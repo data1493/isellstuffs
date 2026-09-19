@@ -52,6 +52,14 @@ export function stallScrapPeelPath(slug: string) {
   return `/stalls/${slug}/scrap/peel`;
 }
 
+export function stallFreePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/free`;
+}
+
+export function stallFreeWritePath() {
+  return "/stalls/free";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
