@@ -8,6 +8,7 @@ import {
   feesPath,
   giftPath,
   helpPath,
+  lotPath,
   pickupPath,
   savedPath,
   sellDeskPath,
@@ -39,6 +40,7 @@ const browse = [
   { href: savedPath(), label: "Later pile" },
   { href: watchedPath(), label: "Watched tables" },
   { href: wantedPath(), label: "Hunt board" },
+  { href: lotPath(), label: "Who set up" },
 ];
 
 export function SiteFooter() {

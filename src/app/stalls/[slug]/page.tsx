@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { cookies } from "next/headers";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
@@ -23,7 +24,7 @@ import {
   resolveFeaturedForStall,
 } from "@/lib/featured-ads";
 import { isStallPacked } from "@/lib/packed-stall";
-import { stallPath } from "@/lib/paths";
+import { lotPath, stallPath } from "@/lib/paths";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -100,7 +101,14 @@ export default async function StallPage({ params }: StallPageProps) {
               eyebrow="Packed up"
               title="This booth packed up."
               body="Files in the folder still exist. Come next weekend. The table went in the car. Not a refund. Not a sold sticker."
-            />
+            >
+              <Link
+                href={lotPath()}
+                className="text-sm underline-offset-4 hover:underline"
+              >
+                See the lot
+              </Link>
+            </MallNotice>
           ) : null}
 
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />

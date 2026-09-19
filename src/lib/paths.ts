@@ -202,3 +202,7 @@ export function giftPath() {
 export function giftRedeemPath() {
   return "/gift/redeem";
 }
+
+export function lotPath() {
+  return "/lot";
+}

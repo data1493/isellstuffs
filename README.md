@@ -18,6 +18,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page. Hub-takeover bookings from `iss-ad-bookings` swap the aisle hero |
+| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags. Still-here is a count, not a SKU grid. |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. |
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
@@ -166,6 +167,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/stalls/[slug]` | Booth name, mix of objects and files |
 | `/about` | The mall story — flea-market mall, 10% cut, labeled ads, not a warehouse |
 | `/help` | How this mall works — browse, tote, mock pay, folder slip, list a stall |
+| `/lot` | Who set up. Booths on the lot vs in the car. Not this week's picks |
 | `/this-week` | Weekend stall drop. Objects and files, not a paid stamp |
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |

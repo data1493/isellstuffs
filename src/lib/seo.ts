@@ -28,6 +28,7 @@ import {
   collectionsPath,
   helpPath,
   listingPath,
+  lotPath,
   orderPath,
   ordersPath,
   savedPath,
@@ -481,6 +482,15 @@ export function thisWeekMetadata(): Metadata {
     description:
       "A weekend stall drop. Mall picks from the stand-in catalog — objects and files, not paid stamps.",
     path: thisWeekPath(),
+  });
+}
+
+export function lotMetadata(): Metadata {
+  return shareMetadata({
+    title: "Who set up",
+    description:
+      "The lot map. Which folding tables came this weekend, which went in the car. Not a lookbook. Not this week's picks.",
+    path: lotPath(),
   });
 }
 
