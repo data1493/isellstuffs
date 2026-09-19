@@ -115,6 +115,11 @@ import {
   parseBoothPour,
 } from "@/lib/booth-pour";
 import {
+  BOOTH_BULB_COOKIE_NAME,
+  BOOTH_BULB_MIRROR_SCRIPT,
+  parseBoothBulb,
+} from "@/lib/booth-bulb";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -184,6 +189,7 @@ export default async function LotPage() {
   const nameMap = parseBoothName(jar.get(BOOTH_NAME_COOKIE_NAME)?.value);
   const poseMap = parseBoothPose(jar.get(BOOTH_POSE_COOKIE_NAME)?.value);
   const pourMap = parseBoothPour(jar.get(BOOTH_POUR_COOKIE_NAME)?.value);
+  const bulbMap = parseBoothBulb(jar.get(BOOTH_BULB_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -218,6 +224,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_NAME_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_POSE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_POUR_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_BULB_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -253,6 +260,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_NAME_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_POSE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_POUR_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_BULB_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -339,6 +347,7 @@ export default async function LotPage() {
                     nameNote={nameMap[row.stall.id]?.note}
                     poseNote={poseMap[row.stall.id]?.note}
                     pourNote={pourMap[row.stall.id]?.note}
+                    bulbNote={bulbMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -390,6 +399,7 @@ export default async function LotPage() {
                     nameNote={nameMap[row.stall.id]?.note}
                     poseNote={poseMap[row.stall.id]?.note}
                     pourNote={pourMap[row.stall.id]?.note}
+                    bulbNote={bulbMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

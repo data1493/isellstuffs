@@ -776,6 +776,14 @@ export function stallPourWritePath() {
   return "/stalls/pour";
 }
 
+export function stallBulbPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/bulb`;
+}
+
+export function stallBulbWritePath() {
+  return "/stalls/bulb";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

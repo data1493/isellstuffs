@@ -175,6 +175,13 @@ import {
   stallPourPath,
 } from "@/lib/booth-pour";
 import {
+  BOOTH_BULB_COOKIE_NAME,
+  BOOTH_BULB_PAPER_LINE,
+  boothBulbFor,
+  parseBoothBulb,
+  stallBulbPath,
+} from "@/lib/booth-bulb";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -382,6 +389,10 @@ export default async function StallPage({
   const pour = boothPourFor(
     stall.id,
     parseBoothPour(jar.get(BOOTH_POUR_COOKIE_NAME)?.value),
+  );
+  const bulb = boothBulbFor(
+    stall.id,
+    parseBoothBulb(jar.get(BOOTH_BULB_COOKIE_NAME)?.value),
   );
 
   return (
@@ -862,6 +873,23 @@ export default async function StallPage({
             <p data-booth-pour-empty={stall.id} hidden />
           )}
 
+          {bulb ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a bulb"
+              title="Twist the neck anyway."
+              body={
+                <p data-booth-bulb-note={stall.id}>
+                  {bulb.note} {BOOTH_BULB_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-bulb-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1078,6 +1106,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t pour
+          </Link>
+
+          <Link
+            href={stallBulbPath(stall.slug)}
+            data-booth-bulb-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a bulb
           </Link>
 
           <Link

@@ -47,6 +47,7 @@ export function LotBoothCard({
   nameNote,
   poseNote,
   pourNote,
+  bulbNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -76,6 +77,7 @@ export function LotBoothCard({
   nameNote?: string;
   poseNote?: string;
   pourNote?: string;
+  bulbNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -358,6 +360,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-pour-empty={stall.id} hidden />
+          )}
+          {bulbNote ? (
+            <p
+              data-booth-bulb-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a bulb. {bulbNote}
+            </p>
+          ) : (
+            <p data-booth-bulb-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
