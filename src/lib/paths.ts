@@ -898,6 +898,14 @@ export function listingEtchWritePath() {
   return "/listings/etch";
 }
 
+export function listingPadPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pad`;
+}
+
+export function listingPadWritePath() {
+  return "/listings/pad";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }

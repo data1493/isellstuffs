@@ -109,6 +109,7 @@ import { ListingVentNotice } from "@/components/listing-vent-notice";
 import { ListingGasketNotice } from "@/components/listing-gasket-notice";
 import { ListingGlowNotice } from "@/components/listing-glow-notice";
 import { ListingEtchNotice } from "@/components/listing-etch-notice";
+import { ListingPadNotice } from "@/components/listing-pad-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -249,6 +250,7 @@ import {
   listingGasketPath,
   listingGlowPath,
   listingEtchPath,
+  listingPadPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -542,6 +544,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingGlowNotice listingId={listing.id} /> : null}
               {physical ? <ListingEvenNotice listingId={listing.id} /> : null}
               {physical ? <ListingCementNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPadNotice listingId={listing.id} /> : null}
               {physical ? <ListingLinkNotice listingId={listing.id} /> : null}
               {physical ? <ListingCenterNotice listingId={listing.id} /> : null}
               {physical ? <ListingWarpNotice listingId={listing.id} /> : null}
@@ -1011,6 +1014,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not cement
+                  </Link>
+                  <Link
+                    href={listingPadPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not pad them
                   </Link>
                   <Link
                     href={listingLinkPath(listing.id)}

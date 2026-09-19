@@ -357,6 +357,12 @@ import {
   subscribeEtch,
 } from "@/lib/listing-etch";
 import {
+  canTapePad,
+  isListingPadOverlay,
+  readPadListingIds,
+  subscribePad,
+} from "@/lib/listing-pad";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -431,6 +437,7 @@ import {
   listingRecapWritePath,
   listingGlowWritePath,
   listingEtchWritePath,
+  listingPadWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -577,6 +584,7 @@ export function DeskBoard({
   const [centerIds, setCenterIds] = useState<string[]>([]);
   const [warpIds, setWarpIds] = useState<string[]>([]);
   const [etchIds, setEtchIds] = useState<string[]>([]);
+  const [padIds, setPadIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -657,6 +665,7 @@ export function DeskBoard({
       setCenterIds(readCenterListingIds());
       setWarpIds(readWarpListingIds());
       setEtchIds(readEtchListingIds());
+      setPadIds(readPadListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -726,6 +735,7 @@ export function DeskBoard({
     const unsubCenter = subscribeCenter(apply);
     const unsubWarp = subscribeWarp(apply);
     const unsubEtch = subscribeEtch(apply);
+    const unsubPad = subscribePad(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -805,6 +815,7 @@ export function DeskBoard({
       unsubCenter();
       unsubWarp();
       unsubEtch();
+      unsubPad();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -1710,6 +1721,37 @@ export function DeskBoard({
                             {isListingEtchOverlay(listing.id, etchIds)
                               ? "Leave the skip"
                               : "I will not read the runout"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePad(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPadWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPadOverlay(listing.id, padIds)
+                                ? "open"
+                                : "pad"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPadOverlay(listing.id, padIds)
+                              ? "Leave the peel"
+                              : "I will not pad them"}
                           </button>
                         </form>
                       ) : null}
