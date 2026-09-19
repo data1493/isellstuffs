@@ -36,6 +36,7 @@ export function LotBoothCard({
   stickNote,
   digNote,
   stackNote,
+  matchNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -54,6 +55,7 @@ export function LotBoothCard({
   stickNote?: string;
   digNote?: string;
   stackNote?: string;
+  matchNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -226,6 +228,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-stack-empty={stall.id} hidden />
+          )}
+          {matchNote ? (
+            <p
+              data-booth-match-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Nothing matches. {matchNote}
+            </p>
+          ) : (
+            <p data-booth-match-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

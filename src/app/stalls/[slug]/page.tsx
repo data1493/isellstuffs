@@ -98,6 +98,13 @@ import {
   stallStackPath,
 } from "@/lib/booth-stack";
 import {
+  BOOTH_MATCH_COOKIE_NAME,
+  BOOTH_MATCH_PAPER_LINE,
+  boothMatchFor,
+  parseBoothMatch,
+  stallMatchPath,
+} from "@/lib/booth-match";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -261,6 +268,10 @@ export default async function StallPage({
   const stack = boothStackFor(
     stall.id,
     parseBoothStack(jar.get(BOOTH_STACK_COOKIE_NAME)?.value),
+  );
+  const match = boothMatchFor(
+    stall.id,
+    parseBoothMatch(jar.get(BOOTH_MATCH_COOKIE_NAME)?.value),
   );
 
   return (
@@ -554,6 +565,23 @@ export default async function StallPage({
             <p data-booth-stack-empty={stall.id} hidden />
           )}
 
+          {match ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Nothing matches"
+              title="Ask what's on the table."
+              body={
+                <p data-booth-match-note={stall.id}>
+                  {match.note} {BOOTH_MATCH_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-match-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -682,6 +710,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Don&apos;t unfold the pile
+          </Link>
+
+          <Link
+            href={stallMatchPath(stall.slug)}
+            data-booth-match-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Nothing matches
           </Link>
 
           <Link
