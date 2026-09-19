@@ -97,6 +97,7 @@ import { ListingLiningNotice } from "@/components/listing-lining-notice";
 import { ListingHoodNotice } from "@/components/listing-hood-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingBeepNotice } from "@/components/listing-beep-notice";
+import { ListingLabelNotice } from "@/components/listing-label-notice";
 import { ListingRecapNotice } from "@/components/listing-recap-notice";
 import { ListingEvenNotice } from "@/components/listing-even-notice";
 import { ListingCementNotice } from "@/components/listing-cement-notice";
@@ -243,6 +244,7 @@ import {
   listingHoodPath,
   listingDonglePath,
   listingBeepPath,
+  listingLabelPath,
   listingRecapPath,
   listingEvenPath,
   listingCementPath,
@@ -552,6 +554,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingHoodNotice listingId={listing.id} /> : null}
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBeepNotice listingId={listing.id} /> : null}
+              {physical ? <ListingLabelNotice listingId={listing.id} /> : null}
               {physical ? <ListingRecapNotice listingId={listing.id} /> : null}
               {physical ? <ListingGlowNotice listingId={listing.id} /> : null}
               {physical ? <ListingEvenNotice listingId={listing.id} /> : null}
@@ -1005,6 +1008,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not beep it
+                  </Link>
+                  <Link
+                    href={listingLabelPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not label them
                   </Link>
                   <Link
                     href={listingRecapPath(listing.id)}
