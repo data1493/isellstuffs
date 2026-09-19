@@ -1008,6 +1008,14 @@ export function stallHarpWritePath() {
   return "/stalls/harp";
 }
 
+export function stallFlashPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/flash`;
+}
+
+export function stallFlashWritePath() {
+  return "/stalls/flash";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

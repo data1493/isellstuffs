@@ -224,6 +224,13 @@ import {
   stallHarpPath,
 } from "@/lib/booth-harp";
 import {
+  BOOTH_FLASH_COOKIE_NAME,
+  BOOTH_FLASH_PAPER_LINE,
+  boothFlashFor,
+  parseBoothFlash,
+  stallFlashPath,
+} from "@/lib/booth-flash";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -459,6 +466,10 @@ export default async function StallPage({
   const harp = boothHarpFor(
     stall.id,
     parseBoothHarp(jar.get(BOOTH_HARP_COOKIE_NAME)?.value),
+  );
+  const flash = boothFlashFor(
+    stall.id,
+    parseBoothFlash(jar.get(BOOTH_FLASH_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1058,6 +1069,23 @@ export default async function StallPage({
             <p data-booth-harp-empty={stall.id} hidden />
           )}
 
+          {flash ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't flash"
+              title="What boots is what boots."
+              body={
+                <p data-booth-flash-note={stall.id}>
+                  {flash.note} {BOOTH_FLASH_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-flash-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1330,6 +1358,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a harp
+          </Link>
+
+          <Link
+            href={stallFlashPath(stall.slug)}
+            data-booth-flash-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t flash
           </Link>
 
           <Link
