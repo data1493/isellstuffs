@@ -393,6 +393,12 @@ import {
   subscribeSocket,
 } from "@/lib/listing-socket";
 import {
+  canTapeSpeaker,
+  isListingSpeakerOverlay,
+  readSpeakerListingIds,
+  subscribeSpeaker,
+} from "@/lib/listing-speaker";
+import {
   canTapeSand,
   isListingSandOverlay,
   readSandListingIds,
@@ -491,6 +497,7 @@ import {
   listingFillWritePath,
   listingWindWritePath,
   listingSocketWritePath,
+  listingSpeakerWritePath,
   listingSandWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -646,6 +653,7 @@ export function DeskBoard({
   const [fillIds, setFillIds] = useState<string[]>([]);
   const [windIds, setWindIds] = useState<string[]>([]);
   const [socketIds, setSocketIds] = useState<string[]>([]);
+  const [speakerIds, setSpeakerIds] = useState<string[]>([]);
   const [sandIds, setSandIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -735,6 +743,7 @@ export function DeskBoard({
       setFillIds(readFillListingIds());
       setWindIds(readWindListingIds());
       setSocketIds(readSocketListingIds());
+      setSpeakerIds(readSpeakerListingIds());
       setSandIds(readSandListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -813,6 +822,7 @@ export function DeskBoard({
     const unsubFill = subscribeFill(apply);
     const unsubWind = subscribeWind(apply);
     const unsubSocket = subscribeSocket(apply);
+    const unsubSpeaker = subscribeSpeaker(apply);
     const unsubSand = subscribeSand(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -901,6 +911,7 @@ export function DeskBoard({
       unsubFill();
       unsubWind();
       unsubSocket();
+      unsubSpeaker();
       unsubSand();
       unsubSplice();
       unsubRadio();
@@ -1995,6 +2006,37 @@ export function DeskBoard({
                             {isListingSocketOverlay(listing.id, socketIds)
                               ? "Leave the neck"
                               : "I will not socket it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSpeaker(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSpeakerWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSpeakerOverlay(listing.id, speakerIds)
+                                ? "open"
+                                : "speaker"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingSpeakerOverlay(listing.id, speakerIds)
+                              ? "Leave the line"
+                              : "I will not speaker it"}
                           </button>
                         </form>
                       ) : null}

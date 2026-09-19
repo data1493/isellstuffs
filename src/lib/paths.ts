@@ -962,6 +962,14 @@ export function listingSocketWritePath() {
   return "/listings/socket";
 }
 
+export function listingSpeakerPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/speaker`;
+}
+
+export function listingSpeakerWritePath() {
+  return "/listings/speaker";
+}
+
 export function listingSandPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/sand`;
 }
