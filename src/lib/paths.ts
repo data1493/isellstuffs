@@ -1138,6 +1138,14 @@ export function listingKnurlWritePath() {
   return "/listings/knurl";
 }
 
+export function listingScalePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/scale`;
+}
+
+export function listingScaleWritePath() {
+  return "/listings/scale";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }

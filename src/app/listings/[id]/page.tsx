@@ -135,6 +135,7 @@ import { ListingLatheNotice } from "@/components/listing-lathe-notice";
 import { ListingHandleNotice } from "@/components/listing-handle-notice";
 import { ListingDegaussNotice } from "@/components/listing-degauss-notice";
 import { ListingKnurlNotice } from "@/components/listing-knurl-notice";
+import { ListingScaleNotice } from "@/components/listing-scale-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
@@ -540,6 +541,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
               {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingScaleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingGreaseNotice listingId={listing.id} /> : null}
               {!physical ? <ListingDoubleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingMinsNotice listingId={listing.id} /> : null}

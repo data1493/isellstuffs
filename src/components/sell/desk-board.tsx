@@ -525,6 +525,12 @@ import {
   subscribePaginate,
 } from "@/lib/listing-paginate";
 import {
+  canTapeScale,
+  isListingScaleOverlay,
+  readScaleListingIds,
+  subscribeScale,
+} from "@/lib/listing-scale";
+import {
   canTapeGate,
   isListingGateOverlay,
   readGateListingIds,
@@ -662,6 +668,7 @@ import {
   listingDegaussWritePath,
   listingKnurlWritePath,
   listingPaginateWritePath,
+  listingScaleWritePath,
   listingGateWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
@@ -859,6 +866,7 @@ export function DeskBoard({
   const [variableIds, setVariableIds] = useState<string[]>([]);
   const [ligatureIds, setLigatureIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
+  const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
@@ -973,6 +981,7 @@ export function DeskBoard({
       setVariableIds(readVariableListingIds());
       setLigatureIds(readLigatureListingIds());
       setPaginateIds(readPaginateListingIds());
+      setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
@@ -1076,6 +1085,7 @@ export function DeskBoard({
     const unsubVariable = subscribeVariable(apply);
     const unsubLigature = subscribeLigature(apply);
     const unsubPaginate = subscribePaginate(apply);
+    const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
@@ -1189,6 +1199,7 @@ export function DeskBoard({
       unsubVariable();
       unsubLigature();
       unsubPaginate();
+      unsubScale();
       unsubGate();
     };
   }, [listings, stall.id]);
@@ -3231,6 +3242,37 @@ export function DeskBoard({
                             {isListingMinsOverlay(listing.id, minsIds)
                               ? "Leave the vibes"
                               : "I will not time it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeScale(listing) ? (
+                        <form
+                          method="post"
+                          action={listingScaleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingScaleOverlay(listing.id, scaleIds)
+                                ? "open"
+                                : "scale"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingScaleOverlay(listing.id, scaleIds)
+                              ? "Leave the vibes"
+                              : "I will not scale them"}
                           </button>
                         </form>
                       ) : null}
