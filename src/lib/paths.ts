@@ -442,6 +442,14 @@ export function listingInkWritePath() {
   return "/listings/ink";
 }
 
+export function listingSolePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/sole`;
+}
+
+export function listingSoleWritePath() {
+  return "/listings/sole";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
