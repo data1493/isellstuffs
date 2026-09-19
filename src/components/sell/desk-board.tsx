@@ -417,6 +417,12 @@ import {
   subscribeContents,
 } from "@/lib/listing-contents";
 import {
+  canTapeDub,
+  isListingDubOverlay,
+  readDubListingIds,
+  subscribeDub,
+} from "@/lib/listing-dub";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -519,6 +525,7 @@ import {
   listingCoilWritePath,
   listingSandWritePath,
   listingContentsWritePath,
+  listingDubWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -678,6 +685,7 @@ export function DeskBoard({
   const [coilIds, setCoilIds] = useState<string[]>([]);
   const [sandIds, setSandIds] = useState<string[]>([]);
   const [contentsIds, setContentsIds] = useState<string[]>([]);
+  const [dubIds, setDubIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -771,6 +779,7 @@ export function DeskBoard({
       setCoilIds(readCoilListingIds());
       setSandIds(readSandListingIds());
       setContentsIds(readContentsListingIds());
+      setDubIds(readDubListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -853,6 +862,7 @@ export function DeskBoard({
     const unsubCoil = subscribeCoil(apply);
     const unsubSand = subscribeSand(apply);
     const unsubContents = subscribeContents(apply);
+    const unsubDub = subscribeDub(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -945,6 +955,7 @@ export function DeskBoard({
       unsubCoil();
       unsubSand();
       unsubContents();
+      unsubDub();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2163,6 +2174,37 @@ export function DeskBoard({
                             {isListingContentsOverlay(listing.id, contentsIds)
                               ? "Leave the Sharpie"
                               : "I will not list what’s on it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDub(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDubWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDubOverlay(listing.id, dubIds)
+                                ? "open"
+                                : "dub"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDubOverlay(listing.id, dubIds)
+                              ? "Leave the hiss"
+                              : "I will not dub it"}
                           </button>
                         </form>
                       ) : null}

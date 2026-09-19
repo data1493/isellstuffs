@@ -1002,6 +1002,14 @@ export function listingContentsWritePath() {
   return "/listings/contents";
 }
 
+export function listingDubPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dub`;
+}
+
+export function listingDubWritePath() {
+  return "/listings/dub";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
