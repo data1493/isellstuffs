@@ -286,3 +286,11 @@ export function giftRedeemPath() {
 export function lotPath() {
   return "/lot";
 }
+
+export function cartShakePath() {
+  return "/cart/shake";
+}
+
+export function cartShakeWritePath() {
+  return "/cart/shake/write";
+}

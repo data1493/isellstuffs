@@ -119,6 +119,7 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | Route | What it is |
 | --- | --- |
 | `/cart` | Tote. Same listing ids listing/stall pages wrote |
+| `/cart/shake` | Shake sold, packed, pulled, and missing ids out of a fat tote. Native `POST /cart/shake`. The sold chair drops; the still-here lamp stays. Same `iss-cart-listing-ids` cookie. Not checkout. |
 | `/checkout/mock` | Local test pay wall when no Stripe secret is set. Physical booths on the slip aside show driveway hours from `@/lib/pickup-display` before you pay. Files and the gift card do not. Physical totes can pay **cash on the table** or the same test card. Digital / gift stay on the card. |
 | `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” and join the sold overlay — the lamp leaves `avail=open`, the PDF stays for sale. A cash tote stamps “Cash on the table” on the receipt and pickup slip. |
 | `/checkout/cancel` | Walked away. Tote stays |
@@ -191,7 +192,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/stalls/[slug]/scrap`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/stalls/[slug]/scrap`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 
