@@ -28,7 +28,7 @@ import {
   resolveFeaturedForStall,
 } from "@/lib/featured-ads";
 import { isStallPacked } from "@/lib/packed-stall";
-import { lotPath, stallPath } from "@/lib/paths";
+import { lotPath, stallPath, stallScrapPath } from "@/lib/paths";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -121,6 +121,13 @@ export default async function StallPage({
           ) : null}
 
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
+
+          <Link
+            href={stallScrapPath(stall.slug)}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Tape a scrap on this table
+          </Link>
 
           <BagThisTableButton stallId={stall.id} slug={stall.slug} bag={bag} />
 

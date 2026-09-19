@@ -32,6 +32,18 @@ export function stallEditPath(slug: string) {
   return `/stalls/${slug}/edit`;
 }
 
+export function stallScrapPath(slug: string) {
+  return `/stalls/${slug}/scrap`;
+}
+
+export function stallScrapTapePath(slug: string) {
+  return `/stalls/${slug}/scrap/tape`;
+}
+
+export function stallScrapPeelPath(slug: string) {
+  return `/stalls/${slug}/scrap/peel`;
+}
+
 export function advertisePath() {
   return "/advertise";
 }

@@ -39,6 +39,7 @@ import {
   sellHoursPath,
   sellListingEditPath,
   sellNewPath,
+  stallScrapPath,
 } from "@/lib/paths";
 import {
   isOverlayListing,
@@ -166,6 +167,12 @@ export function DeskBoard({
           className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
         >
           Tape this weekend’s hours
+        </Link>
+        <Link
+          href={stallScrapPath(stall.slug)}
+          className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+        >
+          Tape a scrap on this table
         </Link>
       </div>
 

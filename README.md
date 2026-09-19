@@ -82,6 +82,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
 | Gift credit desk | http://127.0.0.1:44721/gift |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
+| Booth scrap | http://127.0.0.1:44721/stalls/folding-table-tuesday/scrap |
 | Watched tables | http://127.0.0.1:44721/watched |
 | Hunt board | http://127.0.0.1:44721/wanted |
 | Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
@@ -103,6 +104,8 @@ Physical PDPs (and stall pages that still have objects) show how you pick the th
 Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — price, condition, booth, aisle. PDFs and the gift card have no tag. Files open in the folder after pay. Gift codes go to the desk. The tag does not show pickup hours.
 
 Physical listings can tape a paper haggle at `/listings/[id]/offer`. Write dollars on the lamp — $8 on the $12 tag — and the stall desk can see that scrap. PDFs and the gift card have no offer. Taping a number does not change the tag or the tote.
+
+A stallholder can tape a sticky on the booth at `/stalls/[slug]/scrap`. “cash only after 2” stays after reload. Cookie `iss-stall-scraps` + `iss:stall-scraps`. Native `POST /stalls/[slug]/scrap/tape` (form: `note`) and peel. Not a hunt. Not an offer on a lamp. Not `/stalls/[slug]/tape`.
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
@@ -183,7 +186,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/stalls/[slug]/scrap`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 
