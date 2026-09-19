@@ -29,6 +29,10 @@ export function advertiseReceiptPath(booking?: string) {
   return `/advertise/receipt?booking=${encodeURIComponent(booking)}`;
 }
 
+export function advertiseBookPayPath() {
+  return "/advertise/book/pay";
+}
+
 export function sellPath() {
   return "/sell";
 }

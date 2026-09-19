@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { BookReceiptView } from "@/components/ads/book-receipt-view";
 import { BookReceiptCard } from "@/components/ads/book-receipt";
+import { SyncAdBookings } from "@/components/ads/sync-ad-bookings";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallHero, MallSection } from "@/components/mall-shell";
@@ -101,7 +102,10 @@ export default async function AdvertiseReceiptPage({
       <MallSection className="border-b border-border">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(16rem,0.85fr)] lg:items-start">
           {fromCookie ? (
-            <BookReceiptCard booking={fromCookie} />
+            <>
+              <SyncAdBookings booking={fromCookie} />
+              <BookReceiptCard booking={fromCookie} />
+            </>
           ) : (
             <BookReceiptView bookingId={bookingId} />
           )}

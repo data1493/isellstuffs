@@ -1,75 +1,51 @@
-"use client";
-
-import { type FormEvent, useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { adKindCopy } from "@/lib/ads-display";
-import {
-  createAdBooking,
-  isHubId,
-  writeAdBooking,
-  type NextWindowPackage,
-} from "@/lib/ad-booking";
+import { type NextWindowPackage } from "@/lib/ad-booking";
 import { formatMoney, mallHubs } from "@/lib/commerce";
-import { advertiseReceiptPath } from "@/lib/paths";
+import { advertiseBookPayPath } from "@/lib/paths";
+import { cn } from "@/lib/utils";
 
-export function BookForm({ pack }: { pack: NextWindowPackage }) {
+const errorCopy = {
+  name: "Name the stall that is buying the light.",
+  hub: "Pick a hub on the map.",
+  pay: "Could not book the corner. Try the desk again.",
+} as const;
+
+export function BookForm({
+  pack,
+  error,
+}: {
+  pack: NextWindowPackage;
+  error?: string;
+}) {
   const kind = adKindCopy[pack.kind];
   const needsHub = pack.kind === "hub-takeover";
-  const [hubId, setHubId] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-
-    const data = new FormData(event.currentTarget);
-    const name = String(data.get("stallName") ?? "")
-      .trim()
-      .replace(/\s+/g, " ");
-    const pickedHub = String(data.get("hubId") ?? "");
-
-    if (name.length < 2) {
-      setError("Name the stall that is buying the light.");
-      return;
-    }
-    if (needsHub && !isHubId(pickedHub)) {
-      setError("Pick a hub on the map.");
-      return;
-    }
-
-    setBusy(true);
-    try {
-      const booking = createAdBooking({
-        kind: pack.kind,
-        stallName: name,
-        ...(needsHub && isHubId(pickedHub) ? { hubId: pickedHub } : {}),
-      });
-      writeAdBooking(booking);
-      window.location.assign(advertiseReceiptPath(booking.id));
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Could not book the corner.");
-      setBusy(false);
-    }
-  }
+  const message =
+    error && error in errorCopy
+      ? errorCopy[error as keyof typeof errorCopy]
+      : null;
 
   return (
-    <form className="space-y-6" onSubmit={submit}>
+    <form
+      method="post"
+      action={advertiseBookPayPath()}
+      className="space-y-6"
+    >
+      <input type="hidden" name="kind" value={pack.kind} />
+
       <fieldset className="space-y-3">
         <legend className="font-heading text-xl tracking-tight">The booth</legend>
         <div className="space-y-1.5">
           <Label htmlFor="stall-name">Booth name</Label>
-          <Input
+          <input
             id="stall-name"
             name="stallName"
             autoComplete="organization"
             required
             minLength={2}
             placeholder="Tape Drawer Saturday"
-            className="h-11 bg-background"
+            className="h-11 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
           />
         </div>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -85,53 +61,43 @@ export function BookForm({ pack }: { pack: NextWindowPackage }) {
             Hubs on the map. The rule stays. You buy the hero, not a rewrite.
           </p>
           <div className="grid gap-2">
-            {mallHubs.map((hub) => {
-              const selected = hubId === hub.id;
-              return (
-                <label
-                  key={hub.id}
-                  className={`flex cursor-pointer items-start gap-3 rounded-2xl px-4 py-3 ring-1 ${
-                    selected
-                      ? "bg-secondary/60 ring-primary/30"
-                      : "bg-card ring-foreground/10"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="hubId"
-                    value={hub.id}
-                    checked={selected}
-                    onChange={() => setHubId(hub.id)}
-                    className="mt-1"
-                  />
-                  <span>
-                    <span className="block font-medium">{hub.name}</span>
-                    <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
-                      {hub.rule}
-                    </span>
+            {mallHubs.map((hub) => (
+              <label
+                key={hub.id}
+                className="flex cursor-pointer items-start gap-3 rounded-2xl bg-card px-4 py-3 ring-1 ring-foreground/10 has-[:checked]:bg-secondary/60 has-[:checked]:ring-primary/30"
+              >
+                <input
+                  type="radio"
+                  name="hubId"
+                  value={hub.id}
+                  required
+                  className="mt-1"
+                />
+                <span>
+                  <span className="block font-medium">{hub.name}</span>
+                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+                    {hub.rule}
                   </span>
-                </label>
-              );
-            })}
+                </span>
+              </label>
+            ))}
           </div>
         </fieldset>
       ) : null}
 
-      {error ? (
+      {message ? (
         <p role="alert" className="text-sm text-destructive">
-          {error}
+          {message}
         </p>
       ) : null}
 
       <div className="flex flex-col gap-2">
-        <Button
+        <button
           type="submit"
-          size="lg"
-          className="h-11 w-full rounded-full"
-          disabled={busy}
+          className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
         >
-          {busy ? "Stamping the slip…" : `Pay ${formatMoney(pack.price)}`}
-        </Button>
+          Pay {formatMoney(pack.price)}
+        </button>
         <p className="text-center text-xs leading-5 text-muted-foreground">
           Local stand-in. No Stripe. No live charge. The receipt is the proof.
         </p>

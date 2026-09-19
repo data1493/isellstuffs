@@ -209,14 +209,22 @@ function persistBookings(next: AdBooking[]) {
   window.dispatchEvent(new Event(AD_BOOKINGS_CHANGED_EVENT));
 }
 
+export function mergeAdBooking(
+  existing: AdBooking[],
+  booking: AdBooking,
+): AdBooking[] {
+  return [booking, ...existing.filter((item) => item.id !== booking.id)];
+}
+
+export function serializeAdBookings(bookings: AdBooking[]) {
+  return JSON.stringify(bookings);
+}
+
 export function writeAdBooking(booking: AdBooking) {
   if (!canUseStorage()) {
     return;
   }
-  persistBookings([
-    booking,
-    ...readAdBookings().filter((item) => item.id !== booking.id),
-  ]);
+  persistBookings(mergeAdBooking(readAdBookings(), booking));
 }
 
 export function createAdBooking(input: {

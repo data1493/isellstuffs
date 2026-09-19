@@ -16,6 +16,7 @@ import { shareMetadata } from "@/lib/seo";
 
 type BookKindPageProps = {
   params: Promise<{ kind: string }>;
+  searchParams?: Promise<{ error?: string | string[] }>;
 };
 
 export async function generateMetadata({
@@ -40,8 +41,11 @@ export async function generateMetadata({
 
 export default async function AdvertiseBookKindPage({
   params,
+  searchParams,
 }: BookKindPageProps) {
   const { kind } = await params;
+  const query = searchParams ? await searchParams : {};
+  const error = Array.isArray(query.error) ? query.error[0] : query.error;
   const pack = nextWindowPackageByKind(kind);
 
   if (!pack) {
@@ -130,7 +134,7 @@ export default async function AdvertiseBookKindPage({
               {copy.includes} {copy.cannotBuy}
             </p>
             <div className="mt-8">
-              <BookForm pack={pack} />
+              <BookForm pack={pack} error={error} />
             </div>
           </div>
 
