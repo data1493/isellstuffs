@@ -1776,6 +1776,14 @@ export function stallPreampWritePath() {
   return "/stalls/preamp";
 }
 
+export function stallSquarePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/square`;
+}
+
+export function stallSquareWritePath() {
+  return "/stalls/square";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

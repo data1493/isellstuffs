@@ -250,6 +250,11 @@ import {
   parseBoothPreamp,
 } from "@/lib/booth-preamp";
 import {
+  BOOTH_SQUARE_COOKIE_NAME,
+  BOOTH_SQUARE_MIRROR_SCRIPT,
+  parseBoothSquare,
+} from "@/lib/booth-square";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -346,6 +351,7 @@ export default async function LotPage() {
   const spudgerMap = parseBoothSpudger(jar.get(BOOTH_SPUDGER_COOKIE_NAME)?.value);
   const funnelMap = parseBoothFunnel(jar.get(BOOTH_FUNNEL_COOKIE_NAME)?.value);
   const preampMap = parseBoothPreamp(jar.get(BOOTH_PREAMP_COOKIE_NAME)?.value);
+  const squareMap = parseBoothSquare(jar.get(BOOTH_SQUARE_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -407,6 +413,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SPUDGER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FUNNEL_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PREAMP_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_SQUARE_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -469,6 +476,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SPUDGER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FUNNEL_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PREAMP_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_SQUARE_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -582,6 +590,7 @@ export default async function LotPage() {
                     spudgerNote={spudgerMap[row.stall.id]?.note}
                     funnelNote={funnelMap[row.stall.id]?.note}
                     preampNote={preampMap[row.stall.id]?.note}
+                    squareNote={squareMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -660,6 +669,7 @@ export default async function LotPage() {
                     spudgerNote={spudgerMap[row.stall.id]?.note}
                     funnelNote={funnelMap[row.stall.id]?.note}
                     preampNote={preampMap[row.stall.id]?.note}
+                    squareNote={squareMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

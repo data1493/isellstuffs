@@ -364,6 +364,13 @@ import {
   stallPreampPath,
 } from "@/lib/booth-preamp";
 import {
+  BOOTH_SQUARE_COOKIE_NAME,
+  BOOTH_SQUARE_PAPER_LINE,
+  boothSquareFor,
+  parseBoothSquare,
+  stallSquarePath,
+} from "@/lib/booth-square";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -679,6 +686,10 @@ export default async function StallPage({
   const preamp = boothPreampFor(
     stall.id,
     parseBoothPreamp(jar.get(BOOTH_PREAMP_COOKIE_NAME)?.value),
+  );
+  const square = boothSquareFor(
+    stall.id,
+    parseBoothSquare(jar.get(BOOTH_SQUARE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1618,6 +1629,23 @@ export default async function StallPage({
             <p data-booth-preamp-empty={stall.id} hidden />
           )}
 
+          {square ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a square"
+              title="Still a table."
+              body={
+                <p data-booth-square-note={stall.id}>
+                  {square.note} {BOOTH_SQUARE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-square-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2050,6 +2078,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a preamp
+          </Link>
+
+          <Link
+            href={stallSquarePath(stall.slug)}
+            data-booth-square-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a square
           </Link>
 
           <Link
