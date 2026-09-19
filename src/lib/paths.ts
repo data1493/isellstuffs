@@ -98,6 +98,14 @@ export function listingPressWritePath() {
   return "/listings/press";
 }
 
+export function listingPartsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/parts`;
+}
+
+export function listingPartsWritePath() {
+  return "/listings/parts";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

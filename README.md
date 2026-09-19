@@ -86,6 +86,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Needs two people | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/heavy |
 | Pockets are empty | http://127.0.0.1:44721/listings/clo-windbreaker/pockets |
 | Which press | http://127.0.0.1:44721/listings/mdb-scratched-lp/press |
+| Sold for parts | http://127.0.0.1:44721/listings/gtk-cable-drawer/parts |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | Scan the liner | http://127.0.0.1:44721/listings/mdb-mixtape-93/scan |
@@ -142,6 +143,8 @@ Physical listings can tape weight paper at `/listings/[id]/heavy`. Native `POST 
 Physical listings can tape pocket honesty at `/listings/[id]/pockets`. Native `POST /listings/pockets` (form: `listingId`, `intent=empty|open`) writes `iss:pockets-listing-ids` / cookie `iss-pockets-listing-ids`. Pockets are empty. Walkers still dig the jacket. Still for sale. Not lost. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you emptied the windbreaker. Lost sunglasses stay on `/stalls/[slug]/lost`.
 
 Physical listings can tape which press at `/listings/[id]/press`. Native `POST /listings/press` (form: `listingId`, `note`, `intent=tape|clear`) writes `iss:listing-press` / cookie `iss-listing-press`. Which press. The $9 LP is not a first press. Still for sale. Not a scan mate. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the scratched LP. Scan cookie stays put.
+
+Physical listings can tape parts honesty at `/listings/[id]/parts`. Native `POST /listings/parts` (form: `listingId`, `intent=parts|open`) writes `iss:parts-listing-ids` / cookie `iss-parts-listing-ids`. Sold for parts. It does not run. Still tote. Not a fourth status. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The Game Boy stays empty if you parted the cable drawer. As-is stays at the register.
 
 Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /listings/van` (form: `listingId`, `intent=van|table`) writes `iss:van-listing-ids` / cookie `iss-van-listing-ids`. More out back. Ask. Still baggable — `status` and `cartEligible` stay put. Gift cards and PDFs are refused. Garage is home. Look is not for sale. Not a sold sticker.
 
