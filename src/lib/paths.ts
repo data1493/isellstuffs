@@ -706,6 +706,14 @@ export function listingLinkWritePath() {
   return "/listings/link";
 }
 
+export function listingIconsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/icons`;
+}
+
+export function listingIconsWritePath() {
+  return "/listings/icons";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

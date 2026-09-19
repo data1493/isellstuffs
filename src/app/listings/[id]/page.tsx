@@ -88,6 +88,7 @@ import { ListingEvenNotice } from "@/components/listing-even-notice";
 import { ListingLinkNotice } from "@/components/listing-link-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingVersoNotice } from "@/components/listing-verso-notice";
+import { ListingIconsNotice } from "@/components/listing-icons-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -197,6 +198,7 @@ import {
   listingLinkPath,
   listingTunePath,
   listingVersoPath,
+  listingIconsPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -414,6 +416,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
               {!physical ? <ListingTuneNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingIconsNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
@@ -995,6 +998,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not cut a slant
+                  </Link>
+                  <Link
+                    href={listingIconsPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not draw the icons
                   </Link>
                 </p>
               )}

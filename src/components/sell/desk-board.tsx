@@ -219,6 +219,12 @@ import {
   subscribeVerso,
 } from "@/lib/listing-verso";
 import {
+  canTapeIcons,
+  isListingIconsOverlay,
+  readIconsListingIds,
+  subscribeIcons,
+} from "@/lib/listing-icons";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -236,6 +242,7 @@ import {
   listingLoopWritePath,
   listingTuneWritePath,
   listingVersoWritePath,
+  listingIconsWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -340,6 +347,7 @@ export function DeskBoard({
   const [linkIds, setLinkIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
+  const [iconsIds, setIconsIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -389,6 +397,7 @@ export function DeskBoard({
       setLinkIds(readLinkListingIds());
       setTuneIds(readTuneListingIds());
       setVersoIds(readVersoListingIds());
+      setIconsIds(readIconsListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -427,6 +436,7 @@ export function DeskBoard({
     const unsubLink = subscribeLink(apply);
     const unsubTune = subscribeTune(apply);
     const unsubVerso = subscribeVerso(apply);
+    const unsubIcons = subscribeIcons(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -475,6 +485,7 @@ export function DeskBoard({
       unsubLink();
       unsubTune();
       unsubVerso();
+      unsubIcons();
     };
   }, [listings, stall.id]);
 
@@ -1493,6 +1504,37 @@ export function DeskBoard({
                             {isListingVersoOverlay(listing.id, versoIds)
                               ? "Leave the one page"
                               : "I will not write Side B"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeIcons(listing) ? (
+                        <form
+                          method="post"
+                          action={listingIconsWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingIconsOverlay(listing.id, iconsIds)
+                                ? "open"
+                                : "icons"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingIconsOverlay(listing.id, iconsIds)
+                              ? "Leave the two weights"
+                              : "I will not draw the icons"}
                           </button>
                         </form>
                       ) : null}
