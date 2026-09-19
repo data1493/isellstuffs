@@ -441,6 +441,12 @@ import {
   subscribeWelt,
 } from "@/lib/listing-welt";
 import {
+  canTapeBurnish,
+  isListingBurnishOverlay,
+  readBurnishListingIds,
+  subscribeBurnish,
+} from "@/lib/listing-burnish";
+import {
   canTapeCinch,
   isListingCinchOverlay,
   readCinchListingIds,
@@ -811,6 +817,7 @@ import {
   listingDubWritePath,
   listingStitchWritePath,
   listingWeltWritePath,
+  listingBurnishWritePath,
   listingCinchWritePath,
   listingFinalizeWritePath,
   listingAzimuthWritePath,
@@ -1018,6 +1025,7 @@ export function DeskBoard({
   const [dubIds, setDubIds] = useState<string[]>([]);
   const [stitchIds, setStitchIds] = useState<string[]>([]);
   const [weltIds, setWeltIds] = useState<string[]>([]);
+  const [burnishIds, setBurnishIds] = useState<string[]>([]);
   const [cinchIds, setCinchIds] = useState<string[]>([]);
   const [finalizeIds, setFinalizeIds] = useState<string[]>([]);
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
@@ -1159,6 +1167,7 @@ export function DeskBoard({
       setDubIds(readDubListingIds());
       setStitchIds(readStitchListingIds());
       setWeltIds(readWeltListingIds());
+      setBurnishIds(readBurnishListingIds());
       setCinchIds(readCinchListingIds());
       setFinalizeIds(readFinalizeListingIds());
       setAzimuthIds(readAzimuthListingIds());
@@ -1289,6 +1298,7 @@ export function DeskBoard({
     const unsubDub = subscribeDub(apply);
     const unsubStitch = subscribeStitch(apply);
     const unsubWelt = subscribeWelt(apply);
+    const unsubBurnish = subscribeBurnish(apply);
     const unsubCinch = subscribeCinch(apply);
     const unsubFinalize = subscribeFinalize(apply);
     const unsubAzimuth = subscribeAzimuth(apply);
@@ -1429,6 +1439,7 @@ export function DeskBoard({
       unsubDub();
       unsubStitch();
       unsubWelt();
+      unsubBurnish();
       unsubCinch();
       unsubFinalize();
       unsubAzimuth();
@@ -3404,6 +3415,37 @@ export function DeskBoard({
                             {isListingWeltOverlay(listing.id, weltIds)
                               ? "Leave the split"
                               : "I will not welt them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBurnish(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBurnishWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBurnishOverlay(listing.id, burnishIds)
+                                ? "open"
+                                : "burnish"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBurnishOverlay(listing.id, burnishIds)
+                              ? "Leave the peel"
+                              : "I will not burnish it"}
                           </button>
                         </form>
                       ) : null}

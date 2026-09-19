@@ -1242,6 +1242,14 @@ export function listingSaturateWritePath() {
   return "/listings/saturate";
 }
 
+export function listingBurnishPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/burnish`;
+}
+
+export function listingBurnishWritePath() {
+  return "/listings/burnish";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

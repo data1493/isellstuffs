@@ -125,6 +125,7 @@ import { ListingContentsNotice } from "@/components/listing-contents-notice";
 import { ListingDubNotice } from "@/components/listing-dub-notice";
 import { ListingStitchNotice } from "@/components/listing-stitch-notice";
 import { ListingWeltNotice } from "@/components/listing-welt-notice";
+import { ListingBurnishNotice } from "@/components/listing-burnish-notice";
 import { ListingCinchNotice } from "@/components/listing-cinch-notice";
 import { ListingFinalizeNotice } from "@/components/listing-finalize-notice";
 import { ListingAzimuthNotice } from "@/components/listing-azimuth-notice";
@@ -326,6 +327,7 @@ import {
   listingDubPath,
   listingStitchPath,
   listingWeltPath,
+  listingBurnishPath,
   listingCinchPath,
   listingFinalizePath,
   listingAzimuthPath,
@@ -711,6 +713,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDubNotice listingId={listing.id} /> : null}
               {physical ? <ListingStitchNotice listingId={listing.id} /> : null}
               {physical ? <ListingWeltNotice listingId={listing.id} /> : null}
+              {physical ? <ListingBurnishNotice listingId={listing.id} /> : null}
               {physical ? <ListingCinchNotice listingId={listing.id} /> : null}
               {physical ? <ListingFinalizeNotice listingId={listing.id} /> : null}
               {physical ? <ListingAzimuthNotice listingId={listing.id} /> : null}
@@ -1361,6 +1364,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not welt them
+                  </Link>
+                  <Link
+                    href={listingBurnishPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not burnish it
                   </Link>
                   <Link
                     href={listingCinchPath(listing.id)}
