@@ -327,6 +327,12 @@ import {
   subscribeVent,
 } from "@/lib/listing-vent";
 import {
+  canTapeGasket,
+  isListingGasketOverlay,
+  readGasketListingIds,
+  subscribeGasket,
+} from "@/lib/listing-gasket";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -400,6 +406,7 @@ import {
   listingSpliceWritePath,
   listingRadioWritePath,
   listingVentWritePath,
+  listingGasketWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
   listingNormWritePath,
@@ -534,6 +541,7 @@ export function DeskBoard({
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
+  const [gasketIds, setGasketIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [normIds, setNormIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
@@ -608,6 +616,7 @@ export function DeskBoard({
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
+      setGasketIds(readGasketListingIds());
       setTuneIds(readTuneListingIds());
       setNormIds(readNormListingIds());
       setVersoIds(readVersoListingIds());
@@ -671,6 +680,7 @@ export function DeskBoard({
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
+    const unsubGasket = subscribeGasket(apply);
     const unsubTune = subscribeTune(apply);
     const unsubNorm = subscribeNorm(apply);
     const unsubVerso = subscribeVerso(apply);
@@ -744,6 +754,7 @@ export function DeskBoard({
       unsubSplice();
       unsubRadio();
       unsubVent();
+      unsubGasket();
       unsubTune();
       unsubNorm();
       unsubVerso();
@@ -1644,6 +1655,37 @@ export function DeskBoard({
                             {isListingVentOverlay(listing.id, ventIds)
                               ? "Leave the lid solid"
                               : "I will not vent"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGasket(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGasketWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGasketOverlay(listing.id, gasketIds)
+                                ? "open"
+                                : "gasket"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGasketOverlay(listing.id, gasketIds)
+                              ? "Leave the knob"
+                              : "I will not gasket"}
                           </button>
                         </form>
                       ) : null}

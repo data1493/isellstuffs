@@ -850,6 +850,14 @@ export function listingVentWritePath() {
   return "/listings/vent";
 }
 
+export function listingGasketPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gasket`;
+}
+
+export function listingGasketWritePath() {
+  return "/listings/gasket";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
