@@ -53,7 +53,7 @@ export default async function StallPage({ params }: StallPageProps) {
   return (
     <div>
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
           <MallCrumb label="Stall location">
             <CrumbSep />
             <span className="text-foreground">{stall.boothName}</span>
@@ -96,7 +96,7 @@ export default async function StallPage({ params }: StallPageProps) {
       </section>
 
       <section>
-        <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="rounded-2xl bg-[linear-gradient(180deg,color-mix(in_oklch,var(--secondary)_55%,var(--background)),var(--background))] p-4 sm:p-6">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
               On the table
@@ -127,7 +127,7 @@ export default async function StallPage({ params }: StallPageProps) {
       </section>
 
       <section className="border-t border-border bg-[color-mix(in_oklch,var(--accent)_28%,var(--background))]">
-        <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div
             className={cn(
               "rounded-2xl p-4 sm:p-6",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { HubTile } from "@/components/browse/cards";
+import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Button } from "@/components/ui/button";
 import { listingsByHub, mallHubs } from "@/lib/commerce";
 import { hubsIndexMetadata } from "@/lib/seo";
@@ -10,10 +11,8 @@ export const metadata: Metadata = hubsIndexMetadata();
 
 export default function HubsPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-        The map
-      </p>
+    <MallWidth className="py-12 sm:py-16">
+      <MallEyebrow>The map</MallEyebrow>
       <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
         Four aisles. Pick one with a rule.
       </h1>
@@ -37,6 +36,6 @@ export default function HubsPage() {
           </li>
         ))}
       </ul>
-    </div>
+    </MallWidth>
   );
 }

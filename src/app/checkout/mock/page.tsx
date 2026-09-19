@@ -3,6 +3,8 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 
 import { PayForm } from "@/app/checkout/mock/pay-form";
+import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { MallWidth } from "@/components/mall-shell";
 import { MallNotice } from "@/components/mall-notice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -70,118 +72,128 @@ export default async function MockCheckoutPage({
   const mix = cartMix(listings);
 
   return (
-    <div className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-start">
-        <div className="space-y-8">
-          <header className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary" className="rounded-full">
-                Mall checkout
-              </Badge>
-              <Badge variant="outline" className="rounded-full">
-                Test · Stripe.js
-              </Badge>
-            </div>
-            <h1 className="font-heading text-4xl tracking-tight sm:text-5xl">
-              Pay the mall
-            </h1>
-            <p className="max-w-xl text-base leading-7 text-muted-foreground">
-              One charge for every stall in the tote. The mall keeps 10%. Each
-              booth is owed the rest. No live onboarding, no live payouts.
-            </p>
-          </header>
+    <div>
+      <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
+        <MallWidth className="grid gap-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-start">
+          <div className="space-y-8">
+            <header className="space-y-4">
+              <MallCrumb label="Checkout">
+                <CrumbSep />
+                <Link href="/cart" className="hover:text-foreground hover:underline">
+                  Tote
+                </Link>
+                <CrumbSep />
+                <span className="text-foreground">Pay</span>
+              </MallCrumb>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="rounded-full">
+                  Mall checkout
+                </Badge>
+                <Badge variant="outline" className="rounded-full">
+                  Test · Stripe.js
+                </Badge>
+              </div>
+              <h1 className="font-heading text-4xl tracking-tight sm:text-5xl">
+                Pay the mall
+              </h1>
+              <p className="max-w-xl text-base leading-7 text-muted-foreground">
+                One charge for every stall in the tote. The mall keeps 10%. Each
+                booth is owed the rest. No live onboarding, no live payouts.
+              </p>
+            </header>
 
-          <Card className="bg-card shadow-sm">
-            <CardHeader className="sr-only">
-              <CardTitle>Payment</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <PayForm session={match} />
-            </CardContent>
-          </Card>
-        </div>
+            <Card className="bg-card">
+              <CardHeader className="sr-only">
+                <CardTitle>Payment</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <PayForm session={match} />
+              </CardContent>
+            </Card>
+          </div>
 
-        <aside className="lg:sticky lg:top-6">
-          <Card className="bg-card shadow-sm">
-            <CardHeader>
-              <CardTitle className="font-heading text-2xl">Your slip</CardTitle>
-              <CardDescription>
-                {mix.physical > 0
-                  ? `${mix.physical} to pick up`
-                  : null}
-                {mix.physical > 0 && mix.digital > 0 ? " · " : null}
-                {mix.digital > 0 ? `${mix.digital} to download` : null}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              {groups.map((group) => (
-                <div key={group.stall.id} className="space-y-2">
+          <aside className="lg:sticky lg:top-24">
+            <Card className="bg-card">
+              <CardHeader>
+                <CardTitle className="font-heading text-2xl">Your slip</CardTitle>
+                <CardDescription>
+                  {mix.physical > 0
+                    ? `${mix.physical} to pick up`
+                    : null}
+                  {mix.physical > 0 && mix.digital > 0 ? " · " : null}
+                  {mix.digital > 0 ? `${mix.digital} to download` : null}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                {groups.map((group) => (
+                  <div key={group.stall.id} className="space-y-2">
+                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      {group.stall.boothName}
+                    </p>
+                    <ul className="space-y-3">
+                      {group.lines.map(({ listing }) => (
+                        <li key={listing.id} className="flex justify-between gap-3 text-sm">
+                          <span>
+                            <span className="block font-medium leading-5">
+                              {listing.title}
+                            </span>
+                            <span className="block text-xs text-muted-foreground">
+                              {listingDetail(listing)}
+                            </span>
+                          </span>
+                          <span className="shrink-0 font-heading">
+                            {formatPlanMoney(
+                              listing.price.amountCents,
+                              listing.price.currency,
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+
+                <Separator />
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Subtotal</span>
+                    <span>{formatPlanMoney(match.subtotalCents, match.currency)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Mall cut (kept)</span>
+                    <span>
+                      {formatPlanMoney(match.platformFeeCents, match.currency)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-base">
+                    <span className="font-medium">You pay</span>
+                    <span className="font-heading text-2xl">
+                      {formatPlanMoney(match.subtotalCents, match.currency)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="rounded-xl bg-secondary/40 px-3 py-3 ring-1 ring-primary/10">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    {group.stall.boothName}
+                    Owed to stalls
                   </p>
-                  <ul className="space-y-3">
-                    {group.lines.map(({ listing }) => (
-                      <li key={listing.id} className="flex justify-between gap-3 text-sm">
+                  <ul className="mt-2 space-y-1.5 text-sm">
+                    {match.transfers.map((transfer) => (
+                      <li key={transfer.stallId} className="flex justify-between gap-3">
+                        <span>{transfer.boothName}</span>
                         <span>
-                          <span className="block font-medium leading-5">
-                            {listing.title}
-                          </span>
-                          <span className="block text-xs text-muted-foreground">
-                            {listingDetail(listing)}
-                          </span>
-                        </span>
-                        <span className="shrink-0 font-heading">
-                          {formatPlanMoney(
-                            listing.price.amountCents,
-                            listing.price.currency,
-                          )}
+                          {formatPlanMoney(transfer.amountCents, match.currency)}
                         </span>
                       </li>
                     ))}
                   </ul>
                 </div>
-              ))}
-
-              <Separator />
-
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span>{formatPlanMoney(match.subtotalCents, match.currency)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Mall cut (kept)</span>
-                  <span>
-                    {formatPlanMoney(match.platformFeeCents, match.currency)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-base">
-                  <span className="font-medium">You pay</span>
-                  <span className="font-heading text-2xl">
-                    {formatPlanMoney(match.subtotalCents, match.currency)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-muted/60 px-3 py-3">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                  Owed to stalls
-                </p>
-                <ul className="mt-2 space-y-1.5 text-sm">
-                  {match.transfers.map((transfer) => (
-                    <li key={transfer.stallId} className="flex justify-between gap-3">
-                      <span>{transfer.boothName}</span>
-                      <span>
-                        {formatPlanMoney(transfer.amountCents, match.currency)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </aside>
-      </div>
+              </CardContent>
+            </Card>
+          </aside>
+        </MallWidth>
+      </section>
     </div>
   );
 }

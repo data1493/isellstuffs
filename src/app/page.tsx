@@ -4,6 +4,7 @@ import Link from "next/link";
 import { HubTile, ListingGrid } from "@/components/browse/cards";
 import { FeaturedBooth, HomepageTakeover } from "@/components/browse/paid";
 import { JsonLd } from "@/components/json-ld";
+import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,40 +48,38 @@ export default function Home() {
   return (
     <div>
       <JsonLd data={websiteJsonLd()} />
-      <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
-          <Badge variant="secondary" className="w-fit rounded-full">
-            Many sellers. One mall.
-          </Badge>
-          <div className="max-w-2xl space-y-4">
-            <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-6xl">
-              Walk the aisles. Buy from stalls, not a storefront.
-            </h1>
-            <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-              {site.name} is a flea-market mall. Independent sellers keep their
-              own stalls. A jacket and a download can sit on the same table.
-              Paid corners are labeled. Always.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Button
-              size="lg"
-              className="rounded-full px-5"
-              render={<Link href="/explore" />}
-            >
-              Explore the concourse
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full px-5"
-              render={<Link href="/hubs" />}
-            >
-              Pick a hub
-            </Button>
-          </div>
+      <MallHero>
+        <Badge variant="secondary" className="w-fit rounded-full">
+          Many sellers. One mall.
+        </Badge>
+        <div className="max-w-2xl space-y-4">
+          <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-6xl">
+            Walk the aisles. Buy from stalls, not a storefront.
+          </h1>
+          <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+            {site.name} is a flea-market mall. Independent sellers keep their
+            own stalls. A jacket and a download can sit on the same table.
+            Paid corners are labeled. Always.
+          </p>
         </div>
-      </section>
+        <div className="flex flex-wrap gap-3">
+          <Button
+            size="lg"
+            className="rounded-full px-5"
+            render={<Link href="/explore" />}
+          >
+            Explore the concourse
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="rounded-full px-5"
+            render={<Link href="/hubs" />}
+          >
+            Pick a hub
+          </Button>
+        </div>
+      </MallHero>
 
       {homepageTakeover ? <HomepageTakeover slot={homepageTakeover} /> : null}
 
@@ -88,64 +87,53 @@ export default function Home() {
         <FeaturedBooth slot={featuredStallSlot} eyebrow="Paid the good corner" />
       ) : null}
 
-      <section id="hubs" className="scroll-mt-6">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <MallSection id="hubs">
+        <div className="max-w-2xl">
+          <MallEyebrow>Opinionated hubs</MallEyebrow>
+          <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
+            Four floors. Not a junk drawer.
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            The concourse is general. These aisles have rules — what belongs,
+            and what gets walked back to the door.
+          </p>
+        </div>
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+          {mallHubs.map((hub) => (
+            <li key={hub.id} className="min-w-0">
+              <HubTile hub={hub} count={listingsByHub(hub.id).length} />
+            </li>
+          ))}
+        </ul>
+      </MallSection>
+
+      <MallSection>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-              Opinionated hubs
-            </p>
+            <MallEyebrow>Elsewhere on the floor</MallEyebrow>
             <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
-              Four floors. Not a junk drawer.
+              The rest of the tables.
             </h2>
             <p className="mt-3 text-muted-foreground">
-              The concourse is general. These aisles have rules — what belongs,
-              and what gets walked back to the door.
+              Sold and file-gone stay on the floor. A picked-over table is
+              still a table.
             </p>
           </div>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-            {mallHubs.map((hub) => (
-              <li key={hub.id} className="min-w-0">
-                <HubTile hub={hub} count={listingsByHub(hub.id).length} />
-              </li>
-            ))}
-          </ul>
+          <Button
+            variant="outline"
+            className="rounded-full px-5"
+            render={<Link href="/explore" />}
+          >
+            See every listing
+          </Button>
         </div>
-      </section>
-
-      <section className="scroll-mt-6">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                Elsewhere on the floor
-              </p>
-              <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
-                The rest of the tables.
-              </h2>
-              <p className="mt-3 text-muted-foreground">
-                Sold and file-gone stay on the floor. A picked-over table is
-                still a table.
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="rounded-full px-5"
-              render={<Link href="/explore" />}
-            >
-              See every listing
-            </Button>
-          </div>
-          <div className="mt-8">
-            <ListingGrid listings={elsewhere} />
-          </div>
+        <div className="mt-8">
+          <ListingGrid listings={elsewhere} />
         </div>
-      </section>
+      </MallSection>
 
-      <section
-        id="how-it-works"
-        className="scroll-mt-6 border-y border-border bg-card/60"
-      >
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 md:grid-cols-3">
+      <MallSection className="border-y border-border bg-card/60" id="how-it-works">
+        <div className="grid gap-8 md:grid-cols-3">
           <article>
             <p className="font-heading text-4xl text-primary">01</p>
             <h2 className="mt-2 font-heading text-2xl tracking-tight">
@@ -177,10 +165,10 @@ export default function Home() {
             </p>
           </article>
         </div>
-      </section>
+      </MallSection>
 
-      <section id="same-stall" className="scroll-mt-6">
-        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-12 sm:px-6 sm:py-16 md:grid-cols-2">
+      <MallSection id="same-stall">
+        <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-card">
             <CardHeader>
               <Badge variant="outline" className="w-fit">
@@ -210,19 +198,17 @@ export default function Home() {
             </CardHeader>
           </Card>
         </div>
-      </section>
+      </MallSection>
 
-      <section id="open-a-stall" className="scroll-mt-6 border-t border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 sm:py-16">
-          <h2 className="font-heading text-3xl tracking-tight sm:text-4xl">
-            Want a stall?
-          </h2>
-          <p className="max-w-xl text-muted-foreground">
-            Booth applications are not open. Walk the floor first — the hubs,
-            the paid corners, the sold stickers still on the tables.
-          </p>
-        </div>
-      </section>
+      <MallSection id="open-a-stall" className="border-t border-border">
+        <h2 className="font-heading text-3xl tracking-tight sm:text-4xl">
+          Want a stall?
+        </h2>
+        <p className="mt-4 max-w-xl text-muted-foreground">
+          Booth applications are not open. Walk the floor first — the hubs,
+          the paid corners, the sold stickers still on the tables.
+        </p>
+      </MallSection>
     </div>
   );
 }

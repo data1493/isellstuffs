@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ListingGrid } from "@/components/browse/cards";
 import { FeaturedBooth } from "@/components/browse/paid";
 import { BrowseEmpty } from "@/components/browse/states";
+import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { featuredStallSlots, mallHubs } from "@/lib/commerce";
 import {
@@ -58,10 +59,8 @@ export default async function ExplorePage({
 
   return (
     <div>
-      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          General concourse
-        </p>
+      <MallWidth className="py-12 sm:py-16">
+        <MallEyebrow>General concourse</MallEyebrow>
         <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
           Explore the mall
         </h1>
@@ -113,7 +112,7 @@ export default async function ExplorePage({
           {activeHub ? ` in ${activeHub.name}` : " on the floor"}
           {type ? ` · ${type}` : null}
         </p>
-      </div>
+      </MallWidth>
 
       {showFeatured ? (
         <FeaturedBooth
@@ -122,11 +121,9 @@ export default async function ExplorePage({
         />
       ) : null}
 
-      <div className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
+      <MallWidth className="pb-16">
         {showFeatured ? (
-          <p className="mb-4 pt-12 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            The rest of the floor
-          </p>
+          <MallEyebrow className="mb-4 pt-12">The rest of the floor</MallEyebrow>
         ) : null}
         {filtered.length === 0 ? (
           <BrowseEmpty
@@ -156,7 +153,7 @@ export default async function ExplorePage({
             }
           />
         )}
-      </div>
+      </MallWidth>
     </div>
   );
 }

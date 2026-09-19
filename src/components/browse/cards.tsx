@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
+import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -9,98 +11,82 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { hubAtmosphere } from "@/lib/browse";
+import { listingPath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 import {
   formatMoney,
   hubById,
-  isDigitalListing,
   mallHubs,
   stallById,
   type Listing,
 } from "@/lib/commerce";
-
-const statusCopy = {
-  available: "On the table",
-  sold: "Sold",
-  "file-gone": "File gone",
-} as const;
+import {
+  listingFact,
+  listingFactLabel,
+  listingStatusLabel,
+} from "@/lib/listing-display";
 
 export function ListingCard({ listing }: { listing: Listing }) {
   const stall = stallById(listing.stallId);
   const hub = hubById(listing.hubId);
   const gone = listing.status !== "available";
-  const atmosphere = hubAtmosphere[listing.hubId];
-  const spec = isDigitalListing(listing)
-    ? listing.fileFormat
-    : listing.condition;
 
   return (
-    <Card
-      className={cn(
-        "h-full gap-0 py-0",
-        gone ? "bg-muted/50" : "bg-card",
-      )}
-    >
-      <div
+    <Link href={listingPath(listing.id)} className="group block h-full min-w-0">
+      <Card
         className={cn(
-          "relative aspect-[5/3] overflow-hidden",
-          atmosphere.wash,
-          gone && "opacity-70",
+          "h-full gap-0 py-0 transition-shadow group-hover:ring-foreground/20",
+          gone ? "bg-muted/50" : "bg-card",
         )}
       >
-        <p className="absolute left-3 top-3 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-foreground/70">
-          {isDigitalListing(listing) ? listing.fileFormat : atmosphere.floor}
-        </p>
-        {gone ? (
-          <p className="absolute right-3 top-3 rounded-full bg-foreground px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-background">
-            {statusCopy[listing.status]}
+        <ListingMediaPlaceholder
+          listing={listing}
+          compact
+          className={cn(
+            "rounded-none rounded-t-xl border-0 border-b border-dashed",
+            gone && "opacity-70",
+          )}
+        />
+        <CardHeader className="pt-4">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <ListingTypeBadge listing={listing} />
+            <Badge variant={gone ? "secondary" : "ghost"}>
+              {listingStatusLabel(listing)}
+            </Badge>
+          </div>
+          <CardTitle className="font-heading text-lg text-balance underline-offset-4 group-hover:underline">
+            {listing.title}
+          </CardTitle>
+          <CardDescription className="text-pretty">
+            {listing.summary}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3 pb-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <p
+              className={
+                gone
+                  ? "text-muted-foreground line-through"
+                  : "font-heading text-2xl tracking-tight"
+              }
+            >
+              {formatMoney(listing.price)}
+            </p>
+            <p className="text-right text-xs leading-5 text-muted-foreground">
+              {listingFactLabel(listing)}
+            </p>
+          </div>
+          <p className="text-sm leading-5 text-foreground/80">
+            {listingFact(listing)}
           </p>
-        ) : null}
-      </div>
-      <CardHeader className="pt-4">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant="outline">
-            {listing.type === "physical" ? "Physical" : "Digital"}
-          </Badge>
-          <Badge variant={gone ? "secondary" : "default"}>
-            {statusCopy[listing.status]}
-          </Badge>
-        </div>
-        <CardTitle className="font-heading text-lg text-balance">
-          {listing.title}
-        </CardTitle>
-        <CardDescription className="text-pretty">
-          {listing.summary}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3 pb-4">
-        <div className="flex items-baseline justify-between gap-3">
-          <p
-            className={
-              gone
-                ? "text-muted-foreground line-through"
-                : "font-heading text-2xl tracking-tight"
-            }
-          >
-            {formatMoney(listing.price)}
-          </p>
-          <p className="text-right text-xs leading-5 text-muted-foreground">
-            {isDigitalListing(listing) ? "Format" : "Condition"}
-          </p>
-        </div>
-        <p className="text-sm leading-5 text-foreground/80">{spec}</p>
-        <p className="text-xs text-muted-foreground">
-          {stall?.boothName ?? listing.stallId}
-          {" · "}
-          <Link
-            href={hub.href}
-            className="underline-offset-4 hover:text-foreground hover:underline"
-          >
+          <p className="text-xs text-muted-foreground">
+            {stall?.boothName ?? listing.stallId}
+            {" · "}
             {hub.name}
-          </Link>
-        </p>
-      </CardContent>
-    </Card>
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
@@ -128,11 +114,13 @@ export function HubTile({
   return (
     <Link href={hub.href} className="group block h-full min-w-0">
       <Card className="h-full min-w-0 gap-0 overflow-hidden py-0 ring-1 ring-foreground/10 transition-colors group-hover:bg-secondary/30">
-        <div className={cn("px-5 py-4", atmosphere.wash)}>
+        <div className={cn("px-5 py-5", atmosphere.wash)}>
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-foreground/60">
             {atmosphere.floor}
           </p>
-          <h3 className="mt-1 font-heading text-2xl tracking-tight">{hub.name}</h3>
+          <h3 className="mt-1 font-heading text-2xl tracking-tight">
+            {hub.name}
+          </h3>
         </div>
         <CardHeader className="pt-4">
           <CardDescription className="text-pretty text-sm leading-6 text-foreground/80">

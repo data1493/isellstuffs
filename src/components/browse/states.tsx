@@ -16,23 +16,19 @@ export function BrowseEmpty({
   actionLabel?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-border bg-[oklch(0.97_0.015_85)] px-5 py-14 text-center sm:px-8">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-        Picked over
-      </p>
-      <h2 className="mt-3 font-heading text-2xl tracking-tight text-balance sm:text-3xl">
-        {title}
-      </h2>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground text-pretty">
-        {body}
-      </p>
-      <Button
-        className="mt-6 w-full rounded-full px-5 sm:w-auto"
-        render={<Link href={actionHref} />}
-      >
-        {actionLabel}
-      </Button>
-    </div>
+    <MallNotice
+      padded={false}
+      titleAs="h2"
+      tone="empty"
+      eyebrow="Picked over"
+      title={title}
+      body={body}
+      actions={
+        <Button className="rounded-full px-5" render={<Link href={actionHref} />}>
+          {actionLabel}
+        </Button>
+      }
+    />
   );
 }
 
@@ -46,18 +42,14 @@ export function BrowseError({
   onRetry?: () => void;
 }) {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-      <div className="rounded-2xl border border-destructive/30 bg-[oklch(0.97_0.02_25)] px-5 py-14 text-center sm:px-8">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-destructive">
-          Aisle closed
-        </p>
-        <h2 className="mt-3 font-heading text-2xl tracking-tight text-balance sm:text-3xl">
-          {title}
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground text-pretty">
-          {body}
-        </p>
-        <div className="mt-6 flex flex-col items-stretch justify-center gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:[&_a]:w-auto sm:[&_button]:w-auto [&_a]:w-full [&_button]:w-full">
+    <MallNotice
+      tone="error"
+      eyebrow="Aisle closed"
+      title={title}
+      body={body}
+      titleAs="h2"
+      actions={
+        <>
           {onRetry ? (
             <Button className="rounded-full px-5" onClick={onRetry}>
               Try the aisle again
@@ -70,9 +62,9 @@ export function BrowseError({
           >
             Back to the concourse
           </Button>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }
 
@@ -116,16 +108,23 @@ export function HubNotFound() {
 
 export function BrowseLoading({ label = "Walking the aisle…" }: { label?: string }) {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
         {label}
       </p>
-      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }, (_, index) => (
           <div
             key={index}
-            className="h-48 animate-pulse rounded-xl bg-muted"
-          />
+            className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10"
+          >
+            <div className="aspect-[16/10] animate-pulse bg-muted" />
+            <div className="space-y-2 p-4">
+              <div className="h-3 w-1/3 animate-pulse rounded bg-muted" />
+              <div className="h-5 w-3/4 animate-pulse rounded bg-muted" />
+              <div className="h-3 w-full animate-pulse rounded bg-muted" />
+            </div>
+          </div>
         ))}
       </div>
     </div>

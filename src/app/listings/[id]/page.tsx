@@ -70,22 +70,29 @@ function SiblingRow({
             <Link
               href={listingPath(item.id)}
               className={cn(
-                "flex h-full flex-col gap-2 rounded-xl bg-card p-4 ring-1 transition-shadow hover:ring-foreground/20",
+                "flex h-full flex-col overflow-hidden rounded-xl bg-card ring-1 transition-shadow hover:ring-foreground/20",
                 isPhysicalListing(item)
                   ? "ring-primary/12"
                   : "ring-accent-foreground/12",
               )}
             >
-              <div className="flex flex-wrap items-center gap-2">
-                <ListingTypeBadge listing={item} />
-                <span className="text-xs text-muted-foreground">
-                  {listingStatusLabel(item)}
-                </span>
+              <ListingMediaPlaceholder
+                listing={item}
+                compact
+                className="rounded-none rounded-t-xl border-0 border-b border-dashed"
+              />
+              <div className="flex flex-col gap-2 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <ListingTypeBadge listing={item} />
+                  <span className="text-xs text-muted-foreground">
+                    {listingStatusLabel(item)}
+                  </span>
+                </div>
+                <p className="font-heading text-lg leading-snug">{item.title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {formatMoney(item.price)} · {listingFact(item)}
+                </p>
               </div>
-              <p className="font-heading text-lg leading-snug">{item.title}</p>
-              <p className="text-sm text-muted-foreground">
-                {formatMoney(item.price)} · {listingFact(item)}
-              </p>
             </Link>
           </li>
         ))}
@@ -122,7 +129,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
             : "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--accent)_40%,var(--card)),var(--background))]",
         )}
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <MallCrumb label="Listing location">
             <CrumbSep />
             {stall ? (
@@ -213,7 +220,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
       {stall ? (
         <section>
-          <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-12 sm:px-6">
+          <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-12 sm:px-6 sm:py-16">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">

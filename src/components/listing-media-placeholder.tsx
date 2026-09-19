@@ -32,7 +32,7 @@ export function ListingMediaPlaceholder({
         physical
           ? "border-primary/25 bg-[linear-gradient(165deg,var(--secondary),color-mix(in_oklch,var(--card)_70%,var(--secondary)))]"
           : "border-accent-foreground/20 bg-[linear-gradient(165deg,var(--accent),color-mix(in_oklch,var(--card)_55%,var(--accent)))]",
-        compact ? "aspect-[16/10]" : "aspect-square",
+        compact ? "aspect-[16/10]" : "aspect-[4/3] sm:aspect-square",
         className,
       )}
     >

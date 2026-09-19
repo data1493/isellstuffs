@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ListingGrid } from "@/components/browse/cards";
 import { HubTakeover } from "@/components/browse/paid";
 import { BrowseEmpty, HubNotFound } from "@/components/browse/states";
+import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Button } from "@/components/ui/button";
 import { adSlots, listingsByHub, mallHubs } from "@/lib/commerce";
 import { exploreHref, hubAtmosphere, hubBySlug } from "@/lib/browse";
@@ -48,7 +49,7 @@ export default async function HubPage({ params }: HubPageProps) {
   return (
     <div>
       <section className={cn("border-b border-border", atmosphere.wash)}>
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <MallWidth className="py-12 sm:py-16">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-foreground/55">
             {atmosphere.floor}
           </p>
@@ -77,10 +78,10 @@ export default async function HubPage({ params }: HubPageProps) {
               All hubs
             </Button>
           </div>
-        </div>
+        </MallWidth>
       </section>
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <MallWidth className="py-12 sm:py-16">
         {takeover ? (
           <div className="mb-10">
             <HubTakeover slot={takeover} />
@@ -104,9 +105,7 @@ export default async function HubPage({ params }: HubPageProps) {
         </div>
 
         <aside className="mt-14 border-t border-border pt-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            Other floors
-          </p>
+          <MallEyebrow>Other floors</MallEyebrow>
           <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
             {otherHubs.map((item) => (
               <li key={item.id}>
@@ -120,7 +119,7 @@ export default async function HubPage({ params }: HubPageProps) {
             ))}
           </ul>
         </aside>
-      </div>
+      </MallWidth>
     </div>
   );
 }

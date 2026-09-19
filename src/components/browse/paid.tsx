@@ -1,5 +1,6 @@
-import { Badge } from "@/components/ui/badge";
+import { LabeledChip, PaidStamp } from "@/components/ads/paid-stamp";
 import { ListingGrid } from "@/components/browse/cards";
+import { Badge } from "@/components/ui/badge";
 import {
   formatMoney,
   listingsByStall,
@@ -12,14 +13,6 @@ const kindCopy = {
   "homepage-takeover": "Homepage takeover",
   "hub-takeover": "Hub takeover",
 } as const;
-
-function PaidStamp() {
-  return (
-    <p className="w-fit rotate-2 border-2 border-current px-2 py-0.5 text-[0.7rem] font-bold uppercase tracking-[0.22em]">
-      Paid
-    </p>
-  );
-}
 
 function CampaignMeta({ slot }: { slot: AdSlot }) {
   const stall = stallById(slot.stallId);
@@ -55,9 +48,7 @@ export function HomepageTakeover({ slot }: { slot: AdSlot }) {
             >
               {kindCopy[slot.kind]}
             </Badge>
-            <span className="text-xs uppercase tracking-[0.18em] text-current/60">
-              Labeled on purpose
-            </span>
+            <LabeledChip className="text-current/60" />
           </div>
           <PaidStamp />
         </div>

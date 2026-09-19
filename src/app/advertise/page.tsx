@@ -6,6 +6,7 @@ import { LivePlacement } from "@/components/ads/live-placement";
 import { PackageCard } from "@/components/ads/package-card";
 import { PaidStamp } from "@/components/ads/paid-stamp";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { campaignLanderPath } from "@/lib/ads-display";
@@ -52,8 +53,7 @@ export default function AdvertisePage() {
 
   return (
     <div>
-      <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
+      <MallHero>
           <MallCrumb label="Advertise">
             <CrumbSep />
             <span className="text-foreground">Advertise</span>
@@ -100,17 +100,10 @@ export default function AdvertisePage() {
               See a bought campaign
             </Button>
           </div>
-        </div>
-      </section>
+      </MallHero>
 
-      <section
-        id="rate-card"
-        className="scroll-mt-6 border-b border-border"
-      >
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            Rate card
-          </p>
+      <MallSection id="rate-card" className="border-b border-border">
+          <MallEyebrow>Rate card</MallEyebrow>
           <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
             Three things you can buy.
           </h2>
@@ -133,14 +126,10 @@ export default function AdvertisePage() {
               ))}
             </ul>
           )}
-        </div>
-      </section>
+      </MallSection>
 
-      <section id="live" className="scroll-mt-6">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            Live this window
-          </p>
+      <MallSection id="live">
+          <MallEyebrow>Live this window</MallEyebrow>
           <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
             Walk the floor. The money already landed.
           </h2>
@@ -163,11 +152,10 @@ export default function AdvertisePage() {
               ))}
             </ul>
           )}
-        </div>
-      </section>
+      </MallSection>
 
-      <section className="border-y border-border bg-card/60">
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 md:grid-cols-2">
+      <MallSection className="border-y border-border bg-card/60">
+        <div className="grid gap-8 md:grid-cols-2">
           {rules.map((rule, index) => (
             <article key={rule.title}>
               <p className="font-heading text-4xl text-primary">
@@ -182,14 +170,12 @@ export default function AdvertisePage() {
             </article>
           ))}
         </div>
-      </section>
+      </MallSection>
 
-      <section className="border-b border-border">
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+      <MallSection className="border-b border-border">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-              Booking
-            </p>
+            <MallEyebrow>Booking</MallEyebrow>
             <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
               No ad checkout. These windows are sold.
             </h2>
@@ -222,10 +208,9 @@ export default function AdvertisePage() {
             )}
           </div>
         </div>
-      </section>
+      </MallSection>
 
-      <section>
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 sm:py-16">
+      <MallSection>
           <h2 className="font-heading text-3xl tracking-tight sm:text-4xl">
             See the bought page.
           </h2>
@@ -249,8 +234,7 @@ export default function AdvertisePage() {
               Home concourse
             </Button>
           </div>
-        </div>
-      </section>
+      </MallSection>
     </div>
   );
 }
