@@ -1154,6 +1154,14 @@ export function listingRivetWritePath() {
   return "/listings/rivet";
 }
 
+export function listingBraidPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/braid`;
+}
+
+export function listingBraidWritePath() {
+  return "/listings/braid";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }

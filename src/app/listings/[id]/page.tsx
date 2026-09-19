@@ -137,6 +137,7 @@ import { ListingDegaussNotice } from "@/components/listing-degauss-notice";
 import { ListingKnurlNotice } from "@/components/listing-knurl-notice";
 import { ListingScaleNotice } from "@/components/listing-scale-notice";
 import { ListingRivetNotice } from "@/components/listing-rivet-notice";
+import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
@@ -312,6 +313,7 @@ import {
   listingDegaussPath,
   listingKnurlPath,
   listingRivetPath,
+  listingBraidPath,
   listingPaginatePath,
   listingContrastPath,
   listingGatePath,
@@ -666,6 +668,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDegaussNotice listingId={listing.id} /> : null}
               {physical ? <ListingKnurlNotice listingId={listing.id} /> : null}
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
+              {physical ? <ListingBraidNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1358,6 +1361,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not rivet it
+                  </Link>
+                  <Link
+                    href={listingBraidPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not braid them
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (
