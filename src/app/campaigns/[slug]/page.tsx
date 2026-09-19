@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { CampaignMissing } from "@/components/mall-missing";
 
 export const dynamicParams = false;
 
@@ -7,5 +7,5 @@ export function generateStaticParams(): { slug: string }[] {
 }
 
 export default function UnknownCampaignPage() {
-  notFound();
+  return <CampaignMissing />;
 }

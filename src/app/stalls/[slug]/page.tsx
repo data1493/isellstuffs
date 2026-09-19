@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { StallMissing } from "@/components/mall-missing";
 import { PickupNote } from "@/components/pickup-note";
 import { StallCardCopy } from "@/components/stalls/stall-card-copy";
 import { StallListingCard } from "@/components/stall-listing-card";
@@ -46,7 +46,7 @@ export default async function StallPage({ params }: StallPageProps) {
   const stall = stallBySlug(slug);
 
   if (!stall) {
-    notFound();
+    return <StallMissing />;
   }
 
   const inventory = listingsByStall(stall.id);

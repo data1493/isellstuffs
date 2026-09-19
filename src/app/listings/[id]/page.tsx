@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/json-ld";
+import { ListingMissing } from "@/components/mall-missing";
 import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
@@ -111,7 +111,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const listing = listingById(id);
 
   if (!listing) {
-    notFound();
+    return <ListingMissing />;
   }
 
   const stall = stallById(listing.stallId);

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
+import { StallMissing } from "@/components/mall-missing";
 import { BoothCardForm } from "@/components/stalls/booth-card-form";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallHero, MallWidth } from "@/components/mall-shell";
@@ -40,7 +40,7 @@ export default async function StallEditPage({ params }: StallEditPageProps) {
   const stall = stallBySlug(slug);
 
   if (!stall) {
-    notFound();
+    return <StallMissing />;
   }
 
   return (
