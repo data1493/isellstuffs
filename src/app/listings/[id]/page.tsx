@@ -11,6 +11,7 @@ import { ListingFirmNotice } from "@/components/listing-firm-notice";
 import { ListingHandsNotice } from "@/components/listing-hands-notice";
 import { ListingHeavyNotice } from "@/components/listing-heavy-notice";
 import { ListingPocketsNotice } from "@/components/listing-pockets-notice";
+import { ListingPressNotice } from "@/components/listing-press-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -44,6 +45,7 @@ import {
   listingOfferPath,
   listingPath,
   listingPocketsPath,
+  listingPressPath,
   listingScanPath,
   listingTagPath,
   listingVanPath,
@@ -213,6 +215,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               <ListingScanNotice listingId={listing.id} />
               {physical ? <ListingHeavyNotice listingId={listing.id} /> : null}
               {physical ? <ListingPocketsNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPressNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -281,6 +284,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Pockets are empty
+                  </Link>
+                  <Link
+                    href={listingPressPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Which press
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

@@ -90,6 +90,14 @@ export function listingPocketsWritePath() {
   return "/listings/pockets";
 }
 
+export function listingPressPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/press`;
+}
+
+export function listingPressWritePath() {
+  return "/listings/press";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
