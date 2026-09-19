@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MallPayError } from "@/components/mall-notice";
 import { buttonVariants } from "@/components/ui/button";
@@ -20,9 +20,7 @@ import {
   CASH_LABEL,
   readMockTender,
   slipAllowsCash,
-  subscribeMockTender,
   writeMockTender,
-  type DrivewayTender,
 } from "@/lib/driveway-tender";
 import { getStripe, isStripeJsConfigured } from "@/lib/stripe-browser";
 import { cn } from "@/lib/utils";
@@ -93,14 +91,7 @@ export function PayForm({
   const [error, setError] = useState<string | null>(confirmError ?? null);
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [asIs, setAsIs] = useState(false);
-  const tender = useSyncExternalStore(
-    subscribeMockTender,
-    () => readMockTender(session.id),
-    () => "card" as DrivewayTender,
-  );
-  function chooseTender(next: DrivewayTender) {
-    writeMockTender(session.id, next);
-  }
+  const formRef = useRef<HTMLFormElement>(null);
   const needsAsIs = useMemo(
     () => slipHasPhysicalLines(session.listingIds),
     [session.listingIds],
@@ -131,6 +122,51 @@ export function PayForm({
     };
   }, [stripeConfigured]);
 
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form || !canPayCash) {
+      return;
+    }
+
+    const cashRadio = () =>
+      form.querySelector<HTMLInputElement>("[data-tender-cash]");
+    const cardFields = () =>
+      form.querySelector<HTMLFieldSetElement>("[data-test-card]");
+
+    const paint = () => {
+      const cashOn = cashRadio()?.checked === true;
+      const fields = cardFields();
+      if (fields) {
+        fields.hidden = cashOn;
+        fields.disabled = cashOn;
+      }
+      const next = cashOn ? "cash" : "card";
+      if (readMockTender(session.id) !== next) {
+        writeMockTender(session.id, next);
+      }
+    };
+
+    if (readMockTender(session.id) === "cash") {
+      const radio = cashRadio();
+      if (radio) {
+        radio.checked = true;
+      }
+    }
+    paint();
+
+    const onClick = () => {
+      window.setTimeout(paint, 0);
+    };
+    form.addEventListener("click", onClick);
+    form.addEventListener("change", paint);
+    const timer = window.setInterval(paint, 150);
+    return () => {
+      form.removeEventListener("click", onClick);
+      form.removeEventListener("change", paint);
+      window.clearInterval(timer);
+    };
+  }, [canPayCash, session.id]);
+
   const total = useMemo(
     () => formatPlanMoney(session.subtotalCents, session.currency),
     [session.currency, session.subtotalCents],
@@ -145,7 +181,7 @@ export function PayForm({
         setFieldError("Enter an email for the stall slips.");
         return;
       }
-      if (tender === "card") {
+      if (readMockTender(session.id) === "card") {
         const pan = digitsOnly(card);
         if (pan.length < 16) {
           setFieldError("Enter the full test card number.");
@@ -190,7 +226,7 @@ export function PayForm({
           email,
           name,
           asIs: asIs ? "1" : undefined,
-          tender: canPayCash ? tender : "card",
+          tender: canPayCash ? readMockTender(session.id) : "card",
         }),
       });
       const data = (await response.json()) as { url?: string; error?: string };
@@ -206,7 +242,8 @@ export function PayForm({
 
   return (
     <form
-      className="space-y-6"
+      ref={formRef}
+      className="space-y-6 [&:has([data-tender-cash]:checked)_[data-test-card]]:hidden"
       action="/api/checkout/confirm"
       method="post"
     >
@@ -261,17 +298,13 @@ export function PayForm({
           <p className="text-sm leading-6 text-muted-foreground">
             Driveway money can be cash on the table. Card is still test theater.
           </p>
-          <label
-            className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6"
-            onClick={() => chooseTender("cash")}
-          >
+          <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
             <input
               type="radio"
               name="tender"
               value="cash"
               data-tender-cash=""
-              checked={tender === "cash"}
-              onChange={() => chooseTender("cash")}
+              defaultChecked={false}
               className="mt-1 size-4 shrink-0 accent-foreground"
             />
             <span>
@@ -279,16 +312,12 @@ export function PayForm({
               <span className="block text-muted-foreground">{CASH_HELP}</span>
             </span>
           </label>
-          <label
-            className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6"
-            onClick={() => chooseTender("card")}
-          >
+          <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
             <input
               type="radio"
               name="tender"
               value="card"
-              checked={tender === "card"}
-              onChange={() => chooseTender("card")}
+              defaultChecked
               className="mt-1 size-4 shrink-0 accent-foreground"
             />
             <span>
@@ -301,7 +330,6 @@ export function PayForm({
         <input type="hidden" name="tender" value="card" />
       )}
 
-      {tender === "card" || !canPayCash ? (
       <fieldset data-test-card="" className="space-y-3">
         <legend className="font-heading text-xl tracking-tight">Test card</legend>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -363,7 +391,6 @@ export function PayForm({
           </div>
         </div>
       </fieldset>
-      ) : null}
 
       {needsAsIs ? (
         <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
