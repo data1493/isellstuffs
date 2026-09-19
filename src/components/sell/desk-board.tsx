@@ -453,6 +453,12 @@ import {
   subscribeAzimuth,
 } from "@/lib/listing-azimuth";
 import {
+  canTapeNest,
+  isListingNestOverlay,
+  readNestListingIds,
+  subscribeNest,
+} from "@/lib/listing-nest";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -567,6 +573,7 @@ import {
   listingCinchWritePath,
   listingFinalizeWritePath,
   listingAzimuthWritePath,
+  listingNestWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -733,6 +740,7 @@ export function DeskBoard({
   const [cinchIds, setCinchIds] = useState<string[]>([]);
   const [finalizeIds, setFinalizeIds] = useState<string[]>([]);
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
+  const [nestIds, setNestIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -833,6 +841,7 @@ export function DeskBoard({
       setCinchIds(readCinchListingIds());
       setFinalizeIds(readFinalizeListingIds());
       setAzimuthIds(readAzimuthListingIds());
+      setNestIds(readNestListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -922,6 +931,7 @@ export function DeskBoard({
     const unsubCinch = subscribeCinch(apply);
     const unsubFinalize = subscribeFinalize(apply);
     const unsubAzimuth = subscribeAzimuth(apply);
+    const unsubNest = subscribeNest(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1021,6 +1031,7 @@ export function DeskBoard({
       unsubCinch();
       unsubFinalize();
       unsubAzimuth();
+      unsubNest();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2426,6 +2437,37 @@ export function DeskBoard({
                             {isListingAzimuthOverlay(listing.id, azimuthIds)
                               ? "Leave the heading"
                               : "I will not azimuth it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeNest(listing) ? (
+                        <form
+                          method="post"
+                          action={listingNestWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingNestOverlay(listing.id, nestIds)
+                                ? "open"
+                                : "nest"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingNestOverlay(listing.id, nestIds)
+                              ? "Leave the pile"
+                              : "I will not nest them"}
                           </button>
                         </form>
                       ) : null}

@@ -1050,6 +1050,14 @@ export function listingAzimuthWritePath() {
   return "/listings/azimuth";
 }
 
+export function listingNestPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/nest`;
+}
+
+export function listingNestWritePath() {
+  return "/listings/nest";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
