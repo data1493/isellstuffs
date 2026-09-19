@@ -168,6 +168,13 @@ import {
   stallPosePath,
 } from "@/lib/booth-pose";
 import {
+  BOOTH_POUR_COOKIE_NAME,
+  BOOTH_POUR_PAPER_LINE,
+  boothPourFor,
+  parseBoothPour,
+  stallPourPath,
+} from "@/lib/booth-pour";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -371,6 +378,10 @@ export default async function StallPage({
   const poseNote = boothPoseFor(
     stall.id,
     parseBoothPose(jar.get(BOOTH_POSE_COOKIE_NAME)?.value),
+  );
+  const pour = boothPourFor(
+    stall.id,
+    parseBoothPour(jar.get(BOOTH_POUR_COOKIE_NAME)?.value),
   );
 
   return (
@@ -834,6 +845,23 @@ export default async function StallPage({
             <p data-booth-pose-empty={stall.id} hidden />
           )}
 
+          {pour ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't pour"
+              title="The mug is empty."
+              body={
+                <p data-booth-pour-note={stall.id}>
+                  {pour.note} {BOOTH_POUR_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-pour-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1042,6 +1070,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Nothing with a lookbook
+          </Link>
+
+          <Link
+            href={stallPourPath(stall.slug)}
+            data-booth-pour-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t pour
           </Link>
 
           <Link
