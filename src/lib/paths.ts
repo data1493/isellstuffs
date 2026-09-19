@@ -36,3 +36,7 @@ export function sellNewPath() {
 export function campaignPath(slug: string) {
   return `/campaigns/${slug}`;
 }
+
+export function folderPath(slip: string) {
+  return `/folder/${encodeURIComponent(slip)}`;
+}

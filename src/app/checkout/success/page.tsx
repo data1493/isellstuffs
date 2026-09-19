@@ -18,6 +18,8 @@ import { Separator } from "@/components/ui/separator";
 import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/checkout";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { listingById } from "@/lib/commerce";
+import { folderHasDigitalLines } from "@/lib/digital-folder";
+import { folderPath } from "@/lib/paths";
 import { checkoutSuccessMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = checkoutSuccessMetadata();
@@ -181,6 +183,16 @@ export default async function CheckoutSuccessPage({
                       your proof the booth sold you the format.
                     </CardDescription>
                   </CardHeader>
+                  {session && folderHasDigitalLines(session.listingIds) ? (
+                    <CardContent>
+                      <Button
+                        className="w-full rounded-full sm:w-auto"
+                        render={<Link href={folderPath(session.id)} />}
+                      >
+                        Open your folder
+                      </Button>
+                    </CardContent>
+                  ) : null}
                 </Card>
               ) : null}
             </div>

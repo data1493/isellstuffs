@@ -1,0 +1,5 @@
+Parking-lot LUT pack — stand-in
+Format: CUBE
+
+This is a booth folder mock from i sell stuffs.
+Not a CDN. Not email. The real LUT files are not hosted here.

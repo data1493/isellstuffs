@@ -1,0 +1,90 @@
+import Link from "next/link";
+
+import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { FolderLine } from "@/lib/digital-folder";
+
+export function FolderSlip({
+  slip,
+  lines,
+}: {
+  slip: string;
+  lines: FolderLine[];
+}) {
+  return (
+    <div>
+      <MallHero>
+        <MallCrumb label="Folder">
+          <CrumbSep />
+          <Link
+            href="/checkout/success"
+            className="hover:text-foreground hover:underline"
+          >
+            Receipt
+          </Link>
+          <CrumbSep />
+          <span className="text-foreground">Folder</span>
+        </MallCrumb>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="secondary" className="rounded-full">
+            Booth folder mock
+          </Badge>
+          <Badge variant="outline" className="rounded-full">
+            Not a CDN · not email
+          </Badge>
+        </div>
+
+        <div className="max-w-2xl space-y-3">
+          <MallEyebrow>Paid files</MallEyebrow>
+          <h1 className="font-heading text-4xl tracking-tight text-balance sm:text-5xl">
+            The envelope is on the table.
+          </h1>
+          <p className="text-base leading-7 text-muted-foreground">
+            Digital lines from slip{" "}
+            <span className="font-mono text-xs text-foreground">{slip}</span>.
+            Each download is a tiny stand-in so the booth feels finished. The
+            mall does not host your real file. Nobody emailed you a link.
+          </p>
+        </div>
+      </MallHero>
+
+      <MallSection innerClassName="grid gap-4">
+        {lines.map((line) => (
+          <Card key={line.listing.id} className="bg-card">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl">
+                {line.listing.title}
+              </CardTitle>
+              <CardDescription className="leading-6">
+                {line.formatLabel} · {line.stall.boothName}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                className="w-full rounded-full sm:w-auto"
+                render={
+                  <a
+                    href={line.downloadHref}
+                    download={line.downloadName}
+                  />
+                }
+              >
+                Download stand-in
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </MallSection>
+    </div>
+  );
+}

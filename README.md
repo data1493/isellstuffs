@@ -64,8 +64,10 @@ Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `i
 | --- | --- |
 | `/cart` | Tote. Same listing ids listing/stall pages wrote |
 | `/checkout/mock` | Local test pay wall when no Stripe secret is set |
-| `/checkout/success` | Paid. Tote clears. Connect split on the slip |
+| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder” |
 | `/checkout/cancel` | Walked away. Tote stays |
+| `/folder` | Current slip’s digital lines, or “No folder on this slip.” |
+| `/folder/[slip]` | One paid slip’s booth folder. Stand-in downloads, not a CDN |
 
 Open **http://127.0.0.1:44721/cart**. Deep-link with `?add=<listingId>` uses the same cart writer.
 
