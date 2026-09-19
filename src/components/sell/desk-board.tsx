@@ -153,12 +153,19 @@ import {
   subscribePolish,
 } from "@/lib/listing-polish";
 import {
+  canTapeInside,
+  isListingInsideOverlay,
+  readInsideListingIds,
+  subscribeInside,
+} from "@/lib/listing-inside";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
   listingGlassWritePath,
   listingPolishWritePath,
+  listingInsideWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -252,6 +259,7 @@ export function DeskBoard({
   const [glassIds, setGlassIds] = useState<string[]>([]);
   const [doubleIds, setDoubleIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
+  const [insideIds, setInsideIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -290,6 +298,7 @@ export function DeskBoard({
       setGlassIds(readGlassListingIds());
       setDoubleIds(readDoubleListingIds());
       setPolishIds(readPolishListingIds());
+      setInsideIds(readInsideListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -317,6 +326,7 @@ export function DeskBoard({
     const unsubGlass = subscribeGlass(apply);
     const unsubDouble = subscribeDouble(apply);
     const unsubPolish = subscribePolish(apply);
+    const unsubInside = subscribeInside(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -354,6 +364,7 @@ export function DeskBoard({
       unsubGlass();
       unsubDouble();
       unsubPolish();
+      unsubInside();
     };
   }, [listings, stall.id]);
 
@@ -628,6 +639,37 @@ export function DeskBoard({
                             {isListingPolishOverlay(listing.id, polishIds)
                               ? "Leave the scratch"
                               : "I will not polish"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeInside(listing) ? (
+                        <form
+                          method="post"
+                          action={listingInsideWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingInsideOverlay(listing.id, insideIds)
+                                ? "open"
+                                : "inside"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingInsideOverlay(listing.id, insideIds)
+                              ? "Leave the empties"
+                              : "I will not say what was inside"}
                           </button>
                         </form>
                       ) : null}

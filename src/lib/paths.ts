@@ -618,6 +618,14 @@ export function listingPolishWritePath() {
   return "/listings/polish";
 }
 
+export function listingInsidePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/inside`;
+}
+
+export function listingInsideWritePath() {
+  return "/listings/inside";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
