@@ -45,6 +45,7 @@ export function LotBoothCard({
   printNote,
   claimNote,
   nameNote,
+  poseNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -72,6 +73,7 @@ export function LotBoothCard({
   printNote?: string;
   claimNote?: string;
   nameNote?: string;
+  poseNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -334,6 +336,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-name-empty={stall.id} hidden />
+          )}
+          {poseNote ? (
+            <p
+              data-booth-pose-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Nothing with a lookbook. {poseNote}
+            </p>
+          ) : (
+            <p data-booth-pose-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

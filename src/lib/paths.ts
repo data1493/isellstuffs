@@ -696,6 +696,14 @@ export function stallNameWritePath() {
   return "/stalls/name";
 }
 
+export function stallPosePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/pose`;
+}
+
+export function stallPoseWritePath() {
+  return "/stalls/pose";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

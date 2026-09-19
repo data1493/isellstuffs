@@ -161,6 +161,13 @@ import {
   stallNamePath,
 } from "@/lib/booth-name";
 import {
+  BOOTH_POSE_COOKIE_NAME,
+  BOOTH_POSE_PAPER_LINE,
+  boothPoseFor,
+  parseBoothPose,
+  stallPosePath,
+} from "@/lib/booth-pose";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -360,6 +367,10 @@ export default async function StallPage({
   const nameNote = boothNameFor(
     stall.id,
     parseBoothName(jar.get(BOOTH_NAME_COOKIE_NAME)?.value),
+  );
+  const poseNote = boothPoseFor(
+    stall.id,
+    parseBoothPose(jar.get(BOOTH_POSE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -806,6 +817,23 @@ export default async function StallPage({
             <p data-booth-name-empty={stall.id} hidden />
           )}
 
+          {poseNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Nothing with a lookbook"
+              title="Clothes had a season."
+              body={
+                <p data-booth-pose-note={stall.id}>
+                  {poseNote.note} {BOOTH_POSE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-pose-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1006,6 +1034,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I will not name them
+          </Link>
+
+          <Link
+            href={stallPosePath(stall.slug)}
+            data-booth-pose-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Nothing with a lookbook
           </Link>
 
           <Link
