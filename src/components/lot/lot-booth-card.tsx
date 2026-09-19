@@ -73,6 +73,7 @@ export function LotBoothCard({
   thimbleNote,
   spudgerNote,
   funnelNote,
+  preampNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -128,6 +129,7 @@ export function LotBoothCard({
   thimbleNote?: string;
   spudgerNote?: string;
   funnelNote?: string;
+  preampNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -670,6 +672,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-funnel-empty={stall.id} hidden />
+          )}
+          {preampNote ? (
+            <p
+              data-booth-preamp-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a preamp. {preampNote}
+            </p>
+          ) : (
+            <p data-booth-preamp-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

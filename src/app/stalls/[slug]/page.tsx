@@ -357,6 +357,13 @@ import {
   stallFunnelPath,
 } from "@/lib/booth-funnel";
 import {
+  BOOTH_PREAMP_COOKIE_NAME,
+  BOOTH_PREAMP_PAPER_LINE,
+  boothPreampFor,
+  parseBoothPreamp,
+  stallPreampPath,
+} from "@/lib/booth-preamp";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -668,6 +675,10 @@ export default async function StallPage({
   const funnel = boothFunnelFor(
     stall.id,
     parseBoothFunnel(jar.get(BOOTH_FUNNEL_COOKIE_NAME)?.value),
+  );
+  const preamp = boothPreampFor(
+    stall.id,
+    parseBoothPreamp(jar.get(BOOTH_PREAMP_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1590,6 +1601,23 @@ export default async function StallPage({
             <p data-booth-funnel-empty={stall.id} hidden />
           )}
 
+          {preamp ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a preamp"
+              title="Still a crate. Still a table."
+              body={
+                <p data-booth-preamp-note={stall.id}>
+                  {preamp.note} {BOOTH_PREAMP_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-preamp-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2014,6 +2042,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a funnel
+          </Link>
+
+          <Link
+            href={stallPreampPath(stall.slug)}
+            data-booth-preamp-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a preamp
           </Link>
 
           <Link

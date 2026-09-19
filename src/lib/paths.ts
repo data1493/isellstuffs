@@ -1728,6 +1728,14 @@ export function stallFunnelWritePath() {
   return "/stalls/funnel";
 }
 
+export function stallPreampPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/preamp`;
+}
+
+export function stallPreampWritePath() {
+  return "/stalls/preamp";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
