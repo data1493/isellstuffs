@@ -314,6 +314,14 @@ export function listingWorkbookWritePath() {
   return "/listings/workbook";
 }
 
+export function listingVibePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/vibe`;
+}
+
+export function listingVibeWritePath() {
+  return "/listings/vibe";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

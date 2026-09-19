@@ -39,6 +39,7 @@ import { ListingToeNotice } from "@/components/listing-toe-notice";
 import { ListingKeyNotice } from "@/components/listing-key-notice";
 import { ListingHingeNotice } from "@/components/listing-hinge-notice";
 import { ListingChipNotice } from "@/components/listing-chip-notice";
+import { ListingVibeNotice } from "@/components/listing-vibe-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -99,6 +100,7 @@ import {
   listingKeyPath,
   listingHingePath,
   listingChipPath,
+  listingVibePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -289,6 +291,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <ListingWorkbookNotice listingId={listing.id} />
               ) : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
@@ -544,6 +547,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     These twelve shots
+                  </Link>
+                  <Link
+                    href={listingVibePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Measurements are vibes
                   </Link>
                 </p>
               )}
