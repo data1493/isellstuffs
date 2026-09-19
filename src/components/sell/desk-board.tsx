@@ -105,8 +105,15 @@ import {
   subscribeRemember,
 } from "@/lib/listing-remember";
 import {
+  canTapeGlue,
+  isListingGlueOverlay,
+  readGlueListingIds,
+  subscribeGlue,
+} from "@/lib/listing-glue";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
+  listingGlueWritePath,
   listingLoopWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -188,6 +195,7 @@ export function DeskBoard({
   const [twistIds, setTwistIds] = useState<string[]>([]);
   const [stretchIds, setStretchIds] = useState<string[]>([]);
   const [rememberIds, setRememberIds] = useState<string[]>([]);
+  const [glueIds, setGlueIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -218,6 +226,7 @@ export function DeskBoard({
       setTwistIds(readTwistListingIds());
       setStretchIds(readStretchListingIds());
       setRememberIds(readRememberListingIds());
+      setGlueIds(readGlueListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -237,6 +246,7 @@ export function DeskBoard({
     const unsubTwist = subscribeTwist(apply);
     const unsubStretch = subscribeStretch(apply);
     const unsubRemember = subscribeRemember(apply);
+    const unsubGlue = subscribeGlue(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -266,6 +276,7 @@ export function DeskBoard({
       unsubTwist();
       unsubStretch();
       unsubRemember();
+      unsubGlue();
     };
   }, [listings, stall.id]);
 
@@ -447,6 +458,37 @@ export function DeskBoard({
                             {isListingDumpOverlay(listing.id, dumpIds)
                               ? "Leave the cart"
                               : "I don't dump"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGlue(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGlueWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGlueOverlay(listing.id, glueIds)
+                                ? "open"
+                                : "glue"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGlueOverlay(listing.id, glueIds)
+                              ? "Leave the crack"
+                              : "I will not glue"}
                           </button>
                         </form>
                       ) : null}

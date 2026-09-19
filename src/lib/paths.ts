@@ -554,6 +554,14 @@ export function listingRememberWritePath() {
   return "/listings/remember";
 }
 
+export function listingGluePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/glue`;
+}
+
+export function listingGlueWritePath() {
+  return "/listings/glue";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
