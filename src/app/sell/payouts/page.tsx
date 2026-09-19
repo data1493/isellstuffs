@@ -216,7 +216,7 @@ export default function SellPayoutsPage() {
             <MallNotice
               tone="empty"
               padded={false}
-              titleAs="h3"
+              titleAs="h2"
               eyebrow="Empty paper"
               title="Nothing for sale on the tables tonight."
               body="Sold and file-gone stay off this board. List something and the cut shows up here as a stand-in."
