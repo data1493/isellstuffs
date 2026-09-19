@@ -954,6 +954,14 @@ export function listingWindWritePath() {
   return "/listings/wind";
 }
 
+export function listingSocketPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/socket`;
+}
+
+export function listingSocketWritePath() {
+  return "/listings/socket";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
