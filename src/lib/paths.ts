@@ -546,6 +546,14 @@ export function listingStretchWritePath() {
   return "/listings/stretch";
 }
 
+export function listingRememberPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/remember`;
+}
+
+export function listingRememberWritePath() {
+  return "/listings/remember";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

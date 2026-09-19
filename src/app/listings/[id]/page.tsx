@@ -68,6 +68,7 @@ import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
 import { ListingLoopNotice } from "@/components/listing-loop-notice";
 import { ListingTwistNotice } from "@/components/listing-twist-notice";
 import { ListingStretchNotice } from "@/components/listing-stretch-notice";
+import { ListingRememberNotice } from "@/components/listing-remember-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -157,6 +158,7 @@ import {
   listingLoopPath,
   listingTwistPath,
   listingStretchPath,
+  listingRememberPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -348,6 +350,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingTypesetNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingRememberNotice listingId={listing.id} />
               ) : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
@@ -751,6 +756,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not typeset
+                  </Link>
+                  <Link
+                    href={listingRememberPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not remember better
                   </Link>
                   <Link
                     href={listingStemsPath(listing.id)}

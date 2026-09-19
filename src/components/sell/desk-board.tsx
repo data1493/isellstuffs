@@ -99,11 +99,18 @@ import {
   subscribeStretch,
 } from "@/lib/listing-stretch";
 import {
+  canTapeRemember,
+  isListingRememberOverlay,
+  readRememberListingIds,
+  subscribeRemember,
+} from "@/lib/listing-remember";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingLoopWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
+  listingRememberWritePath,
   listingRipWritePath,
   listingShotWritePath,
   listingTypesetWritePath,
@@ -180,6 +187,7 @@ export function DeskBoard({
   const [loopIds, setLoopIds] = useState<string[]>([]);
   const [twistIds, setTwistIds] = useState<string[]>([]);
   const [stretchIds, setStretchIds] = useState<string[]>([]);
+  const [rememberIds, setRememberIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -209,6 +217,7 @@ export function DeskBoard({
       setLoopIds(readLoopListingIds());
       setTwistIds(readTwistListingIds());
       setStretchIds(readStretchListingIds());
+      setRememberIds(readRememberListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -227,6 +236,7 @@ export function DeskBoard({
     const unsubLoop = subscribeLoop(apply);
     const unsubTwist = subscribeTwist(apply);
     const unsubStretch = subscribeStretch(apply);
+    const unsubRemember = subscribeRemember(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -255,6 +265,7 @@ export function DeskBoard({
       unsubLoop();
       unsubTwist();
       unsubStretch();
+      unsubRemember();
     };
   }, [listings, stall.id]);
 
@@ -746,6 +757,37 @@ export function DeskBoard({
                             {isListingStretchOverlay(listing.id, stretchIds)
                               ? "Leave the pair"
                               : "I will not stretch"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRemember(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRememberWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRememberOverlay(listing.id, rememberIds)
+                                ? "open"
+                                : "remember"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRememberOverlay(listing.id, rememberIds)
+                              ? "Leave the page"
+                              : "I will not remember better"}
                           </button>
                         </form>
                       ) : null}
