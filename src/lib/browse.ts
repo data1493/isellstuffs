@@ -25,6 +25,16 @@ export const hubAtmosphere: Record<
     floor: "Workbench",
     refuse: "Condition is the copy.",
   },
+  "media-bin": {
+    wash: "bg-[oklch(0.86_0.06_300)]",
+    floor: "Crate under the table",
+    refuse: "No streaming codes.",
+  },
+  "kitchen-drawer": {
+    wash: "bg-[oklch(0.87_0.06_50)]",
+    floor: "Next to the sink",
+    refuse: "No staged sets.",
+  },
   "download-stall": {
     wash: "bg-[oklch(0.86_0.045_195)]",
     floor: "Folder on the table",

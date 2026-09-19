@@ -7,7 +7,7 @@ import { FeaturedBooth } from "@/components/browse/paid";
 import { BrowseEmpty } from "@/components/browse/states";
 import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import { featuredStallSlots, mallHubs } from "@/lib/commerce";
+import { featuredStallSlots, hubFloorList, mallHubs } from "@/lib/commerce";
 import {
   exploreHref,
   filterListings,
@@ -134,7 +134,7 @@ export default async function ExplorePage({
             }
             body={
               unknownFilter
-                ? "Hubs are Yard Sale, Closet Overflow, Garage Tech, and Download Stall. Kind is physical or digital."
+                ? `Hubs are ${hubFloorList()}. Kind is physical or digital.`
                 : activeHub
                   ? `${activeHub.name} does not have ${type ?? "those"} listings right now. Digital lives in Download Stall. Clothes do not come as a zip.`
                   : "Nothing matches. Clear the filters and walk the concourse again."

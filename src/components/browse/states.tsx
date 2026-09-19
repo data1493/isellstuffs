@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { MallNotice } from "@/components/mall-notice";
 import { Button } from "@/components/ui/button";
-import { mallHubs } from "@/lib/commerce";
+import { hubFloorList, mallHubs } from "@/lib/commerce";
 
 export function BrowseEmpty({
   title,
@@ -74,7 +74,7 @@ export function HubNotFound() {
       tone="missing"
       eyebrow="Not on the map"
       title="That aisle is not in this mall."
-      body="No artisan-home wing. No junk drawer. The floors are Yard Sale, Closet Overflow, Garage Tech, and Download Stall."
+      body={`No artisan-home wing. No junk drawer. The floors are ${hubFloorList()}.`}
       actions={
         <>
           <Button className="rounded-full px-5" render={<Link href="/hubs" />}>

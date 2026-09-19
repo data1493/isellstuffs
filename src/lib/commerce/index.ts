@@ -5,7 +5,7 @@
  * listing, stall, or ad-slot shapes. Pages are Wave 2+.
  */
 
-export { mallHubs, hubById, type HubId } from "./hubs";
+export { mallHubs, hubById, physicalHubs, hubFloorList, type HubId } from "./hubs";
 export {
   money,
   formatMoney,

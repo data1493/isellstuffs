@@ -47,7 +47,7 @@ export function SiteFooter() {
             </nav>
             <nav aria-label="Hubs" className="flex flex-col gap-2 text-sm">
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                Four aisles
+                The aisles
               </p>
               {mallHubs.map((hub) => (
                 <Link

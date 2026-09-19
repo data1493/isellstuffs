@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import {
   formatMoney,
   hubById,
+  hubFloorList,
   isCartEligible,
   isPhysicalListing,
   listingsByHub,
@@ -125,7 +126,7 @@ export function exploreMetadata(filters: {
     return shareMetadata({
       title: "That filter is not on the map",
       description:
-        "Hubs are Yard Sale, Closet Overflow, Garage Tech, and Download Stall. Kind is physical or digital. Clear the query and walk the concourse.",
+        `Hubs are ${hubFloorList()}. Kind is physical or digital. Clear the query and walk the concourse.`,
       path: "/explore",
       robots: noIndexFollow,
     });
@@ -222,9 +223,9 @@ export function browseMetadata(): Metadata {
 
 export function hubsIndexMetadata(): Metadata {
   return shareMetadata({
-    title: "Four aisles",
+    title: "The aisles",
     description:
-      "Yard Sale, Closet Overflow, Garage Tech, and Download Stall. Each hub refuses the wrong inventory. Explore stays the general concourse.",
+      `${hubFloorList()}. Each hub refuses the wrong inventory. Explore stays the general concourse.`,
     path: "/hubs",
   });
 }
@@ -242,7 +243,7 @@ export function missingHubMetadata(): Metadata {
   return shareMetadata({
     title: "Aisle not on the map",
     description:
-      "No artisan-home wing. No junk drawer. The floors are Yard Sale, Closet Overflow, Garage Tech, and Download Stall.",
+      `No artisan-home wing. No junk drawer. The floors are ${hubFloorList()}.`,
     path: "/hubs",
     robots: noIndexFollow,
   });

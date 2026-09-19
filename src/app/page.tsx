@@ -100,7 +100,7 @@ export default function Home() {
         <div className="max-w-2xl">
           <MallEyebrow>Opinionated hubs</MallEyebrow>
           <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
-            Four floors. Not a junk drawer.
+            Floors with rules. Not a junk drawer.
           </h2>
           <p className="mt-3 text-muted-foreground">
             The concourse is general. These aisles have rules — what belongs,
@@ -159,8 +159,9 @@ export default function Home() {
               Hubs you can roam
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Yard Sale, Closet Overflow, Garage Tech, Download Stall. Browse
-              the floor, then duck into an aisle that has a rule.
+              Yard Sale, Closet Overflow, Garage Tech, Media Bin, Kitchen
+              Drawer, Download Stall. Browse the floor, then duck into an aisle
+              that has a rule.
             </p>
           </article>
           <article>

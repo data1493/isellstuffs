@@ -14,7 +14,7 @@ export default function HubsPage() {
     <MallWidth className="py-12 sm:py-16">
       <MallEyebrow>The map</MallEyebrow>
       <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
-        Four aisles. Pick one with a rule.
+        The aisles. Pick one with a rule.
       </h1>
       <p className="mt-3 max-w-2xl text-muted-foreground text-pretty">
         These hubs earn their own pages because they refuse the wrong inventory.

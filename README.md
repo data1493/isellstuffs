@@ -14,7 +14,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/explore` | General concourse. Filter by hub or physical/digital |
 | `/browse` | Redirects to `/explore` |
 | `/search` | Look up a title, stall, hub, or physical/digital |
-| `/hubs` | The four aisle map |
+| `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone |
 
@@ -135,11 +135,11 @@ Other agents should import from `@/lib/commerce`. Do not invent listing, stall, 
 | Types | `@/lib/commerce/types` |
 | Locked hubs | `@/lib/commerce/hubs` |
 | Money helpers | `@/lib/commerce/money` |
-| Stand-in catalog (12 SKUs) | `@/lib/commerce/catalog` |
+| Stand-in catalog | `@/lib/commerce/catalog` |
 
 Locked listing fields: `price`, `type` (`physical` \| `digital`), `condition` **or** `fileFormat`, `stallId`, `cartEligible`. One stall holds mixed listings (`slug`, `boothName`, `featured`). Ad slots are labeled campaign fixtures: featured stall, homepage takeover, hub takeover.
 
-Hubs that earn aisle pages: Yard Sale, Closet Overflow, Garage Tech, Download Stall. Homepage + `/browse` stay the general concourse.
+Hubs that earn aisle pages: Yard Sale, Closet Overflow, Garage Tech, Media Bin, Kitchen Drawer, Download Stall. Homepage + `/browse` stay the general concourse.
 
 ## Stack
 

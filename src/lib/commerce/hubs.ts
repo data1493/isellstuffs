@@ -1,6 +1,6 @@
 /**
- * Locked mall hubs from marketplace-concept.md.
- * Homepage + /browse stay the general concourse; these four earn aisle pages.
+ * Mall hubs. Homepage + /browse stay the general concourse;
+ * each of these earns an aisle page with a refuse rule.
  */
 
 export const mallHubs = [
@@ -29,6 +29,22 @@ export const mallHubs = [
     rule: "Condition is a first-class field. “Tested, kinda” is valid copy.",
   },
   {
+    id: "media-bin",
+    name: "Media Bin",
+    slug: "media-bin",
+    href: "/hubs/media-bin",
+    blurb: "Vinyl, tapes, jewel cases, magazines that still have a spine.",
+    rule: "If it spins, rewinds, or snaps shut, it belongs. No streaming codes.",
+  },
+  {
+    id: "kitchen-drawer",
+    name: "Kitchen Drawer",
+    slug: "kitchen-drawer",
+    href: "/hubs/kitchen-drawer",
+    blurb: "Mismatched mugs, dented lids, utensils that survived three apartments.",
+    rule: "If it lived next to the sink, it belongs. No staged tableware sets.",
+  },
+  {
     id: "download-stall",
     name: "Download Stall",
     slug: "download-stall",
@@ -46,4 +62,21 @@ export function hubById(id: HubId) {
     throw new Error(`Unknown hub: ${id}`);
   }
   return hub;
+}
+
+/** Physical aisles only. Digital listings stay in Download Stall. */
+export function physicalHubs() {
+  return mallHubs.filter((hub) => hub.id !== "download-stall");
+}
+
+/** “Yard Sale, Closet Overflow, and Download Stall” for map copy. */
+export function hubFloorList() {
+  const names = mallHubs.map((hub) => hub.name);
+  if (names.length <= 1) {
+    return names[0] ?? "";
+  }
+  if (names.length === 2) {
+    return `${names[0]} and ${names[1]}`;
+  }
+  return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
 }

@@ -1,4 +1,4 @@
-import { listingsByHub, mallHubs } from "@/lib/commerce";
+import { hubFloorList, listingsByHub, mallHubs } from "@/lib/commerce";
 import { hubBySlug } from "@/lib/browse";
 import { ogContentType, ogImage, ogSize } from "@/lib/og-image";
 
@@ -22,7 +22,7 @@ export default async function HubOpenGraphImage({
     return ogImage({
       kicker: "Hub",
       title: "That aisle is not in this mall",
-      detail: "Yard Sale, Closet Overflow, Garage Tech, Download Stall.",
+      detail: hubFloorList(),
     });
   }
 

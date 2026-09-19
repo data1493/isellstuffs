@@ -32,7 +32,7 @@ export function BookForm({ pack }: { pack: NextWindowPackage }) {
       return;
     }
     if (needsHub && !hubId) {
-      setError("Pick one of the four locked hubs.");
+      setError("Pick a hub on the map.");
       return;
     }
 
@@ -84,7 +84,7 @@ export function BookForm({ pack }: { pack: NextWindowPackage }) {
         <fieldset className="space-y-3">
           <legend className="font-heading text-xl tracking-tight">Which aisle</legend>
           <p className="text-sm leading-6 text-muted-foreground">
-            Four hubs. The rule stays. You buy the hero, not a rewrite.
+            Hubs on the map. The rule stays. You buy the hero, not a rewrite.
           </p>
           <div className="grid gap-2">
             {mallHubs.map((hub) => {

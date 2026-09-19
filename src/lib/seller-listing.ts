@@ -3,17 +3,14 @@ import {
   listingTypes,
   mallHubs,
   money,
+  physicalHubs,
   stallById,
   type HubId,
   type Listing,
   type ListingType,
 } from "@/lib/commerce";
 
-export const physicalHubIds = [
-  "yard-sale",
-  "closet-overflow",
-  "garage-tech",
-] as const satisfies readonly HubId[];
+export const physicalHubIds = physicalHubs().map((hub) => hub.id);
 
 export type SellerListingError = {
   ok: false;
@@ -153,7 +150,10 @@ export function parseSellerListing(formData: FormData): SellerListingResult {
     return {
       ok: false,
       error:
-        "Physical junk sits in Yard Sale, Closet Overflow, or Garage Tech.",
+        `Physical junk sits in ${physicalHubs()
+          .map((hub) => hub.name)
+          .join(", ")
+          .replace(/, ([^,]+)$/, ", or $1")}.`,
     };
   }
 
