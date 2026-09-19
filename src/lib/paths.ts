@@ -402,6 +402,14 @@ export function listingSongsWritePath() {
   return "/listings/songs";
 }
 
+export function listingSleevePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/sleeve`;
+}
+
+export function listingSleeveWritePath() {
+  return "/listings/sleeve";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
