@@ -69,12 +69,19 @@ import {
   subscribeZip,
 } from "@/lib/listing-zip";
 import {
+  canTapeWhose,
+  isListingWhoseOverlay,
+  readWhoseListingIds,
+  subscribeWhose,
+} from "@/lib/listing-whose";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingPhoneWritePath,
   listingRipWritePath,
   listingShotWritePath,
   listingZipWritePath,
+  listingWhoseWritePath,
   listingPath,
   sellDeskStallPath,
   sellHoursPath,
@@ -140,6 +147,7 @@ export function DeskBoard({
   const [cardsIds, setCardsIds] = useState<string[]>([]);
   const [zipIds, setZipIds] = useState<string[]>([]);
   const [shotIds, setShotIds] = useState<string[]>([]);
+  const [whoseIds, setWhoseIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -164,6 +172,7 @@ export function DeskBoard({
       setCardsIds(readCardsListingIds());
       setZipIds(readZipListingIds());
       setShotIds(readShotListingIds());
+      setWhoseIds(readWhoseListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -177,6 +186,7 @@ export function DeskBoard({
     const unsubCards = subscribeCards(apply);
     const unsubZip = subscribeZip(apply);
     const unsubShot = subscribeShot(apply);
+    const unsubWhose = subscribeWhose(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -200,6 +210,7 @@ export function DeskBoard({
       unsubCards();
       unsubZip();
       unsubShot();
+      unsubWhose();
     };
   }, [listings, stall.id]);
 
@@ -536,6 +547,37 @@ export function DeskBoard({
                             {isListingShotOverlay(listing.id, shotIds)
                               ? "Leave the looks"
                               : "I don't shoot"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWhose(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWhoseWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWhoseOverlay(listing.id, whoseIds)
+                                ? "open"
+                                : "whose"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingWhoseOverlay(listing.id, whoseIds)
+                              ? "Leave the mug"
+                              : "I will not say whose"}
                           </button>
                         </form>
                       ) : null}

@@ -506,6 +506,14 @@ export function listingZipWritePath() {
   return "/listings/zip";
 }
 
+export function listingWhosePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/whose`;
+}
+
+export function listingWhoseWritePath() {
+  return "/listings/whose";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
