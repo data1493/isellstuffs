@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { MallPayError } from "@/components/mall-notice";
 import { buttonVariants } from "@/components/ui/button";
@@ -18,7 +18,10 @@ import {
   CARD_LABEL,
   CASH_HELP,
   CASH_LABEL,
+  readMockTender,
   slipAllowsCash,
+  subscribeMockTender,
+  writeMockTender,
   type DrivewayTender,
 } from "@/lib/driveway-tender";
 import { getStripe, isStripeJsConfigured } from "@/lib/stripe-browser";
@@ -90,7 +93,14 @@ export function PayForm({
   const [error, setError] = useState<string | null>(confirmError ?? null);
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [asIs, setAsIs] = useState(false);
-  const [tender, setTender] = useState<DrivewayTender>("card");
+  const tender = useSyncExternalStore(
+    subscribeMockTender,
+    () => readMockTender(session.id),
+    () => "card" as DrivewayTender,
+  );
+  function chooseTender(next: DrivewayTender) {
+    writeMockTender(session.id, next);
+  }
   const needsAsIs = useMemo(
     () => slipHasPhysicalLines(session.listingIds),
     [session.listingIds],
@@ -196,19 +206,9 @@ export function PayForm({
 
   return (
     <form
-      className="space-y-6 [&:has([data-tender-cash]:checked)_[data-test-card]]:hidden"
+      className="space-y-6"
       action="/api/checkout/confirm"
       method="post"
-      onChange={(event) => {
-        const target = event.target;
-        if (
-          target instanceof HTMLInputElement &&
-          target.name === "tender" &&
-          (target.value === "cash" || target.value === "card")
-        ) {
-          setTender(target.value);
-        }
-      }}
     >
       <input type="hidden" name="sessionId" value={session.id} />
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -263,7 +263,7 @@ export function PayForm({
           </p>
           <label
             className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6"
-            onClick={() => setTender("cash")}
+            onClick={() => chooseTender("cash")}
           >
             <input
               type="radio"
@@ -271,7 +271,7 @@ export function PayForm({
               value="cash"
               data-tender-cash=""
               checked={tender === "cash"}
-              onChange={() => setTender("cash")}
+              onChange={() => chooseTender("cash")}
               className="mt-1 size-4 shrink-0 accent-foreground"
             />
             <span>
@@ -281,14 +281,14 @@ export function PayForm({
           </label>
           <label
             className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6"
-            onClick={() => setTender("card")}
+            onClick={() => chooseTender("card")}
           >
             <input
               type="radio"
               name="tender"
               value="card"
               checked={tender === "card"}
-              onChange={() => setTender("card")}
+              onChange={() => chooseTender("card")}
               className="mt-1 size-4 shrink-0 accent-foreground"
             />
             <span>
@@ -301,14 +301,8 @@ export function PayForm({
         <input type="hidden" name="tender" value="card" />
       )}
 
-      <fieldset
-        data-test-card=""
-        hidden={canPayCash && tender === "cash"}
-        className={cn(
-          "space-y-3",
-          canPayCash && tender === "cash" && "hidden",
-        )}
-      >
+      {tender === "card" || !canPayCash ? (
+      <fieldset data-test-card="" className="space-y-3">
         <legend className="font-heading text-xl tracking-tight">Test card</legend>
         <p className="text-sm leading-6 text-muted-foreground">
           This wall stands in for Stripe-hosted Checkout until a test secret is
@@ -369,6 +363,7 @@ export function PayForm({
           </div>
         </div>
       </fieldset>
+      ) : null}
 
       {needsAsIs ? (
         <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
