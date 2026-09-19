@@ -7,13 +7,15 @@ import { FeaturedBooth } from "@/components/browse/paid";
 import { BrowseEmpty } from "@/components/browse/states";
 import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import { featuredStallSlots, hubFloorList, mallHubs } from "@/lib/commerce";
+import { featuredStallSlots, mallHubs } from "@/lib/commerce";
 import {
+  browseListings,
+  exploreCountLine,
+  exploreEmptyCopy,
   exploreHref,
-  filterListings,
-  firstSearchParam,
-  isHubId,
-  isListingType,
+  exploreShowsFeatured,
+  parseExploreFilters,
+  type ExploreFilters,
 } from "@/lib/browse";
 import { exploreMetadata } from "@/lib/seo";
 
@@ -25,13 +27,7 @@ export async function generateMetadata({
   searchParams,
 }: ExplorePageProps): Promise<Metadata> {
   const params = await searchParams;
-  const hubParam = firstSearchParam(params.hub);
-  const typeParam = firstSearchParam(params.type);
-  const hubId = isHubId(hubParam) ? hubParam : undefined;
-  const type = isListingType(typeParam) ? typeParam : undefined;
-  const unknown = Boolean((hubParam && !hubId) || (typeParam && !type));
-
-  return exploreMetadata({ hubId, type, unknown });
+  return exploreMetadata(parseExploreFilters(params));
 }
 
 const typeFilters = [
@@ -39,23 +35,38 @@ const typeFilters = [
   { id: "digital" as const, label: "Digital" },
 ];
 
+const availFilters = [
+  { id: undefined, label: "All" },
+  { id: "open" as const, label: "Still here" },
+];
+
+const priceFilters = [
+  { id: undefined, label: "Any" },
+  { id: "10" as const, label: "Under a ten" },
+  { id: "25" as const, label: "Under $25" },
+];
+
+const sortFilters = [
+  { id: undefined, label: "As listed" },
+  { id: "price" as const, label: "Cheap first" },
+  { id: "price-desc" as const, label: "Dear first" },
+];
+
 export default async function ExplorePage({
   searchParams,
 }: ExplorePageProps) {
   const params = await searchParams;
-  const hubParam = firstSearchParam(params.hub);
-  const typeParam = firstSearchParam(params.type);
-  const hubId = isHubId(hubParam) ? hubParam : undefined;
-  const type = isListingType(typeParam) ? typeParam : undefined;
-  const unknownFilter = Boolean(
-    (hubParam && !hubId) || (typeParam && !type),
-  );
-  const filtered = unknownFilter ? [] : filterListings({ hubId, type });
+  const query = parseExploreFilters(params);
+  const { hubId, type, avail, max, sort, unknown } = query;
+  const chips: ExploreFilters = { hubId, type, avail, max, sort };
+  const filtered = unknown ? [] : browseListings(chips);
   const activeHub = hubId
     ? mallHubs.find((hub) => hub.id === hubId)
     : undefined;
   const featuredStallSlot = featuredStallSlots()[0];
-  const showFeatured = !hubId && !type && !unknownFilter && featuredStallSlot;
+  const showFeatured =
+    exploreShowsFeatured(query) && Boolean(featuredStallSlot);
+  const empty = exploreEmptyCopy(query, activeHub?.name);
 
   return (
     <div>
@@ -65,56 +76,81 @@ export default async function ExplorePage({
           Explore the mall
         </h1>
         <p className="mt-3 max-w-2xl text-muted-foreground text-pretty">
-          Every listing on the floor, including sold and file-gone. The good
-          corner is paid and labeled. Duck into a hub when you want an aisle
-          with rules.
+          Every listing on the floor, including sold and file-gone — unless you
+          ask for still here. The good corner is paid and labeled. Duck into a
+          hub when you want an aisle with rules.
         </p>
 
         <div className="mt-8 space-y-4 rounded-2xl border border-border bg-card px-3 py-4 sm:px-5">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <span className="w-12 shrink-0 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              Hub
-            </span>
-            <FilterChip href={exploreHref({ type })} active={!hubId}>
+          <FilterRow label="Hub">
+            <FilterChip href={exploreHref({ ...chips, hubId: undefined })} active={!hubId}>
               All hubs
             </FilterChip>
             {mallHubs.map((hub) => (
               <FilterChip
                 key={hub.id}
-                href={exploreHref({ hubId: hub.id, type })}
+                href={exploreHref({ ...chips, hubId: hub.id })}
                 active={hubId === hub.id}
               >
                 {hub.name}
               </FilterChip>
             ))}
-          </div>
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <span className="w-12 shrink-0 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              Kind
-            </span>
-            <FilterChip href={exploreHref({ hubId })} active={!type}>
+          </FilterRow>
+          <FilterRow label="Kind">
+            <FilterChip href={exploreHref({ ...chips, type: undefined })} active={!type}>
               Both
             </FilterChip>
             {typeFilters.map((item) => (
               <FilterChip
                 key={item.id}
-                href={exploreHref({ hubId, type: item.id })}
+                href={exploreHref({ ...chips, type: item.id })}
                 active={type === item.id}
               >
                 {item.label}
               </FilterChip>
             ))}
-          </div>
+          </FilterRow>
+          <FilterRow label="On the floor">
+            {availFilters.map((item) => (
+              <FilterChip
+                key={item.label}
+                href={exploreHref({ ...chips, avail: item.id })}
+                active={item.id ? avail === item.id : !avail || avail === "all"}
+              >
+                {item.label}
+              </FilterChip>
+            ))}
+          </FilterRow>
+          <FilterRow label="Price">
+            {priceFilters.map((item) => (
+              <FilterChip
+                key={item.label}
+                href={exploreHref({ ...chips, max: item.id })}
+                active={item.id ? max === item.id : !max}
+              >
+                {item.label}
+              </FilterChip>
+            ))}
+          </FilterRow>
+          <FilterRow label="Sort">
+            {sortFilters.map((item) => (
+              <FilterChip
+                key={item.label}
+                href={exploreHref({ ...chips, sort: item.id })}
+                active={item.id ? sort === item.id : !sort}
+              >
+                {item.label}
+              </FilterChip>
+            ))}
+          </FilterRow>
         </div>
 
         <p className="mt-8 text-sm text-muted-foreground">
-          {filtered.length} {filtered.length === 1 ? "thing" : "things"}
-          {activeHub ? ` in ${activeHub.name}` : " on the floor"}
-          {type ? ` · ${type}` : null}
+          {exploreCountLine(filtered.length, chips, activeHub?.name)}
         </p>
       </MallWidth>
 
-      {showFeatured ? (
+      {showFeatured && featuredStallSlot ? (
         <FeaturedBooth
           slot={featuredStallSlot}
           eyebrow="Paid booth on the concourse"
@@ -127,25 +163,15 @@ export default async function ExplorePage({
         ) : null}
         {filtered.length === 0 ? (
           <BrowseEmpty
-            title={
-              unknownFilter
-                ? "That filter is not on the map."
-                : "This combination is picked over."
-            }
-            body={
-              unknownFilter
-                ? `Hubs are ${hubFloorList()}. Kind is physical or digital.`
-                : activeHub
-                  ? `${activeHub.name} does not have ${type ?? "those"} listings right now. Digital lives in Download Stall. Clothes do not come as a zip.`
-                  : "Nothing matches. Clear the filters and walk the concourse again."
-            }
+            title={empty.title}
+            body={empty.body}
             actionHref={exploreHref()}
             actionLabel="Clear filters"
           />
         ) : (
           <ListingGrid
             listings={
-              showFeatured
+              showFeatured && featuredStallSlot
                 ? filtered.filter(
                     (listing) => listing.stallId !== featuredStallSlot.stallId,
                   )
@@ -154,6 +180,23 @@ export default async function ExplorePage({
           />
         )}
       </MallWidth>
+    </div>
+  );
+}
+
+function FilterRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex min-w-0 flex-wrap items-center gap-2">
+      <span className="w-[7.25rem] shrink-0 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+        {label}
+      </span>
+      {children}
     </div>
   );
 }

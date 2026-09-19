@@ -12,7 +12,7 @@ Walk the stand-in catalog without leaving the mall map.
 | --- | --- |
 | `/` | Home: hubs, labeled ads, a slice of the tables |
 | `/about` | What this site is: flea-market mall, physical + digital, 10% cut, labeled ads. Not the seller contract — that is `/fees` |
-| `/explore` | General concourse. Filter by hub or physical/digital |
+| `/explore` | General concourse. Filter by hub, physical/digital, still here, or a price band |
 | `/browse` | Redirects to `/explore` |
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
@@ -125,7 +125,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | Surface | What a share sees |
 | --- | --- |
 | `/` | Mall name + four-hub pitch. WebSite JSON-LD |
-| `/explore` | Concourse title; hub/type query strings get their own title and description |
+| `/explore` | Concourse title; hub, kind, still-here, and price query strings get their own title and description |
 | `/search` | Bare search is indexed. Query URLs are `noindex` |
 | `/hubs`, `/hubs/[slug]` | Aisle name, rule, listing count |
 | `/listings/[id]` | `{title} · {price}` plus condition/format, stall, status. Product + Offer JSON-LD |
