@@ -170,6 +170,14 @@ export function listingHeatWritePath() {
   return "/listings/heat";
 }
 
+export function listingBentPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bent`;
+}
+
+export function listingBentWritePath() {
+  return "/listings/bent";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
