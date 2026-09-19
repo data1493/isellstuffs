@@ -1208,6 +1208,14 @@ export function stallWifiWritePath() {
   return "/stalls/wifi";
 }
 
+export function stallKitPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/kit`;
+}
+
+export function stallKitWritePath() {
+  return "/stalls/kit";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

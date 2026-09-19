@@ -266,6 +266,13 @@ import {
   stallWifiPath,
 } from "@/lib/booth-wifi";
 import {
+  BOOTH_KIT_COOKIE_NAME,
+  BOOTH_KIT_PAPER_LINE,
+  boothKitFor,
+  parseBoothKit,
+  stallKitPath,
+} from "@/lib/booth-kit";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -525,6 +532,10 @@ export default async function StallPage({
   const wifiNote = boothWifiFor(
     stall.id,
     parseBoothWifi(jar.get(BOOTH_WIFI_COOKIE_NAME)?.value),
+  );
+  const kitNote = boothKitFor(
+    stall.id,
+    parseBoothKit(jar.get(BOOTH_KIT_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1226,6 +1237,23 @@ export default async function StallPage({
             <p data-booth-wifi-empty={stall.id} hidden />
           )}
 
+          {kitNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't assemble"
+              title="Shade stays in the box."
+              body={
+                <p data-booth-kit-note={stall.id}>
+                  {kitNote.note} {BOOTH_KIT_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-kit-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1546,6 +1574,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have wifi
+          </Link>
+
+          <Link
+            href={stallKitPath(stall.slug)}
+            data-booth-kit-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t assemble
           </Link>
 
           <Link

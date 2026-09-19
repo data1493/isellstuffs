@@ -60,6 +60,7 @@ export function LotBoothCard({
   pinsNote,
   foilNote,
   wifiNote,
+  kitNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -102,6 +103,7 @@ export function LotBoothCard({
   pinsNote?: string;
   foilNote?: string;
   wifiNote?: string;
+  kitNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -514,6 +516,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-wifi-empty={stall.id} hidden />
+          )}
+          {kitNote ? (
+            <p
+              data-booth-kit-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t assemble. {kitNote}
+            </p>
+          ) : (
+            <p data-booth-kit-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
