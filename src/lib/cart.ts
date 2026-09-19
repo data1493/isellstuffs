@@ -75,19 +75,24 @@ export function readCartListingIds(): string[] {
   }
   const fromStorage = window.localStorage.getItem(CART_STORAGE_KEY);
   if (fromStorage) {
-    return snapshotFromRaw(fromStorage);
+    const stored = snapshotFromRaw(fromStorage);
+    if (stored.length > 0) {
+      return stored;
+    }
   }
   const fromCookie = readCookieRaw();
   if (fromCookie) {
     const ids = snapshotFromRaw(fromCookie);
-    try {
-      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(ids));
-    } catch {
-      // blocked storage
+    if (ids.length > 0) {
+      try {
+        window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(ids));
+      } catch {
+        // blocked storage
+      }
+      return ids;
     }
-    return ids;
   }
-  return snapshotFromRaw(null);
+  return snapshotFromRaw(fromStorage ?? null);
 }
 
 export function writeCartListingIds(listingIds: string[]) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 
 import {
   addListingToCart,
@@ -12,11 +12,20 @@ import {
 
 const emptyCart: string[] = [];
 
-export function useCart() {
+export function useCart(serverListingIds: readonly string[] = emptyCart) {
+  const serverSnapshot = useRef(
+    serverListingIds.length > 0 ? [...serverListingIds] : emptyCart,
+  ).current;
+
+  const getServerSnapshot = useCallback(
+    () => (serverSnapshot.length > 0 ? serverSnapshot : emptyCart),
+    [serverSnapshot],
+  );
+
   const listingIds = useSyncExternalStore(
     subscribeCart,
     readCartListingIds,
-    () => emptyCart,
+    getServerSnapshot,
   );
 
   const add = useCallback((listingId: string): CartWriteResult => {

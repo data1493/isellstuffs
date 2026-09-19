@@ -44,11 +44,16 @@ import { getStripe } from "@/lib/stripe-browser";
 
 type CheckoutMode = "stripe-test" | "local-mock";
 
-export function CartView({ initialAdd }: { initialAdd?: string }) {
+export function CartView({
+  initialAdd,
+  initialListingIds = [],
+}: {
+  initialAdd?: string;
+  initialListingIds?: string[];
+}) {
   const router = useRouter();
-  const cart = useCart();
+  const cart = useCart(initialListingIds);
   const listingIds = cart.listingIds;
-  const [paying, setPaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<CheckoutMode | null>(null);
   const [stripeJs, setStripeJs] = useState(false);
@@ -127,36 +132,16 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
     setError(null);
   }
 
-  async function pay() {
-    setError(null);
-    setPaying(true);
-    try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          listingIds: payable.map((line) => line.listing.id),
-        }),
-      });
-      const data = (await response.json()) as {
-        url?: string;
-        sessionId?: string;
-        mode?: CheckoutMode;
-        error?: string;
-      };
-      if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Checkout could not start.");
-      }
-
-      await getStripe();
-      window.location.assign(data.url);
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Checkout could not start.");
-      setPaying(false);
-    }
-  }
-
   const bagEmpty = payable.length === 0 && gone.length === 0;
+
+  const checkoutFields = payable.map((line) => (
+    <input
+      key={line.listing.id}
+      type="hidden"
+      name="listingId"
+      value={line.listing.id}
+    />
+  ));
 
   return (
     <div
@@ -397,14 +382,17 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
                   </p>
                 </CardContent>
                 <CardFooter className="hidden flex-col items-stretch gap-2 border-0 bg-transparent lg:flex">
-                  <Button
-                    size="lg"
-                    className="rounded-full"
-                    disabled={payable.length === 0 || paying}
-                    onClick={() => void pay()}
-                  >
-                    {paying ? "Opening checkout…" : `Checkout · ${formatMoney(subtotal)}`}
-                  </Button>
+                  <form action="/cart/pay" method="post" className="flex flex-col">
+                    {checkoutFields}
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="rounded-full"
+                      disabled={payable.length === 0}
+                    >
+                      {`Checkout · ${formatMoney(subtotal)}`}
+                    </Button>
+                  </form>
                   <p className="text-center text-xs leading-5 text-muted-foreground">
                     {mode === "stripe-test"
                       ? "Stripe.js sends you to Stripe test Checkout."
@@ -498,14 +486,17 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
                 {`${groups.length} ${groups.length === 1 ? "stall" : "stalls"} · mall keeps ${formatMoney(mallCut)}`}
               </p>
             </div>
-            <Button
-              size="lg"
-              className="rounded-full"
-              disabled={payable.length === 0 || paying}
-              onClick={() => void pay()}
-            >
-              {paying ? "Opening…" : "Checkout"}
-            </Button>
+            <form action="/cart/pay" method="post">
+              {checkoutFields}
+              <Button
+                type="submit"
+                size="lg"
+                className="rounded-full"
+                disabled={payable.length === 0}
+              >
+                Checkout
+              </Button>
+            </form>
           </div>
         </div>
       )}
