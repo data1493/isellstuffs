@@ -50,6 +50,7 @@ export function LotBoothCard({
   bulbNote,
   meterNote,
   copyNote,
+  shrinkNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -82,6 +83,7 @@ export function LotBoothCard({
   bulbNote?: string;
   meterNote?: string;
   copyNote?: string;
+  shrinkNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -394,6 +396,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-copy-empty={stall.id} hidden />
+          )}
+          {shrinkNote ? (
+            <p
+              data-booth-shrink-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t shrink-wrap. {shrinkNote}
+            </p>
+          ) : (
+            <p data-booth-shrink-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

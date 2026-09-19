@@ -196,6 +196,13 @@ import {
   stallCopyPath,
 } from "@/lib/booth-copy";
 import {
+  BOOTH_SHRINK_COOKIE_NAME,
+  BOOTH_SHRINK_PAPER_LINE,
+  boothShrinkFor,
+  parseBoothShrink,
+  stallShrinkPath,
+} from "@/lib/booth-shrink";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -415,6 +422,10 @@ export default async function StallPage({
   const copyNote = boothCopyFor(
     stall.id,
     parseBoothCopy(jar.get(BOOTH_COPY_COOKIE_NAME)?.value),
+  );
+  const shrink = boothShrinkFor(
+    stall.id,
+    parseBoothShrink(jar.get(BOOTH_SHRINK_COOKIE_NAME)?.value),
   );
 
   return (
@@ -946,6 +957,23 @@ export default async function StallPage({
             <p data-booth-copy-empty={stall.id} hidden />
           )}
 
+          {shrink ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't shrink-wrap"
+              title="Poly stays if it is on."
+              body={
+                <p data-booth-shrink-note={stall.id}>
+                  {shrink.note} {BOOTH_SHRINK_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-shrink-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1186,6 +1214,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I will not copy onto your stick
+          </Link>
+
+          <Link
+            href={stallShrinkPath(stall.slug)}
+            data-booth-shrink-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t shrink-wrap
           </Link>
 
           <Link

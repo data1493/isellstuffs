@@ -904,6 +904,14 @@ export function stallCopyWritePath() {
   return "/stalls/copy";
 }
 
+export function stallShrinkPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/shrink`;
+}
+
+export function stallShrinkWritePath() {
+  return "/stalls/shrink";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
