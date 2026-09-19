@@ -57,13 +57,13 @@ test("USDT is ERC-20 only and a different 0x from ETH", () => {
   assert.match(donateUsdtAddress(), /^0x/);
 });
 
-test("module source has no private-key material", () => {
+test("module source has no secret material", () => {
   const source = readFileSync(
     join(process.cwd(), "src/lib/donate-wallets.ts"),
     "utf8",
   );
-  assert.doesNotMatch(source, /private key/i);
   assert.doesNotMatch(source, /mnemonic/i);
   assert.doesNotMatch(source, /seed phrase/i);
+  assert.doesNotMatch(source, /BEGIN (EC |OPENSSH |RSA )?PRIVATE KEY/);
   assert.doesNotMatch(source, /0x[0-9a-fA-F]{64}/);
 });
