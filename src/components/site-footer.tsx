@@ -2,10 +2,11 @@ import Link from "next/link";
 
 import { mallHubs } from "@/lib/commerce";
 import { yardSaleTuesdayLanderPath } from "@/lib/ads-display";
-import { collectionsPath, feesPath, thisWeekPath } from "@/lib/paths";
+import { aboutPath, collectionsPath, feesPath, thisWeekPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
 const browse = [
+  { href: aboutPath(), label: "About" },
   { href: "/explore", label: "Explore" },
   { href: "/hubs", label: "Hubs" },
   { href: thisWeekPath(), label: "This week" },

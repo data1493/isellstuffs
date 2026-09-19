@@ -49,6 +49,10 @@ export function feesPath() {
   return "/fees";
 }
 
+export function aboutPath() {
+  return "/about";
+}
+
 export function thisWeekPath() {
   return "/this-week";
 }

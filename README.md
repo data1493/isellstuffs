@@ -11,6 +11,7 @@ Walk the stand-in catalog without leaving the mall map.
 | Route | What it is |
 | --- | --- |
 | `/` | Home: hubs, labeled ads, a slice of the tables |
+| `/about` | What this site is: flea-market mall, physical + digital, 10% cut, labeled ads. Not the seller contract — that is `/fees` |
 | `/explore` | General concourse. Filter by hub or physical/digital |
 | `/browse` | Redirects to `/explore` |
 | `/search` | Look up a title, stall, hub, or physical/digital |
