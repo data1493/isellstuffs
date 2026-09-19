@@ -45,6 +45,12 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  EARLY_FOLD_COOKIE_NAME,
+  EARLY_FOLD_PAPER_LINE,
+  earlyFoldFor,
+  parseEarlyFold,
+} from "@/lib/early-fold";
+import {
   MOVED_SPOT_COOKIE_NAME,
   MOVED_SPOT_PAPER_LINE,
   movedSpotFor,
@@ -55,6 +61,7 @@ import {
   lotPath,
   stallBackPath,
   stallCoverPath,
+  stallFoldPath,
   stallPath,
   stallScrapPath,
   stallSpotPath,
@@ -117,6 +124,10 @@ export default async function StallPage({
   const sitter = coverSitterFor(
     stall.id,
     parseBoothCover(jar.get(BOOTH_COVER_COOKIE_NAME)?.value),
+  );
+  const lastCall = earlyFoldFor(
+    stall.id,
+    parseEarlyFold(jar.get(EARLY_FOLD_COOKIE_NAME)?.value),
   );
 
   return (
@@ -207,6 +218,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {lastCall ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Folding up at noon"
+              title="Last call."
+              body={
+                <p data-early-fold-note={stall.id}>
+                  {lastCall.note} {EARLY_FOLD_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -231,6 +257,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Neighbor is sitting
+          </Link>
+
+          <Link
+            href={stallFoldPath(stall.slug)}
+            data-early-fold-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Folding up at noon
           </Link>
 
           <Link

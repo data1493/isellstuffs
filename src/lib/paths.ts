@@ -112,6 +112,14 @@ export function stallCoverWritePath() {
   return "/stalls/cover";
 }
 
+export function stallFoldPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/fold`;
+}
+
+export function stallFoldWritePath() {
+  return "/stalls/fold";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

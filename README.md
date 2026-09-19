@@ -18,7 +18,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page. Hub-takeover bookings from `iss-ad-bookings` swap the aisle hero |
-| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags, lunch notes, gravel notes, and who is sitting. Still-here is a count, not a SKU grid. |
+| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags, lunch notes, gravel notes, who is sitting, and last-call fold notes. Still-here is a count, not a SKU grid. |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. Desk pins (`iss:weekend-pins`) append after that table. |
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
@@ -90,6 +90,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Back after lunch | http://127.0.0.1:44721/stalls/folding-table-tuesday/back |
 | Moved two spots | http://127.0.0.1:44721/stalls/folding-table-tuesday/spot |
 | Neighbor is sitting | http://127.0.0.1:44721/stalls/folding-table-tuesday/cover |
+| Folding up at noon | http://127.0.0.1:44721/stalls/folding-table-tuesday/fold |
 | Still-here price sheet | http://127.0.0.1:44721/stalls/folding-table-tuesday/tape |
 | Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
 | Paid stash | http://127.0.0.1:44721/stalls/folding-table-tuesday/stash |
@@ -128,6 +129,8 @@ A stallholder can tape a lunch run at `/stalls/[slug]/back`. “Taco truck, back
 A stallholder can tape a gravel note at `/stalls/[slug]/spot`. “Two spots toward the pavilion.” stays after reload. Cookie `iss-moved-spot` + `iss:moved-spot`. Native `POST /stalls/spot` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. Same booth, new gravel. Not a seventh stall. Not new hours. Not rain. The stall and `/lot` show the note. Closet stays empty if Tuesday taped.
 
 A stallholder can tape who is covering the table at `/stalls/[slug]/cover`. The Hall Closet on Folding Table Tuesday stays after reload. Cookie `iss-booth-cover` + `iss:booth-cover`. Native `POST /stalls/cover` (form: `stallId`, `sitterId`, `intent=tape|clear`). Sitter must be a real catalog `Stall.id`. A booth cannot sit itself. Clear deletes that booth only. Not lunch. Not a watch. The stall and `/lot` name the sitter. Closet stays empty if Tuesday taped.
+
+A stallholder can tape a last-call note at `/stalls/[slug]/fold`. “Boxing at noon.” stays after reload. Cookie `iss-early-fold` + `iss:early-fold`. Native `POST /stalls/fold` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. Not packed. Not new hours. The stall and `/lot` show the note. Closet stays empty if Tuesday taped. Lamp PDP hours stay the Saturday plan.
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
@@ -223,7 +226,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 
