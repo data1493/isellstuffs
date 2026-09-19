@@ -91,6 +91,13 @@ import {
   stallDigPath,
 } from "@/lib/booth-dig";
 import {
+  BOOTH_STACK_COOKIE_NAME,
+  BOOTH_STACK_PAPER_LINE,
+  boothStackFor,
+  parseBoothStack,
+  stallStackPath,
+} from "@/lib/booth-stack";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -250,6 +257,10 @@ export default async function StallPage({
   const dig = boothDigFor(
     stall.id,
     parseBoothDig(jar.get(BOOTH_DIG_COOKIE_NAME)?.value),
+  );
+  const stack = boothStackFor(
+    stall.id,
+    parseBoothStack(jar.get(BOOTH_STACK_COOKIE_NAME)?.value),
   );
 
   return (
@@ -526,6 +537,23 @@ export default async function StallPage({
             <p data-booth-dig-empty={stall.id} hidden />
           )}
 
+          {stack ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Don't unfold the pile"
+              title="Ask what's on top."
+              body={
+                <p data-booth-stack-note={stall.id}>
+                  {stack.note} {BOOTH_STACK_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-stack-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -646,6 +674,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Don&apos;t dig under
+          </Link>
+
+          <Link
+            href={stallStackPath(stall.slug)}
+            data-booth-stack-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Don&apos;t unfold the pile
           </Link>
 
           <Link
