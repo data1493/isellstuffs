@@ -76,6 +76,7 @@ import { ListingVgNotice } from "@/components/listing-vg-notice";
 import { ListingBakeNotice } from "@/components/listing-bake-notice";
 import { ListingGlassNotice } from "@/components/listing-glass-notice";
 import { ListingDoubleNotice } from "@/components/listing-double-notice";
+import { ListingPolishNotice } from "@/components/listing-polish-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -173,6 +174,7 @@ import {
   listingBakePath,
   listingGlassPath,
   listingDoublePath,
+  listingPolishPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -414,6 +416,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPhoneNotice listingId={listing.id} /> : null}
               {physical ? <ListingRipNotice listingId={listing.id} /> : null}
               {physical ? <ListingZipNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPolishNotice listingId={listing.id} /> : null}
               {physical ? <ListingWhoseNotice listingId={listing.id} /> : null}
               {physical ? <ListingTwistNotice listingId={listing.id} /> : null}
               {physical ? <ListingVgNotice listingId={listing.id} /> : null}
@@ -750,6 +753,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don't have the zip
+                  </Link>
+                  <Link
+                    href={listingPolishPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not polish
                   </Link>
                   <Link
                     href={listingWhosePath(listing.id)}

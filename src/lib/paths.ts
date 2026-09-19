@@ -610,6 +610,14 @@ export function listingDoubleWritePath() {
   return "/listings/double";
 }
 
+export function listingPolishPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/polish`;
+}
+
+export function listingPolishWritePath() {
+  return "/listings/polish";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

@@ -147,11 +147,18 @@ import {
   subscribeDouble,
 } from "@/lib/listing-double";
 import {
+  canTapePolish,
+  isListingPolishOverlay,
+  readPolishListingIds,
+  subscribePolish,
+} from "@/lib/listing-polish";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
   listingGlassWritePath,
+  listingPolishWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -244,6 +251,7 @@ export function DeskBoard({
   const [bakeIds, setBakeIds] = useState<string[]>([]);
   const [glassIds, setGlassIds] = useState<string[]>([]);
   const [doubleIds, setDoubleIds] = useState<string[]>([]);
+  const [polishIds, setPolishIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -281,6 +289,7 @@ export function DeskBoard({
       setBakeIds(readBakeListingIds());
       setGlassIds(readGlassListingIds());
       setDoubleIds(readDoubleListingIds());
+      setPolishIds(readPolishListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -307,6 +316,7 @@ export function DeskBoard({
     const unsubBake = subscribeBake(apply);
     const unsubGlass = subscribeGlass(apply);
     const unsubDouble = subscribeDouble(apply);
+    const unsubPolish = subscribePolish(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -343,6 +353,7 @@ export function DeskBoard({
       unsubBake();
       unsubGlass();
       unsubDouble();
+      unsubPolish();
     };
   }, [listings, stall.id]);
 
@@ -586,6 +597,37 @@ export function DeskBoard({
                             {isListingGlassOverlay(listing.id, glassIds)
                               ? "Leave the lid"
                               : "I will not replace the glass"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePolish(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPolishWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPolishOverlay(listing.id, polishIds)
+                                ? "open"
+                                : "polish"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPolishOverlay(listing.id, polishIds)
+                              ? "Leave the scratch"
+                              : "I will not polish"}
                           </button>
                         </form>
                       ) : null}
