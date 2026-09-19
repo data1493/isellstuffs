@@ -65,6 +65,11 @@ import {
   parseBoothMatch,
 } from "@/lib/booth-match";
 import {
+  BOOTH_SEAT_COOKIE_NAME,
+  BOOTH_SEAT_MIRROR_SCRIPT,
+  parseBoothSeat,
+} from "@/lib/booth-seat";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -124,6 +129,7 @@ export default async function LotPage() {
   const digMap = parseBoothDig(jar.get(BOOTH_DIG_COOKIE_NAME)?.value);
   const stackMap = parseBoothStack(jar.get(BOOTH_STACK_COOKIE_NAME)?.value);
   const matchMap = parseBoothMatch(jar.get(BOOTH_MATCH_COOKIE_NAME)?.value);
+  const seatMap = parseBoothSeat(jar.get(BOOTH_SEAT_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -148,6 +154,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DIG_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STACK_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_MATCH_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_SEAT_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -173,6 +180,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DIG_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STACK_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_MATCH_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_SEAT_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -249,6 +257,7 @@ export default async function LotPage() {
                     digNote={digMap[row.stall.id]?.note}
                     stackNote={stackMap[row.stall.id]?.note}
                     matchNote={matchMap[row.stall.id]?.note}
+                    seatNote={seatMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -290,6 +299,7 @@ export default async function LotPage() {
                     digNote={digMap[row.stall.id]?.note}
                     stackNote={stackMap[row.stall.id]?.note}
                     matchNote={matchMap[row.stall.id]?.note}
+                    seatNote={seatMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

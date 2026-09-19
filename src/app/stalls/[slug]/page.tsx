@@ -105,6 +105,13 @@ import {
   stallMatchPath,
 } from "@/lib/booth-match";
 import {
+  BOOTH_SEAT_COOKIE_NAME,
+  BOOTH_SEAT_PAPER_LINE,
+  boothSeatFor,
+  parseBoothSeat,
+  stallSeatPath,
+} from "@/lib/booth-seat";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -272,6 +279,10 @@ export default async function StallPage({
   const match = boothMatchFor(
     stall.id,
     parseBoothMatch(jar.get(BOOTH_MATCH_COOKIE_NAME)?.value),
+  );
+  const seat = boothSeatFor(
+    stall.id,
+    parseBoothSeat(jar.get(BOOTH_SEAT_COOKIE_NAME)?.value),
   );
 
   return (
@@ -582,6 +593,23 @@ export default async function StallPage({
             <p data-booth-match-empty={stall.id} hidden />
           )}
 
+          {seat ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Don't sit on the crate"
+              title="The crate is stock, not a chair."
+              body={
+                <p data-booth-seat-note={stall.id}>
+                  {seat.note} {BOOTH_SEAT_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-seat-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -718,6 +746,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Nothing matches
+          </Link>
+
+          <Link
+            href={stallSeatPath(stall.slug)}
+            data-booth-seat-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Don&apos;t sit on the crate
           </Link>
 
           <Link
