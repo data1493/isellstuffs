@@ -642,6 +642,14 @@ export function listingTinesWritePath() {
   return "/listings/tines";
 }
 
+export function listingCapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cap`;
+}
+
+export function listingCapWritePath() {
+  return "/listings/cap";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

@@ -171,6 +171,12 @@ import {
   subscribeTines,
 } from "@/lib/listing-tines";
 import {
+  canTapeCap,
+  isListingCapOverlay,
+  readCapListingIds,
+  subscribeCap,
+} from "@/lib/listing-cap";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -179,6 +185,7 @@ import {
   listingPolishWritePath,
   listingInsideWritePath,
   listingTinesWritePath,
+  listingCapWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -276,6 +283,7 @@ export function DeskBoard({
   const [polishIds, setPolishIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
+  const [capIds, setCapIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -317,6 +325,7 @@ export function DeskBoard({
       setPolishIds(readPolishListingIds());
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
+      setCapIds(readCapListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -347,6 +356,7 @@ export function DeskBoard({
     const unsubPolish = subscribePolish(apply);
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
+    const unsubCap = subscribeCap(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -387,6 +397,7 @@ export function DeskBoard({
       unsubPolish();
       unsubInside();
       unsubTines();
+      unsubCap();
     };
   }, [listings, stall.id]);
 
@@ -692,6 +703,37 @@ export function DeskBoard({
                             {isListingInsideOverlay(listing.id, insideIds)
                               ? "Leave the empties"
                               : "I will not say what was inside"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCap(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCapWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCapOverlay(listing.id, capIds)
+                                ? "open"
+                                : "cap"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCapOverlay(listing.id, capIds)
+                              ? "Leave it open"
+                              : "I don't have a cap"}
                           </button>
                         </form>
                       ) : null}
