@@ -294,6 +294,13 @@ import {
   stallSpiderPath,
 } from "@/lib/booth-spider";
 import {
+  BOOTH_MIRROR_COOKIE_NAME,
+  BOOTH_MIRROR_PAPER_LINE,
+  boothMirrorFor,
+  parseBoothMirror,
+  stallMirrorPath,
+} from "@/lib/booth-mirror";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -569,6 +576,10 @@ export default async function StallPage({
   const spider = boothSpiderFor(
     stall.id,
     parseBoothSpider(jar.get(BOOTH_SPIDER_COOKIE_NAME)?.value),
+  );
+  const mirror = boothMirrorFor(
+    stall.id,
+    parseBoothMirror(jar.get(BOOTH_MIRROR_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1338,6 +1349,23 @@ export default async function StallPage({
             <p data-booth-spider-empty={stall.id} hidden />
           )}
 
+          {mirror ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a mirror"
+              title="Still a rack."
+              body={
+                <p data-booth-mirror-note={stall.id}>
+                  {mirror.note} {BOOTH_MIRROR_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-mirror-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1690,6 +1718,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a spider
+          </Link>
+
+          <Link
+            href={stallMirrorPath(stall.slug)}
+            data-booth-mirror-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a mirror
           </Link>
 
           <Link

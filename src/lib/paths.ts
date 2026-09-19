@@ -1376,6 +1376,14 @@ export function stallSpiderWritePath() {
   return "/stalls/spider";
 }
 
+export function stallMirrorPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/mirror`;
+}
+
+export function stallMirrorWritePath() {
+  return "/stalls/mirror";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

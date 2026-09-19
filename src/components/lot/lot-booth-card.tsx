@@ -64,6 +64,7 @@ export function LotBoothCard({
   driverNote,
   playerNote,
   spiderNote,
+  mirrorNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -110,6 +111,7 @@ export function LotBoothCard({
   driverNote?: string;
   playerNote?: string;
   spiderNote?: string;
+  mirrorNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -562,6 +564,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-spider-empty={stall.id} hidden />
+          )}
+          {mirrorNote ? (
+            <p
+              data-booth-mirror-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a mirror. {mirrorNote}
+            </p>
+          ) : (
+            <p data-booth-mirror-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
