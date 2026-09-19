@@ -9,20 +9,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   adKindCopy,
+  campaignLanderPath,
   homepageBeatsCampaign,
   liveSurfaces,
 } from "@/lib/ads-display";
 import { adSlots, stallById } from "@/lib/commerce";
 import { advertisePath, stallPath } from "@/lib/paths";
+import { shareMetadata } from "@/lib/seo";
 
 const slot = adSlots.find((item) => item.id === homepageBeatsCampaign.slotId);
 
-export const metadata: Metadata = {
+export const metadata: Metadata = shareMetadata({
   title: slot?.headline ?? "Campaign ended",
   description:
     slot?.blurb ??
     "This campaign URL is off the floor. See the mall rate card.",
-};
+  path: campaignLanderPath,
+});
 
 export default function HomepageBeatsCampaignPage() {
   if (!slot) {

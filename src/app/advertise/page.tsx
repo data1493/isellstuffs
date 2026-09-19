@@ -8,18 +8,21 @@ import { PaidStamp } from "@/components/ads/paid-stamp";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { campaignLanderPath } from "@/lib/ads-display";
 import {
   adSlots,
   adSlotsByKind,
   formatMoney,
 } from "@/lib/commerce";
-import { campaignLanderPath } from "@/lib/ads-display";
+import { advertisePath } from "@/lib/paths";
+import { shareMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = shareMetadata({
   title: "Advertise",
   description:
     "Buy a labeled corner: featured stall, homepage takeover, or hub takeover. The mall does not hide paid light.",
-};
+  path: advertisePath(),
+});
 
 const rules = [
   {
