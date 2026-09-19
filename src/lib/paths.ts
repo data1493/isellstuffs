@@ -1266,6 +1266,14 @@ export function listingOutlineWritePath() {
   return "/listings/outline";
 }
 
+export function listingDeoxPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/deox`;
+}
+
+export function listingDeoxWritePath() {
+  return "/listings/deox";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

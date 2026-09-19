@@ -162,6 +162,7 @@ import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
+import { ListingDeoxNotice } from "@/components/listing-deox-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -734,6 +735,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingFellNotice listingId={listing.id} /> : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
+              {physical ? <ListingDeoxNotice listingId={listing.id} /> : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
               {physical ? <ListingHandleNotice listingId={listing.id} /> : null}

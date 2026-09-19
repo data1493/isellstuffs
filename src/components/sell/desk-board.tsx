@@ -513,6 +513,12 @@ import {
   subscribeReflow,
 } from "@/lib/listing-reflow";
 import {
+  canTapeDeox,
+  isListingDeoxOverlay,
+  readDeoxListingIds,
+  subscribeDeox,
+} from "@/lib/listing-deox";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -870,6 +876,7 @@ import {
   listingSubsetWritePath,
   listingProofWritePath,
   listingReflowWritePath,
+  listingDeoxWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingContrastWritePath,
@@ -1051,6 +1058,7 @@ export function DeskBoard({
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
   const [reflowIds, setReflowIds] = useState<string[]>([]);
+  const [deoxIds, setDeoxIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1195,6 +1203,7 @@ export function DeskBoard({
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
       setReflowIds(readReflowListingIds());
+      setDeoxIds(readDeoxListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -1328,6 +1337,7 @@ export function DeskBoard({
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
     const unsubReflow = subscribeReflow(apply);
+    const unsubDeox = subscribeDeox(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -1471,6 +1481,7 @@ export function DeskBoard({
       unsubDart();
       unsubContrast();
       unsubReflow();
+      unsubDeox();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -3902,6 +3913,37 @@ export function DeskBoard({
                             {isListingReflowOverlay(listing.id, reflowIds)
                               ? "Leave the joints"
                               : "I will not reflow it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDeox(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDeoxWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDeoxOverlay(listing.id, deoxIds)
+                                ? "open"
+                                : "deox"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDeoxOverlay(listing.id, deoxIds)
+                              ? "Leave the slot"
+                              : "I will not deox it"}
                           </button>
                         </form>
                       ) : null}
