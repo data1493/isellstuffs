@@ -107,6 +107,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Wrong on purpose | http://127.0.0.1:44721/listings/dl-crate-side-a/wrong |
 | Not a foundry seat | http://127.0.0.1:44721/listings/dl-booth-font/foundry |
 | I don't convert | http://127.0.0.1:44721/listings/dl-camera-luts/convert |
+| BPM is a guess | http://127.0.0.1:44721/listings/dl-sample-pack/bpm |
 | Won't split the pile | http://127.0.0.1:44721/listings/gtk-cable-drawer/pile |
 | The strap walked | http://127.0.0.1:44721/listings/clo-windbreaker/strap |
 | The water ring stays | http://127.0.0.1:44721/listings/gtk-cable-drawer/ring |
@@ -245,6 +246,8 @@ Digital files can tape liner honesty at `/listings/[id]/wrong`. Native `POST /li
 Digital files can tape booth-font honesty at `/listings/[id]/foundry`. Native `POST /listings/foundry` (form: `listingId`, `intent=foundry|open`) writes `iss:foundry-listing-ids` / cookie `iss-foundry-listing-ids`. Not a foundry seat. One booth license. Stick is no email. This is the booth font honesty. Not a EULA shop. Not stick. Still tote. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and lamps are refused. The lamp stays empty if you taped the mall-directory font. Stick stays the zip note.
 
 Digital files can tape format honesty at `/listings/[id]/convert`. Native `POST /listings/convert` (form: `listingId`, `intent=convert|open`) writes `iss:convert-listing-ids` / cookie `iss-convert-listing-ids`. I don't convert. The cubes stay .cube. Grade is I don't grade. Foundry is a booth license. This is the LUT format. I will not convert CUBE to 3DL. Still tote. Not grade. Not foundry. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and lamps are refused. The lamp stays empty if you taped the LUT pack. Grade stays the as-shot note.
+
+Digital files can tape tempo honesty at `/listings/[id]/bpm`. Native `POST /listings/bpm` (form: `listingId`, `intent=bpm|open`) writes `iss:bpm-listing-ids` / cookie `iss-bpm-listing-ids`. BPM is a guess. I will not tempo-map. Stems is twelve shots. Grade is I don't grade. Convert is no Rec.709. Walkers still ask Beats for a tempo map. Still tote. Not stems. Not convert. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and lamps are refused. The LUT pack stays empty if you taped the sample pack. Stems stays the shot count.
 
 Physical listings can tape a whole-drawer note at `/listings/[id]/pile`. Native `POST /listings/pile` (form: `listingId`, `intent=pile|open`) writes `iss:pile-listing-ids` / cookie `iss-pile-listing-ids`. Won't split the pile. Take the drawer or leave it. Parts is it does not run. Walkers still pull one USB from the cable drawer. Still tote. Not parts. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the cable drawer. Parts stays it does not run.
 

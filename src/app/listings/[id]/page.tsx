@@ -49,6 +49,7 @@ import { ListingClipNotice } from "@/components/listing-clip-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
 import { ListingFoundryNotice } from "@/components/listing-foundry-notice";
 import { ListingConvertNotice } from "@/components/listing-convert-notice";
+import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
 import { ListingOilNotice } from "@/components/listing-oil-notice";
 import { ListingSleeveNotice } from "@/components/listing-sleeve-notice";
@@ -126,6 +127,7 @@ import {
   listingWrongPath,
   listingFoundryPath,
   listingConvertPath,
+  listingBpmPath,
   listingManualPath,
   listingOilPath,
   listingSleevePath,
@@ -332,6 +334,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? (
                 <ListingConvertNotice listingId={listing.id} />
               ) : null}
+              {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
@@ -701,6 +704,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don't convert
+                  </Link>
+                  <Link
+                    href={listingBpmPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    BPM is a guess
                   </Link>
                 </p>
               )}

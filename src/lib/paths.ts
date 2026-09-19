@@ -450,6 +450,14 @@ export function listingSoleWritePath() {
   return "/listings/sole";
 }
 
+export function listingBpmPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bpm`;
+}
+
+export function listingBpmWritePath() {
+  return "/listings/bpm";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
