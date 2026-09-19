@@ -14,6 +14,8 @@ import {
 } from "@/lib/commerce";
 
 export const AD_BOOKINGS_STORAGE_KEY = "iss:ad-bookings";
+export const AD_BOOKINGS_COOKIE = "iss-ad-bookings";
+export const AD_BOOKINGS_CHANGED_EVENT = "iss:ad-bookings-changed";
 
 export const NEXT_WINDOW = "Next weekend" as const;
 
@@ -141,7 +143,13 @@ export function parseAdBookings(raw: string | null | undefined): AdBooking[] {
     return [];
   }
   try {
-    const parsed: unknown = JSON.parse(raw);
+    let value = raw;
+    try {
+      value = decodeURIComponent(raw);
+    } catch {
+      value = raw;
+    }
+    const parsed: unknown = JSON.parse(value);
     if (!Array.isArray(parsed)) {
       return [];
     }
@@ -179,24 +187,36 @@ export function subscribeAdBookings(listener: () => void) {
     }
   };
   window.addEventListener("storage", onStorage);
+  window.addEventListener(AD_BOOKINGS_CHANGED_EVENT, listener);
   return () => {
     window.removeEventListener("storage", onStorage);
+    window.removeEventListener(AD_BOOKINGS_CHANGED_EVENT, listener);
   };
+}
+
+function persistBookings(next: AdBooking[]) {
+  const raw = JSON.stringify(next);
+  try {
+    window.localStorage.setItem(AD_BOOKINGS_STORAGE_KEY, raw);
+  } catch {
+    // blocked storage
+  }
+  try {
+    document.cookie = `${AD_BOOKINGS_COOKIE}=${encodeURIComponent(raw)}; Path=/; Max-Age=2592000; SameSite=Lax`;
+  } catch {
+    // blocked cookies
+  }
+  window.dispatchEvent(new Event(AD_BOOKINGS_CHANGED_EVENT));
 }
 
 export function writeAdBooking(booking: AdBooking) {
   if (!canUseStorage()) {
     return;
   }
-  const next = [
+  persistBookings([
     booking,
     ...readAdBookings().filter((item) => item.id !== booking.id),
-  ];
-  try {
-    window.localStorage.setItem(AD_BOOKINGS_STORAGE_KEY, JSON.stringify(next));
-  } catch {
-    // blocked storage
-  }
+  ]);
 }
 
 export function createAdBooking(input: {

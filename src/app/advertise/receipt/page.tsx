@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
-import { BookReceiptView } from "@/components/ads/book-receipt";
+import { BookReceiptView } from "@/components/ads/book-receipt-view";
+import { BookReceiptCard } from "@/components/ads/book-receipt";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AD_BOOKINGS_COOKIE, parseAdBookings } from "@/lib/ad-booking";
 import { advertiseBookPath, advertisePath, advertiseReceiptPath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = shareMetadata({
   title: "Ad receipt",
@@ -29,6 +34,11 @@ export default async function AdvertiseReceiptPage({
 }) {
   const params = await searchParams;
   const bookingId = firstQuery(params.booking)?.trim();
+  const jar = await cookies();
+  const stored = parseAdBookings(jar.get(AD_BOOKINGS_COOKIE)?.value);
+  const fromCookie = bookingId
+    ? stored.find((item) => item.id === bookingId)
+    : undefined;
 
   if (!bookingId) {
     return (
@@ -90,7 +100,11 @@ export default async function AdvertiseReceiptPage({
 
       <MallSection className="border-b border-border">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(16rem,0.85fr)] lg:items-start">
-          <BookReceiptView bookingId={bookingId} />
+          {fromCookie ? (
+            <BookReceiptCard booking={fromCookie} />
+          ) : (
+            <BookReceiptView bookingId={bookingId} />
+          )}
           <div className="flex flex-col gap-3">
             <Button
               className="w-full rounded-full sm:w-auto"

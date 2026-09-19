@@ -1,21 +1,9 @@
-"use client";
-
-import Link from "next/link";
-import { useSyncExternalStore } from "react";
-
 import { PaidStamp } from "@/components/ads/paid-stamp";
-import { MallNotice } from "@/components/mall-notice";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { adKindCopy } from "@/lib/ads-display";
-import {
-  readAdBookings,
-  subscribeAdBookings,
-  type AdBooking,
-} from "@/lib/ad-booking";
+import { type AdBooking } from "@/lib/ad-booking";
 import { formatMoney, hubById } from "@/lib/commerce";
-import { advertiseBookPath, advertisePath } from "@/lib/paths";
 
 const lines = [
   { key: "package", label: "Package" },
@@ -91,69 +79,4 @@ export function BookReceiptCard({ booking }: { booking: AdBooking }) {
       </dl>
     </aside>
   );
-}
-
-const emptyBookings: AdBooking[] = [];
-
-function clientTrue() {
-  return true;
-}
-
-function serverFalse() {
-  return false;
-}
-
-function subscribeNothing() {
-  return () => {};
-}
-
-export function BookReceiptView({ bookingId }: { bookingId?: string }) {
-  const mounted = useSyncExternalStore(
-    subscribeNothing,
-    clientTrue,
-    serverFalse,
-  );
-  const bookings = useSyncExternalStore(
-    subscribeAdBookings,
-    readAdBookings,
-    () => emptyBookings,
-  );
-  const booking = bookingId
-    ? (bookings.find((item) => item.id === bookingId) ?? null)
-    : null;
-
-  if (!mounted) {
-    return <p className="text-sm text-muted-foreground">Pulling your slip…</p>;
-  }
-
-  if (!booking) {
-    return (
-      <MallNotice
-        padded={false}
-        tone="missing"
-        eyebrow="No slip"
-        title="That booking is not on this desk."
-        body="The receipt lives in this browser. The id is missing, this is a different machine, or the corner was never booked."
-        actions={
-          <>
-            <Button
-              className="rounded-full px-5"
-              render={<Link href={advertiseBookPath()} />}
-            >
-              Book next weekend
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-full px-5"
-              render={<Link href={advertisePath()} />}
-            >
-              Rate card
-            </Button>
-          </>
-        }
-      />
-    );
-  }
-
-  return <BookReceiptCard booking={booking} />;
 }

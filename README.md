@@ -36,7 +36,7 @@ Paid corners are a product. `/advertise` is the rate card. Next weekend can be b
 | `/campaigns/homepage-beats` | Beats Under the Table Fri–Mon lander. Receipt, not a blog post |
 | `/campaigns/yard-sale-tuesday` | Folding Table Tuesday Yard Sale hub takeover. Receipt, not a hub page |
 
-Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` via `@/lib/ad-booking` and stop at the receipt — they do not land on the floor yet.
+Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` and cookie `iss-ad-bookings` via `@/lib/ad-booking` and stop at the receipt — they do not land on the floor yet.
 
 ## Sell
 

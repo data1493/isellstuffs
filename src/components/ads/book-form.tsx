@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,29 +8,35 @@ import { Label } from "@/components/ui/label";
 import { adKindCopy } from "@/lib/ads-display";
 import {
   createAdBooking,
+  isHubId,
   writeAdBooking,
   type NextWindowPackage,
 } from "@/lib/ad-booking";
-import { formatMoney, mallHubs, type HubId } from "@/lib/commerce";
+import { formatMoney, mallHubs } from "@/lib/commerce";
 import { advertiseReceiptPath } from "@/lib/paths";
 
 export function BookForm({ pack }: { pack: NextWindowPackage }) {
-  const router = useRouter();
   const kind = adKindCopy[pack.kind];
   const needsHub = pack.kind === "hub-takeover";
-  const [stallName, setStallName] = useState("");
-  const [hubId, setHubId] = useState<HubId | "">("");
+  const [hubId, setHubId] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function submit() {
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError(null);
-    const name = stallName.trim();
+
+    const data = new FormData(event.currentTarget);
+    const name = String(data.get("stallName") ?? "")
+      .trim()
+      .replace(/\s+/g, " ");
+    const pickedHub = String(data.get("hubId") ?? "");
+
     if (name.length < 2) {
       setError("Name the stall that is buying the light.");
       return;
     }
-    if (needsHub && !hubId) {
+    if (needsHub && !isHubId(pickedHub)) {
       setError("Pick a hub on the map.");
       return;
     }
@@ -41,10 +46,10 @@ export function BookForm({ pack }: { pack: NextWindowPackage }) {
       const booking = createAdBooking({
         kind: pack.kind,
         stallName: name,
-        ...(needsHub && hubId ? { hubId } : {}),
+        ...(needsHub && isHubId(pickedHub) ? { hubId: pickedHub } : {}),
       });
       writeAdBooking(booking);
-      router.push(advertiseReceiptPath(booking.id));
+      window.location.assign(advertiseReceiptPath(booking.id));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not book the corner.");
       setBusy(false);
@@ -52,13 +57,7 @@ export function BookForm({ pack }: { pack: NextWindowPackage }) {
   }
 
   return (
-    <form
-      className="space-y-6"
-      onSubmit={(event) => {
-        event.preventDefault();
-        submit();
-      }}
-    >
+    <form className="space-y-6" onSubmit={submit}>
       <fieldset className="space-y-3">
         <legend className="font-heading text-xl tracking-tight">The booth</legend>
         <div className="space-y-1.5">
@@ -68,9 +67,8 @@ export function BookForm({ pack }: { pack: NextWindowPackage }) {
             name="stallName"
             autoComplete="organization"
             required
+            minLength={2}
             placeholder="Tape Drawer Saturday"
-            value={stallName}
-            onChange={(event) => setStallName(event.target.value)}
             className="h-11 bg-background"
           />
         </div>
