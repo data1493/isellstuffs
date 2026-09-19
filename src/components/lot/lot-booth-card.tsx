@@ -77,6 +77,7 @@ export function LotBoothCard({
   squareNote,
   jigNote,
   wickNote,
+  lastNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -136,6 +137,7 @@ export function LotBoothCard({
   squareNote?: string;
   jigNote?: string;
   wickNote?: string;
+  lastNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -718,6 +720,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-wick-empty={stall.id} hidden />
+          )}
+          {lastNote ? (
+            <p
+              data-booth-last-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a last. {lastNote}
+            </p>
+          ) : (
+            <p data-booth-last-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

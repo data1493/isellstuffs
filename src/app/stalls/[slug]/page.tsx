@@ -385,6 +385,13 @@ import {
   stallWickPath,
 } from "@/lib/booth-wick";
 import {
+  BOOTH_LAST_COOKIE_NAME,
+  BOOTH_LAST_PAPER_LINE,
+  boothLastFor,
+  parseBoothLast,
+  stallLastPath,
+} from "@/lib/booth-last";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -712,6 +719,10 @@ export default async function StallPage({
   const wick = boothWickFor(
     stall.id,
     parseBoothWick(jar.get(BOOTH_WICK_COOKIE_NAME)?.value),
+  );
+  const last = boothLastFor(
+    stall.id,
+    parseBoothLast(jar.get(BOOTH_LAST_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1702,6 +1713,23 @@ export default async function StallPage({
             <p data-booth-wick-empty={stall.id} hidden />
           )}
 
+          {last ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a last"
+              title="Still a table."
+              body={
+                <p data-booth-last-note={stall.id}>
+                  {last.note} {BOOTH_LAST_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-last-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2158,6 +2186,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a wick
+          </Link>
+
+          <Link
+            href={stallLastPath(stall.slug)}
+            data-booth-last-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a last
           </Link>
 
           <Link

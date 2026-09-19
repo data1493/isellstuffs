@@ -1896,6 +1896,14 @@ export function stallWickWritePath() {
   return "/stalls/wick";
 }
 
+export function stallLastPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/last`;
+}
+
+export function stallLastWritePath() {
+  return "/stalls/last";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
