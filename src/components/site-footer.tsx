@@ -6,6 +6,7 @@ import {
   aboutPath,
   collectionsPath,
   feesPath,
+  giftPath,
   helpPath,
   pickupPath,
   savedPath,
@@ -28,6 +29,7 @@ const browse = [
   { href: yardSaleTuesdayLanderPath, label: "Yard Sale campaign" },
   { href: "/cart", label: "Tote" },
   { href: pickupPath(), label: "Pickup" },
+  { href: giftPath(), label: "Gift desk" },
   { href: savedPath(), label: "Later pile" },
 ];
 

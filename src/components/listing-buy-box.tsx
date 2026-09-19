@@ -1,7 +1,14 @@
+import Link from "next/link";
+
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { SaveForLaterButton } from "@/components/save-for-later-button";
-import { formatMoney, isPhysicalListing, type Listing } from "@/lib/commerce";
-import { listingPath } from "@/lib/paths";
+import {
+  formatMoney,
+  isGiftListing,
+  isPhysicalListing,
+  type Listing,
+} from "@/lib/commerce";
+import { giftPath, listingPath } from "@/lib/paths";
 import {
   fulfillmentCopy,
   listingBuyKicker,
@@ -45,6 +52,17 @@ export function ListingBuyBox({ listing }: { listing: Listing }) {
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {fulfillmentCopy(listing)}
       </p>
+      {isGiftListing(listing) ? (
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          The desk reads the code.{" "}
+          <Link
+            href={giftPath()}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Gift desk
+          </Link>
+        </p>
+      ) : null}
     </div>
   );
 }

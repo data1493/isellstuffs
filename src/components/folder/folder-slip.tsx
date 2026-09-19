@@ -11,7 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { isGiftListing } from "@/lib/commerce";
 import type { FolderLine } from "@/lib/digital-folder";
+import { giftPath } from "@/lib/paths";
 
 export function FolderSlip({
   slip,
@@ -69,7 +71,7 @@ export function FolderSlip({
                 {line.formatLabel} · {line.stall.boothName}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <Button
                 className="w-full rounded-full sm:w-auto"
                 render={
@@ -81,6 +83,15 @@ export function FolderSlip({
               >
                 Download stand-in
               </Button>
+              {isGiftListing(line.listing) ? (
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full sm:w-auto"
+                  render={<Link href={giftPath()} />}
+                >
+                  Take this to the gift desk
+                </Button>
+              ) : null}
             </CardContent>
           </Card>
         ))}

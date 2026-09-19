@@ -23,6 +23,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
 | `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Not a second cart |
+| `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
 
@@ -64,6 +65,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
 | Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
+| Gift credit desk | http://127.0.0.1:44721/gift |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
 | Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |
@@ -148,7 +150,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/this-week` | Weekend stall drop. Objects and files, not a paid stamp |
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
-| `/cart`, `/checkout/*`, `/saved`, `/orders` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/checkout/*`, `/saved`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

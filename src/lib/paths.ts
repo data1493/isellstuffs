@@ -116,3 +116,11 @@ export function pickupPath() {
 export function pickupSlipPath(slip: string) {
   return `/pickup/${encodeURIComponent(slip)}`;
 }
+
+export function giftPath() {
+  return "/gift";
+}
+
+export function giftRedeemPath() {
+  return "/gift/redeem";
+}
