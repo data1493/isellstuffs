@@ -232,6 +232,14 @@ export function stallBuyWritePath() {
   return "/stalls/buy";
 }
 
+export function stallFilmPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/film`;
+}
+
+export function stallFilmWritePath() {
+  return "/stalls/film";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

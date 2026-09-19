@@ -46,6 +46,12 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BOOTH_FILM_COOKIE_NAME,
+  BOOTH_FILM_PAPER_LINE,
+  boothFilmFor,
+  parseBoothFilm,
+} from "@/lib/booth-film";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -84,6 +90,7 @@ import {
   stallFoldPath,
   stallPath,
   stallScrapPath,
+  stallFilmPath,
   stallShadePath,
   stallSharePath,
   stallSpotPath,
@@ -173,6 +180,10 @@ export default async function StallPage({
   const shade = boothShadeFor(
     stall.id,
     parseBoothShade(jar.get(BOOTH_SHADE_COOKIE_NAME)?.value),
+  );
+  const film = boothFilmFor(
+    stall.id,
+    parseBoothFilm(jar.get(BOOTH_FILM_COOKIE_NAME)?.value),
   );
 
   return (
@@ -338,6 +349,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {film ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Don't photograph the tags"
+              title="Walkers still film every 3×5."
+              body={
+                <p data-booth-film-note={stall.id}>
+                  {film.note} {BOOTH_FILM_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -402,6 +428,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Keep it in the shade
+          </Link>
+
+          <Link
+            href={stallFilmPath(stall.slug)}
+            data-booth-film-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Don&apos;t photograph the tags
           </Link>
 
           <Link
