@@ -7,6 +7,10 @@ import { StallMissing } from "@/components/mall-missing";
 import { MallNotice } from "@/components/mall-notice";
 import { PickupNote } from "@/components/pickup-note";
 import { StallCardCopy } from "@/components/stalls/stall-card-copy";
+import {
+  BagThisTableButton,
+  parseStallBagNotice,
+} from "@/components/stalls/bag-table-button";
 import { WatchStallButton } from "@/components/watch-stall-button";
 import { StallListingCard } from "@/components/stall-listing-card";
 import { StallMixBar } from "@/components/stall-mix-bar";
@@ -32,6 +36,7 @@ export const dynamic = "force-dynamic";
 
 type StallPageProps = {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ bag?: string | string[] }>;
 };
 
 export function generateStaticParams() {
@@ -51,7 +56,10 @@ export async function generateMetadata({
   return stallMetadata(stall);
 }
 
-export default async function StallPage({ params }: StallPageProps) {
+export default async function StallPage({
+  params,
+  searchParams,
+}: StallPageProps) {
   const { slug } = await params;
   const stall = stallBySlug(slug);
 
@@ -59,6 +67,7 @@ export default async function StallPage({ params }: StallPageProps) {
     return <StallMissing />;
   }
 
+  const bag = parseStallBagNotice((await searchParams)?.bag);
   const inventory = listingsByStall(stall.id);
   const physical = inventory.filter(isPhysicalListing);
   const digital = inventory.filter(isDigitalListing);
@@ -112,6 +121,8 @@ export default async function StallPage({ params }: StallPageProps) {
           ) : null}
 
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
+
+          <BagThisTableButton stallId={stall.id} slug={stall.slug} bag={bag} />
 
           <StallMixBar physical={physical.length} digital={digital.length} />
 

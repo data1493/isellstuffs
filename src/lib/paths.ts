@@ -207,6 +207,10 @@ export function stallsWatchPath() {
   return "/stalls/watch";
 }
 
+export function stallBagPath() {
+  return "/stalls/bag";
+}
+
 export function ordersPath() {
   return "/orders";
 }

@@ -100,7 +100,7 @@ Physical PDPs (and stall pages that still have objects) show how you pick the th
 
 Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — price, condition, booth, aisle. PDFs and the gift card have no tag. Files open in the folder after pay. Gift codes go to the desk. The tag does not show pickup hours.
 
-Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag.
+Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
 Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile. **Bag the pile** POSTs to `/saved/bag` and copies still-here ids onto the existing tote writer (`@/lib/cart`). Sold, file-gone, and missing SKUs stay parked. The pile cookie stays.
 
