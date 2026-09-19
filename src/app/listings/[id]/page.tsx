@@ -86,6 +86,7 @@ import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingEvenNotice } from "@/components/listing-even-notice";
 import { ListingLinkNotice } from "@/components/listing-link-notice";
+import { ListingCenterNotice } from "@/components/listing-center-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingVersoNotice } from "@/components/listing-verso-notice";
 import { ListingIconsNotice } from "@/components/listing-icons-notice";
@@ -196,6 +197,7 @@ import {
   listingDonglePath,
   listingEvenPath,
   listingLinkPath,
+  listingCenterPath,
   listingTunePath,
   listingVersoPath,
   listingIconsPath,
@@ -459,6 +461,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
               {physical ? <ListingEvenNotice listingId={listing.id} /> : null}
               {physical ? <ListingLinkNotice listingId={listing.id} /> : null}
+              {physical ? <ListingCenterNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -869,6 +872,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don't have a link
+                  </Link>
+                  <Link
+                    href={listingCenterPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not center it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

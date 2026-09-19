@@ -207,6 +207,12 @@ import {
   subscribeLink,
 } from "@/lib/listing-link";
 import {
+  canTapeCenter,
+  isListingCenterOverlay,
+  readCenterListingIds,
+  subscribeCenter,
+} from "@/lib/listing-center";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -239,6 +245,7 @@ import {
   listingDongleWritePath,
   listingEvenWritePath,
   listingLinkWritePath,
+  listingCenterWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
   listingVersoWritePath,
@@ -345,6 +352,7 @@ export function DeskBoard({
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
+  const [centerIds, setCenterIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
@@ -395,6 +403,7 @@ export function DeskBoard({
       setDongleIds(readDongleListingIds());
       setEvenIds(readEvenListingIds());
       setLinkIds(readLinkListingIds());
+      setCenterIds(readCenterListingIds());
       setTuneIds(readTuneListingIds());
       setVersoIds(readVersoListingIds());
       setIconsIds(readIconsListingIds());
@@ -434,6 +443,7 @@ export function DeskBoard({
     const unsubDongle = subscribeDongle(apply);
     const unsubEven = subscribeEven(apply);
     const unsubLink = subscribeLink(apply);
+    const unsubCenter = subscribeCenter(apply);
     const unsubTune = subscribeTune(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubIcons = subscribeIcons(apply);
@@ -483,6 +493,7 @@ export function DeskBoard({
       unsubDongle();
       unsubEven();
       unsubLink();
+      unsubCenter();
       unsubTune();
       unsubVerso();
       unsubIcons();
@@ -977,6 +988,37 @@ export function DeskBoard({
                             {isListingLinkOverlay(listing.id, linkIds)
                               ? "Leave the brick"
                               : "I don't have a link"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCenter(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCenterWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCenterOverlay(listing.id, centerIds)
+                                ? "open"
+                                : "center"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCenterOverlay(listing.id, centerIds)
+                              ? "Leave the hole"
+                              : "I will not center it"}
                           </button>
                         </form>
                       ) : null}

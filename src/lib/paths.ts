@@ -714,6 +714,14 @@ export function listingIconsWritePath() {
   return "/listings/icons";
 }
 
+export function listingCenterPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/center`;
+}
+
+export function listingCenterWritePath() {
+  return "/listings/center";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
