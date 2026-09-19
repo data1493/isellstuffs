@@ -423,6 +423,12 @@ import {
   subscribeDub,
 } from "@/lib/listing-dub";
 import {
+  canTapeStitch,
+  isListingStitchOverlay,
+  readStitchListingIds,
+  subscribeStitch,
+} from "@/lib/listing-stitch";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -526,6 +532,7 @@ import {
   listingSandWritePath,
   listingContentsWritePath,
   listingDubWritePath,
+  listingStitchWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -686,6 +693,7 @@ export function DeskBoard({
   const [sandIds, setSandIds] = useState<string[]>([]);
   const [contentsIds, setContentsIds] = useState<string[]>([]);
   const [dubIds, setDubIds] = useState<string[]>([]);
+  const [stitchIds, setStitchIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -780,6 +788,7 @@ export function DeskBoard({
       setSandIds(readSandListingIds());
       setContentsIds(readContentsListingIds());
       setDubIds(readDubListingIds());
+      setStitchIds(readStitchListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -863,6 +872,7 @@ export function DeskBoard({
     const unsubSand = subscribeSand(apply);
     const unsubContents = subscribeContents(apply);
     const unsubDub = subscribeDub(apply);
+    const unsubStitch = subscribeStitch(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -956,6 +966,7 @@ export function DeskBoard({
       unsubSand();
       unsubContents();
       unsubDub();
+      unsubStitch();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2205,6 +2216,37 @@ export function DeskBoard({
                             {isListingDubOverlay(listing.id, dubIds)
                               ? "Leave the hiss"
                               : "I will not dub it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeStitch(listing) ? (
+                        <form
+                          method="post"
+                          action={listingStitchWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingStitchOverlay(listing.id, stitchIds)
+                                ? "open"
+                                : "stitch"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingStitchOverlay(listing.id, stitchIds)
+                              ? "Leave the split"
+                              : "I will not stitch them"}
                           </button>
                         </form>
                       ) : null}

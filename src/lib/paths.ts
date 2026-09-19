@@ -1010,6 +1010,14 @@ export function listingDubWritePath() {
   return "/listings/dub";
 }
 
+export function listingStitchPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/stitch`;
+}
+
+export function listingStitchWritePath() {
+  return "/listings/stitch";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
