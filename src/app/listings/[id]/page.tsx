@@ -106,6 +106,7 @@ import { ListingGumNotice } from "@/components/listing-gum-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingNormNotice } from "@/components/listing-norm-notice";
 import { ListingVersoNotice } from "@/components/listing-verso-notice";
+import { ListingYearNotice } from "@/components/listing-year-notice";
 import { ListingIconsNotice } from "@/components/listing-icons-notice";
 import { ListingBoldNotice } from "@/components/listing-bold-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
@@ -235,6 +236,7 @@ import {
   listingTunePath,
   listingNormPath,
   listingVersoPath,
+  listingYearPath,
   listingIconsPath,
   listingBoldPath,
   listingSizePath,
@@ -439,6 +441,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <ListingRememberNotice listingId={listing.id} />
               ) : null}
               {!physical ? <ListingVersoNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingYearNotice listingId={listing.id} /> : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
@@ -1066,6 +1069,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not write Side B
+                  </Link>
+                  <Link
+                    href={listingYearPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not date it
                   </Link>
                   <Link
                     href={listingStemsPath(listing.id)}

@@ -321,6 +321,12 @@ import {
   subscribeVerso,
 } from "@/lib/listing-verso";
 import {
+  canTapeYear,
+  isListingYearOverlay,
+  readYearListingIds,
+  subscribeYear,
+} from "@/lib/listing-year";
+import {
   canTapeIcons,
   isListingIconsOverlay,
   readIconsListingIds,
@@ -371,6 +377,7 @@ import {
   listingTuneWritePath,
   listingNormWritePath,
   listingVersoWritePath,
+  listingYearWritePath,
   listingIconsWritePath,
   listingBoldWritePath,
   listingSlantWritePath,
@@ -498,6 +505,7 @@ export function DeskBoard({
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [normIds, setNormIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
+  const [yearIds, setYearIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
   const [boldIds, setBoldIds] = useState<string[]>([]);
   const [card, setCard] = useState({
@@ -567,6 +575,7 @@ export function DeskBoard({
       setTuneIds(readTuneListingIds());
       setNormIds(readNormListingIds());
       setVersoIds(readVersoListingIds());
+      setYearIds(readYearListingIds());
       setIconsIds(readIconsListingIds());
       setBoldIds(readBoldListingIds());
       const patch = stallCardById(stall.id);
@@ -625,6 +634,7 @@ export function DeskBoard({
     const unsubTune = subscribeTune(apply);
     const unsubNorm = subscribeNorm(apply);
     const unsubVerso = subscribeVerso(apply);
+    const unsubYear = subscribeYear(apply);
     const unsubIcons = subscribeIcons(apply);
     const unsubBold = subscribeBold(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
@@ -693,6 +703,7 @@ export function DeskBoard({
       unsubTune();
       unsubNorm();
       unsubVerso();
+      unsubYear();
       unsubIcons();
       unsubBold();
     };
@@ -2209,6 +2220,37 @@ export function DeskBoard({
                             {isListingVersoOverlay(listing.id, versoIds)
                               ? "Leave the one page"
                               : "I will not write Side B"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeYear(listing) ? (
+                        <form
+                          method="post"
+                          action={listingYearWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingYearOverlay(listing.id, yearIds)
+                                ? "open"
+                                : "year"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingYearOverlay(listing.id, yearIds)
+                              ? "Leave it summer-ish"
+                              : "I will not date it"}
                           </button>
                         </form>
                       ) : null}

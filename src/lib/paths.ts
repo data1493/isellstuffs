@@ -770,6 +770,14 @@ export function listingVersoWritePath() {
   return "/listings/verso";
 }
 
+export function listingYearPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/year`;
+}
+
+export function listingYearWritePath() {
+  return "/listings/year";
+}
+
 export function listingLinkPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/link`;
 }
