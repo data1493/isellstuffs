@@ -363,6 +363,12 @@ import {
   subscribeNorm,
 } from "@/lib/listing-norm";
 import {
+  canTapeRights,
+  isListingRightsOverlay,
+  readRightsListingIds,
+  subscribeRights,
+} from "@/lib/listing-rights";
+import {
   canTapeVerso,
   isListingVersoOverlay,
   readVersoListingIds,
@@ -430,6 +436,7 @@ import {
   listingLoopWritePath,
   listingTuneWritePath,
   listingNormWritePath,
+  listingRightsWritePath,
   listingVersoWritePath,
   listingYearWritePath,
   listingIconsWritePath,
@@ -568,6 +575,7 @@ export function DeskBoard({
   const [gasketIds, setGasketIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [normIds, setNormIds] = useState<string[]>([]);
+  const [rightsIds, setRightsIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [yearIds, setYearIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
@@ -646,6 +654,7 @@ export function DeskBoard({
       setGasketIds(readGasketListingIds());
       setTuneIds(readTuneListingIds());
       setNormIds(readNormListingIds());
+      setRightsIds(readRightsListingIds());
       setVersoIds(readVersoListingIds());
       setYearIds(readYearListingIds());
       setIconsIds(readIconsListingIds());
@@ -713,6 +722,7 @@ export function DeskBoard({
     const unsubGasket = subscribeGasket(apply);
     const unsubTune = subscribeTune(apply);
     const unsubNorm = subscribeNorm(apply);
+    const unsubRights = subscribeRights(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubYear = subscribeYear(apply);
     const unsubIcons = subscribeIcons(apply);
@@ -790,6 +800,7 @@ export function DeskBoard({
       unsubGasket();
       unsubTune();
       unsubNorm();
+      unsubRights();
       unsubVerso();
       unsubYear();
       unsubIcons();
@@ -2432,6 +2443,37 @@ export function DeskBoard({
                             {isListingNormOverlay(listing.id, normIds)
                               ? "Leave it as recorded"
                               : "I will not normalize"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRights(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRightsWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRightsOverlay(listing.id, rightsIds)
+                                ? "open"
+                                : "rights"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRightsOverlay(listing.id, rightsIds)
+                              ? "Leave it as recorded"
+                              : "I will not clear it"}
                           </button>
                         </form>
                       ) : null}

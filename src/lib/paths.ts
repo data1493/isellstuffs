@@ -786,6 +786,14 @@ export function listingNormWritePath() {
   return "/listings/norm";
 }
 
+export function listingRightsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rights`;
+}
+
+export function listingRightsWritePath() {
+  return "/listings/rights";
+}
+
 export function listingVersoPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/verso`;
 }
