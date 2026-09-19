@@ -651,6 +651,12 @@ import {
   subscribeGrain,
 } from "@/lib/listing-grain";
 import {
+  canTapeCube,
+  isListingCubeOverlay,
+  readCubeListingIds,
+  subscribeCube,
+} from "@/lib/listing-cube";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -803,6 +809,7 @@ import {
   listingProofWritePath,
   listingReflowWritePath,
   listingGrainWritePath,
+  listingCubeWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1020,6 +1027,7 @@ export function DeskBoard({
   const [subsetIds, setSubsetIds] = useState<string[]>([]);
   const [proofIds, setProofIds] = useState<string[]>([]);
   const [grainIds, setGrainIds] = useState<string[]>([]);
+  const [cubeIds, setCubeIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1154,6 +1162,7 @@ export function DeskBoard({
       setSubsetIds(readSubsetListingIds());
       setProofIds(readProofListingIds());
       setGrainIds(readGrainListingIds());
+      setCubeIds(readCubeListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1277,6 +1286,7 @@ export function DeskBoard({
     const unsubSubset = subscribeSubset(apply);
     const unsubProof = subscribeProof(apply);
     const unsubGrain = subscribeGrain(apply);
+    const unsubCube = subscribeCube(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1410,6 +1420,7 @@ export function DeskBoard({
       unsubSubset();
       unsubProof();
       unsubGrain();
+      unsubCube();
     };
   }, [listings, stall.id]);
 
@@ -4133,6 +4144,37 @@ export function DeskBoard({
                             {isListingGrainOverlay(listing.id, grainIds)
                               ? "Leave the looks"
                               : "I will not grain them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCube(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCubeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCubeOverlay(listing.id, cubeIds)
+                                ? "open"
+                                : "cube"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCubeOverlay(listing.id, cubeIds)
+                              ? "Leave the three looks"
+                              : "I will not cube them"}
                           </button>
                         </form>
                       ) : null}

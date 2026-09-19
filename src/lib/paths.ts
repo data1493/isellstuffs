@@ -1306,6 +1306,14 @@ export function listingPickleWritePath() {
   return "/listings/pickle";
 }
 
+export function listingCubePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cube`;
+}
+
+export function listingCubeWritePath() {
+  return "/listings/cube";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
