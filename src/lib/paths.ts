@@ -34,6 +34,14 @@ export function listingVanWritePath() {
   return "/listings/van";
 }
 
+export function listingFirmPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/firm`;
+}
+
+export function listingFirmTapePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/firm/tape`;
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

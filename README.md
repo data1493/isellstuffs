@@ -80,6 +80,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
 | Driveway price tag | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/tag |
 | Offer slip | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/offer |
+| That's the price | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/firm |
 | Look, don't bag | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/look |
 | More in the van | http://127.0.0.1:44721/listings/gtk-cable-drawer/van |
 | Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
@@ -117,6 +118,8 @@ Physical PDPs (and stall pages that still have objects) show how you pick the th
 Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — price, condition, booth, aisle. PDFs and the gift card have no tag. Files open in the folder after pay. Gift codes go to the desk. The tag does not show pickup hours.
 
 Physical listings can tape a paper haggle at `/listings/[id]/offer`. Write dollars on the lamp — $8 on the $12 tag — and the stall desk can see that scrap. PDFs and the gift card have no offer. Taping a number does not change the tag or the tote.
+
+Physical listings can tape firm paper at `/listings/[id]/firm`. That's the price. The seller will not move. Native `POST /listings/[id]/firm/tape` (form: `listingId`, `intent=firm|open`) writes `iss:firm-listing-ids` / cookie `iss-firm-listing-ids`. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The Closet windbreaker stays empty if you firmed the lamp. An offer is the other paper.
 
 Physical listings can sit as a display piece at `/listings/[id]/look`. Native `POST /listings/look` (form: `listingId`, `intent=look|open`) writes `iss:look-listing-ids` / cookie `iss-look-listing-ids`. Shop lookups stamp `cartEligible: false` and leave `status` alone. Look drops that id from the tote. Sell-again restores Add to cart. Gift cards and PDFs are refused. Tuesday stays on `/lot`. Not a sold sticker. Not a pack-up.
 
@@ -226,7 +229,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/listings/[id]/firm`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 
