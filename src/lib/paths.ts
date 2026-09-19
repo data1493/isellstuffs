@@ -1566,3 +1566,27 @@ export function cartShakePath() {
 export function cartShakeWritePath() {
   return "/cart/shake/write";
 }
+
+export function agentsPath() {
+  return "/agents";
+}
+
+export function agentsWritePath() {
+  return "/agents/write";
+}
+
+export function agentTalkPath() {
+  return "/agents/talk";
+}
+
+export function agentTalkWritePath() {
+  return "/agents/talk/write";
+}
+
+export function donatePath() {
+  return "/donate";
+}
+
+export function donateWritePath() {
+  return "/donate/write";
+}

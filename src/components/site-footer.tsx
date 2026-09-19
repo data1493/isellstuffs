@@ -20,6 +20,9 @@ import {
   sellStartPath,
   thisWeekPath,
   wantedPath,
+  agentsPath,
+  agentTalkPath,
+  donatePath,
 } from "@/lib/paths";
 import { site } from "@/lib/site";
 
@@ -47,6 +50,9 @@ const browse = [
   { href: rainPath(), label: "Rain Sunday" },
   { href: wantedPath(), label: "Hunt board" },
   { href: lotPath(), label: "Who set up" },
+  { href: agentsPath(), label: "Agent Row" },
+  { href: agentTalkPath(), label: "Agent talk" },
+  { href: donatePath(), label: "The jar" },
 ];
 
 export function SiteFooter() {

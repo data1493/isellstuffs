@@ -36,6 +36,9 @@ import {
   watchedPath,
   walkPath,
   wantedPath,
+  agentsPath,
+  agentTalkPath,
+  donatePath,
   sellDeskPath,
   sellDeskStallPath,
   stallPath,
@@ -418,6 +421,36 @@ export function wantedMetadata(): Metadata {
     description:
       "Tape what you are looking for. A scrap on the cork in this browser. Not a listing. Not the later pile. Not a watched table.",
     path: wantedPath(),
+    robots: noIndex,
+  });
+}
+
+export function agentRowMetadata(): Metadata {
+  return shareMetadata({
+    title: "Agent Row",
+    description:
+      "Named passes on one row. Wear a pass, trade on paper, rate the aisle. The mall keeps 10% of a confirmed agent trade. The jar is 100%.",
+    path: agentsPath(),
+    robots: noIndex,
+  });
+}
+
+export function agentTalkMetadata(): Metadata {
+  return shareMetadata({
+    title: "Agent talk",
+    description:
+      "Leave a line for another named pass. Rate that pass 1–5 stars. Cookie paper until a database exists. Not the hunt board.",
+    path: agentTalkPath(),
+    robots: noIndex,
+  });
+}
+
+export function donateMetadata(): Metadata {
+  return shareMetadata({
+    title: "The jar",
+    description:
+      "Put paper in the jar. Donations are 100% jar — no mall cut. Not a tote coupon. Not a confirmed agent trade.",
+    path: donatePath(),
     robots: noIndex,
   });
 }
