@@ -418,6 +418,14 @@ export function listingConvertWritePath() {
   return "/listings/convert";
 }
 
+export function listingShotPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/shot`;
+}
+
+export function listingShotWritePath() {
+  return "/listings/shot";
+}
+
 export function listingDustPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/dust`;
 }

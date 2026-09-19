@@ -57,6 +57,12 @@ import {
   subscribeRip,
 } from "@/lib/listing-rip";
 import {
+  canTapeShot,
+  isListingShotOverlay,
+  readShotListingIds,
+  subscribeShot,
+} from "@/lib/listing-shot";
+import {
   canTapeZip,
   isListingZipOverlay,
   readZipListingIds,
@@ -67,6 +73,7 @@ import {
   listingDumpWritePath,
   listingPhoneWritePath,
   listingRipWritePath,
+  listingShotWritePath,
   listingZipWritePath,
   listingPath,
   sellDeskStallPath,
@@ -132,6 +139,7 @@ export function DeskBoard({
   const [ripIds, setRipIds] = useState<string[]>([]);
   const [cardsIds, setCardsIds] = useState<string[]>([]);
   const [zipIds, setZipIds] = useState<string[]>([]);
+  const [shotIds, setShotIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -155,6 +163,7 @@ export function DeskBoard({
       setRipIds(readRipListingIds());
       setCardsIds(readCardsListingIds());
       setZipIds(readZipListingIds());
+      setShotIds(readShotListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -167,6 +176,7 @@ export function DeskBoard({
     const unsubRip = subscribeRip(apply);
     const unsubCards = subscribeCards(apply);
     const unsubZip = subscribeZip(apply);
+    const unsubShot = subscribeShot(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -189,6 +199,7 @@ export function DeskBoard({
       unsubRip();
       unsubCards();
       unsubZip();
+      unsubShot();
     };
   }, [listings, stall.id]);
 
@@ -494,6 +505,37 @@ export function DeskBoard({
                             {isListingZipOverlay(listing.id, zipIds)
                               ? "Leave the disc"
                               : "I don't have the zip"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeShot(listing) ? (
+                        <form
+                          method="post"
+                          action={listingShotWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingShotOverlay(listing.id, shotIds)
+                                ? "open"
+                                : "shot"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingShotOverlay(listing.id, shotIds)
+                              ? "Leave the looks"
+                              : "I don't shoot"}
                           </button>
                         </form>
                       ) : null}
