@@ -46,6 +46,27 @@ export type PaidStashSheet = {
   refuse: string;
 };
 
+/** Checkout slips mix lamps and PDFs. Stash paper is this booth’s physicals. */
+export function clipPaidStashSeed(
+  seed: PaidStashSlip | null,
+  slug: string,
+): PaidStashSlip | null {
+  const stall = stallBySlug(slug);
+  if (!seed || !stall) {
+    return null;
+  }
+
+  const listingIds = physicalLinesOnSlip(seed.listingIds)
+    .filter((line) => line.stall.id === stall.id)
+    .map((line) => line.listing.id);
+
+  if (listingIds.length === 0) {
+    return null;
+  }
+
+  return { id: seed.id, listingIds };
+}
+
 export function mergePaidStashSlips(
   stored: readonly PaidStashSlip[],
   seed: PaidStashSlip | null,

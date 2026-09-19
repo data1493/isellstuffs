@@ -5,7 +5,7 @@ import { PaidStashView } from "@/components/stalls/paid-stash-view";
 import { CHECKOUT_COOKIE } from "@/lib/checkout";
 import { orderSlipFromCheckoutCookie } from "@/lib/order-history";
 import { stallStashPath } from "@/lib/paths";
-import { paidStashForSlug } from "@/lib/paid-stash";
+import { clipPaidStashSeed, paidStashForSlug } from "@/lib/paid-stash";
 import { missingStallMetadata, shareMetadata } from "@/lib/seo";
 import {
   parseTakenHandoffs,
@@ -23,8 +23,9 @@ export async function generateMetadata({
 }: StashPageProps): Promise<Metadata> {
   const { slug } = await params;
   const jar = await cookies();
-  const seed = orderSlipFromCheckoutCookie(jar.get(CHECKOUT_COOKIE)?.value);
+  const rawSeed = orderSlipFromCheckoutCookie(jar.get(CHECKOUT_COOKIE)?.value);
   const taken = parseTakenHandoffs(jar.get(TAKEN_COOKIE_NAME)?.value);
+  const seed = clipPaidStashSeed(rawSeed, slug);
   const sheet = paidStashForSlug(slug, seed ? [seed] : [], taken);
 
   if (sheet.kind === "missing" || !sheet.stall) {
@@ -54,7 +55,10 @@ export async function generateMetadata({
 export default async function StallStashPage({ params }: StashPageProps) {
   const { slug } = await params;
   const jar = await cookies();
-  const seed = orderSlipFromCheckoutCookie(jar.get(CHECKOUT_COOKIE)?.value);
+  const seed = clipPaidStashSeed(
+    orderSlipFromCheckoutCookie(jar.get(CHECKOUT_COOKIE)?.value),
+    slug,
+  );
   const takenSeed = parseTakenHandoffs(jar.get(TAKEN_COOKIE_NAME)?.value);
 
   return (
