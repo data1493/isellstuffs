@@ -350,6 +350,13 @@ import {
   stallSpudgerPath,
 } from "@/lib/booth-spudger";
 import {
+  BOOTH_FUNNEL_COOKIE_NAME,
+  BOOTH_FUNNEL_PAPER_LINE,
+  boothFunnelFor,
+  parseBoothFunnel,
+  stallFunnelPath,
+} from "@/lib/booth-funnel";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -657,6 +664,10 @@ export default async function StallPage({
   const spudger = boothSpudgerFor(
     stall.id,
     parseBoothSpudger(jar.get(BOOTH_SPUDGER_COOKIE_NAME)?.value),
+  );
+  const funnel = boothFunnelFor(
+    stall.id,
+    parseBoothFunnel(jar.get(BOOTH_FUNNEL_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1562,6 +1573,23 @@ export default async function StallPage({
             <p data-booth-spudger-empty={stall.id} hidden />
           )}
 
+          {funnel ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a funnel"
+              title="Still a drawer. Still a table."
+              body={
+                <p data-booth-funnel-note={stall.id}>
+                  {funnel.note} {BOOTH_FUNNEL_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-funnel-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1978,6 +2006,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a spudger
+          </Link>
+
+          <Link
+            href={stallFunnelPath(stall.slug)}
+            data-booth-funnel-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a funnel
           </Link>
 
           <Link

@@ -72,6 +72,7 @@ export function LotBoothCard({
   trivetNote,
   thimbleNote,
   spudgerNote,
+  funnelNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -126,6 +127,7 @@ export function LotBoothCard({
   trivetNote?: string;
   thimbleNote?: string;
   spudgerNote?: string;
+  funnelNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -658,6 +660,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-spudger-empty={stall.id} hidden />
+          )}
+          {funnelNote ? (
+            <p
+              data-booth-funnel-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a funnel. {funnelNote}
+            </p>
+          ) : (
+            <p data-booth-funnel-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

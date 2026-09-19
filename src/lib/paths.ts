@@ -1696,6 +1696,14 @@ export function stallSpudgerWritePath() {
   return "/stalls/spudger";
 }
 
+export function stallFunnelPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/funnel`;
+}
+
+export function stallFunnelWritePath() {
+  return "/stalls/funnel";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
