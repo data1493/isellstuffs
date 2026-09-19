@@ -2,7 +2,7 @@
 
 A flea-market mall for independent stalls — not a single-seller shop. Sellers list physical finds and digital goods from the same stall. Category hubs are the map of the floor.
 
-This repo is a flea-market mall (Wave 0 shell + Wave 1 commerce contracts + Wave 2 browse). Checkout, Connect, ads UI, auth, and a database are not in this wave.
+This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall pages). Checkout, Connect, ads UI, auth, and a database are not in this wave.
 
 ## Browse
 
@@ -16,7 +16,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/hubs` | The four aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
 
-Empty filters and unknown hub slugs get intentional empty / not-found copy. Listing, stall, cart, and checkout pages belong to other waves.
+Empty filters and unknown hub slugs get intentional empty / not-found copy. Cart and checkout pages belong to other waves.
 
 ## Run locally
 
@@ -51,6 +51,20 @@ Other agents should import from `@/lib/commerce`. Do not invent listing, stall, 
 Locked listing fields: `price`, `type` (`physical` \| `digital`), `condition` **or** `fileFormat`, `stallId`, `cartEligible`. One stall holds mixed listings (`slug`, `boothName`, `featured`). Ad slots are labeled campaign fixtures: featured stall, homepage takeover, hub takeover.
 
 Hubs that earn aisle pages: Yard Sale, Closet Overflow, Garage Tech, Download Stall. Homepage + `/browse` stay the general concourse.
+
+## Listing and stall pages
+
+Open a listing or a stall directly. Home, explore, and hub browse are owned elsewhere — these routes do not replace them.
+
+| Page | Example |
+| --- | --- |
+| Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
+| Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
+| Featured stall | http://127.0.0.1:44721/stalls/half-working |
+| Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
+| File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
+
+Add to cart writes `Listing.id` values to `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout routes should import that module instead of inventing a second bag.
 
 ## Stack
 
