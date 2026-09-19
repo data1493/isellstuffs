@@ -87,6 +87,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Pockets are empty | http://127.0.0.1:44721/listings/clo-windbreaker/pockets |
 | Which press | http://127.0.0.1:44721/listings/mdb-scratched-lp/press |
 | Sold for parts | http://127.0.0.1:44721/listings/gtk-cable-drawer/parts |
+| Batteries not included | http://127.0.0.1:44721/listings/gtk-game-boy/cells |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | Scan the liner | http://127.0.0.1:44721/listings/mdb-mixtape-93/scan |
@@ -147,6 +148,8 @@ Physical listings can tape pocket honesty at `/listings/[id]/pockets`. Native `P
 Physical listings can tape which press at `/listings/[id]/press`. Native `POST /listings/press` (form: `listingId`, `note`, `intent=tape|clear`) writes `iss:listing-press` / cookie `iss-listing-press`. Which press. The $9 LP is not a first press. Still for sale. Not a scan mate. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the scratched LP. Scan cookie stays put.
 
 Physical listings can tape parts honesty at `/listings/[id]/parts`. Native `POST /listings/parts` (form: `listingId`, `intent=parts|open`) writes `iss:parts-listing-ids` / cookie `iss-parts-listing-ids`. Sold for parts. It does not run. Still tote. Not a fourth status. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The Game Boy stays empty if you parted the cable drawer. As-is stays at the register.
+
+Physical listings can tape battery honesty at `/listings/[id]/cells`. Native `POST /listings/cells` (form: `listingId`, `intent=cells|open`) writes `iss:cells-listing-ids` / cookie `iss-cells-listing-ids`. Batteries not included. Needs AAs. Still tote. Not a fourth status. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you celled the Game Boy. Parts is it does not run.
 
 Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /listings/van` (form: `listingId`, `intent=van|table`) writes `iss:van-listing-ids` / cookie `iss-van-listing-ids`. More out back. Ask. Still baggable — `status` and `cartEligible` stay put. Gift cards and PDFs are refused. Garage is home. Look is not for sale. Not a sold sticker.
 
@@ -274,7 +277,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/listings/[id]/heavy`, `/listings/[id]/pockets`, `/listings/[id]/press`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/buy`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/stalls/[slug]/stay`, `/stalls/[slug]/shade`, `/stalls/[slug]/film`, `/stalls/[slug]/kids`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/listings/[id]/heavy`, `/listings/[id]/pockets`, `/listings/[id]/press`, `/listings/[id]/cells`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/buy`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/stalls/[slug]/stay`, `/stalls/[slug]/shade`, `/stalls/[slug]/film`, `/stalls/[slug]/kids`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

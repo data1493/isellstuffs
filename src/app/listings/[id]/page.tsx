@@ -10,6 +10,7 @@ import { ListingAskNotice } from "@/components/listing-ask-notice";
 import { ListingFirmNotice } from "@/components/listing-firm-notice";
 import { ListingHandsNotice } from "@/components/listing-hands-notice";
 import { ListingHeavyNotice } from "@/components/listing-heavy-notice";
+import { ListingCellsNotice } from "@/components/listing-cells-notice";
 import { ListingPartsNotice } from "@/components/listing-parts-notice";
 import { ListingPocketsNotice } from "@/components/listing-pockets-notice";
 import { ListingPressNotice } from "@/components/listing-press-notice";
@@ -39,6 +40,7 @@ import {
 } from "@/lib/listing-display";
 import {
   listingAskPath,
+  listingCellsPath,
   listingFirmPath,
   listingHandsPath,
   listingHeavyPath,
@@ -219,6 +221,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPocketsNotice listingId={listing.id} /> : null}
               {physical ? <ListingPressNotice listingId={listing.id} /> : null}
               {physical ? <ListingPartsNotice listingId={listing.id} /> : null}
+              {physical ? <ListingCellsNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -299,6 +302,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Sold for parts
+                  </Link>
+                  <Link
+                    href={listingCellsPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Batteries not included
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

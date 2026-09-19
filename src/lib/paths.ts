@@ -106,6 +106,14 @@ export function listingPartsWritePath() {
   return "/listings/parts";
 }
 
+export function listingCellsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cells`;
+}
+
+export function listingCellsWritePath() {
+  return "/listings/cells";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
