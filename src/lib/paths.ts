@@ -1194,6 +1194,14 @@ export function listingPuckWritePath() {
   return "/listings/puck";
 }
 
+export function listingBevelPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bevel`;
+}
+
+export function listingBevelWritePath() {
+  return "/listings/bevel";
+}
+
 export function listingCollatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/collate`;
 }

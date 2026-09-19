@@ -555,6 +555,12 @@ import {
   subscribePuck,
 } from "@/lib/listing-puck";
 import {
+  canTapeBevel,
+  isListingBevelOverlay,
+  readBevelListingIds,
+  subscribeBevel,
+} from "@/lib/listing-bevel";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -721,6 +727,7 @@ import {
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPuckWritePath,
+  listingBevelWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingScaleWritePath,
@@ -911,6 +918,7 @@ export function DeskBoard({
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
+  const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1034,6 +1042,7 @@ export function DeskBoard({
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPuckIds(readPuckListingIds());
+      setBevelIds(readBevelListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1146,6 +1155,7 @@ export function DeskBoard({
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPuck = subscribePuck(apply);
+    const unsubBevel = subscribeBevel(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1268,6 +1278,7 @@ export function DeskBoard({
       unsubPeen();
       unsubGlaze();
       unsubPuck();
+      unsubBevel();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2648,6 +2659,37 @@ export function DeskBoard({
                             {isListingPuckOverlay(listing.id, puckIds)
                               ? "Leave the skip"
                               : "I will not puck it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBevel(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBevelWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBevelOverlay(listing.id, bevelIds)
+                                ? "open"
+                                : "bevel"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBevelOverlay(listing.id, bevelIds)
+                              ? "Leave the catch"
+                              : "I will not bevel it"}
                           </button>
                         </form>
                       ) : null}
