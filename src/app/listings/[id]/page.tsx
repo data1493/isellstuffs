@@ -32,6 +32,7 @@ import { ListingStrapNotice } from "@/components/listing-strap-notice";
 import { ListingRingNotice } from "@/components/listing-ring-notice";
 import { ListingNeedleNotice } from "@/components/listing-needle-notice";
 import { ListingBookNotice } from "@/components/listing-book-notice";
+import { ListingHissNotice } from "@/components/listing-hiss-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -85,6 +86,7 @@ import {
   listingRingPath,
   listingNeedlePath,
   listingBookPath,
+  listingHissPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -276,6 +278,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
               {physical ? <ListingNeedleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBookNotice listingId={listing.id} /> : null}
+              {physical ? <ListingHissNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -464,6 +467,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The booklet walked
+                  </Link>
+                  <Link
+                    href={listingHissPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The hiss stays
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
