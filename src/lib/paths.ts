@@ -1074,6 +1074,14 @@ export function listingGrommetWritePath() {
   return "/listings/grommet";
 }
 
+export function listingPaginatePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/paginate`;
+}
+
+export function listingPaginateWritePath() {
+  return "/listings/paginate";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

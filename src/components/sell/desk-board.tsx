@@ -471,6 +471,12 @@ import {
   subscribeGrommet,
 } from "@/lib/listing-grommet";
 import {
+  canTapePaginate,
+  isListingPaginateOverlay,
+  readPaginateListingIds,
+  subscribePaginate,
+} from "@/lib/listing-paginate";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -588,6 +594,7 @@ import {
   listingNestWritePath,
   listingAnnealWritePath,
   listingGrommetWritePath,
+  listingPaginateWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -772,6 +779,7 @@ export function DeskBoard({
   const [profileIds, setProfileIds] = useState<string[]>([]);
   const [boldIds, setBoldIds] = useState<string[]>([]);
   const [variableIds, setVariableIds] = useState<string[]>([]);
+  const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -875,6 +883,7 @@ export function DeskBoard({
       setProfileIds(readProfileListingIds());
       setBoldIds(readBoldListingIds());
       setVariableIds(readVariableListingIds());
+      setPaginateIds(readPaginateListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -967,6 +976,7 @@ export function DeskBoard({
     const unsubProfile = subscribeProfile(apply);
     const unsubBold = subscribeBold(apply);
     const unsubVariable = subscribeVariable(apply);
+    const unsubPaginate = subscribePaginate(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1069,6 +1079,7 @@ export function DeskBoard({
       unsubProfile();
       unsubBold();
       unsubVariable();
+      unsubPaginate();
     };
   }, [listings, stall.id]);
 
@@ -3699,6 +3710,37 @@ export function DeskBoard({
                             {isListingVariableOverlay(listing.id, variableIds)
                               ? "Leave the two weights"
                               : "I will not variable it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePaginate(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPaginateWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPaginateOverlay(listing.id, paginateIds)
+                                ? "open"
+                                : "paginate"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPaginateOverlay(listing.id, paginateIds)
+                              ? "Leave the one page"
+                              : "I will not paginate it"}
                           </button>
                         </form>
                       ) : null}

@@ -128,6 +128,7 @@ import { ListingAzimuthNotice } from "@/components/listing-azimuth-notice";
 import { ListingNestNotice } from "@/components/listing-nest-notice";
 import { ListingAnnealNotice } from "@/components/listing-anneal-notice";
 import { ListingGrommetNotice } from "@/components/listing-grommet-notice";
+import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -291,6 +292,7 @@ import {
   listingNestPath,
   listingAnnealPath,
   listingGrommetPath,
+  listingPaginatePath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -502,6 +504,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingGridNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingPaginateNotice listingId={listing.id} />
               ) : null}
               {!physical ? (
                 <ListingConsultNotice listingId={listing.id} />
@@ -1310,6 +1315,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not spreadsheet
+                  </Link>
+                  <Link
+                    href={listingPaginatePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not paginate it
                   </Link>
                   <Link
                     href={listingConsultPath(listing.id)}
