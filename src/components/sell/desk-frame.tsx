@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { DeskBoard } from "@/components/sell/desk-board";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
@@ -16,6 +17,10 @@ import {
   stallEditPath,
   stallPath,
 } from "@/lib/paths";
+import {
+  parseWeekendPinIds,
+  WEEKEND_PINS_COOKIE_NAME,
+} from "@/lib/weekend-table-pin";
 
 function shortcutsFor(stall: Stall) {
   return [
@@ -42,7 +47,7 @@ function shortcutsFor(stall: Stall) {
   ];
 }
 
-export function DeskFrame({
+export async function DeskFrame({
   stall,
   listings,
   children,
@@ -52,6 +57,10 @@ export function DeskFrame({
   children?: ReactNode;
 }) {
   const shortcuts = shortcutsFor(stall);
+  const jar = await cookies();
+  const weekendPins = parseWeekendPinIds(
+    jar.get(WEEKEND_PINS_COOKIE_NAME)?.value,
+  );
 
   return (
     <div>
@@ -174,7 +183,11 @@ export function DeskFrame({
           you can see what walked.
         </p>
         <div className="mt-8">
-          <DeskBoard stall={stall} listings={listings} />
+          <DeskBoard
+            stall={stall}
+            listings={listings}
+            weekendPins={weekendPins}
+          />
         </div>
       </MallSection>
     </div>

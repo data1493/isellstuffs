@@ -68,6 +68,7 @@ import {
   isTestedKindaPinned,
 } from "@/lib/tested-kinda-pin";
 import {
+  WEEKEND_PIN_MIRROR_SCRIPT,
   WEEKEND_PINS_CHANGED_EVENT,
   canPinWeekend,
   readWeekendPinIds,
@@ -81,13 +82,15 @@ import {
 export function DeskBoard({
   stall,
   listings,
+  weekendPins: weekendPinSeed = [],
 }: {
   stall: Stall;
   listings: Listing[];
+  weekendPins?: string[];
 }) {
   const [rows, setRows] = useState(listings);
   const [packed, setPacked] = useState(false);
-  const [weekendPins, setWeekendPins] = useState<string[]>([]);
+  const [weekendPins, setWeekendPins] = useState(weekendPinSeed);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -147,6 +150,7 @@ export function DeskBoard({
 
   return (
     <div className="space-y-10">
+      <script dangerouslySetInnerHTML={{ __html: WEEKEND_PIN_MIRROR_SCRIPT }} />
       <div className="max-w-2xl space-y-3">
         <p className="font-heading text-2xl tracking-tight sm:text-3xl">
           {card.boothName}
