@@ -802,6 +802,14 @@ export function listingWarpWritePath() {
   return "/listings/warp";
 }
 
+export function listingBoldPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bold`;
+}
+
+export function listingBoldWritePath() {
+  return "/listings/bold";
+}
+
 export function listingSplicePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/splice`;
 }

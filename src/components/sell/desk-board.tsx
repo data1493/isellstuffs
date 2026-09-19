@@ -327,6 +327,12 @@ import {
   subscribeIcons,
 } from "@/lib/listing-icons";
 import {
+  canTapeBold,
+  isListingBoldOverlay,
+  readBoldListingIds,
+  subscribeBold,
+} from "@/lib/listing-bold";
+import {
   canTapeGum,
   isListingGumOverlay,
   readGumListingIds,
@@ -366,6 +372,7 @@ import {
   listingNormWritePath,
   listingVersoWritePath,
   listingIconsWritePath,
+  listingBoldWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -492,6 +499,7 @@ export function DeskBoard({
   const [normIds, setNormIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
+  const [boldIds, setBoldIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -560,6 +568,7 @@ export function DeskBoard({
       setNormIds(readNormListingIds());
       setVersoIds(readVersoListingIds());
       setIconsIds(readIconsListingIds());
+      setBoldIds(readBoldListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -617,6 +626,7 @@ export function DeskBoard({
     const unsubNorm = subscribeNorm(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubIcons = subscribeIcons(apply);
+    const unsubBold = subscribeBold(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -684,6 +694,7 @@ export function DeskBoard({
       unsubNorm();
       unsubVerso();
       unsubIcons();
+      unsubBold();
     };
   }, [listings, stall.id]);
 
@@ -2229,6 +2240,37 @@ export function DeskBoard({
                             {isListingIconsOverlay(listing.id, iconsIds)
                               ? "Leave the two weights"
                               : "I will not draw the icons"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBold(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBoldWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBoldOverlay(listing.id, boldIds)
+                                ? "open"
+                                : "bold"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBoldOverlay(listing.id, boldIds)
+                              ? "Leave the two weights"
+                              : "I will not bold it"}
                           </button>
                         </form>
                       ) : null}
