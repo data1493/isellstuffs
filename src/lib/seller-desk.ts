@@ -14,8 +14,8 @@ import { readSellerListings } from "@/lib/seller-overlay";
 
 export const DESK_STALL_ID = "folding-table-tuesday";
 
-/** POST `/sell/desk/sold`, `/sell/desk/gone`, and `/sell/desk/queue` live here — not booth slugs. */
-export const RESERVED_DESK_SLUGS = new Set(["sold", "gone", "queue"]);
+/** POST `/sell/desk/sold`, `/sell/desk/gone`, `/sell/desk/pack`, and `/sell/desk/queue` live here — not booth slugs. */
+export const RESERVED_DESK_SLUGS = new Set(["sold", "gone", "pack", "queue"]);
 
 export function isReservedDeskSlug(slug: string) {
   return RESERVED_DESK_SLUGS.has(slug.trim().toLowerCase());

@@ -51,7 +51,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
-| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). Overlay rows can retape. Other booths you listed on get a line here. |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
 | `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Files stay in the folder. |
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |
 | `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
@@ -82,6 +82,8 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 Paying a physical find writes its id to `iss:sold-listing-ids` / cookie `iss-sold-listing-ids`. Shop lookups in `allListings()` stamp those rows `sold` without editing fixture objects. Digital files and the gift card are not auto-sold. The desk can sticker a physical SKU or put it back (`POST /sell/desk/sold`) — restock, not a refund.
 
 The desk can pull a digital file (`POST /sell/desk/gone`) and write its id to `iss:file-gone-listing-ids` / cookie `iss-file-gone-listing-ids`. Shop lookups stamp those rows `file-gone` so the PDP and folder refuse them. Gift card and the stain zine fixture stay put. Pay does not pull a PDF. Putting back is restock, not a refund.
+
+The desk can pack a booth (`POST /sell/desk/pack`) and write its id to `iss:packed-stall-ids` / cookie `iss-packed-stall-ids`. Shop lookups leave listing `status` alone and only drop tote eligibility on still-available physicals. Files and the gift card stay baggable. Setting the table back up is restock, not a refund and not an unsell.
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
 Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field.

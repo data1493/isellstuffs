@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { MallNotice } from "@/components/mall-notice";
 import { FileGoneButton } from "@/components/sell/file-gone-button";
+import { PackButton } from "@/components/sell/pack-button";
 import { SoldButton } from "@/components/sell/sold-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,11 @@ import {
   stampFileGoneListings,
 } from "@/lib/file-gone-overlay";
 import {
+  PACKED_CHANGED_EVENT,
+  isStallPacked,
+  stampPackedListings,
+} from "@/lib/packed-stall";
+import {
   SOLD_CHANGED_EVENT,
   canStampSold,
   stampSoldListings,
@@ -66,6 +72,7 @@ export function DeskBoard({
   listings: Listing[];
 }) {
   const [rows, setRows] = useState(listings);
+  const [packed, setPacked] = useState(false);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -74,12 +81,15 @@ export function DeskBoard({
   useEffect(() => {
     function apply() {
       setRows(
-        stampFileGoneListings(
-          stampSoldListings(
-            mergeDeskListingsForStall(stall.id, listings, readSellerListings()),
+        stampPackedListings(
+          stampFileGoneListings(
+            stampSoldListings(
+              mergeDeskListingsForStall(stall.id, listings, readSellerListings()),
+            ),
           ),
         ),
       );
+      setPacked(isStallPacked(stall.id));
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -91,12 +101,14 @@ export function DeskBoard({
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
     window.addEventListener(FILE_GONE_CHANGED_EVENT, apply);
+    window.addEventListener(PACKED_CHANGED_EVENT, apply);
     window.addEventListener("storage", apply);
     return () => {
       window.removeEventListener(SELLER_LISTINGS_CHANGED, apply);
       window.removeEventListener(SELLER_STALLS_CHANGED, apply);
       window.removeEventListener(SOLD_CHANGED_EVENT, apply);
       window.removeEventListener(FILE_GONE_CHANGED_EVENT, apply);
+      window.removeEventListener(PACKED_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
     };
   }, [listings, stall.id]);
@@ -115,11 +127,19 @@ export function DeskBoard({
 
   return (
     <div className="space-y-10">
-      <div className="max-w-2xl space-y-2">
+      <div className="max-w-2xl space-y-3">
         <p className="font-heading text-2xl tracking-tight sm:text-3xl">
           {card.boothName}
         </p>
         <p className="text-sm leading-6 text-muted-foreground">{card.blurb}</p>
+        <p className="text-sm leading-6 text-muted-foreground">
+          The table went in the car. Not a refund. Not a sold sticker.
+        </p>
+        <PackButton
+          stallId={stall.id}
+          intent={packed ? "open" : "pack"}
+          returnTo={sellDeskStallPath(stall.slug)}
+        />
       </div>
 
       {rows.length === 0 ? (

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { StallMissing } from "@/components/mall-missing";
+import { MallNotice } from "@/components/mall-notice";
 import { PickupNote } from "@/components/pickup-note";
 import { StallCardCopy } from "@/components/stalls/stall-card-copy";
 import { StallListingCard } from "@/components/stall-listing-card";
@@ -20,6 +21,7 @@ import {
   featuredBookingsFromCookie,
   resolveFeaturedForStall,
 } from "@/lib/featured-ads";
+import { isStallPacked } from "@/lib/packed-stall";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -87,6 +89,17 @@ export default async function StallPage({ params }: StallPageProps) {
             boothName={stall.boothName}
             blurb={stall.blurb}
           />
+
+          {isStallPacked(stall.id) ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Packed up"
+              title="This booth packed up."
+              body="Files in the folder still exist. Come next weekend. The table went in the car. Not a refund. Not a sold sticker."
+            />
+          ) : null}
 
           <StallMixBar physical={physical.length} digital={digital.length} />
 

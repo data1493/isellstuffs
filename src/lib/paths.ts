@@ -91,6 +91,10 @@ export function sellDeskGonePath() {
   return "/sell/desk/gone";
 }
 
+export function sellDeskPackPath() {
+  return "/sell/desk/pack";
+}
+
 export function sellDeskQueuePath() {
   return "/sell/desk/queue";
 }

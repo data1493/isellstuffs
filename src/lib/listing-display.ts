@@ -4,6 +4,7 @@ import {
   isPhysicalListing,
   type Listing,
 } from "@/lib/commerce";
+import { isStallPacked } from "@/lib/packed-stall";
 
 export function listingTypeLabel(listing: Listing) {
   if (isPhysicalListing(listing)) {
@@ -80,6 +81,9 @@ export function unavailableCartLabel(listing: Listing) {
   if (listing.status === "file-gone") {
     return "File's gone";
   }
+  if (isPhysicalListing(listing) && isStallPacked(listing.stallId)) {
+    return "Packed up — next weekend";
+  }
   return "Not for the cart";
 }
 
@@ -89,6 +93,9 @@ export function fulfillmentCopy(listing: Listing) {
   }
   if (listing.status === "file-gone") {
     return "The folder is empty. The stall may still have something you can hold.";
+  }
+  if (isPhysicalListing(listing) && isStallPacked(listing.stallId)) {
+    return "This booth packed up. The table went in the car. Not a refund. Not a sold sticker. Come next weekend.";
   }
   if (isPhysicalListing(listing)) {
     return "One of these on the table. Condition is the listing. Pickup and shipping land with checkout.";
