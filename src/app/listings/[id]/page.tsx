@@ -43,6 +43,7 @@ import { ListingKnobNotice } from "@/components/listing-knob-notice";
 import { ListingVibeNotice } from "@/components/listing-vibe-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
 import { ListingFoundryNotice } from "@/components/listing-foundry-notice";
+import { ListingManualNotice } from "@/components/listing-manual-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -107,6 +108,7 @@ import {
   listingVibePath,
   listingWrongPath,
   listingFoundryPath,
+  listingManualPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -313,6 +315,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingHingeNotice listingId={listing.id} /> : null}
               {physical ? <ListingChipNotice listingId={listing.id} /> : null}
               {physical ? <ListingKnobNotice listingId={listing.id} /> : null}
+              {physical ? <ListingManualNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -537,6 +540,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The knob stays loose
+                  </Link>
+                  <Link
+                    href={listingManualPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    There is no manual
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

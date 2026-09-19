@@ -346,6 +346,14 @@ export function listingFoundryWritePath() {
   return "/listings/foundry";
 }
 
+export function listingManualPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/manual`;
+}
+
+export function listingManualWritePath() {
+  return "/listings/manual";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
