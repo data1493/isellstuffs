@@ -61,6 +61,7 @@ export function LotBoothCard({
   foilNote,
   wifiNote,
   kitNote,
+  driverNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -104,6 +105,7 @@ export function LotBoothCard({
   foilNote?: string;
   wifiNote?: string;
   kitNote?: string;
+  driverNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -526,6 +528,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-kit-empty={stall.id} hidden />
+          )}
+          {driverNote ? (
+            <p
+              data-booth-driver-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a driver. {driverNote}
+            </p>
+          ) : (
+            <p data-booth-driver-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

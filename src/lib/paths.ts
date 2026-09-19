@@ -1272,6 +1272,14 @@ export function stallKitWritePath() {
   return "/stalls/kit";
 }
 
+export function stallDriverPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/driver`;
+}
+
+export function stallDriverWritePath() {
+  return "/stalls/driver";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

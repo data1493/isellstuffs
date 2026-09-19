@@ -273,6 +273,13 @@ import {
   stallKitPath,
 } from "@/lib/booth-kit";
 import {
+  BOOTH_DRIVER_COOKIE_NAME,
+  BOOTH_DRIVER_PAPER_LINE,
+  boothDriverFor,
+  parseBoothDriver,
+  stallDriverPath,
+} from "@/lib/booth-driver";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -536,6 +543,10 @@ export default async function StallPage({
   const kitNote = boothKitFor(
     stall.id,
     parseBoothKit(jar.get(BOOTH_KIT_COOKIE_NAME)?.value),
+  );
+  const driver = boothDriverFor(
+    stall.id,
+    parseBoothDriver(jar.get(BOOTH_DRIVER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1254,6 +1265,23 @@ export default async function StallPage({
             <p data-booth-kit-empty={stall.id} hidden />
           )}
 
+          {driver ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a driver"
+              title="Blister stays closed."
+              body={
+                <p data-booth-driver-note={stall.id}>
+                  {driver.note} {BOOTH_DRIVER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-driver-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1582,6 +1610,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t assemble
+          </Link>
+
+          <Link
+            href={stallDriverPath(stall.slug)}
+            data-booth-driver-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a driver
           </Link>
 
           <Link
