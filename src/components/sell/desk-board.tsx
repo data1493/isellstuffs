@@ -435,6 +435,12 @@ import {
   subscribeStitch,
 } from "@/lib/listing-stitch";
 import {
+  canTapeWelt,
+  isListingWeltOverlay,
+  readWeltListingIds,
+  subscribeWelt,
+} from "@/lib/listing-welt";
+import {
   canTapeCinch,
   isListingCinchOverlay,
   readCinchListingIds,
@@ -732,6 +738,7 @@ import {
   listingContentsWritePath,
   listingDubWritePath,
   listingStitchWritePath,
+  listingWeltWritePath,
   listingCinchWritePath,
   listingFinalizeWritePath,
   listingAzimuthWritePath,
@@ -926,6 +933,7 @@ export function DeskBoard({
   const [contentsIds, setContentsIds] = useState<string[]>([]);
   const [dubIds, setDubIds] = useState<string[]>([]);
   const [stitchIds, setStitchIds] = useState<string[]>([]);
+  const [weltIds, setWeltIds] = useState<string[]>([]);
   const [cinchIds, setCinchIds] = useState<string[]>([]);
   const [finalizeIds, setFinalizeIds] = useState<string[]>([]);
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
@@ -1054,6 +1062,7 @@ export function DeskBoard({
       setContentsIds(readContentsListingIds());
       setDubIds(readDubListingIds());
       setStitchIds(readStitchListingIds());
+      setWeltIds(readWeltListingIds());
       setCinchIds(readCinchListingIds());
       setFinalizeIds(readFinalizeListingIds());
       setAzimuthIds(readAzimuthListingIds());
@@ -1171,6 +1180,7 @@ export function DeskBoard({
     const unsubContents = subscribeContents(apply);
     const unsubDub = subscribeDub(apply);
     const unsubStitch = subscribeStitch(apply);
+    const unsubWelt = subscribeWelt(apply);
     const unsubCinch = subscribeCinch(apply);
     const unsubFinalize = subscribeFinalize(apply);
     const unsubAzimuth = subscribeAzimuth(apply);
@@ -1298,6 +1308,7 @@ export function DeskBoard({
       unsubContents();
       unsubDub();
       unsubStitch();
+      unsubWelt();
       unsubCinch();
       unsubFinalize();
       unsubAzimuth();
@@ -3013,6 +3024,37 @@ export function DeskBoard({
                             {isListingStitchOverlay(listing.id, stitchIds)
                               ? "Leave the split"
                               : "I will not stitch them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWelt(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWeltWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWeltOverlay(listing.id, weltIds)
+                                ? "open"
+                                : "welt"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingWeltOverlay(listing.id, weltIds)
+                              ? "Leave the split"
+                              : "I will not welt them"}
                           </button>
                         </form>
                       ) : null}

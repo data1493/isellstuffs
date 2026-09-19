@@ -1258,6 +1258,14 @@ export function listingProofWritePath() {
   return "/listings/proof";
 }
 
+export function listingWeltPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/welt`;
+}
+
+export function listingWeltWritePath() {
+  return "/listings/welt";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
