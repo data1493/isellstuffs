@@ -872,6 +872,14 @@ export function stallMeterWritePath() {
   return "/stalls/meter";
 }
 
+export function stallCopyPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/copy`;
+}
+
+export function stallCopyWritePath() {
+  return "/stalls/copy";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

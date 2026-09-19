@@ -189,6 +189,13 @@ import {
   stallMeterPath,
 } from "@/lib/booth-meter";
 import {
+  BOOTH_COPY_COOKIE_NAME,
+  BOOTH_COPY_PAPER_LINE,
+  boothCopyFor,
+  parseBoothCopy,
+  stallCopyPath,
+} from "@/lib/booth-copy";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -404,6 +411,10 @@ export default async function StallPage({
   const meter = boothMeterFor(
     stall.id,
     parseBoothMeter(jar.get(BOOTH_METER_COOKIE_NAME)?.value),
+  );
+  const copyNote = boothCopyFor(
+    stall.id,
+    parseBoothCopy(jar.get(BOOTH_COPY_COOKIE_NAME)?.value),
   );
 
   return (
@@ -918,6 +929,23 @@ export default async function StallPage({
             <p data-booth-meter-empty={stall.id} hidden />
           )}
 
+          {copyNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I will not copy onto your stick"
+              title="Folder after pay."
+              body={
+                <p data-booth-copy-note={stall.id}>
+                  {copyNote.note} {BOOTH_COPY_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-copy-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1150,6 +1178,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a meter
+          </Link>
+
+          <Link
+            href={stallCopyPath(stall.slug)}
+            data-booth-copy-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I will not copy onto your stick
           </Link>
 
           <Link

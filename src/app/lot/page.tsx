@@ -125,6 +125,11 @@ import {
   parseBoothMeter,
 } from "@/lib/booth-meter";
 import {
+  BOOTH_COPY_COOKIE_NAME,
+  BOOTH_COPY_MIRROR_SCRIPT,
+  parseBoothCopy,
+} from "@/lib/booth-copy";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -196,6 +201,7 @@ export default async function LotPage() {
   const pourMap = parseBoothPour(jar.get(BOOTH_POUR_COOKIE_NAME)?.value);
   const bulbMap = parseBoothBulb(jar.get(BOOTH_BULB_COOKIE_NAME)?.value);
   const meterMap = parseBoothMeter(jar.get(BOOTH_METER_COOKIE_NAME)?.value);
+  const copyMap = parseBoothCopy(jar.get(BOOTH_COPY_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -232,6 +238,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_POUR_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_BULB_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_METER_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_COPY_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -269,6 +276,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_POUR_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_BULB_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_METER_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_COPY_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -357,6 +365,7 @@ export default async function LotPage() {
                     pourNote={pourMap[row.stall.id]?.note}
                     bulbNote={bulbMap[row.stall.id]?.note}
                     meterNote={meterMap[row.stall.id]?.note}
+                    copyNote={copyMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -410,6 +419,7 @@ export default async function LotPage() {
                     pourNote={pourMap[row.stall.id]?.note}
                     bulbNote={bulbMap[row.stall.id]?.note}
                     meterNote={meterMap[row.stall.id]?.note}
+                    copyNote={copyMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

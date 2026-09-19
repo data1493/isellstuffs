@@ -49,6 +49,7 @@ export function LotBoothCard({
   pourNote,
   bulbNote,
   meterNote,
+  copyNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -80,6 +81,7 @@ export function LotBoothCard({
   pourNote?: string;
   bulbNote?: string;
   meterNote?: string;
+  copyNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -382,6 +384,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-meter-empty={stall.id} hidden />
+          )}
+          {copyNote ? (
+            <p
+              data-booth-copy-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I will not copy onto your stick. {copyNote}
+            </p>
+          ) : (
+            <p data-booth-copy-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
