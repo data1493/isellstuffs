@@ -153,6 +153,7 @@ import { ListingBevelNotice } from "@/components/listing-bevel-notice";
 import { ListingDolbyNotice } from "@/components/listing-dolby-notice";
 import { ListingPancakeNotice } from "@/components/listing-pancake-notice";
 import { ListingFluxNotice } from "@/components/listing-flux-notice";
+import { ListingTemperNotice } from "@/components/listing-temper-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
@@ -348,6 +349,7 @@ import {
   listingDolbyPath,
   listingPancakePath,
   listingFluxPath,
+  listingTemperPath,
   listingPaginatePath,
   listingCollatePath,
   listingContrastPath,
@@ -721,6 +723,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDolbyNotice listingId={listing.id} /> : null}
               {physical ? <ListingPancakeNotice listingId={listing.id} /> : null}
               {physical ? <ListingFluxNotice listingId={listing.id} /> : null}
+              {physical ? <ListingTemperNotice listingId={listing.id} /> : null}
               {physical ? <ListingKnurlNotice listingId={listing.id} /> : null}
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
               {physical ? <ListingBushNotice listingId={listing.id} /> : null}
@@ -1475,6 +1478,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not flux them
+                  </Link>
+                  <Link
+                    href={listingTemperPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not temper it
                   </Link>
                   <Link
                     href={listingKnurlPath(listing.id)}

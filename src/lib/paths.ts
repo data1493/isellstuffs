@@ -1330,6 +1330,14 @@ export function listingFluxWritePath() {
   return "/listings/flux";
 }
 
+export function listingTemperPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/temper`;
+}
+
+export function listingTemperWritePath() {
+  return "/listings/temper";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

@@ -609,6 +609,12 @@ import {
   subscribeFlux,
 } from "@/lib/listing-flux";
 import {
+  canTapeTemper,
+  isListingTemperOverlay,
+  readTemperListingIds,
+  subscribeTemper,
+} from "@/lib/listing-temper";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -814,6 +820,7 @@ import {
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingFluxWritePath,
+  listingTemperWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingScaleWritePath,
@@ -1019,6 +1026,7 @@ export function DeskBoard({
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
+  const [temperIds, setTemperIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1156,6 +1164,7 @@ export function DeskBoard({
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setFluxIds(readFluxListingIds());
+      setTemperIds(readTemperListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1282,6 +1291,7 @@ export function DeskBoard({
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubFlux = subscribeFlux(apply);
+    const unsubTemper = subscribeTemper(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1418,6 +1428,7 @@ export function DeskBoard({
       unsubDolby();
       unsubPancake();
       unsubFlux();
+      unsubTemper();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2988,6 +2999,37 @@ export function DeskBoard({
                             {isListingFluxOverlay(listing.id, fluxIds)
                               ? "Leave the copper"
                               : "I will not flux them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTemper(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTemperWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTemperOverlay(listing.id, temperIds)
+                                ? "open"
+                                : "temper"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTemperOverlay(listing.id, temperIds)
+                              ? "Leave the splay"
+                              : "I will not temper it"}
                           </button>
                         </form>
                       ) : null}
