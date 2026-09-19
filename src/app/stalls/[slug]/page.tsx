@@ -154,6 +154,13 @@ import {
   stallClaimPath,
 } from "@/lib/booth-claim";
 import {
+  BOOTH_NAME_COOKIE_NAME,
+  BOOTH_NAME_PAPER_LINE,
+  boothNameFor,
+  parseBoothName,
+  stallNamePath,
+} from "@/lib/booth-name";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -349,6 +356,10 @@ export default async function StallPage({
   const claim = boothClaimFor(
     stall.id,
     parseBoothClaim(jar.get(BOOTH_CLAIM_COOKIE_NAME)?.value),
+  );
+  const nameNote = boothNameFor(
+    stall.id,
+    parseBoothName(jar.get(BOOTH_NAME_COOKIE_NAME)?.value),
   );
 
   return (
@@ -778,6 +789,23 @@ export default async function StallPage({
             <p data-booth-claim-empty={stall.id} hidden />
           )}
 
+          {nameNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I will not name them"
+              title="Side A still plays."
+              body={
+                <p data-booth-name-note={stall.id}>
+                  {nameNote.note} {BOOTH_NAME_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-name-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -970,6 +998,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t warranty
+          </Link>
+
+          <Link
+            href={stallNamePath(stall.slug)}
+            data-booth-name-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I will not name them
           </Link>
 
           <Link

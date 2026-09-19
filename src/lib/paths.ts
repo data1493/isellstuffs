@@ -656,6 +656,14 @@ export function stallClaimWritePath() {
   return "/stalls/claim";
 }
 
+export function stallNamePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/name`;
+}
+
+export function stallNameWritePath() {
+  return "/stalls/name";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

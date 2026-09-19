@@ -100,6 +100,11 @@ import {
   parseBoothClaim,
 } from "@/lib/booth-claim";
 import {
+  BOOTH_NAME_COOKIE_NAME,
+  BOOTH_NAME_MIRROR_SCRIPT,
+  parseBoothName,
+} from "@/lib/booth-name";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -166,6 +171,7 @@ export default async function LotPage() {
   const sewMap = parseBoothSew(jar.get(BOOTH_SEW_COOKIE_NAME)?.value);
   const printMap = parseBoothPrint(jar.get(BOOTH_PRINT_COOKIE_NAME)?.value);
   const claimMap = parseBoothClaim(jar.get(BOOTH_CLAIM_COOKIE_NAME)?.value);
+  const nameMap = parseBoothName(jar.get(BOOTH_NAME_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -197,6 +203,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SEW_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PRINT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_CLAIM_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_NAME_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -229,6 +236,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SEW_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PRINT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_CLAIM_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_NAME_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -312,6 +320,7 @@ export default async function LotPage() {
                     sewNote={sewMap[row.stall.id]?.note}
                     printNote={printMap[row.stall.id]?.note}
                     claimNote={claimMap[row.stall.id]?.note}
+                    nameNote={nameMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -360,6 +369,7 @@ export default async function LotPage() {
                     sewNote={sewMap[row.stall.id]?.note}
                     printNote={printMap[row.stall.id]?.note}
                     claimNote={claimMap[row.stall.id]?.note}
+                    nameNote={nameMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
