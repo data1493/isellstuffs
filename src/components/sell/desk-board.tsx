@@ -459,6 +459,12 @@ import {
   subscribeNest,
 } from "@/lib/listing-nest";
 import {
+  canTapeAnneal,
+  isListingAnnealOverlay,
+  readAnnealListingIds,
+  subscribeAnneal,
+} from "@/lib/listing-anneal";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -574,6 +580,7 @@ import {
   listingFinalizeWritePath,
   listingAzimuthWritePath,
   listingNestWritePath,
+  listingAnnealWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -741,6 +748,7 @@ export function DeskBoard({
   const [finalizeIds, setFinalizeIds] = useState<string[]>([]);
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
   const [nestIds, setNestIds] = useState<string[]>([]);
+  const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -842,6 +850,7 @@ export function DeskBoard({
       setFinalizeIds(readFinalizeListingIds());
       setAzimuthIds(readAzimuthListingIds());
       setNestIds(readNestListingIds());
+      setAnnealIds(readAnnealListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -932,6 +941,7 @@ export function DeskBoard({
     const unsubFinalize = subscribeFinalize(apply);
     const unsubAzimuth = subscribeAzimuth(apply);
     const unsubNest = subscribeNest(apply);
+    const unsubAnneal = subscribeAnneal(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1032,6 +1042,7 @@ export function DeskBoard({
       unsubFinalize();
       unsubAzimuth();
       unsubNest();
+      unsubAnneal();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2468,6 +2479,37 @@ export function DeskBoard({
                             {isListingNestOverlay(listing.id, nestIds)
                               ? "Leave the pile"
                               : "I will not nest them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAnneal(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAnnealWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAnnealOverlay(listing.id, annealIds)
+                                ? "open"
+                                : "anneal"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingAnnealOverlay(listing.id, annealIds)
+                              ? "Leave the splay"
+                              : "I will not anneal it"}
                           </button>
                         </form>
                       ) : null}

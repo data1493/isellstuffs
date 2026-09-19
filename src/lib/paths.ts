@@ -1058,6 +1058,14 @@ export function listingNestWritePath() {
   return "/listings/nest";
 }
 
+export function listingAnnealPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/anneal`;
+}
+
+export function listingAnnealWritePath() {
+  return "/listings/anneal";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
