@@ -62,6 +62,7 @@ export function LotBoothCard({
   wifiNote,
   kitNote,
   driverNote,
+  spiderNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -106,6 +107,7 @@ export function LotBoothCard({
   wifiNote?: string;
   kitNote?: string;
   driverNote?: string;
+  spiderNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -538,6 +540,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-driver-empty={stall.id} hidden />
+          )}
+          {spiderNote ? (
+            <p
+              data-booth-spider-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a spider. {spiderNote}
+            </p>
+          ) : (
+            <p data-booth-spider-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

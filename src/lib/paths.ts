@@ -1288,6 +1288,14 @@ export function stallDriverWritePath() {
   return "/stalls/driver";
 }
 
+export function stallSpiderPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/spider`;
+}
+
+export function stallSpiderWritePath() {
+  return "/stalls/spider";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

@@ -280,6 +280,13 @@ import {
   stallDriverPath,
 } from "@/lib/booth-driver";
 import {
+  BOOTH_SPIDER_COOKIE_NAME,
+  BOOTH_SPIDER_PAPER_LINE,
+  boothSpiderFor,
+  parseBoothSpider,
+  stallSpiderPath,
+} from "@/lib/booth-spider";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -547,6 +554,10 @@ export default async function StallPage({
   const driver = boothDriverFor(
     stall.id,
     parseBoothDriver(jar.get(BOOTH_DRIVER_COOKIE_NAME)?.value),
+  );
+  const spider = boothSpiderFor(
+    stall.id,
+    parseBoothSpider(jar.get(BOOTH_SPIDER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1282,6 +1293,23 @@ export default async function StallPage({
             <p data-booth-driver-empty={stall.id} hidden />
           )}
 
+          {spider ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a spider"
+              title="Still Side A."
+              body={
+                <p data-booth-spider-note={stall.id}>
+                  {spider.note} {BOOTH_SPIDER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-spider-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1618,6 +1646,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a driver
+          </Link>
+
+          <Link
+            href={stallSpiderPath(stall.slug)}
+            data-booth-spider-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a spider
           </Link>
 
           <Link
