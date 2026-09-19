@@ -458,6 +458,14 @@ export function listingBpmWritePath() {
   return "/listings/bpm";
 }
 
+export function listingDumpPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dump`;
+}
+
+export function listingDumpWritePath() {
+  return "/listings/dump";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

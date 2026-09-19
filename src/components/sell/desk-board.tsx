@@ -33,6 +33,13 @@ import {
   listingStatusLabel,
 } from "@/lib/listing-display";
 import {
+  canTapeDump,
+  isListingDumpOverlay,
+  readDumpListingIds,
+  subscribeDump,
+} from "@/lib/listing-dump";
+import {
+  listingDumpWritePath,
   listingPath,
   sellDeskStallPath,
   sellHoursPath,
@@ -92,6 +99,7 @@ export function DeskBoard({
   const [rows, setRows] = useState(listings);
   const [packed, setPacked] = useState(false);
   const [weekendPins, setWeekendPins] = useState(weekendPinSeed);
+  const [dumpIds, setDumpIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -110,6 +118,7 @@ export function DeskBoard({
       );
       setPacked(isStallPacked(stall.id));
       setWeekendPins(readWeekendPinIds());
+      setDumpIds(readDumpListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -117,6 +126,7 @@ export function DeskBoard({
     }
 
     apply();
+    const unsubDump = subscribeDump(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -134,6 +144,7 @@ export function DeskBoard({
       window.removeEventListener(TESTED_KINDA_CHANGED_EVENT, apply);
       window.removeEventListener(WEEKEND_PINS_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
+      unsubDump();
     };
   }, [listings, stall.id]);
 
@@ -286,6 +297,37 @@ export function DeskBoard({
                           }
                           returnTo={sellDeskStallPath(stall.slug)}
                         />
+                      ) : null}
+                      {canTapeDump(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDumpWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDumpOverlay(listing.id, dumpIds)
+                                ? "open"
+                                : "dump"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDumpOverlay(listing.id, dumpIds)
+                              ? "Leave the cart"
+                              : "I don't dump"}
+                          </button>
+                        </form>
                       ) : null}
                     </div>
                     <p
