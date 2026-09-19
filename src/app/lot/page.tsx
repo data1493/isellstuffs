@@ -175,6 +175,11 @@ import {
   parseBoothFoil,
 } from "@/lib/booth-foil";
 import {
+  BOOTH_WIFI_COOKIE_NAME,
+  BOOTH_WIFI_MIRROR_SCRIPT,
+  parseBoothWifi,
+} from "@/lib/booth-wifi";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -256,6 +261,7 @@ export default async function LotPage() {
   const innersMap = parseBoothInners(jar.get(BOOTH_INNERS_COOKIE_NAME)?.value);
   const pinsMap = parseBoothPins(jar.get(BOOTH_PINS_COOKIE_NAME)?.value);
   const foilMap = parseBoothFoil(jar.get(BOOTH_FOIL_COOKIE_NAME)?.value);
+  const wifiMap = parseBoothWifi(jar.get(BOOTH_WIFI_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -302,6 +308,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_INNERS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PINS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FOIL_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_WIFI_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -349,6 +356,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_INNERS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PINS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FOIL_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_WIFI_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -447,6 +455,7 @@ export default async function LotPage() {
                     innersNote={innersMap[row.stall.id]?.note}
                     pinsNote={pinsMap[row.stall.id]?.note}
                     foilNote={foilMap[row.stall.id]?.note}
+                    wifiNote={wifiMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -510,6 +519,7 @@ export default async function LotPage() {
                     innersNote={innersMap[row.stall.id]?.note}
                     pinsNote={pinsMap[row.stall.id]?.note}
                     foilNote={foilMap[row.stall.id]?.note}
+                    wifiNote={wifiMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

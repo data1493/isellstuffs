@@ -259,6 +259,13 @@ import {
   stallFoilPath,
 } from "@/lib/booth-foil";
 import {
+  BOOTH_WIFI_COOKIE_NAME,
+  BOOTH_WIFI_PAPER_LINE,
+  boothWifiFor,
+  parseBoothWifi,
+  stallWifiPath,
+} from "@/lib/booth-wifi";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -514,6 +521,10 @@ export default async function StallPage({
   const foil = boothFoilFor(
     stall.id,
     parseBoothFoil(jar.get(BOOTH_FOIL_COOKIE_NAME)?.value),
+  );
+  const wifiNote = boothWifiFor(
+    stall.id,
+    parseBoothWifi(jar.get(BOOTH_WIFI_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1198,6 +1209,23 @@ export default async function StallPage({
             <p data-booth-foil-empty={stall.id} hidden />
           )}
 
+          {wifiNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have wifi"
+              title="Pay first."
+              body={
+                <p data-booth-wifi-note={stall.id}>
+                  {wifiNote.note} {BOOTH_WIFI_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-wifi-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1510,6 +1538,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have foil
+          </Link>
+
+          <Link
+            href={stallWifiPath(stall.slug)}
+            data-booth-wifi-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have wifi
           </Link>
 
           <Link

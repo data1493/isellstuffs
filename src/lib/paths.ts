@@ -1176,6 +1176,14 @@ export function stallFoilWritePath() {
   return "/stalls/foil";
 }
 
+export function stallWifiPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/wifi`;
+}
+
+export function stallWifiWritePath() {
+  return "/stalls/wifi";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
