@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { HubTile, ListingGrid } from "@/components/browse/cards";
 import { FeaturedBooth, HomepageTakeover } from "@/components/browse/paid";
@@ -13,31 +14,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AD_BOOKINGS_COOKIE } from "@/lib/ad-booking";
 import {
-  adSlotsByKind,
-  featuredStallSlots,
   listings,
   listingsByHub,
   listingsByStall,
   listingsByType,
   mallHubs,
 } from "@/lib/commerce";
+import {
+  homeBookingsFromCookie,
+  resolveHomeFeatured,
+  resolveHomeTakeover,
+} from "@/lib/live-ads";
 import { feesPath, thisWeekPath } from "@/lib/paths";
 import { homeMetadata, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = homeMetadata();
 
-export default function Home() {
-  const homepageTakeover = adSlotsByKind("homepage-takeover")[0];
-  const featuredStallSlot = featuredStallSlots()[0];
-  const featuredGoods = featuredStallSlot
-    ? listingsByStall(featuredStallSlot.stallId)
+export default async function Home() {
+  const jar = await cookies();
+  const bookings = homeBookingsFromCookie(jar.get(AD_BOOKINGS_COOKIE)?.value);
+  const homepageTakeover = resolveHomeTakeover(bookings);
+  const featuredStall = resolveHomeFeatured(bookings);
+  const featuredGoods = featuredStall?.slot.stallId
+    ? listingsByStall(featuredStall.slot.stallId)
     : [];
   const featuredIds = new Set(featuredGoods.map((listing) => listing.id));
   const takeoverIds = new Set(
-    homepageTakeover
-      ? listingsByStall(homepageTakeover.stallId).map((listing) => listing.id)
+    homepageTakeover?.slot.stallId
+      ? listingsByStall(homepageTakeover.slot.stallId).map((listing) => listing.id)
       : [],
   );
   const elsewhere = listings
@@ -90,10 +99,19 @@ export default function Home() {
         </div>
       </MallHero>
 
-      {homepageTakeover ? <HomepageTakeover slot={homepageTakeover} /> : null}
+      {homepageTakeover ? (
+        <HomepageTakeover
+          slot={homepageTakeover.slot}
+          stallName={homepageTakeover.stallName}
+        />
+      ) : null}
 
-      {featuredStallSlot ? (
-        <FeaturedBooth slot={featuredStallSlot} eyebrow="Paid the good corner" />
+      {featuredStall ? (
+        <FeaturedBooth
+          slot={featuredStall.slot}
+          stallName={featuredStall.stallName}
+          eyebrow="Paid the good corner"
+        />
       ) : null}
 
       <MallSection id="hubs">

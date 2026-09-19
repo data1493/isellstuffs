@@ -14,12 +14,19 @@ const kindCopy = {
   "hub-takeover": "Hub takeover",
 } as const;
 
-function CampaignMeta({ slot }: { slot: AdSlot }) {
+function CampaignMeta({
+  slot,
+  stallName,
+}: {
+  slot: AdSlot;
+  stallName?: string;
+}) {
   const stall = stallById(slot.stallId);
+  const booth = stallName ?? stall?.boothName ?? slot.stallId;
 
   return (
     <p className="text-xs leading-5 text-current/70">
-      {stall?.boothName ?? slot.stallId}
+      {booth}
       {" · "}
       {slot.packageName}
       {" · "}
@@ -30,9 +37,16 @@ function CampaignMeta({ slot }: { slot: AdSlot }) {
   );
 }
 
-export function HomepageTakeover({ slot }: { slot: AdSlot }) {
+export function HomepageTakeover({
+  slot,
+  stallName,
+}: {
+  slot: AdSlot;
+  stallName?: string;
+}) {
   const stall = stallById(slot.stallId);
-  const goods = listingsByStall(slot.stallId);
+  const booth = stallName ?? stall?.boothName ?? slot.stallId;
+  const goods = slot.stallId ? listingsByStall(slot.stallId) : [];
 
   return (
     <section className="border-b border-border bg-[oklch(0.27_0.035_42)] text-[oklch(0.97_0.015_85)]">
@@ -53,7 +67,7 @@ export function HomepageTakeover({ slot }: { slot: AdSlot }) {
           <PaidStamp />
         </div>
         <p className="mt-6 text-xs font-medium uppercase tracking-[0.2em] text-current/55">
-          {stall?.boothName ?? slot.stallId} bought the hero
+          {booth} bought the hero
         </p>
         <h2 className="mt-2 max-w-3xl font-heading text-3xl leading-[1.1] tracking-tight text-balance sm:text-5xl">
           {slot.headline}
@@ -62,7 +76,7 @@ export function HomepageTakeover({ slot }: { slot: AdSlot }) {
           {slot.blurb} {stall?.blurb}
         </p>
         <div className="mt-4">
-          <CampaignMeta slot={slot} />
+          <CampaignMeta slot={slot} stallName={stallName} />
         </div>
         {goods.length > 0 ? (
           <div className="mt-8 text-foreground">
@@ -79,13 +93,15 @@ export function HomepageTakeover({ slot }: { slot: AdSlot }) {
 
 export function FeaturedBooth({
   slot,
+  stallName,
   eyebrow = "The good corner",
 }: {
   slot: AdSlot;
+  stallName?: string;
   eyebrow?: string;
 }) {
   const stall = stallById(slot.stallId);
-  const goods = listingsByStall(slot.stallId);
+  const goods = slot.stallId ? listingsByStall(slot.stallId) : [];
 
   return (
     <section className="border-y border-border bg-[oklch(0.93_0.04_75)]">
@@ -107,7 +123,7 @@ export function FeaturedBooth({
               {stall ? ` ${stall.blurb}` : null}
             </p>
             <div className="mt-3">
-              <CampaignMeta slot={slot} />
+              <CampaignMeta slot={slot} stallName={stallName} />
             </div>
           </div>
           <PaidStamp />
