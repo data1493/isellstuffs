@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { ListingGrid } from "@/components/browse/cards";
 import { HubTakeover } from "@/components/browse/paid";
 import { BrowseEmpty, HubNotFound } from "@/components/browse/states";
 import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Button } from "@/components/ui/button";
-import { adSlots, listingsByHub, mallHubs } from "@/lib/commerce";
+import { AD_BOOKINGS_COOKIE } from "@/lib/ad-booking";
+import { listingsByHub, mallHubs } from "@/lib/commerce";
 import { exploreHref, hubAtmosphere, hubBySlug } from "@/lib/browse";
+import {
+  hubBookingsFromCookie,
+  resolveHubTakeover,
+} from "@/lib/hub-ads";
 import { hubMetadata, missingHubMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
 export const dynamicParams = false;
 
 type HubPageProps = {
@@ -41,9 +48,9 @@ export default async function HubPage({ params }: HubPageProps) {
 
   const atmosphere = hubAtmosphere[hub.id];
   const hubListings = listingsByHub(hub.id);
-  const takeover = adSlots.find(
-    (slot) => slot.kind === "hub-takeover" && slot.hubId === hub.id,
-  );
+  const jar = await cookies();
+  const bookings = hubBookingsFromCookie(jar.get(AD_BOOKINGS_COOKIE)?.value);
+  const takeover = resolveHubTakeover(bookings, hub.id);
   const otherHubs = mallHubs.filter((item) => item.id !== hub.id);
 
   return (
@@ -84,7 +91,10 @@ export default async function HubPage({ params }: HubPageProps) {
       <MallWidth className="py-12 sm:py-16">
         {takeover ? (
           <div className="mb-10">
-            <HubTakeover slot={takeover} />
+            <HubTakeover
+              slot={takeover.slot}
+              stallName={takeover.stallName}
+            />
           </div>
         ) : null}
 

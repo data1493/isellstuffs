@@ -17,7 +17,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/browse` | Redirects to `/explore` |
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
-| `/hubs/[slug]` | Opinionated hub page |
+| `/hubs/[slug]` | Opinionated hub page. Hub-takeover bookings from `iss-ad-bookings` swap the aisle hero |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. |
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
@@ -41,7 +41,7 @@ Paid corners are a product. `/advertise` is the rate card. Next weekend can be b
 | `/campaigns/homepage-beats` | Beats Under the Table Fri–Mon lander. Receipt, not a blog post |
 | `/campaigns/yard-sale-tuesday` | Folding Table Tuesday Yard Sale hub takeover. Receipt, not a hub page |
 
-Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` and cookie `iss-ad-bookings` via `@/lib/ad-booking` (POST `/advertise/book/pay`). Home reads that cookie and stamps the matching paid corner — Paid, stall, window — instead of only the Beats / Half-Working fixtures. Explore and hub aisles stay on the sold catalog stamps.
+Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` and cookie `iss-ad-bookings` via `@/lib/ad-booking` (POST `/advertise/book/pay`). Home reads that cookie and stamps featured / homepage-takeover — Paid, stall, window — instead of only the Beats / Half-Working fixtures. Hub aisles read the same cookie for hub-takeover only: book Yard Sale and `/hubs/yard-sale` lights that stall. Explore stays on the sold catalog stamps.
 
 ## Sell
 

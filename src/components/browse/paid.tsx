@@ -138,7 +138,13 @@ export function FeaturedBooth({
   );
 }
 
-export function HubTakeover({ slot }: { slot: AdSlot }) {
+export function HubTakeover({
+  slot,
+  stallName,
+}: {
+  slot: AdSlot;
+  stallName?: string;
+}) {
   const stall = stallById(slot.stallId);
 
   return (
@@ -162,7 +168,7 @@ export function HubTakeover({ slot }: { slot: AdSlot }) {
         {stall ? ` ${stall.blurb}` : null}
       </p>
       <div className="mt-3">
-        <CampaignMeta slot={slot} />
+        <CampaignMeta slot={slot} stallName={stallName} />
       </div>
     </div>
   );
