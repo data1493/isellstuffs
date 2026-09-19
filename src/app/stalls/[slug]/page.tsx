@@ -71,8 +71,15 @@ import {
   stallFoldPath,
   stallPath,
   stallScrapPath,
+  stallSharePath,
   stallSpotPath,
 } from "@/lib/paths";
+import {
+  TABLE_SHARE_COOKIE_NAME,
+  TABLE_SHARE_PAPER_LINE,
+  parseTableShare,
+  sharePartnerFor,
+} from "@/lib/table-share";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -139,6 +146,10 @@ export default async function StallPage({
   const changeJar = breakBillsFor(
     stall.id,
     parseBreakBills(jar.get(BREAK_BILLS_COOKIE_NAME)?.value),
+  );
+  const sharer = sharePartnerFor(
+    stall.id,
+    parseTableShare(jar.get(TABLE_SHARE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -259,6 +270,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {sharer ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Sharing this table"
+              title="Two names."
+              body={
+                <p data-table-share-sharer={stall.id}>
+                  {sharer.boothName} {TABLE_SHARE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -299,6 +325,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I can break a twenty
+          </Link>
+
+          <Link
+            href={stallSharePath(stall.slug)}
+            data-table-share-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Sharing this table
           </Link>
 
           <Link

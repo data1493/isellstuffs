@@ -152,6 +152,14 @@ export function stallBreakWritePath() {
   return "/stalls/break";
 }
 
+export function stallSharePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/share`;
+}
+
+export function stallShareWritePath() {
+  return "/stalls/share";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
