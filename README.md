@@ -17,6 +17,8 @@ Walk the stand-in catalog without leaving the mall map.
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone |
+| `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
+| `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
 
 Empty filters, an empty tote, canceled or failed pay, and missing listing / stall / hub pages use the same designed empty and error panels. Those states are built for a phone-width viewport.
 

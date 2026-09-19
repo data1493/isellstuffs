@@ -1,13 +1,14 @@
 import Link from "next/link";
 
 import { mallHubs } from "@/lib/commerce";
-import { feesPath, thisWeekPath } from "@/lib/paths";
+import { collectionsPath, feesPath, thisWeekPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
 const browse = [
   { href: "/explore", label: "Explore" },
   { href: "/hubs", label: "Hubs" },
   { href: thisWeekPath(), label: "This week" },
+  { href: collectionsPath(), label: "Collections" },
   { href: "/sell", label: "Sell" },
   { href: feesPath(), label: "Fees" },
   { href: "/advertise", label: "Advertise" },

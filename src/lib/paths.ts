@@ -53,6 +53,14 @@ export function thisWeekPath() {
   return "/this-week";
 }
 
+export function collectionsPath() {
+  return "/collections";
+}
+
+export function collectionPath(slug: string) {
+  return `/collections/${slug}`;
+}
+
 export function campaignPath(slug: string) {
   return `/campaigns/${slug}`;
 }
