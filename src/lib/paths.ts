@@ -1160,6 +1160,14 @@ export function stallInnersWritePath() {
   return "/stalls/inners";
 }
 
+export function stallPinsPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/pins`;
+}
+
+export function stallPinsWritePath() {
+  return "/stalls/pins";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

@@ -245,6 +245,13 @@ import {
   stallInnersPath,
 } from "@/lib/booth-inners";
 import {
+  BOOTH_PINS_COOKIE_NAME,
+  BOOTH_PINS_PAPER_LINE,
+  boothPinsFor,
+  parseBoothPins,
+  stallPinsPath,
+} from "@/lib/booth-pins";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -492,6 +499,10 @@ export default async function StallPage({
   const innersNote = boothInnersFor(
     stall.id,
     parseBoothInners(jar.get(BOOTH_INNERS_COOKIE_NAME)?.value),
+  );
+  const pins = boothPinsFor(
+    stall.id,
+    parseBoothPins(jar.get(BOOTH_PINS_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1142,6 +1153,23 @@ export default async function StallPage({
             <p data-booth-inners-empty={stall.id} hidden />
           )}
 
+          {pins ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have pins"
+              title="Hem stays."
+              body={
+                <p data-booth-pins-note={stall.id}>
+                  {pins.note} {BOOTH_PINS_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-pins-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1438,6 +1466,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have inners
+          </Link>
+
+          <Link
+            href={stallPinsPath(stall.slug)}
+            data-booth-pins-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have pins
           </Link>
 
           <Link
