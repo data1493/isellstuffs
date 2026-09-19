@@ -858,6 +858,14 @@ export function listingTrayWritePath() {
   return "/listings/tray";
 }
 
+export function listingMasterPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/master`;
+}
+
+export function listingMasterWritePath() {
+  return "/listings/master";
+}
+
 export function listingSaucerPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/saucer`;
 }

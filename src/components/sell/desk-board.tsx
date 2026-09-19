@@ -195,6 +195,12 @@ import {
   subscribeTray,
 } from "@/lib/listing-tray";
 import {
+  canTapeMaster,
+  isListingMasterOverlay,
+  readMasterListingIds,
+  subscribeMaster,
+} from "@/lib/listing-master";
+import {
   canTapeInside,
   isListingInsideOverlay,
   readInsideListingIds,
@@ -366,6 +372,7 @@ import {
   listingGlassWritePath,
   listingPolishWritePath,
   listingTrayWritePath,
+  listingMasterWritePath,
   listingGumWritePath,
   listingInsideWritePath,
   listingTinesWritePath,
@@ -497,6 +504,7 @@ export function DeskBoard({
   const [expireIds, setExpireIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
   const [trayIds, setTrayIds] = useState<string[]>([]);
+  const [masterIds, setMasterIds] = useState<string[]>([]);
   const [gumIds, setGumIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
@@ -569,6 +577,7 @@ export function DeskBoard({
       setExpireIds(readExpireListingIds());
       setPolishIds(readPolishListingIds());
       setTrayIds(readTrayListingIds());
+      setMasterIds(readMasterListingIds());
       setGumIds(readGumListingIds());
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
@@ -630,6 +639,7 @@ export function DeskBoard({
     const unsubExpire = subscribeExpire(apply);
     const unsubPolish = subscribePolish(apply);
     const unsubTray = subscribeTray(apply);
+    const unsubMaster = subscribeMaster(apply);
     const unsubGum = subscribeGum(apply);
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
@@ -701,6 +711,7 @@ export function DeskBoard({
       unsubExpire();
       unsubPolish();
       unsubTray();
+      unsubMaster();
       unsubGum();
       unsubInside();
       unsubTines();
@@ -1033,6 +1044,37 @@ export function DeskBoard({
                             {isListingTrayOverlay(listing.id, trayIds)
                               ? "Leave this jewel"
                               : "I will not tray it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeMaster(listing) ? (
+                        <form
+                          method="post"
+                          action={listingMasterWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingMasterOverlay(listing.id, masterIds)
+                                ? "open"
+                                : "master"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingMasterOverlay(listing.id, masterIds)
+                              ? "Leave this burn"
+                              : "I don't have the master"}
                           </button>
                         </form>
                       ) : null}

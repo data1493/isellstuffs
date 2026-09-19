@@ -104,6 +104,7 @@ import { ListingSpliceNotice } from "@/components/listing-splice-notice";
 import { ListingRadioNotice } from "@/components/listing-radio-notice";
 import { ListingVentNotice } from "@/components/listing-vent-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
+import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingNormNotice } from "@/components/listing-norm-notice";
@@ -236,6 +237,7 @@ import {
   listingRadioPath,
   listingVentPath,
   listingTrayPath,
+  listingMasterPath,
   listingGumPath,
   listingTunePath,
   listingNormPath,
@@ -526,6 +528,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingRadioNotice listingId={listing.id} /> : null}
               {physical ? <ListingVentNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrayNotice listingId={listing.id} /> : null}
+              {physical ? <ListingMasterNotice listingId={listing.id} /> : null}
               {physical ? <ListingGumNotice listingId={listing.id} /> : null}
 
               {physical ? (
@@ -1015,6 +1018,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not tray it
+                  </Link>
+                  <Link
+                    href={listingMasterPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't have the master
                   </Link>
                   <Link
                     href={listingGumPath(listing.id)}
