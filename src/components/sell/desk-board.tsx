@@ -375,6 +375,12 @@ import {
   subscribeFill,
 } from "@/lib/listing-fill";
 import {
+  canTapeWind,
+  isListingWindOverlay,
+  readWindListingIds,
+  subscribeWind,
+} from "@/lib/listing-wind";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -458,6 +464,7 @@ import {
   listingPadWritePath,
   listingShimWritePath,
   listingFillWritePath,
+  listingWindWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -608,6 +615,7 @@ export function DeskBoard({
   const [padIds, setPadIds] = useState<string[]>([]);
   const [shimIds, setShimIds] = useState<string[]>([]);
   const [fillIds, setFillIds] = useState<string[]>([]);
+  const [windIds, setWindIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -692,6 +700,7 @@ export function DeskBoard({
       setPadIds(readPadListingIds());
       setShimIds(readShimListingIds());
       setFillIds(readFillListingIds());
+      setWindIds(readWindListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -765,6 +774,7 @@ export function DeskBoard({
     const unsubPad = subscribePad(apply);
     const unsubShim = subscribeShim(apply);
     const unsubFill = subscribeFill(apply);
+    const unsubWind = subscribeWind(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -848,6 +858,7 @@ export function DeskBoard({
       unsubPad();
       unsubShim();
       unsubFill();
+      unsubWind();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -1847,6 +1858,37 @@ export function DeskBoard({
                             {isListingFillOverlay(listing.id, fillIds)
                               ? "Leave the empty jewel"
                               : "I will not fill it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWind(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWindWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWindOverlay(listing.id, windIds)
+                                ? "open"
+                                : "wind"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingWindOverlay(listing.id, windIds)
+                              ? "Leave the hiss"
+                              : "I will not wind it"}
                           </button>
                         </form>
                       ) : null}

@@ -930,6 +930,14 @@ export function listingFillWritePath() {
   return "/listings/fill";
 }
 
+export function listingWindPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/wind`;
+}
+
+export function listingWindWritePath() {
+  return "/listings/wind";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }

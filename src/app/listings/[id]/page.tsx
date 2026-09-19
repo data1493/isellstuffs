@@ -112,6 +112,7 @@ import { ListingEtchNotice } from "@/components/listing-etch-notice";
 import { ListingPadNotice } from "@/components/listing-pad-notice";
 import { ListingShimNotice } from "@/components/listing-shim-notice";
 import { ListingFillNotice } from "@/components/listing-fill-notice";
+import { ListingWindNotice } from "@/components/listing-wind-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -256,6 +257,7 @@ import {
   listingPadPath,
   listingShimPath,
   listingFillPath,
+  listingWindPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -565,6 +567,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingMasterNotice listingId={listing.id} /> : null}
               {physical ? <ListingGumNotice listingId={listing.id} /> : null}
               {physical ? <ListingFillNotice listingId={listing.id} /> : null}
+              {physical ? <ListingWindNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1107,6 +1110,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not fill it
+                  </Link>
+                  <Link
+                    href={listingWindPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not wind it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (
