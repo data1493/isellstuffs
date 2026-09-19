@@ -123,6 +123,7 @@ import { ListingContentsNotice } from "@/components/listing-contents-notice";
 import { ListingDubNotice } from "@/components/listing-dub-notice";
 import { ListingStitchNotice } from "@/components/listing-stitch-notice";
 import { ListingCinchNotice } from "@/components/listing-cinch-notice";
+import { ListingFinalizeNotice } from "@/components/listing-finalize-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -281,6 +282,7 @@ import {
   listingDubPath,
   listingStitchPath,
   listingCinchPath,
+  listingFinalizePath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -609,6 +611,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDubNotice listingId={listing.id} /> : null}
               {physical ? <ListingStitchNotice listingId={listing.id} /> : null}
               {physical ? <ListingCinchNotice listingId={listing.id} /> : null}
+              {physical ? <ListingFinalizeNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1217,6 +1220,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not cinch it
+                  </Link>
+                  <Link
+                    href={listingFinalizePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not finalize it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (

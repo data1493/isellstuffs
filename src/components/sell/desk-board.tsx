@@ -441,6 +441,12 @@ import {
   subscribeCinch,
 } from "@/lib/listing-cinch";
 import {
+  canTapeFinalize,
+  isListingFinalizeOverlay,
+  readFinalizeListingIds,
+  subscribeFinalize,
+} from "@/lib/listing-finalize";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -553,6 +559,7 @@ import {
   listingDubWritePath,
   listingStitchWritePath,
   listingCinchWritePath,
+  listingFinalizeWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -717,6 +724,7 @@ export function DeskBoard({
   const [dubIds, setDubIds] = useState<string[]>([]);
   const [stitchIds, setStitchIds] = useState<string[]>([]);
   const [cinchIds, setCinchIds] = useState<string[]>([]);
+  const [finalizeIds, setFinalizeIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -815,6 +823,7 @@ export function DeskBoard({
       setDubIds(readDubListingIds());
       setStitchIds(readStitchListingIds());
       setCinchIds(readCinchListingIds());
+      setFinalizeIds(readFinalizeListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -902,6 +911,7 @@ export function DeskBoard({
     const unsubDub = subscribeDub(apply);
     const unsubStitch = subscribeStitch(apply);
     const unsubCinch = subscribeCinch(apply);
+    const unsubFinalize = subscribeFinalize(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -999,6 +1009,7 @@ export function DeskBoard({
       unsubDub();
       unsubStitch();
       unsubCinch();
+      unsubFinalize();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2342,6 +2353,37 @@ export function DeskBoard({
                             {isListingCinchOverlay(listing.id, cinchIds)
                               ? "Leave the waist"
                               : "I will not cinch it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFinalize(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFinalizeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFinalizeOverlay(listing.id, finalizeIds)
+                                ? "open"
+                                : "finalize"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFinalizeOverlay(listing.id, finalizeIds)
+                              ? "Leave the session"
+                              : "I will not finalize it"}
                           </button>
                         </form>
                       ) : null}

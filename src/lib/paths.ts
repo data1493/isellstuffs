@@ -1034,6 +1034,14 @@ export function listingCinchWritePath() {
   return "/listings/cinch";
 }
 
+export function listingFinalizePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/finalize`;
+}
+
+export function listingFinalizeWritePath() {
+  return "/listings/finalize";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
