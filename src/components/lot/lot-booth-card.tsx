@@ -33,6 +33,7 @@ export function LotBoothCard({
   polyNote,
   wrapNote,
   shellNote,
+  stickNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -48,6 +49,7 @@ export function LotBoothCard({
   polyNote?: string;
   wrapNote?: string;
   shellNote?: string;
+  stickNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -190,6 +192,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-shell-empty={stall.id} hidden />
+          )}
+          {stickNote ? (
+            <p
+              data-booth-stick-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t email the zip. {stickNote}
+            </p>
+          ) : (
+            <p data-booth-stick-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

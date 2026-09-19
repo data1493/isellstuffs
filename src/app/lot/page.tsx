@@ -45,6 +45,11 @@ import {
   parseBoothShell,
 } from "@/lib/booth-shell";
 import {
+  BOOTH_STICK_COOKIE_NAME,
+  BOOTH_STICK_MIRROR_SCRIPT,
+  parseBoothStick,
+} from "@/lib/booth-stick";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -100,6 +105,7 @@ export default async function LotPage() {
   const polyMap = parseBoothPoly(jar.get(BOOTH_POLY_COOKIE_NAME)?.value);
   const wrapMap = parseBoothWrap(jar.get(BOOTH_WRAP_COOKIE_NAME)?.value);
   const shellMap = parseBoothShell(jar.get(BOOTH_SHELL_COOKIE_NAME)?.value);
+  const stickMap = parseBoothStick(jar.get(BOOTH_STICK_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -120,6 +126,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_POLY_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WRAP_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SHELL_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_STICK_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -141,6 +148,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_POLY_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WRAP_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SHELL_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_STICK_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -213,6 +221,7 @@ export default async function LotPage() {
                     polyNote={polyMap[row.stall.id]?.note}
                     wrapNote={wrapMap[row.stall.id]?.note}
                     shellNote={shellMap[row.stall.id]?.note}
+                    stickNote={stickMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -250,6 +259,7 @@ export default async function LotPage() {
                     polyNote={polyMap[row.stall.id]?.note}
                     wrapNote={wrapMap[row.stall.id]?.note}
                     shellNote={shellMap[row.stall.id]?.note}
+                    stickNote={stickMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

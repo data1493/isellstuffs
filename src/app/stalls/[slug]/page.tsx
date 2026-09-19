@@ -77,6 +77,13 @@ import {
   stallShellPath,
 } from "@/lib/booth-shell";
 import {
+  BOOTH_STICK_COOKIE_NAME,
+  BOOTH_STICK_PAPER_LINE,
+  boothStickFor,
+  parseBoothStick,
+  stallStickPath,
+} from "@/lib/booth-stick";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -228,6 +235,10 @@ export default async function StallPage({
   const shell = boothShellFor(
     stall.id,
     parseBoothShell(jar.get(BOOTH_SHELL_COOKIE_NAME)?.value),
+  );
+  const stick = boothStickFor(
+    stall.id,
+    parseBoothStick(jar.get(BOOTH_STICK_COOKIE_NAME)?.value),
   );
 
   return (
@@ -470,6 +481,23 @@ export default async function StallPage({
             <p data-booth-shell-empty={stall.id} hidden />
           )}
 
+          {stick ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't email the zip"
+              title="Pay and open the folder."
+              body={
+                <p data-booth-stick-note={stall.id}>
+                  {stick.note} {BOOTH_STICK_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-stick-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -574,6 +602,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Don&apos;t open the shell
+          </Link>
+
+          <Link
+            href={stallStickPath(stall.slug)}
+            data-booth-stick-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t email the zip
           </Link>
 
           <Link
