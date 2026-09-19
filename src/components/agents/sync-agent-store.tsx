@@ -2,24 +2,20 @@
 
 import { useEffect } from "react";
 
-import {
-  AGENT_LOTS_STORAGE_KEY,
-  AGENT_PASS_STORAGE_KEY,
-  AGENT_TALK_STORAGE_KEY,
-  AGENT_TRADES_STORAGE_KEY,
-  DONATE_PLEDGES_STORAGE_KEY,
-  serializeLots,
-  serializePass,
-  serializePledges,
-  serializeTalk,
-  serializeTrades,
-  type AgentLot,
-  type AgentPass,
-  type AgentRating,
-  type AgentSuggestion,
-  type AgentTrade,
-  type DonatePledge,
+import type {
+  AgentLot,
+  AgentPass,
+  AgentRating,
+  AgentSuggestion,
+  AgentTrade,
+  DonatePledge,
 } from "@/lib/agent-store";
+
+const PASS_KEY = "iss:agent-pass";
+const LOTS_KEY = "iss:agent-lots";
+const TRADES_KEY = "iss:agent-trades";
+const TALK_KEY = "iss:agent-talk";
+const PLEDGES_KEY = "iss:donate-pledges";
 
 /** Copy cookie twins into `iss:agent-*` after a no-JS POST. */
 export function SyncAgentStore({
@@ -39,20 +35,14 @@ export function SyncAgentStore({
 }) {
   useEffect(() => {
     try {
-      window.localStorage.setItem(AGENT_PASS_STORAGE_KEY, serializePass(pass));
-      window.localStorage.setItem(AGENT_LOTS_STORAGE_KEY, serializeLots(lots));
+      window.localStorage.setItem(PASS_KEY, JSON.stringify(pass));
+      window.localStorage.setItem(LOTS_KEY, JSON.stringify(lots));
+      window.localStorage.setItem(TRADES_KEY, JSON.stringify(trades));
       window.localStorage.setItem(
-        AGENT_TRADES_STORAGE_KEY,
-        serializeTrades(trades),
+        TALK_KEY,
+        JSON.stringify({ ratings, suggestions }),
       );
-      window.localStorage.setItem(
-        AGENT_TALK_STORAGE_KEY,
-        serializeTalk({ ratings, suggestions }),
-      );
-      window.localStorage.setItem(
-        DONATE_PLEDGES_STORAGE_KEY,
-        serializePledges(pledges),
-      );
+      window.localStorage.setItem(PLEDGES_KEY, JSON.stringify(pledges));
     } catch {
       // blocked storage
     }

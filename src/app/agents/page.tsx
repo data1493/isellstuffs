@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { AgentRow } from "@/components/agents/agent-row";
-import { parseLots } from "@/lib/agent-store";
 import {
   loadAgentRowFloor,
+  parseLots,
   snapshotFromRequestCookies,
 } from "@/lib/agent-row-io";
 import { agentRowMetadata } from "@/lib/seo";

@@ -13,6 +13,7 @@ import {
   listSuggestions,
   listTrades,
   mallCutThisAisle,
+  parseLots,
   readPass,
   snapshotFromCookies,
   usesDatabase,
@@ -37,6 +38,8 @@ export type AgentRowFloor = {
   jarCents: number;
   shared: boolean;
 };
+
+export { parseLots };
 
 export function snapshotFromRequestCookies(get: (name: string) => string | undefined) {
   return snapshotFromCookies(get);
