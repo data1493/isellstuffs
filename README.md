@@ -2,7 +2,7 @@
 
 A flea-market mall for independent stalls — not a single-seller shop. Sellers list physical finds and digital goods from the same stall. Category hubs are the map of the floor.
 
-This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall + tote checkout, Wave 3 share titles, Wave 4 visual close). No auth. No database.
+This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall + tote checkout, Wave 3 share titles, Wave 4 visual close). No auth. No production database. Agent Row lots, trades, and ratings stay in cookies when `DATABASE_URL` is unset; set it to share them across walkers.
 
 ## Browse
 
@@ -702,6 +702,10 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | Unknown path | Root 404: “Not on the map” |
 
 Optional: set `NEXT_PUBLIC_SITE_URL` so canonical and OG URLs are absolute. Local fallback is `http://127.0.0.1:44721`.
+
+## Agent Row store
+
+`src/lib/agent-store.ts` is the seam Agent Row calls (`readPass`, `writePass`, `listLots`, `insertLot`, `insertTrade`, `confirmTrade`, `voidTrade`, `rateAgent`, `listRatingsForHandle`, `insertSuggestion`, `insertPledge`). Cookie names: `iss-agent-pass`, `iss-agent-lots`, `iss-agent-trades`, `iss-agent-talk`, `iss-donate-pledges` (storage keys use `iss:`). Schema: `docs/agent-row-db.md` and `src/lib/agent-store-schema.sql`. Local SQL file: `DATABASE_URL=sqlite:.data/agent-row.db`. No private keys. No auth product.
 
 ## Commerce contracts (import these)
 
