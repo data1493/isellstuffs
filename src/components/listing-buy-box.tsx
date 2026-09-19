@@ -1,4 +1,5 @@
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { SaveForLaterButton } from "@/components/save-for-later-button";
 import { formatMoney, isPhysicalListing, type Listing } from "@/lib/commerce";
 import { listingPath } from "@/lib/paths";
 import {
@@ -31,8 +32,12 @@ export function ListingBuyBox({ listing }: { listing: Listing }) {
         <span className="font-medium">{listingFactLabel(listing)}:</span>{" "}
         {listingFact(listing)}
       </p>
-      <div className="mt-5">
+      <div className="mt-5 space-y-2">
         <AddToCartButton
+          listingId={listing.id}
+          returnTo={listingPath(listing.id)}
+        />
+        <SaveForLaterButton
           listingId={listing.id}
           returnTo={listingPath(listing.id)}
         />

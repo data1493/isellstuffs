@@ -73,6 +73,10 @@ export function folderPath(slip: string) {
   return `/folder/${encodeURIComponent(slip)}`;
 }
 
+export function savedPath() {
+  return "/saved";
+}
+
 export function ordersPath() {
   return "/orders";
 }

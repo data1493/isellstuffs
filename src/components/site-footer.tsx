@@ -2,7 +2,13 @@ import Link from "next/link";
 
 import { mallHubs } from "@/lib/commerce";
 import { yardSaleTuesdayLanderPath } from "@/lib/ads-display";
-import { aboutPath, collectionsPath, feesPath, thisWeekPath } from "@/lib/paths";
+import {
+  aboutPath,
+  collectionsPath,
+  feesPath,
+  savedPath,
+  thisWeekPath,
+} from "@/lib/paths";
 import { site } from "@/lib/site";
 
 const browse = [
@@ -16,6 +22,7 @@ const browse = [
   { href: "/advertise", label: "Advertise" },
   { href: yardSaleTuesdayLanderPath, label: "Yard Sale campaign" },
   { href: "/cart", label: "Tote" },
+  { href: savedPath(), label: "Later pile" },
 ];
 
 export function SiteFooter() {

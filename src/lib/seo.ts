@@ -22,7 +22,7 @@ import {
   type ExploreSort,
 } from "@/lib/browse";
 import { listingFact, listingFactLabel, listingStatusLabel } from "@/lib/listing-display";
-import { listingPath, searchPath, stallPath } from "@/lib/paths";
+import { listingPath, savedPath, searchPath, stallPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
 const fallbackOrigin = "http://127.0.0.1:44721";
@@ -360,6 +360,16 @@ export function cartMetadata(): Metadata {
     description:
       "The bag for i sell stuffs. One mall charge for every stall in the tote. The mall keeps 10%. Test checkout only.",
     path: "/cart",
+    robots: noIndex,
+  });
+}
+
+export function savedMetadata(): Metadata {
+  return shareMetadata({
+    title: "Later pile",
+    description:
+      "Listings parked on this browser. Not the tote. Parked, not paid. No account.",
+    path: savedPath(),
     robots: noIndex,
   });
 }

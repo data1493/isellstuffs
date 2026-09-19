@@ -20,8 +20,9 @@ Walk the stand-in catalog without leaving the mall map.
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
+| `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Not a second cart |
 
-Empty filters, an empty tote, canceled or failed pay, and missing listing / stall / hub pages use the same designed empty and error panels. Those states are built for a phone-width viewport.
+Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub pages use the same designed empty and error panels. Those states are built for a phone-width viewport.
 
 ## Advertise
 
@@ -67,6 +68,8 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag.
+
+Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile.
 
 ## Cart and checkout
 
@@ -130,7 +133,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/hubs`, `/hubs/[slug]` | Aisle name, rule, listing count |
 | `/listings/[id]` | `{title} · {price}` plus condition/format, stall, status. Product + Offer JSON-LD |
 | `/stalls/[slug]` | Booth name, mix of objects and files |
-| `/cart`, `/checkout/*` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/checkout/*`, `/saved` | Real titles. `noindex` — not catalog URLs |
 | Unknown path | Root 404: “Not on the map” |
 
 Optional: set `NEXT_PUBLIC_SITE_URL` so canonical and OG URLs are absolute. Local fallback is `http://127.0.0.1:44721`.
