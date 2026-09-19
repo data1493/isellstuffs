@@ -44,7 +44,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |
 
-New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads.
+New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads. Rewrite a booth name and pitch at `/stalls/[slug]/edit` (`iss:seller-stalls`). The slug stays put.
 
 ## Listing and stall pages
 
@@ -54,6 +54,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | --- | --- |
 | Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
+| Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |
 | Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |

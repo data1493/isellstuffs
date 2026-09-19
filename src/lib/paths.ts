@@ -12,6 +12,10 @@ export function stallPath(slug: string) {
   return `/stalls/${slug}`;
 }
 
+export function stallEditPath(slug: string) {
+  return `/stalls/${slug}/edit`;
+}
+
 export function advertisePath() {
   return "/advertise";
 }

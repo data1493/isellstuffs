@@ -36,6 +36,7 @@ export {
   stalls,
   listings,
   allListings,
+  allStalls,
   adSlots,
   stallById,
   stallBySlug,

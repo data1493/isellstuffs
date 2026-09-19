@@ -1,4 +1,5 @@
 import { readSellerListings } from "../seller-overlay";
+import { applyStallCard } from "../stall-overlay";
 import { money } from "./money";
 import type { AdSlot, DigitalListing, Listing, PhysicalListing, Stall } from "./types";
 
@@ -346,12 +347,17 @@ export const adSlots = [
   },
 ] as const satisfies readonly AdSlot[];
 
+/** Fixture booths plus the local stall-card overlay. Shop lookups use this. */
+export function allStalls(): Stall[] {
+  return stalls.map((stall) => applyStallCard(stall));
+}
+
 export function stallById(id: string): Stall | undefined {
-  return stalls.find((stall) => stall.id === id);
+  return allStalls().find((stall) => stall.id === id);
 }
 
 export function stallBySlug(slug: string): Stall | undefined {
-  return stalls.find((stall) => stall.slug === slug);
+  return allStalls().find((stall) => stall.slug === slug);
 }
 
 export function listingById(id: string): Listing | undefined {
@@ -377,7 +383,7 @@ export function cartEligibleListings(): Listing[] {
 }
 
 export function featuredStalls(): Stall[] {
-  return stalls.filter((stall) => stall.featured);
+  return allStalls().filter((stall) => stall.featured);
 }
 
 export function adSlotsByKind(kind: AdSlot["kind"]): AdSlot[] {

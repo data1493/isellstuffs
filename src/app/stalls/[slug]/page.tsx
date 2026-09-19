@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { StallCardCopy } from "@/components/stalls/stall-card-copy";
 import { StallListingCard } from "@/components/stall-listing-card";
 import { StallMixBar } from "@/components/stall-mix-bar";
 import { Badge } from "@/components/ui/badge";
@@ -70,14 +71,12 @@ export default async function StallPage({ params }: StallPageProps) {
             ) : null}
           </div>
 
-          <div className="max-w-2xl space-y-3">
-            <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-5xl">
-              {stall.boothName}
-            </h1>
-            <p className="text-base leading-7 text-muted-foreground sm:text-lg">
-              {stall.blurb}
-            </p>
-          </div>
+          <StallCardCopy
+            stallId={stall.id}
+            slug={stall.slug}
+            boothName={stall.boothName}
+            blurb={stall.blurb}
+          />
 
           <StallMixBar physical={physical.length} digital={digital.length} />
 

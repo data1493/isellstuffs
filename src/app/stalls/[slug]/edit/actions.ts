@@ -1,0 +1,27 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+import { stallById } from "@/lib/commerce";
+import { stallEditPath, stallPath } from "@/lib/paths";
+import { parseStallCard, type StallCardResult } from "@/lib/stall-card";
+import { upsertStallCard } from "@/lib/stall-overlay";
+
+export async function saveStallCard(
+  formData: FormData,
+): Promise<StallCardResult> {
+  const parsed = parseStallCard(formData);
+  if (!parsed.ok) {
+    return parsed;
+  }
+
+  upsertStallCard(parsed.patch);
+  const stall = stallById(parsed.patch.stallId);
+
+  if (stall) {
+    revalidatePath(stallPath(stall.slug));
+    revalidatePath(stallEditPath(stall.slug));
+  }
+
+  return parsed;
+}
