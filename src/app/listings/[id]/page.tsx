@@ -79,6 +79,7 @@ import { ListingGlassNotice } from "@/components/listing-glass-notice";
 import { ListingDoubleNotice } from "@/components/listing-double-notice";
 import { ListingPolishNotice } from "@/components/listing-polish-notice";
 import { ListingInsideNotice } from "@/components/listing-inside-notice";
+import { ListingTinesNotice } from "@/components/listing-tines-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -179,6 +180,7 @@ import {
   listingDoublePath,
   listingPolishPath,
   listingInsidePath,
+  listingTinesPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -429,6 +431,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingVgNotice listingId={listing.id} /> : null}
               {physical ? <ListingBakeNotice listingId={listing.id} /> : null}
               {physical ? <ListingInsideNotice listingId={listing.id} /> : null}
+              {physical ? <ListingTinesNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -797,6 +800,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not say what was inside
+                  </Link>
+                  <Link
+                    href={listingTinesPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not replace a tine
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

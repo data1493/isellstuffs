@@ -165,6 +165,12 @@ import {
   subscribeInside,
 } from "@/lib/listing-inside";
 import {
+  canTapeTines,
+  isListingTinesOverlay,
+  readTinesListingIds,
+  subscribeTines,
+} from "@/lib/listing-tines";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -172,6 +178,7 @@ import {
   listingGlassWritePath,
   listingPolishWritePath,
   listingInsideWritePath,
+  listingTinesWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -268,6 +275,7 @@ export function DeskBoard({
   const [doubleIds, setDoubleIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
+  const [tinesIds, setTinesIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -308,6 +316,7 @@ export function DeskBoard({
       setDoubleIds(readDoubleListingIds());
       setPolishIds(readPolishListingIds());
       setInsideIds(readInsideListingIds());
+      setTinesIds(readTinesListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -337,6 +346,7 @@ export function DeskBoard({
     const unsubDouble = subscribeDouble(apply);
     const unsubPolish = subscribePolish(apply);
     const unsubInside = subscribeInside(apply);
+    const unsubTines = subscribeTines(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -376,6 +386,7 @@ export function DeskBoard({
       unsubDouble();
       unsubPolish();
       unsubInside();
+      unsubTines();
     };
   }, [listings, stall.id]);
 
@@ -1208,6 +1219,37 @@ export function DeskBoard({
                             {isListingBakeOverlay(listing.id, bakeIds)
                               ? "Leave the tape"
                               : "I will not bake"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTines(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTinesWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTinesOverlay(listing.id, tinesIds)
+                                ? "open"
+                                : "tines"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTinesOverlay(listing.id, tinesIds)
+                              ? "Leave the splay"
+                              : "I will not replace a tine"}
                           </button>
                         </form>
                       ) : null}

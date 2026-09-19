@@ -634,6 +634,14 @@ export function listingReviseWritePath() {
   return "/listings/revise";
 }
 
+export function listingTinesPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tines`;
+}
+
+export function listingTinesWritePath() {
+  return "/listings/tines";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
