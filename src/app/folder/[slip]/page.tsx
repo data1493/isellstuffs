@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
-import { FolderEmpty } from "@/components/folder/folder-empty";
-import { FolderSlip } from "@/components/folder/folder-slip";
-import {
-  CHECKOUT_COOKIE,
-  digitalLinesOnSlip,
-  folderSlipFromCookie,
-} from "@/lib/digital-folder";
+import { FolderSlipView } from "@/components/folder/folder-views";
+import { CHECKOUT_COOKIE, folderSlipFromCookie } from "@/lib/digital-folder";
 import { folderPath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
 
@@ -34,12 +29,7 @@ export default async function FolderSlipPage({
   const { slip: rawSlip } = await params;
   const slip = decodeURIComponent(rawSlip);
   const jar = await cookies();
-  const session = folderSlipFromCookie(jar.get(CHECKOUT_COOKIE)?.value, slip);
-  const lines = session ? digitalLinesOnSlip(session.listingIds) : [];
+  const seed = folderSlipFromCookie(jar.get(CHECKOUT_COOKIE)?.value, slip);
 
-  if (!session || lines.length === 0) {
-    return <FolderEmpty />;
-  }
-
-  return <FolderSlip slip={session.id} lines={lines} />;
+  return <FolderSlipView slip={slip} seed={seed} />;
 }

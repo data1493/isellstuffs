@@ -90,8 +90,8 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | `/checkout/mock` | Local test pay wall when no Stripe secret is set |
 | `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” and join the sold overlay — the lamp leaves `avail=open`, the PDF stays for sale |
 | `/checkout/cancel` | Walked away. Tote stays |
-| `/folder` | Current slip’s digital lines, or “No folder on this slip.” |
-| `/folder/[slip]` | One paid slip’s booth folder. Stand-in downloads, not a CDN |
+| `/folder` | Current slip’s digital lines, or last week’s files still in `iss:orders`. Cold tab: “No folder on this slip.” |
+| `/folder/[slip]` | One paid slip’s booth folder. Reads the checkout cookie, then `iss:orders` after that cookie dies. Stand-in downloads, not a CDN |
 | `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” |
 | `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |

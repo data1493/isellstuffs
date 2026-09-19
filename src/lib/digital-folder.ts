@@ -103,6 +103,11 @@ export function digitalLinesOnSlip(listingIds: string[]): FolderLine[] {
   return lines;
 }
 
+export type FolderSlipRef = {
+  id: string;
+  listingIds: string[];
+};
+
 /** Same cookie read checkout success uses. Optional slip must match the stored id. */
 export function folderSlipFromCookie(
   cookieValue: string | undefined,
@@ -116,6 +121,48 @@ export function folderSlipFromCookie(
     return null;
   }
   return stored;
+}
+
+/** One paid tote from `iss:orders`. Do not invent a second folder key. */
+export function folderSlipFromOrders(
+  orders: readonly FolderSlipRef[],
+  slip: string,
+): FolderSlipRef | null {
+  if (!slip) {
+    return null;
+  }
+  return orders.find((order) => order.id === slip) ?? null;
+}
+
+/**
+ * Cookie first; `iss:orders` when the checkout cookie is a different tote
+ * (last week's PDF after the 30-minute slip cookie dies).
+ */
+export function resolveFolderSlip(
+  slip: string,
+  cookie: FolderSlipRef | null,
+  orders: readonly FolderSlipRef[],
+): FolderSlipRef | null {
+  if (cookie && cookie.id === slip) {
+    return cookie;
+  }
+  return folderSlipFromOrders(orders, slip);
+}
+
+/**
+ * `/folder` index: honor the current cookie even when it has no files.
+ * If this tab has no cookie, offer the newest stored slip that still has files.
+ */
+export function resolveFolderIndex(
+  cookie: FolderSlipRef | null,
+  orders: readonly FolderSlipRef[],
+): FolderSlipRef | null {
+  if (cookie) {
+    return cookie;
+  }
+  return (
+    orders.find((order) => folderHasDigitalLines(order.listingIds)) ?? null
+  );
 }
 
 export function folderHasDigitalLines(listingIds: string[]): boolean {

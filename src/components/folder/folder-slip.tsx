@@ -11,7 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { isGiftListing } from "@/lib/commerce";
 import type { FolderLine } from "@/lib/digital-folder";
+import { giftPath, orderPath } from "@/lib/paths";
 
 export function FolderSlip({
   slip,
@@ -26,10 +28,10 @@ export function FolderSlip({
         <MallCrumb label="Folder">
           <CrumbSep />
           <Link
-            href="/checkout/success"
+            href={orderPath(slip)}
             className="hover:text-foreground hover:underline"
           >
-            Receipt
+            Slip
           </Link>
           <CrumbSep />
           <span className="text-foreground">Folder</span>
@@ -69,18 +71,41 @@ export function FolderSlip({
                 {line.formatLabel} · {line.stall.boothName}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button
-                className="w-full rounded-full sm:w-auto"
-                render={
-                  <a
-                    href={line.downloadHref}
-                    download={line.downloadName}
-                  />
-                }
-              >
-                Download stand-in
-              </Button>
+            <CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              {isGiftListing(line.listing) ? (
+                <Button
+                  className="w-full rounded-full sm:w-auto"
+                  render={<Link href={giftPath()} />}
+                >
+                  Take this to the gift desk
+                </Button>
+              ) : (
+                <Button
+                  className="w-full rounded-full sm:w-auto"
+                  render={
+                    <a
+                      href={line.downloadHref}
+                      download={line.downloadName}
+                    />
+                  }
+                >
+                  Download stand-in
+                </Button>
+              )}
+              {isGiftListing(line.listing) ? (
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full sm:w-auto"
+                  render={
+                    <a
+                      href={line.downloadHref}
+                      download={line.downloadName}
+                    />
+                  }
+                >
+                  Download the code
+                </Button>
+              ) : null}
             </CardContent>
           </Card>
         ))}
