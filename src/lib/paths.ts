@@ -298,6 +298,14 @@ export function listingHingeWritePath() {
   return "/listings/hinge";
 }
 
+export function listingChipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/chip`;
+}
+
+export function listingChipWritePath() {
+  return "/listings/chip";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

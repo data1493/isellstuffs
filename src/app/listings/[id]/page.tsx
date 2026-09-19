@@ -37,6 +37,7 @@ import { ListingHissNotice } from "@/components/listing-hiss-notice";
 import { ListingToeNotice } from "@/components/listing-toe-notice";
 import { ListingKeyNotice } from "@/components/listing-key-notice";
 import { ListingHingeNotice } from "@/components/listing-hinge-notice";
+import { ListingChipNotice } from "@/components/listing-chip-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -95,6 +96,7 @@ import {
   listingToePath,
   listingKeyPath,
   listingHingePath,
+  listingChipPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -291,6 +293,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingToeNotice listingId={listing.id} /> : null}
               {physical ? <ListingKeyNotice listingId={listing.id} /> : null}
               {physical ? <ListingHingeNotice listingId={listing.id} /> : null}
+              {physical ? <ListingChipNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -503,6 +506,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The hinge stays gone
+                  </Link>
+                  <Link
+                    href={listingChipPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The chip stays
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
