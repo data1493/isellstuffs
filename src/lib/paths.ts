@@ -306,6 +306,14 @@ export function listingChipWritePath() {
   return "/listings/chip";
 }
 
+export function listingKnobPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/knob`;
+}
+
+export function listingKnobWritePath() {
+  return "/listings/knob";
+}
+
 export function listingWorkbookPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/workbook`;
 }
