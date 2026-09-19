@@ -27,8 +27,10 @@ import {
   listingPath,
   orderEmailPath,
   ordersPath,
+  pickupSlipPath,
   stallPath,
 } from "@/lib/paths";
+import { pickupHasPhysicalLines } from "@/lib/pickup-slip";
 
 function lineNote(line: OrderLine) {
   if (!line.listing) {
@@ -47,6 +49,7 @@ function lineNote(line: OrderLine) {
 export function OrderSlipCard({ order }: { order: OrderSlip }) {
   const groups = reconstructOrderGroups(order.listingIds);
   const showFolder = folderHasDigitalLines(order.listingIds);
+  const showPickup = pickupHasPhysicalLines(order.listingIds);
 
   return (
     <div>
@@ -192,8 +195,17 @@ export function OrderSlipCard({ order }: { order: OrderSlip }) {
         </Card>
 
         <div className="flex flex-col gap-3">
+          {showPickup ? (
+            <Button
+              className="w-full rounded-full sm:w-auto"
+              render={<Link href={pickupSlipPath(order.id)} />}
+            >
+              Open the pickup slip
+            </Button>
+          ) : null}
           {showFolder ? (
             <Button
+              variant={showPickup ? "outline" : undefined}
               className="w-full rounded-full sm:w-auto"
               render={<Link href={folderPath(order.id)} />}
             >
@@ -201,7 +213,7 @@ export function OrderSlipCard({ order }: { order: OrderSlip }) {
             </Button>
           ) : null}
           <Button
-            variant={showFolder ? "outline" : undefined}
+            variant={showPickup || showFolder ? "outline" : undefined}
             className="w-full rounded-full sm:w-auto"
             render={<Link href={orderEmailPath(order.id)} />}
           >

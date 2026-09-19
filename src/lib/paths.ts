@@ -104,3 +104,11 @@ export function orderPath(id: string) {
 export function orderEmailPath(id: string) {
   return `/orders/${encodeURIComponent(id)}/email`;
 }
+
+export function pickupPath() {
+  return "/pickup";
+}
+
+export function pickupSlipPath(slip: string) {
+  return `/pickup/${encodeURIComponent(slip)}`;
+}

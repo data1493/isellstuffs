@@ -20,7 +20,8 @@ import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/ch
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { listingById } from "@/lib/commerce";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
-import { folderPath, orderPath } from "@/lib/paths";
+import { folderPath, orderPath, pickupSlipPath } from "@/lib/paths";
+import { pickupHasPhysicalLines } from "@/lib/pickup-slip";
 import { checkoutSuccessMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = checkoutSuccessMetadata();
@@ -174,6 +175,16 @@ export default async function CheckoutSuccessPage({
                       warehouse in this wave.
                     </CardDescription>
                   </CardHeader>
+                  {session && pickupHasPhysicalLines(session.listingIds) ? (
+                    <CardContent>
+                      <Button
+                        className="w-full rounded-full sm:w-auto"
+                        render={<Link href={pickupSlipPath(session.id)} />}
+                      >
+                        Open the pickup slip
+                      </Button>
+                    </CardContent>
+                  ) : null}
                 </Card>
               ) : null}
               {mix.digital > 0 ? (

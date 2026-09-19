@@ -82,10 +82,12 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | --- | --- |
 | `/cart` | Tote. Same listing ids listing/stall pages wrote |
 | `/checkout/mock` | Local test pay wall when no Stripe secret is set |
-| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder” |
+| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” |
 | `/checkout/cancel` | Walked away. Tote stays |
 | `/folder` | Current slip’s digital lines, or “No folder on this slip.” |
 | `/folder/[slip]` | One paid slip’s booth folder. Stand-in downloads, not a CDN |
+| `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” |
+| `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |
 | `/orders/[id]` | Reconstruct the tote from checkout listing ids |
 | `/orders/[id]/email` | Printed receipt email of that slip. Same lines. Nothing is sent |
