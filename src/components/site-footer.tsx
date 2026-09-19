@@ -11,6 +11,7 @@ import {
   cartShakePath,
   lotPath,
   pickupPath,
+  rainPath,
   savedPath,
   sellDeskPath,
   watchedPath,
@@ -43,6 +44,7 @@ const browse = [
   { href: savedPath(), label: "Later pile" },
   { href: watchedPath(), label: "Watched tables" },
   { href: walkPath(), label: "Saturday walk" },
+  { href: rainPath(), label: "Rain Sunday" },
   { href: wantedPath(), label: "Hunt board" },
   { href: lotPath(), label: "Who set up" },
 ];

@@ -199,6 +199,22 @@ export function sellHoursSavePath() {
   return "/sell/hours/save";
 }
 
+export function rainPath() {
+  return "/rain";
+}
+
+export function sellRainPath(stall?: string) {
+  const trimmed = stall?.trim() ?? "";
+  if (!trimmed) {
+    return "/sell/rain";
+  }
+  return `/sell/rain?stall=${encodeURIComponent(trimmed)}`;
+}
+
+export function sellRainWritePath() {
+  return "/sell/rain";
+}
+
 export function sellListingEditPath(id: string) {
   return `/sell/listings/${encodeURIComponent(id)}/edit`;
 }

@@ -26,6 +26,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Scoop with **Bag the pile** (`POST /saved/bag`) into the existing tote. Not a second cart |
 | `/watched` | Watched tables. Mark a booth, not a SKU. Cookie `iss-watched-stall-ids` + `iss:watched-stall-ids`. Same folding tables next weekend. Not the later pile |
 | `/walk` | Saturday morning scrap. Watched booths that are still out, with this weekend’s hours. Packed tables stay in the car. Reads watched / hours / packed cookies. Does not write them. |
+| `/rain` | Rain Sunday. Booths that taped a Sunday card if Saturday is wet. Cookie `iss-rain-dates` + `iss:rain-dates`. Lamp PDP hours stay the Saturday plan. Not a rewrite of `/sell/hours`. |
 | `/wanted` | Hunt board. Tape what you are looking for. Cookie `iss-wanted-hunts` + `iss:wanted-hunts`. A scrap on the cork — not a listing, not `/saved`, not `/watched` |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
 
@@ -62,6 +63,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |
 | `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
 | `/sell/hours` | Tape this weekend’s hours for one catalog booth. Native `POST /sell/hours/save` writes `iss:weekend-hours`. Restore puts the fixture back. Not a mall `/hours` page. |
+| `/sell/rain` | Tape a Sunday rain date for one catalog booth. Native `POST /sell/rain` writes `iss:rain-dates`. Restore clears that booth from `/rain`. Not a rewrite of `/sell/hours`. Pickup still recites Saturday. |
 | `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals, plus what walked from paid slips in this browser. No Connect, no bank |
@@ -209,7 +211,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 
