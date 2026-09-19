@@ -555,6 +555,12 @@ import {
   subscribeBush,
 } from "@/lib/listing-bush";
 import {
+  canTapeSwage,
+  isListingSwageOverlay,
+  readSwageListingIds,
+  subscribeSwage,
+} from "@/lib/listing-swage";
+import {
   canTapeBraid,
   isListingBraidOverlay,
   readBraidListingIds,
@@ -834,6 +840,7 @@ import {
   listingKnurlWritePath,
   listingRivetWritePath,
   listingBushWritePath,
+  listingSwageWritePath,
   listingBraidWritePath,
   listingSergeWritePath,
   listingFellWritePath,
@@ -1044,6 +1051,7 @@ export function DeskBoard({
   const [knurlIds, setKnurlIds] = useState<string[]>([]);
   const [rivetIds, setRivetIds] = useState<string[]>([]);
   const [bushIds, setBushIds] = useState<string[]>([]);
+  const [swageIds, setSwageIds] = useState<string[]>([]);
   const [braidIds, setBraidIds] = useState<string[]>([]);
   const [sergeIds, setSergeIds] = useState<string[]>([]);
   const [fellIds, setFellIds] = useState<string[]>([]);
@@ -1186,6 +1194,7 @@ export function DeskBoard({
       setKnurlIds(readKnurlListingIds());
       setRivetIds(readRivetListingIds());
       setBushIds(readBushListingIds());
+      setSwageIds(readSwageListingIds());
       setBraidIds(readBraidListingIds());
       setSergeIds(readSergeListingIds());
       setFellIds(readFellListingIds());
@@ -1317,6 +1326,7 @@ export function DeskBoard({
     const unsubKnurl = subscribeKnurl(apply);
     const unsubRivet = subscribeRivet(apply);
     const unsubBush = subscribeBush(apply);
+    const unsubSwage = subscribeSwage(apply);
     const unsubBraid = subscribeBraid(apply);
     const unsubSerge = subscribeSerge(apply);
     const unsubFell = subscribeFell(apply);
@@ -1458,6 +1468,7 @@ export function DeskBoard({
       unsubKnurl();
       unsubRivet();
       unsubBush();
+      unsubSwage();
       unsubBraid();
       unsubSerge();
       unsubFell();
@@ -3229,6 +3240,37 @@ export function DeskBoard({
                             {isListingBushOverlay(listing.id, bushIds)
                               ? "Leave the wobble"
                               : "I will not bush it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSwage(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSwageWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSwageOverlay(listing.id, swageIds)
+                                ? "open"
+                                : "swage"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSwageOverlay(listing.id, swageIds)
+                              ? "Leave the neck"
+                              : "I will not swage it"}
                           </button>
                         </form>
                       ) : null}

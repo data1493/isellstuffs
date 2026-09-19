@@ -1250,6 +1250,14 @@ export function listingBurnishWritePath() {
   return "/listings/burnish";
 }
 
+export function listingSwagePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/swage`;
+}
+
+export function listingSwageWritePath() {
+  return "/listings/swage";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }
