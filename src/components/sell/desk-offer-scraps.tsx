@@ -1,19 +1,16 @@
-"use client";
-
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { ListingOfferScrap } from "@/components/listing-offer-scrap";
-import { formatMoney, type Listing } from "@/lib/commerce";
+import { formatMoney, listingById, type Listing } from "@/lib/commerce";
 import {
+  OFFER_COOKIE_NAME,
   offersForStall,
-  readListingOffers,
-  subscribeListingOffers,
-  type ListingOffer,
+  parseListingOffers,
 } from "@/lib/listing-offer";
 import { listingOfferPath, sellDeskStallPath } from "@/lib/paths";
 
-export function DeskOfferScraps({
+export async function DeskOfferScraps({
   stallId,
   stallSlug,
   listings,
@@ -22,16 +19,11 @@ export function DeskOfferScraps({
   stallSlug: string;
   listings: Listing[];
 }) {
-  const [offers, setOffers] = useState<ListingOffer[]>([]);
-
-  useEffect(() => {
-    function apply() {
-      setOffers(offersForStall(readListingOffers(), stallId));
-    }
-
-    apply();
-    return subscribeListingOffers(apply);
-  }, [stallId]);
+  const jar = await cookies();
+  const offers = offersForStall(
+    parseListingOffers(jar.get(OFFER_COOKIE_NAME)?.value),
+    stallId,
+  );
 
   if (offers.length === 0) {
     return null;
@@ -48,7 +40,7 @@ export function DeskOfferScraps({
       </p>
       <ul className="grid gap-3">
         {offers.map((offer) => {
-          const listing = titles.get(offer.listingId);
+          const listing = titles.get(offer.listingId) ?? listingById(offer.listingId);
           const tagLabel = listing ? formatMoney(listing.price) : "the tag";
 
           return (

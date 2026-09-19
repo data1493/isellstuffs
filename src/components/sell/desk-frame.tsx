@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 
 import { DeskBoard } from "@/components/sell/desk-board";
+import { DeskOfferScraps } from "@/components/sell/desk-offer-scraps";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
@@ -183,6 +184,11 @@ export async function DeskFrame({
           you can see what walked.
         </p>
         <div className="mt-8">
+          <DeskOfferScraps
+            stallId={stall.id}
+            stallSlug={stall.slug}
+            listings={listings}
+          />
           <DeskBoard
             stall={stall}
             listings={listings}

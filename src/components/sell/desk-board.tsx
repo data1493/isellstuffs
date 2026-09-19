@@ -10,7 +10,6 @@ import { PackButton } from "@/components/sell/pack-button";
 import { SoldButton } from "@/components/sell/sold-button";
 import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
 import { TestedPin } from "@/components/sell/tested-pin";
-import { DeskOfferScraps } from "@/components/sell/desk-offer-scraps";
 import { WeekendPin } from "@/components/sell/weekend-pin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -179,12 +178,6 @@ export function DeskBoard({
           Tape a scrap on this table
         </Link>
       </div>
-
-      <DeskOfferScraps
-        stallId={stall.id}
-        stallSlug={stall.slug}
-        listings={rows}
-      />
 
       {rows.length === 0 ? (
         <MallNotice
