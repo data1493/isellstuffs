@@ -722,6 +722,14 @@ export function listingLiningWritePath() {
   return "/listings/lining";
 }
 
+export function listingHoodPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hood`;
+}
+
+export function listingHoodWritePath() {
+  return "/listings/hood";
+}
+
 export function listingDonglePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/dongle`;
 }

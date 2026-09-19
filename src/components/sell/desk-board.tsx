@@ -267,6 +267,12 @@ import {
   subscribeLining,
 } from "@/lib/listing-lining";
 import {
+  canTapeHood,
+  isListingHoodOverlay,
+  readHoodListingIds,
+  subscribeHood,
+} from "@/lib/listing-hood";
+import {
   canTapeDongle,
   isListingDongleOverlay,
   readDongleListingIds,
@@ -401,6 +407,7 @@ import {
   listingCastWritePath,
   listingSprayWritePath,
   listingLiningWritePath,
+  listingHoodWritePath,
   listingDongleWritePath,
   listingBeepWritePath,
   listingRecapWritePath,
@@ -538,6 +545,7 @@ export function DeskBoard({
   const [castIds, setCastIds] = useState<string[]>([]);
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [liningIds, setLiningIds] = useState<string[]>([]);
+  const [hoodIds, setHoodIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [beepIds, setBeepIds] = useState<string[]>([]);
   const [recapIds, setRecapIds] = useState<string[]>([]);
@@ -614,6 +622,7 @@ export function DeskBoard({
       setCastIds(readCastListingIds());
       setSprayIds(readSprayListingIds());
       setLiningIds(readLiningListingIds());
+      setHoodIds(readHoodListingIds());
       setDongleIds(readDongleListingIds());
       setBeepIds(readBeepListingIds());
       setRecapIds(readRecapListingIds());
@@ -679,6 +688,7 @@ export function DeskBoard({
     const unsubCast = subscribeCast(apply);
     const unsubSpray = subscribeSpray(apply);
     const unsubLining = subscribeLining(apply);
+    const unsubHood = subscribeHood(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubBeep = subscribeBeep(apply);
     const unsubRecap = subscribeRecap(apply);
@@ -754,6 +764,7 @@ export function DeskBoard({
       unsubCast();
       unsubSpray();
       unsubLining();
+      unsubHood();
       unsubDongle();
       unsubBeep();
       unsubRecap();
@@ -1325,6 +1336,37 @@ export function DeskBoard({
                             {isListingLiningOverlay(listing.id, liningIds)
                               ? "Leave the shell"
                               : "I don’t have a lining"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHood(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHoodWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHoodOverlay(listing.id, hoodIds)
+                                ? "open"
+                                : "hood"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingHoodOverlay(listing.id, hoodIds)
+                              ? "Leave the shell"
+                              : "I don’t have a hood"}
                           </button>
                         </form>
                       ) : null}

@@ -94,6 +94,7 @@ import { ListingLedNotice } from "@/components/listing-led-notice";
 import { ListingCastNotice } from "@/components/listing-cast-notice";
 import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingLiningNotice } from "@/components/listing-lining-notice";
+import { ListingHoodNotice } from "@/components/listing-hood-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingBeepNotice } from "@/components/listing-beep-notice";
 import { ListingRecapNotice } from "@/components/listing-recap-notice";
@@ -230,6 +231,7 @@ import {
   listingCastPath,
   listingSprayPath,
   listingLiningPath,
+  listingHoodPath,
   listingDonglePath,
   listingBeepPath,
   listingRecapPath,
@@ -526,6 +528,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCastNotice listingId={listing.id} /> : null}
               {physical ? <ListingSprayNotice listingId={listing.id} /> : null}
               {physical ? <ListingLiningNotice listingId={listing.id} /> : null}
+              {physical ? <ListingHoodNotice listingId={listing.id} /> : null}
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBeepNotice listingId={listing.id} /> : null}
               {physical ? <ListingRecapNotice listingId={listing.id} /> : null}
@@ -957,6 +960,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don’t have a lining
+                  </Link>
+                  <Link
+                    href={listingHoodPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don’t have a hood
                   </Link>
                   <Link
                     href={listingDonglePath(listing.id)}
