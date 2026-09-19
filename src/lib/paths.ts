@@ -290,6 +290,14 @@ export function listingKeyWritePath() {
   return "/listings/key";
 }
 
+export function listingHingePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hinge`;
+}
+
+export function listingHingeWritePath() {
+  return "/listings/hinge";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
