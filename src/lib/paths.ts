@@ -1178,6 +1178,14 @@ export function listingPeenWritePath() {
   return "/listings/peen";
 }
 
+export function listingGlazePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/glaze`;
+}
+
+export function listingGlazeWritePath() {
+  return "/listings/glaze";
+}
+
 export function listingCollatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/collate`;
 }

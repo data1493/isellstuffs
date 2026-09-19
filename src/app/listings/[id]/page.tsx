@@ -140,6 +140,7 @@ import { ListingRivetNotice } from "@/components/listing-rivet-notice";
 import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingSergeNotice } from "@/components/listing-serge-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
+import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
@@ -319,6 +320,7 @@ import {
   listingBraidPath,
   listingSergePath,
   listingPeenPath,
+  listingGlazePath,
   listingPaginatePath,
   listingCollatePath,
   listingContrastPath,
@@ -680,6 +682,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
               {physical ? <ListingBraidNotice listingId={listing.id} /> : null}
               {physical ? <ListingPeenNotice listingId={listing.id} /> : null}
+              {physical ? <ListingGlazeNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1360,6 +1363,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not handle it
+                  </Link>
+                  <Link
+                    href={listingGlazePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not glaze it
                   </Link>
                   <Link
                     href={listingDegaussPath(listing.id)}
