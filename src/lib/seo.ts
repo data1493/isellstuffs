@@ -34,6 +34,7 @@ import {
   savedPath,
   searchPath,
   watchedPath,
+  walkPath,
   wantedPath,
   sellDeskPath,
   sellDeskStallPath,
@@ -397,6 +398,16 @@ export function watchedMetadata(): Metadata {
     description:
       "Booths marked on this browser. Same folding tables next weekend. Not the later pile. No account.",
     path: watchedPath(),
+    robots: noIndex,
+  });
+}
+
+export function walkMetadata(): Metadata {
+  return shareMetadata({
+    title: "Saturday morning walk",
+    description:
+      "The scrap for this Saturday. Watched tables that are still out, with this weekend's hours. Packed booths stay in the car.",
+    path: walkPath(),
     robots: noIndex,
   });
 }

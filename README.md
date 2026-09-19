@@ -25,6 +25,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
 | `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Scoop with **Bag the pile** (`POST /saved/bag`) into the existing tote. Not a second cart |
 | `/watched` | Watched tables. Mark a booth, not a SKU. Cookie `iss-watched-stall-ids` + `iss:watched-stall-ids`. Same folding tables next weekend. Not the later pile |
+| `/walk` | Saturday morning scrap. Watched booths that are still out, with this weekend’s hours. Packed tables stay in the car. Reads watched / hours / packed cookies. Does not write them. |
 | `/wanted` | Hunt board. Tape what you are looking for. Cookie `iss-wanted-hunts` + `iss:wanted-hunts`. A scrap on the cork — not a listing, not `/saved`, not `/watched` |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
 
@@ -175,7 +176,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/checkout/*`, `/saved`, `/watched`, `/wanted`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

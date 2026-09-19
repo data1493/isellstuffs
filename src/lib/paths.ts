@@ -191,6 +191,10 @@ export function watchedPath() {
   return "/watched";
 }
 
+export function walkPath() {
+  return "/walk";
+}
+
 export function stallsWatchPath() {
   return "/stalls/watch";
 }

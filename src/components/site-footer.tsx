@@ -13,6 +13,7 @@ import {
   savedPath,
   sellDeskPath,
   watchedPath,
+  walkPath,
   sellDeskQueuePath,
   sellStartPath,
   thisWeekPath,
@@ -39,6 +40,7 @@ const browse = [
   { href: giftPath(), label: "Gift desk" },
   { href: savedPath(), label: "Later pile" },
   { href: watchedPath(), label: "Watched tables" },
+  { href: walkPath(), label: "Saturday walk" },
   { href: wantedPath(), label: "Hunt board" },
   { href: lotPath(), label: "Who set up" },
 ];
