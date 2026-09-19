@@ -140,6 +140,13 @@ import {
   stallSewPath,
 } from "@/lib/booth-sew";
 import {
+  BOOTH_PRINT_COOKIE_NAME,
+  BOOTH_PRINT_PAPER_LINE,
+  boothPrintFor,
+  parseBoothPrint,
+  stallPrintPath,
+} from "@/lib/booth-print";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -327,6 +334,10 @@ export default async function StallPage({
   const sew = boothSewFor(
     stall.id,
     parseBoothSew(jar.get(BOOTH_SEW_COOKIE_NAME)?.value),
+  );
+  const printNote = boothPrintFor(
+    stall.id,
+    parseBoothPrint(jar.get(BOOTH_PRINT_COOKIE_NAME)?.value),
   );
 
   return (
@@ -722,6 +733,23 @@ export default async function StallPage({
             <p data-booth-sew-empty={stall.id} hidden />
           )}
 
+          {printNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't print"
+              title="Take the file."
+              body={
+                <p data-booth-print-note={stall.id}>
+                  {printNote.note} {BOOTH_PRINT_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-print-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -898,6 +926,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t sew
+          </Link>
+
+          <Link
+            href={stallPrintPath(stall.slug)}
+            data-booth-print-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t print
           </Link>
 
           <Link

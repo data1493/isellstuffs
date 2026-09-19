@@ -42,6 +42,7 @@ export function LotBoothCard({
   burnNote,
   deckNote,
   sewNote,
+  printNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -66,6 +67,7 @@ export function LotBoothCard({
   burnNote?: string;
   deckNote?: string;
   sewNote?: string;
+  printNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -298,6 +300,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-sew-empty={stall.id} hidden />
+          )}
+          {printNote ? (
+            <p
+              data-booth-print-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t print. {printNote}
+            </p>
+          ) : (
+            <p data-booth-print-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
