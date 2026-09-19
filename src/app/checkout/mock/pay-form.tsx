@@ -196,9 +196,19 @@ export function PayForm({
 
   return (
     <form
-      className="space-y-6"
+      className="space-y-6 [&:has([data-tender-cash]:checked)_[data-test-card]]:hidden"
       action="/api/checkout/confirm"
       method="post"
+      onChange={(event) => {
+        const target = event.target;
+        if (
+          target instanceof HTMLInputElement &&
+          target.name === "tender" &&
+          (target.value === "cash" || target.value === "card")
+        ) {
+          setTender(target.value);
+        }
+      }}
     >
       <input type="hidden" name="sessionId" value={session.id} />
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -251,11 +261,15 @@ export function PayForm({
           <p className="text-sm leading-6 text-muted-foreground">
             Driveway money can be cash on the table. Card is still test theater.
           </p>
-          <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
+          <label
+            className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6"
+            onClick={() => setTender("cash")}
+          >
             <input
               type="radio"
               name="tender"
               value="cash"
+              data-tender-cash=""
               checked={tender === "cash"}
               onChange={() => setTender("cash")}
               className="mt-1 size-4 shrink-0 accent-foreground"
@@ -265,7 +279,10 @@ export function PayForm({
               <span className="block text-muted-foreground">{CASH_HELP}</span>
             </span>
           </label>
-          <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
+          <label
+            className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6"
+            onClick={() => setTender("card")}
+          >
             <input
               type="radio"
               name="tender"
@@ -284,8 +301,14 @@ export function PayForm({
         <input type="hidden" name="tender" value="card" />
       )}
 
-      {tender === "card" || !canPayCash ? (
-      <fieldset className="space-y-3">
+      <fieldset
+        data-test-card=""
+        hidden={canPayCash && tender === "cash"}
+        className={cn(
+          "space-y-3",
+          canPayCash && tender === "cash" && "hidden",
+        )}
+      >
         <legend className="font-heading text-xl tracking-tight">Test card</legend>
         <p className="text-sm leading-6 text-muted-foreground">
           This wall stands in for Stripe-hosted Checkout until a test secret is
@@ -346,7 +369,6 @@ export function PayForm({
           </div>
         </div>
       </fieldset>
-      ) : null}
 
       {needsAsIs ? (
         <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
