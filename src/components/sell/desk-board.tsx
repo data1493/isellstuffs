@@ -447,6 +447,12 @@ import {
   subscribeCrush,
 } from "@/lib/listing-crush";
 import {
+  canTapeVariable,
+  isListingVariableOverlay,
+  readVariableListingIds,
+  subscribeVariable,
+} from "@/lib/listing-variable";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -553,6 +559,7 @@ import {
   listingHintWritePath,
   listingProfileWritePath,
   listingBoldWritePath,
+  listingVariableWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -708,6 +715,7 @@ export function DeskBoard({
   const [hintIds, setHintIds] = useState<string[]>([]);
   const [profileIds, setProfileIds] = useState<string[]>([]);
   const [boldIds, setBoldIds] = useState<string[]>([]);
+  const [variableIds, setVariableIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -803,6 +811,7 @@ export function DeskBoard({
       setHintIds(readHintListingIds());
       setProfileIds(readProfileListingIds());
       setBoldIds(readBoldListingIds());
+      setVariableIds(readVariableListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -887,6 +896,7 @@ export function DeskBoard({
     const unsubHint = subscribeHint(apply);
     const unsubProfile = subscribeProfile(apply);
     const unsubBold = subscribeBold(apply);
+    const unsubVariable = subscribeVariable(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -981,6 +991,7 @@ export function DeskBoard({
       unsubHint();
       unsubProfile();
       unsubBold();
+      unsubVariable();
     };
   }, [listings, stall.id]);
 
@@ -3363,6 +3374,37 @@ export function DeskBoard({
                             {isListingBoldOverlay(listing.id, boldIds)
                               ? "Leave the two weights"
                               : "I will not bold it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVariable(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVariableWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVariableOverlay(listing.id, variableIds)
+                                ? "open"
+                                : "variable"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVariableOverlay(listing.id, variableIds)
+                              ? "Leave the two weights"
+                              : "I will not variable it"}
                           </button>
                         </form>
                       ) : null}

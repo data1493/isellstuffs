@@ -134,6 +134,7 @@ import { ListingIconsNotice } from "@/components/listing-icons-notice";
 import { ListingHintNotice } from "@/components/listing-hint-notice";
 import { ListingProfileNotice } from "@/components/listing-profile-notice";
 import { ListingBoldNotice } from "@/components/listing-bold-notice";
+import { ListingVariableNotice } from "@/components/listing-variable-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -289,6 +290,7 @@ import {
   listingHintPath,
   listingProfilePath,
   listingBoldPath,
+  listingVariablePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -525,6 +527,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingIconsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingHintNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBoldNotice listingId={listing.id} /> : null}
+              {!physical ? (
+                <ListingVariableNotice listingId={listing.id} />
+              ) : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
@@ -1416,6 +1421,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not bold it
+                  </Link>
+                  <Link
+                    href={listingVariablePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not variable it
                   </Link>
                 </p>
               )}

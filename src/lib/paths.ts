@@ -1018,6 +1018,14 @@ export function listingStitchWritePath() {
   return "/listings/stitch";
 }
 
+export function listingVariablePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/variable`;
+}
+
+export function listingVariableWritePath() {
+  return "/listings/variable";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
