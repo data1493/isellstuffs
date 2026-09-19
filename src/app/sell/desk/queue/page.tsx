@@ -6,6 +6,10 @@ import { CHECKOUT_COOKIE } from "@/lib/checkout";
 import { orderSlipFromCheckoutCookie } from "@/lib/order-history";
 import { sellDeskQueuePath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
+import {
+  parseTakenHandoffs,
+  TAKEN_COOKIE_NAME,
+} from "@/lib/taken-handoff";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +24,7 @@ export const metadata: Metadata = shareMetadata({
 export default async function SellDeskQueuePage() {
   const jar = await cookies();
   const seed = orderSlipFromCheckoutCookie(jar.get(CHECKOUT_COOKIE)?.value);
+  const takenSeed = parseTakenHandoffs(jar.get(TAKEN_COOKIE_NAME)?.value);
 
-  return <QueueView seed={seed} />;
+  return <QueueView seed={seed} takenSeed={takenSeed} />;
 }

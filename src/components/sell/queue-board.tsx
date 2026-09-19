@@ -66,7 +66,13 @@ function whoIsComing(arrival: { buyerName?: string; slipId: string }) {
   return name && name.length > 0 ? name : arrival.slipId;
 }
 
-export function QueueView({ seed }: { seed: OrderSlip | null }) {
+export function QueueView({
+  seed,
+  takenSeed = emptyTaken,
+}: {
+  seed: OrderSlip | null;
+  takenSeed?: TakenHandoff[];
+}) {
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
     readOrderSlips,
@@ -75,7 +81,7 @@ export function QueueView({ seed }: { seed: OrderSlip | null }) {
   const taken = useSyncExternalStore(
     subscribeTaken,
     readTakenHandoffs,
-    () => emptyTaken,
+    () => takenSeed,
   );
 
   useEffect(() => {
