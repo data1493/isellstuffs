@@ -5,6 +5,7 @@ import { useSyncExternalStore } from "react";
 
 import { AdFlyerMissing } from "@/components/ads/ad-flyer-missing";
 import { AdFlyerSheet } from "@/components/ads/ad-flyer-sheet";
+import { CampaignUrlButton } from "@/components/ads/campaign-url-button";
 import { SyncAdBookings } from "@/components/ads/sync-ad-bookings";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallHero, MallSection } from "@/components/mall-shell";
@@ -91,6 +92,7 @@ export function AdFlyerView({
           >
             Back to the slip
           </Button>
+          <CampaignUrlButton bookingId={booking.id} seed={booking} />
           <Button
             variant="outline"
             className="w-full rounded-full sm:w-auto"

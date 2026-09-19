@@ -42,10 +42,10 @@ Paid corners are a product. `/advertise` is the rate card. Next weekend can be b
 | `/advertise/book/[kind]` | Name the stall, confirm the package, pay on paper |
 | `/advertise/receipt` | Bought slip. Stamp, package, window, price. Not on the floor yet |
 | `/advertise/flyer/[booking]` | Take-home souvenir for that paid booking. Stall, package, window, Paid stamp. Reads `iss-ad-bookings`. Does not paint home |
-| `/campaigns/homepage-beats` | Beats Under the Table Fri–Mon lander. Receipt, not a blog post |
-| `/campaigns/yard-sale-tuesday` | Folding Table Tuesday Yard Sale hub takeover. Receipt, not a hub page |
+| `/campaigns/homepage-beats` | Homepage-takeover souvenir. Fixture is Beats Under the Table. A booked homepage takeover from `iss-ad-bookings` names that stall here — Tape Drawer replaces Beats on this URL only. Receipt, not a blog post |
+| `/campaigns/yard-sale-tuesday` | Hub-takeover souvenir for Yard Sale. Fixture is Folding Table Tuesday. A Yard Sale hub booking names that stall here. Receipt, not a hub page |
 
-Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` and cookie `iss-ad-bookings` via `@/lib/ad-booking` (POST `/advertise/book/pay`). Home reads that cookie and stamps featured / homepage-takeover — Paid, stall, window — instead of only the Beats / Half-Working fixtures. Hub aisles read the same cookie for hub-takeover only: book Yard Sale and `/hubs/yard-sale` lights that stall. Idle `/explore` and the matching stall page read featured-stall bookings the same way — book Tape Drawer Saturday and the concourse corner stamps that name. Filtered explore stays unlabeled.
+Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` and cookie `iss-ad-bookings` via `@/lib/ad-booking` (POST `/advertise/book/pay`). Home reads that cookie and stamps featured / homepage-takeover — Paid, stall, window — instead of only the Beats / Half-Working fixtures. Hub aisles read the same cookie for hub-takeover only: book Yard Sale and `/hubs/yard-sale` lights that stall. Idle `/explore` and the matching stall page read featured-stall bookings the same way — book Tape Drawer Saturday and the concourse corner stamps that name. Filtered explore stays unlabeled. `/campaigns/[slug]` reads the same cookie: homepage takeover paints `/campaigns/homepage-beats`; a Yard Sale hub takeover paints `/campaigns/yard-sale-tuesday`. Featured bought the corner, not a URL. Flyer and home/hub paint stay owned elsewhere.
 
 ## Sell
 

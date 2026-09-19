@@ -1,38 +1,22 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
-import { CampaignEnded } from "@/components/ads/campaign-ended";
 import { CampaignGoods } from "@/components/ads/campaign-goods";
 import { CampaignReceipt } from "@/components/ads/campaign-receipt";
 import { LabeledChip, PaidStamp } from "@/components/ads/paid-stamp";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  adKindCopy,
-  campaignLanderPath,
-  homepageBeatsCampaign,
-  liveSurfaces,
-} from "@/lib/ads-display";
-import { adSlots, stallById } from "@/lib/commerce";
+import { adKindCopy, liveSurfaces } from "@/lib/ads-display";
+import type { CampaignLander } from "@/lib/booked-campaign";
+import { stallById } from "@/lib/commerce";
 import { advertisePath, stallPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
 
-const slot = adSlots.find((item) => item.id === homepageBeatsCampaign.slotId);
-
-export const metadata: Metadata = shareMetadata({
-  title: slot?.headline ?? "Campaign ended",
-  description:
-    slot?.blurb ??
-    "This campaign URL is off the floor. See the mall rate card.",
-  path: campaignLanderPath,
-});
-
-export default function HomepageBeatsCampaignPage() {
-  if (!slot) {
-    return <CampaignEnded />;
-  }
-
-  const stall = stallById(slot.stallId);
+export function HomepageCampaignLander({
+  lander,
+}: {
+  lander: CampaignLander;
+}) {
+  const { slot, stallName } = lander;
+  const stall = slot.stallId ? stallById(slot.stallId) : undefined;
   const kind = adKindCopy[slot.kind];
   const surfaces = liveSurfaces(slot).filter(
     (surface) => !surface.href.startsWith("/campaigns"),
@@ -65,9 +49,11 @@ export default function HomepageBeatsCampaignPage() {
             {slot.headline}
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-current/75 text-pretty sm:text-lg">
-            This is not a stall page and it is not organic.{" "}
-            {stall?.boothName ?? "This booth"} paid for the homepage hero
-            and this URL. The mall stamped it.
+            This is not a stall page and it is not organic. {stallName} paid
+            for the homepage hero and this URL. The mall stamped it.
+            {lander.fromBooking
+              ? " You bought the URL. You did not replace the mall pitch."
+              : null}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -94,7 +80,7 @@ export default function HomepageBeatsCampaignPage() {
 
       <section className="border-b border-border bg-[oklch(0.22_0.03_42)] text-[oklch(0.97_0.015_85)]">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <CampaignReceipt slot={slot} tone="ink" />
+          <CampaignReceipt slot={slot} stallName={stallName} tone="ink" />
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-current/55">
               What the money bought

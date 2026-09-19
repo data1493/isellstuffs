@@ -15,9 +15,11 @@ const lines = [
 
 export function CampaignReceipt({
   slot,
+  stallName,
   tone = "paper",
 }: {
   slot: AdSlot;
+  stallName?: string;
   tone?: "paper" | "ink";
 }) {
   const stall = stallById(slot.stallId);
@@ -27,7 +29,7 @@ export function CampaignReceipt({
     package: slot.packageName,
     window: slot.window,
     price: formatMoney(slot.price),
-    stall: stall?.boothName ?? slot.stallId,
+    stall: stallName ?? stall?.boothName ?? slot.stallId,
     aisle: hub?.name ?? "Mall floor",
     label: "Refused. This is stamped.",
   } as const;

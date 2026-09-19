@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { BookReceiptView } from "@/components/ads/book-receipt-view";
 import { BookReceiptCard } from "@/components/ads/book-receipt";
+import { CampaignUrlButton } from "@/components/ads/campaign-url-button";
 import { SyncAdBookings } from "@/components/ads/sync-ad-bookings";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
@@ -121,6 +122,7 @@ export default async function AdvertiseReceiptPage({
             >
               Open the flyer
             </Button>
+            <CampaignUrlButton bookingId={bookingId} seed={fromCookie} />
             <Button
               variant="outline"
               className="w-full rounded-full sm:w-auto"

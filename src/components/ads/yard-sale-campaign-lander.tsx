@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
-import { CampaignEnded } from "@/components/ads/campaign-ended";
 import { CampaignGoods } from "@/components/ads/campaign-goods";
 import { CampaignReceipt } from "@/components/ads/campaign-receipt";
 import { LabeledChip, PaidStamp } from "@/components/ads/paid-stamp";
@@ -13,29 +11,18 @@ import {
   adKindCopy,
   campaignLanderPath,
   liveSurfaces,
-  yardSaleTuesdayCampaign,
-  yardSaleTuesdayLanderPath,
 } from "@/lib/ads-display";
-import { adSlots, hubById, stallById } from "@/lib/commerce";
+import type { CampaignLander } from "@/lib/booked-campaign";
+import { hubById, stallById } from "@/lib/commerce";
 import { advertiseBookPath, advertisePath, stallPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
 
-const slot = adSlots.find((item) => item.id === yardSaleTuesdayCampaign.slotId);
-
-export const metadata: Metadata = shareMetadata({
-  title: slot?.headline ?? "Campaign ended",
-  description:
-    slot?.blurb ??
-    "This campaign URL is off the floor. See the mall rate card.",
-  path: yardSaleTuesdayLanderPath,
-});
-
-export default function YardSaleTuesdayCampaignPage() {
-  if (!slot) {
-    return <CampaignEnded />;
-  }
-
-  const stall = stallById(slot.stallId);
+export function YardSaleCampaignLander({
+  lander,
+}: {
+  lander: CampaignLander;
+}) {
+  const { slot, stallName } = lander;
+  const stall = slot.stallId ? stallById(slot.stallId) : undefined;
   const hub = slot.hubId ? hubById(slot.hubId) : undefined;
   const kind = adKindCopy[slot.kind];
   const surfaces = liveSurfaces(slot).filter(
@@ -73,10 +60,13 @@ export default function YardSaleTuesdayCampaignPage() {
               {slot.headline}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-foreground/80 text-pretty sm:text-lg">
-              This is not a hub page and it is not organic.{" "}
-              {stall?.boothName ?? "This booth"} paid for the{" "}
-              {hub?.name ?? "aisle"} hero and this URL. The mall stamped
-              it. Money buys light, not a rewrite — the driveway rule stays.
+              This is not a hub page and it is not organic. {stallName} paid
+              for the {hub?.name ?? "aisle"} hero and this URL. The mall
+              stamped it. Money buys light, not a rewrite — the driveway
+              rule stays.
+              {lander.fromBooking
+                ? " You bought light on this floor. Yard Sale is still a driveway."
+                : null}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -102,7 +92,7 @@ export default function YardSaleTuesdayCampaignPage() {
             </div>
           </div>
 
-          <CampaignReceipt slot={slot} />
+          <CampaignReceipt slot={slot} stallName={stallName} />
         </div>
       </MallHero>
 
