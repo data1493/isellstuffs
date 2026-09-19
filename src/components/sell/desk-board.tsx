@@ -657,6 +657,12 @@ import {
   subscribeQuantize,
 } from "@/lib/listing-quantize";
 import {
+  canTapeSaturate,
+  isListingSaturateOverlay,
+  readSaturateListingIds,
+  subscribeSaturate,
+} from "@/lib/listing-saturate";
+import {
   canTapeSubset,
   isListingSubsetOverlay,
   readSubsetListingIds,
@@ -833,6 +839,7 @@ import {
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
+  listingSaturateWritePath,
   listingSubsetWritePath,
   listingProofWritePath,
   listingReflowWritePath,
@@ -1056,6 +1063,7 @@ export function DeskBoard({
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
+  const [saturateIds, setSaturateIds] = useState<string[]>([]);
   const [subsetIds, setSubsetIds] = useState<string[]>([]);
   const [proofIds, setProofIds] = useState<string[]>([]);
   const [grainIds, setGrainIds] = useState<string[]>([]);
@@ -1195,6 +1203,7 @@ export function DeskBoard({
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
+      setSaturateIds(readSaturateListingIds());
       setSubsetIds(readSubsetListingIds());
       setProofIds(readProofListingIds());
       setGrainIds(readGrainListingIds());
@@ -1323,6 +1332,7 @@ export function DeskBoard({
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
+    const unsubSaturate = subscribeSaturate(apply);
     const unsubSubset = subscribeSubset(apply);
     const unsubProof = subscribeProof(apply);
     const unsubGrain = subscribeGrain(apply);
@@ -1461,6 +1471,7 @@ export function DeskBoard({
       unsubScale();
       unsubGate();
       unsubQuantize();
+      unsubSaturate();
       unsubSubset();
       unsubProof();
       unsubGrain();
@@ -4777,6 +4788,37 @@ export function DeskBoard({
                             {isListingQuantizeOverlay(listing.id, quantizeIds)
                               ? "Leave the twelve shots"
                               : "I will not quantize them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSaturate(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSaturateWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSaturateOverlay(listing.id, saturateIds)
+                                ? "open"
+                                : "saturate"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSaturateOverlay(listing.id, saturateIds)
+                              ? "Leave the kicks thin"
+                              : "I will not saturate them"}
                           </button>
                         </form>
                       ) : null}

@@ -161,6 +161,7 @@ import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
+import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
 import { ListingSubsetNotice } from "@/components/listing-subset-notice";
 import { ListingProofNotice } from "@/components/listing-proof-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
@@ -357,6 +358,7 @@ import {
   listingContrastPath,
   listingGatePath,
   listingQuantizePath,
+  listingSaturatePath,
   listingSubsetPath,
   listingFlockPath,
   listingTrayPath,
@@ -617,6 +619,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingCrushNotice listingId={listing.id} /> : null}
               {!physical ? <ListingGateNotice listingId={listing.id} /> : null}
               {!physical ? <ListingQuantizeNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingSaturateNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSubsetNotice listingId={listing.id} /> : null}
               {!physical ? <ListingRightsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
@@ -1751,6 +1754,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not quantize them
+                  </Link>
+                  <Link
+                    href={listingSaturatePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not saturate them
                   </Link>
                   <Link
                     href={listingRightsPath(listing.id)}
