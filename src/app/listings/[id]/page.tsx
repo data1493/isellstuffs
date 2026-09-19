@@ -88,6 +88,7 @@ import { ListingRustNotice } from "@/components/listing-rust-notice";
 import { ListingCapNotice } from "@/components/listing-cap-notice";
 import { ListingSaucerNotice } from "@/components/listing-saucer-notice";
 import { ListingLedNotice } from "@/components/listing-led-notice";
+import { ListingCastNotice } from "@/components/listing-cast-notice";
 import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingEvenNotice } from "@/components/listing-even-notice";
@@ -209,6 +210,7 @@ import {
   listingCapPath,
   listingSaucerPath,
   listingLedPath,
+  listingCastPath,
   listingSprayPath,
   listingDonglePath,
   listingEvenPath,
@@ -485,6 +487,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCapNotice listingId={listing.id} /> : null}
               {physical ? <ListingSaucerNotice listingId={listing.id} /> : null}
               {physical ? <ListingLedNotice listingId={listing.id} /> : null}
+              {physical ? <ListingCastNotice listingId={listing.id} /> : null}
               {physical ? <ListingSprayNotice listingId={listing.id} /> : null}
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
               {physical ? <ListingEvenNotice listingId={listing.id} /> : null}
@@ -892,6 +895,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not LED it
+                  </Link>
+                  <Link
+                    href={listingCastPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not recast
                   </Link>
                   <Link
                     href={listingSprayPath(listing.id)}

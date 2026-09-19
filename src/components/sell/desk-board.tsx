@@ -225,6 +225,12 @@ import {
   subscribeLed,
 } from "@/lib/listing-led";
 import {
+  canTapeCast,
+  isListingCastOverlay,
+  readCastListingIds,
+  subscribeCast,
+} from "@/lib/listing-cast";
+import {
   canTapeSpray,
   isListingSprayOverlay,
   readSprayListingIds,
@@ -306,6 +312,7 @@ import {
   listingCapWritePath,
   listingSaucerWritePath,
   listingLedWritePath,
+  listingCastWritePath,
   listingSprayWritePath,
   listingDongleWritePath,
   listingEvenWritePath,
@@ -426,6 +433,7 @@ export function DeskBoard({
   const [capIds, setCapIds] = useState<string[]>([]);
   const [saucerIds, setSaucerIds] = useState<string[]>([]);
   const [ledIds, setLedIds] = useState<string[]>([]);
+  const [castIds, setCastIds] = useState<string[]>([]);
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
@@ -487,6 +495,7 @@ export function DeskBoard({
       setCapIds(readCapListingIds());
       setSaucerIds(readSaucerListingIds());
       setLedIds(readLedListingIds());
+      setCastIds(readCastListingIds());
       setSprayIds(readSprayListingIds());
       setDongleIds(readDongleListingIds());
       setEvenIds(readEvenListingIds());
@@ -537,6 +546,7 @@ export function DeskBoard({
     const unsubCap = subscribeCap(apply);
     const unsubSaucer = subscribeSaucer(apply);
     const unsubLed = subscribeLed(apply);
+    const unsubCast = subscribeCast(apply);
     const unsubSpray = subscribeSpray(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubEven = subscribeEven(apply);
@@ -597,6 +607,7 @@ export function DeskBoard({
       unsubCap();
       unsubSaucer();
       unsubLed();
+      unsubCast();
       unsubSpray();
       unsubDongle();
       unsubEven();
@@ -1036,6 +1047,37 @@ export function DeskBoard({
                             {isListingLedOverlay(listing.id, ledIds)
                               ? "Leave the twist"
                               : "I will not LED it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCast(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCastWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCastOverlay(listing.id, castIds)
+                                ? "open"
+                                : "cast"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCastOverlay(listing.id, castIds)
+                              ? "Leave this clay"
+                              : "I will not recast"}
                           </button>
                         </form>
                       ) : null}

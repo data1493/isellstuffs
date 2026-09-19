@@ -682,6 +682,14 @@ export function listingLedWritePath() {
   return "/listings/led";
 }
 
+export function listingCastPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cast`;
+}
+
+export function listingCastWritePath() {
+  return "/listings/cast";
+}
+
 export function listingSprayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/spray`;
 }
