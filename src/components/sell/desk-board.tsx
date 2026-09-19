@@ -465,6 +465,12 @@ import {
   subscribeAnneal,
 } from "@/lib/listing-anneal";
 import {
+  canTapeGrommet,
+  isListingGrommetOverlay,
+  readGrommetListingIds,
+  subscribeGrommet,
+} from "@/lib/listing-grommet";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -581,6 +587,7 @@ import {
   listingAzimuthWritePath,
   listingNestWritePath,
   listingAnnealWritePath,
+  listingGrommetWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -749,6 +756,7 @@ export function DeskBoard({
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
   const [nestIds, setNestIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
+  const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -851,6 +859,7 @@ export function DeskBoard({
       setAzimuthIds(readAzimuthListingIds());
       setNestIds(readNestListingIds());
       setAnnealIds(readAnnealListingIds());
+      setGrommetIds(readGrommetListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -942,6 +951,7 @@ export function DeskBoard({
     const unsubAzimuth = subscribeAzimuth(apply);
     const unsubNest = subscribeNest(apply);
     const unsubAnneal = subscribeAnneal(apply);
+    const unsubGrommet = subscribeGrommet(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1043,6 +1053,7 @@ export function DeskBoard({
       unsubAzimuth();
       unsubNest();
       unsubAnneal();
+      unsubGrommet();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2510,6 +2521,37 @@ export function DeskBoard({
                             {isListingAnnealOverlay(listing.id, annealIds)
                               ? "Leave the splay"
                               : "I will not anneal it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGrommet(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGrommetWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGrommetOverlay(listing.id, grommetIds)
+                                ? "open"
+                                : "grommet"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGrommetOverlay(listing.id, grommetIds)
+                              ? "Leave the shade"
+                              : "I will not grommet it"}
                           </button>
                         </form>
                       ) : null}

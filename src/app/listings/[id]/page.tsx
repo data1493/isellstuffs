@@ -127,6 +127,7 @@ import { ListingFinalizeNotice } from "@/components/listing-finalize-notice";
 import { ListingAzimuthNotice } from "@/components/listing-azimuth-notice";
 import { ListingNestNotice } from "@/components/listing-nest-notice";
 import { ListingAnnealNotice } from "@/components/listing-anneal-notice";
+import { ListingGrommetNotice } from "@/components/listing-grommet-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -289,6 +290,7 @@ import {
   listingAzimuthPath,
   listingNestPath,
   listingAnnealPath,
+  listingGrommetPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -621,6 +623,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingAzimuthNotice listingId={listing.id} /> : null}
               {physical ? <ListingNestNotice listingId={listing.id} /> : null}
               {physical ? <ListingAnnealNotice listingId={listing.id} /> : null}
+              {physical ? <ListingGrommetNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1253,6 +1256,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not anneal it
+                  </Link>
+                  <Link
+                    href={listingGrommetPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not grommet it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (

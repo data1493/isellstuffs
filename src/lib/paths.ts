@@ -1066,6 +1066,14 @@ export function listingAnnealWritePath() {
   return "/listings/anneal";
 }
 
+export function listingGrommetPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/grommet`;
+}
+
+export function listingGrommetWritePath() {
+  return "/listings/grommet";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
