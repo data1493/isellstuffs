@@ -6,6 +6,18 @@ export function listingTagPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tag`;
 }
 
+export function listingOfferPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/offer`;
+}
+
+export function listingOfferTapePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/offer/tape`;
+}
+
+export function listingOfferPeelPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/offer/peel`;
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

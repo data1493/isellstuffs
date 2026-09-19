@@ -27,7 +27,7 @@ import {
   listingSiblingKicker,
   listingStatusLabel,
 } from "@/lib/listing-display";
-import { listingPath, listingTagPath, stallPath } from "@/lib/paths";
+import { listingOfferPath, listingPath, listingTagPath, stallPath } from "@/lib/paths";
 import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -184,12 +184,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
               <ListingBuyBox listing={listing} />
 
               {physical ? (
-                <p>
+                <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
                   <Link
                     href={listingTagPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Print a driveway tag
+                  </Link>
+                  <Link
+                    href={listingOfferPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Tape an offer
                   </Link>
                 </p>
               ) : null}

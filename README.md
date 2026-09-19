@@ -76,6 +76,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | --- | --- |
 | Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
 | Driveway price tag | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/tag |
+| Offer slip | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/offer |
 | Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
 | Gift credit desk | http://127.0.0.1:44721/gift |
@@ -99,6 +100,8 @@ The desk can pack a booth (`POST /sell/desk/pack`) and write its id to `iss:pack
 Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field. A stallholder can tape this Saturday at `/sell/hours` (`iss:weekend-hours` / cookie `iss-weekend-hours`). `stallPickupNote` applies that overlay. The fixture table stays.
 
 Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — price, condition, booth, aisle. PDFs and the gift card have no tag. Files open in the folder after pay. Gift codes go to the desk. The tag does not show pickup hours.
+
+Physical listings can tape a paper haggle at `/listings/[id]/offer`. Write dollars on the lamp — $8 on the $12 tag — and the stall desk can see that scrap. PDFs and the gift card have no offer. Taping a number does not change the tag or the tote.
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
