@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useCart } from "@/hooks/use-cart";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallEyebrow, MallWidth } from "@/components/mall-shell";
-import { MallLoading, MallNotice, MallPayError } from "@/components/mall-notice";
+import { MallNotice, MallPayError } from "@/components/mall-notice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,11 +48,6 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
   const router = useRouter();
   const cart = useCart();
   const listingIds = cart.listingIds;
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<CheckoutMode | null>(null);
@@ -162,10 +157,6 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
   }
 
   const bagEmpty = payable.length === 0 && gone.length === 0;
-
-  if (!mounted) {
-    return <MallLoading label="Pulling your tote off the hook…" />;
-  }
 
   return (
     <div
