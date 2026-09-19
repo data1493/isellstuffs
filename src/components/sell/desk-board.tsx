@@ -309,6 +309,12 @@ import {
   subscribeTune,
 } from "@/lib/listing-tune";
 import {
+  canTapeNorm,
+  isListingNormOverlay,
+  readNormListingIds,
+  subscribeNorm,
+} from "@/lib/listing-norm";
+import {
   canTapeVerso,
   isListingVersoOverlay,
   readVersoListingIds,
@@ -357,6 +363,7 @@ import {
   listingVentWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
+  listingNormWritePath,
   listingVersoWritePath,
   listingIconsWritePath,
   listingSlantWritePath,
@@ -482,6 +489,7 @@ export function DeskBoard({
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
+  const [normIds, setNormIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
   const [card, setCard] = useState({
@@ -549,6 +557,7 @@ export function DeskBoard({
       setSpliceIds(readSpliceListingIds());
       setVentIds(readVentListingIds());
       setTuneIds(readTuneListingIds());
+      setNormIds(readNormListingIds());
       setVersoIds(readVersoListingIds());
       setIconsIds(readIconsListingIds());
       const patch = stallCardById(stall.id);
@@ -605,6 +614,7 @@ export function DeskBoard({
     const unsubSplice = subscribeSplice(apply);
     const unsubVent = subscribeVent(apply);
     const unsubTune = subscribeTune(apply);
+    const unsubNorm = subscribeNorm(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubIcons = subscribeIcons(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
@@ -671,6 +681,7 @@ export function DeskBoard({
       unsubSplice();
       unsubVent();
       unsubTune();
+      unsubNorm();
       unsubVerso();
       unsubIcons();
     };
@@ -2032,6 +2043,37 @@ export function DeskBoard({
                             {isListingTuneOverlay(listing.id, tuneIds)
                               ? "Leave the one-shots"
                               : "I will not tune it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeNorm(listing) ? (
+                        <form
+                          method="post"
+                          action={listingNormWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingNormOverlay(listing.id, normIds)
+                                ? "open"
+                                : "norm"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingNormOverlay(listing.id, normIds)
+                              ? "Leave it as recorded"
+                              : "I will not normalize"}
                           </button>
                         </form>
                       ) : null}

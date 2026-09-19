@@ -754,6 +754,14 @@ export function listingTuneWritePath() {
   return "/listings/tune";
 }
 
+export function listingNormPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/norm`;
+}
+
+export function listingNormWritePath() {
+  return "/listings/norm";
+}
+
 export function listingVersoPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/verso`;
 }
