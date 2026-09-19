@@ -898,6 +898,14 @@ export function listingBalanceWritePath() {
   return "/listings/balance";
 }
 
+export function listingLogPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/log`;
+}
+
+export function listingLogWritePath() {
+  return "/listings/log";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
