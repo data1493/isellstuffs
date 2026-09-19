@@ -237,6 +237,12 @@ import {
   subscribeSpray,
 } from "@/lib/listing-spray";
 import {
+  canTapeLining,
+  isListingLiningOverlay,
+  readLiningListingIds,
+  subscribeLining,
+} from "@/lib/listing-lining";
+import {
   canTapeDongle,
   isListingDongleOverlay,
   readDongleListingIds,
@@ -320,6 +326,7 @@ import {
   listingLedWritePath,
   listingCastWritePath,
   listingSprayWritePath,
+  listingLiningWritePath,
   listingDongleWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -442,6 +449,7 @@ export function DeskBoard({
   const [ledIds, setLedIds] = useState<string[]>([]);
   const [castIds, setCastIds] = useState<string[]>([]);
   const [sprayIds, setSprayIds] = useState<string[]>([]);
+  const [liningIds, setLiningIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
   const [cementIds, setCementIds] = useState<string[]>([]);
@@ -505,6 +513,7 @@ export function DeskBoard({
       setLedIds(readLedListingIds());
       setCastIds(readCastListingIds());
       setSprayIds(readSprayListingIds());
+      setLiningIds(readLiningListingIds());
       setDongleIds(readDongleListingIds());
       setEvenIds(readEvenListingIds());
       setCementIds(readCementListingIds());
@@ -557,6 +566,7 @@ export function DeskBoard({
     const unsubLed = subscribeLed(apply);
     const unsubCast = subscribeCast(apply);
     const unsubSpray = subscribeSpray(apply);
+    const unsubLining = subscribeLining(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubEven = subscribeEven(apply);
     const unsubCement = subscribeCement(apply);
@@ -619,6 +629,7 @@ export function DeskBoard({
       unsubLed();
       unsubCast();
       unsubSpray();
+      unsubLining();
       unsubDongle();
       unsubEven();
       unsubCement();
@@ -1120,6 +1131,37 @@ export function DeskBoard({
                             {isListingSprayOverlay(listing.id, sprayIds)
                               ? "Leave the jacket"
                               : "I will not spray it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLining(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLiningWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLiningOverlay(listing.id, liningIds)
+                                ? "open"
+                                : "lining"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLiningOverlay(listing.id, liningIds)
+                              ? "Leave the shell"
+                              : "I don’t have a lining"}
                           </button>
                         </form>
                       ) : null}

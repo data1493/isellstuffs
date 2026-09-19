@@ -698,6 +698,14 @@ export function listingSprayWritePath() {
   return "/listings/spray";
 }
 
+export function listingLiningPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/lining`;
+}
+
+export function listingLiningWritePath() {
+  return "/listings/lining";
+}
+
 export function listingDonglePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/dongle`;
 }
