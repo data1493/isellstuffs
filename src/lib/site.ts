@@ -3,7 +3,7 @@ export const site = {
   mall: "the mall",
   tagline: "A flea-market mall, not a single shop.",
   description:
-    "Independent stalls under one roof. Sellers list physical finds and digital goods from the same stall.",
+    "A flea-market mall for independent stalls. Physical finds and digital files from the same booth — Yard Sale, Closet Overflow, Garage Tech, and Download Stall.",
 };
 
 /** Locked mall hubs live in `@/lib/commerce`. */

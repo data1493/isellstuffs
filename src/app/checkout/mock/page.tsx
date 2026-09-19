@@ -20,11 +20,9 @@ import {
 } from "@/lib/checkout";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { listingById } from "@/lib/commerce";
+import { checkoutMockMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Checkout",
-  description: "Pay the mall. Test checkout with Stripe.js.",
-};
+export const metadata: Metadata = checkoutMockMetadata();
 
 export default async function MockCheckoutPage({
   searchParams,

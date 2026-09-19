@@ -4,12 +4,9 @@ import Link from "next/link";
 import { HubTile } from "@/components/browse/cards";
 import { Button } from "@/components/ui/button";
 import { listingsByHub, mallHubs } from "@/lib/commerce";
+import { hubsIndexMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Hubs",
-  description:
-    "Four opinionated aisles: Yard Sale, Closet Overflow, Garage Tech, and Download Stall.",
-};
+export const metadata: Metadata = hubsIndexMetadata();
 
 export default function HubsPage() {
   return (

@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { missingStallMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = missingStallMetadata();
 
 export default function StallNotFound() {
   return (

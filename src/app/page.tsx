@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { HubTile, ListingGrid } from "@/components/browse/cards";
 import { FeaturedBooth, HomepageTakeover } from "@/components/browse/paid";
+import { JsonLd } from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +21,10 @@ import {
   listingsByType,
   mallHubs,
 } from "@/lib/commerce";
+import { homeMetadata, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
+
+export const metadata: Metadata = homeMetadata();
 
 export default function Home() {
   const homepageTakeover = adSlotsByKind("homepage-takeover")[0];
@@ -41,6 +46,7 @@ export default function Home() {
 
   return (
     <div>
+      <JsonLd data={websiteJsonLd()} />
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
           <Badge variant="secondary" className="w-fit rounded-full">

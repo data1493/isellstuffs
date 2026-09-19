@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 
 import { CartView } from "@/app/cart/cart-view";
+import { cartMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Your tote",
-  description: "Pay the mall. Stalls keep their cut after a test checkout.",
-};
+export const metadata: Metadata = cartMetadata();
 
 export default async function CartPage({
   searchParams,

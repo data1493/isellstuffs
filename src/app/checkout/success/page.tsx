@@ -16,11 +16,9 @@ import { Separator } from "@/components/ui/separator";
 import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/checkout";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { listingById } from "@/lib/commerce";
+import { checkoutSuccessMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "You’re on the slip",
-  description: "Test payment landed. The tote is empty.",
-};
+export const metadata: Metadata = checkoutSuccessMetadata();
 
 export default async function CheckoutSuccessPage({
   searchParams,

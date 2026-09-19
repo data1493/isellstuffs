@@ -13,6 +13,7 @@ import {
   stallBySlug,
   stalls,
 } from "@/lib/commerce";
+import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 type StallPageProps = {
@@ -30,13 +31,10 @@ export async function generateMetadata({
   const stall = stallBySlug(slug);
 
   if (!stall) {
-    return { title: "Stall gone" };
+    return missingStallMetadata();
   }
 
-  return {
-    title: stall.boothName,
-    description: stall.blurb,
-  };
+  return stallMetadata(stall);
 }
 
 export default async function StallPage({ params }: StallPageProps) {

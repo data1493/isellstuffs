@@ -4,7 +4,7 @@ import { Figtree, Fraunces, Geist_Mono } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { site } from "@/lib/site";
+import { rootMetadata } from "@/lib/seo";
 
 import "./globals.css";
 
@@ -23,13 +23,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: `${site.name} — ${site.mall}`,
-    template: `%s — ${site.name}`,
-  },
-  description: site.description,
-};
+export const metadata: Metadata = rootMetadata();
 
 export default function RootLayout({
   children,

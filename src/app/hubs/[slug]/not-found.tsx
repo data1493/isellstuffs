@@ -1,7 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { mallHubs } from "@/lib/commerce";
+import { missingHubMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = missingHubMetadata();
 
 export default function HubNotFound() {
   return (

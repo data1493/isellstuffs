@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { JsonLd } from "@/components/json-ld";
 import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
@@ -23,6 +24,7 @@ import {
   listingStatusLabel,
 } from "@/lib/listing-display";
 import { listingPath, stallPath } from "@/lib/paths";
+import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 type ListingPageProps = {
@@ -40,13 +42,10 @@ export async function generateMetadata({
   const listing = listingById(id);
 
   if (!listing) {
-    return { title: "Listing gone" };
+    return missingListingMetadata();
   }
 
-  return {
-    title: listing.title,
-    description: listing.summary,
-  };
+  return listingMetadata(listing);
 }
 
 function SiblingRow({
@@ -114,6 +113,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   return (
     <div data-listing-type={listing.type}>
+      <JsonLd data={listingProductJsonLd(listing)} />
       <section
         className={cn(
           "border-b border-border",

@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { missingListingMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = missingListingMetadata();
 
 export default function ListingNotFound() {
   return (

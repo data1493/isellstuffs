@@ -14,12 +14,24 @@ import {
   isHubId,
   isListingType,
 } from "@/lib/browse";
+import { exploreMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Explore the concourse",
-  description:
-    "The general mall floor. Filter the stand-in catalog by hub or listing type.",
+type ExplorePageProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
+
+export async function generateMetadata({
+  searchParams,
+}: ExplorePageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const hubParam = firstSearchParam(params.hub);
+  const typeParam = firstSearchParam(params.type);
+  const hubId = isHubId(hubParam) ? hubParam : undefined;
+  const type = isListingType(typeParam) ? typeParam : undefined;
+  const unknown = Boolean((hubParam && !hubId) || (typeParam && !type));
+
+  return exploreMetadata({ hubId, type, unknown });
+}
 
 const typeFilters = [
   { id: "physical" as const, label: "Physical" },
@@ -28,9 +40,7 @@ const typeFilters = [
 
 export default async function ExplorePage({
   searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+}: ExplorePageProps) {
   const params = await searchParams;
   const hubParam = firstSearchParam(params.hub);
   const typeParam = firstSearchParam(params.type);

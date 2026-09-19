@@ -8,6 +8,7 @@ import { BrowseEmpty } from "@/components/browse/states";
 import { Button } from "@/components/ui/button";
 import { adSlots, listingsByHub, mallHubs } from "@/lib/commerce";
 import { exploreHref, hubAtmosphere, hubBySlug } from "@/lib/browse";
+import { hubMetadata, missingHubMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 type HubPageProps = {
@@ -24,12 +25,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const hub = hubBySlug(slug);
   if (!hub) {
-    return { title: "Aisle not on the map" };
+    return missingHubMetadata();
   }
-  return {
-    title: hub.name,
-    description: hub.blurb,
-  };
+  return hubMetadata(hub);
 }
 
 export default async function HubPage({ params }: HubPageProps) {

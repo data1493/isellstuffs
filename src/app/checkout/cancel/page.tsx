@@ -13,11 +13,9 @@ import {
 } from "@/components/ui/card";
 import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/checkout";
 import { groupListingsByStall } from "@/lib/checkout-display";
+import { checkoutCancelMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Checkout canceled",
-  description: "Nothing was charged. Your tote is still yours.",
-};
+export const metadata: Metadata = checkoutCancelMetadata();
 
 export default async function CheckoutCancelPage({
   searchParams,

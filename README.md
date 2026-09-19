@@ -2,7 +2,7 @@
 
 A flea-market mall for independent stalls — not a single-seller shop. Sellers list physical finds and digital goods from the same stall. Category hubs are the map of the floor.
 
-This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall + tote checkout). No auth. No database.
+This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall + tote checkout, Wave 3 share titles). No auth. No database.
 
 ## Browse
 
@@ -77,6 +77,22 @@ Optional local env (gitignored — do not commit keys):
 - `STRIPE_SECRET_KEY` — test secret; omit it and checkout stays mocked
 
 Do not put production keys in this app.
+
+## Share titles
+
+Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/lib/seo`. Titles and prices come from `@/lib/commerce` — do not invent listing copy in metadata.
+
+| Surface | What a share sees |
+| --- | --- |
+| `/` | Mall name + four-hub pitch. WebSite JSON-LD |
+| `/explore` | Concourse title; hub/type query strings get their own title and description |
+| `/hubs`, `/hubs/[slug]` | Aisle name, rule, listing count |
+| `/listings/[id]` | `{title} · {price}` plus condition/format, stall, status. Product + Offer JSON-LD |
+| `/stalls/[slug]` | Booth name, mix of objects and files |
+| `/cart`, `/checkout/*` | Real titles. `noindex` — not catalog URLs |
+| Unknown path | Root 404: “Not on the map” |
+
+Optional: set `NEXT_PUBLIC_SITE_URL` so canonical and OG URLs are absolute. Local fallback is `http://127.0.0.1:44721`.
 
 ## Commerce contracts (import these)
 
