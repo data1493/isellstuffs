@@ -633,6 +633,12 @@ import {
   subscribeProof,
 } from "@/lib/listing-proof";
 import {
+  canTapeGrain,
+  isListingGrainOverlay,
+  readGrainListingIds,
+  subscribeGrain,
+} from "@/lib/listing-grain";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -782,6 +788,7 @@ import {
   listingSubsetWritePath,
   listingProofWritePath,
   listingReflowWritePath,
+  listingGrainWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -996,6 +1003,7 @@ export function DeskBoard({
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
   const [subsetIds, setSubsetIds] = useState<string[]>([]);
   const [proofIds, setProofIds] = useState<string[]>([]);
+  const [grainIds, setGrainIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1127,6 +1135,7 @@ export function DeskBoard({
       setQuantizeIds(readQuantizeListingIds());
       setSubsetIds(readSubsetListingIds());
       setProofIds(readProofListingIds());
+      setGrainIds(readGrainListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1247,6 +1256,7 @@ export function DeskBoard({
     const unsubQuantize = subscribeQuantize(apply);
     const unsubSubset = subscribeSubset(apply);
     const unsubProof = subscribeProof(apply);
+    const unsubGrain = subscribeGrain(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1377,6 +1387,7 @@ export function DeskBoard({
       unsubQuantize();
       unsubSubset();
       unsubProof();
+      unsubGrain();
     };
   }, [listings, stall.id]);
 
@@ -4007,6 +4018,37 @@ export function DeskBoard({
                             {isListingBalanceOverlay(listing.id, balanceIds)
                               ? "Leave the three looks"
                               : "I will not balance it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGrain(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGrainWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGrainOverlay(listing.id, grainIds)
+                                ? "open"
+                                : "grain"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGrainOverlay(listing.id, grainIds)
+                              ? "Leave the looks"
+                              : "I will not grain them"}
                           </button>
                         </form>
                       ) : null}

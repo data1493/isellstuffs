@@ -1282,6 +1282,14 @@ export function listingBushWritePath() {
   return "/listings/bush";
 }
 
+export function listingGrainPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/grain`;
+}
+
+export function listingGrainWritePath() {
+  return "/listings/grain";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

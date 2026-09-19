@@ -52,6 +52,7 @@ import { ListingConvertNotice } from "@/components/listing-convert-notice";
 import { ListingShotNotice } from "@/components/listing-shot-notice";
 import { ListingWarmNotice } from "@/components/listing-warm-notice";
 import { ListingBalanceNotice } from "@/components/listing-balance-notice";
+import { ListingGrainNotice } from "@/components/listing-grain-notice";
 import { ListingLogNotice } from "@/components/listing-log-notice";
 import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
@@ -243,6 +244,7 @@ import {
   listingShotPath,
   listingWarmPath,
   listingBalancePath,
+  listingGrainPath,
   listingLogPath,
   listingBpmPath,
   listingManualPath,
@@ -590,6 +592,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingShotNotice listingId={listing.id} /> : null}
               {!physical ? <ListingWarmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBalanceNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingGrainNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLogNotice listingId={listing.id} /> : null}
               {!physical ? <ListingProfileNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
@@ -1625,6 +1628,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not balance it
+                  </Link>
+                  <Link
+                    href={listingGrainPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not grain them
                   </Link>
                   <Link
                     href={listingLogPath(listing.id)}
