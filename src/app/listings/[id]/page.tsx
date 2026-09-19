@@ -100,6 +100,7 @@ import { ListingLinkNotice } from "@/components/listing-link-notice";
 import { ListingCenterNotice } from "@/components/listing-center-notice";
 import { ListingWarpNotice } from "@/components/listing-warp-notice";
 import { ListingSpliceNotice } from "@/components/listing-splice-notice";
+import { ListingRadioNotice } from "@/components/listing-radio-notice";
 import { ListingVentNotice } from "@/components/listing-vent-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -230,6 +231,7 @@ import {
   listingCenterPath,
   listingWarpPath,
   listingSplicePath,
+  listingRadioPath,
   listingVentPath,
   listingTrayPath,
   listingGumPath,
@@ -518,6 +520,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCenterNotice listingId={listing.id} /> : null}
               {physical ? <ListingWarpNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpliceNotice listingId={listing.id} /> : null}
+              {physical ? <ListingRadioNotice listingId={listing.id} /> : null}
               {physical ? <ListingVentNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrayNotice listingId={listing.id} /> : null}
               {physical ? <ListingGumNotice listingId={listing.id} /> : null}
@@ -991,6 +994,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not splice
+                  </Link>
+                  <Link
+                    href={listingRadioPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The radio edit stays
                   </Link>
                   <Link
                     href={listingVentPath(listing.id)}
