@@ -1242,6 +1242,14 @@ export function listingSubsetWritePath() {
   return "/listings/subset";
 }
 
+export function listingFlockPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/flock`;
+}
+
+export function listingFlockWritePath() {
+  return "/listings/flock";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

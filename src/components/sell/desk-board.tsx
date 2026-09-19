@@ -465,6 +465,12 @@ import {
   subscribeFoam,
 } from "@/lib/listing-foam";
 import {
+  canTapeFlock,
+  isListingFlockOverlay,
+  readFlockListingIds,
+  subscribeFlock,
+} from "@/lib/listing-flock";
+import {
   canTapeAnneal,
   isListingAnnealOverlay,
   readAnnealListingIds,
@@ -725,6 +731,7 @@ import {
   listingAzimuthWritePath,
   listingNestWritePath,
   listingFoamWritePath,
+  listingFlockWritePath,
   listingAnnealWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
@@ -917,6 +924,7 @@ export function DeskBoard({
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
   const [nestIds, setNestIds] = useState<string[]>([]);
   const [foamIds, setFoamIds] = useState<string[]>([]);
+  const [flockIds, setFlockIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
@@ -1043,6 +1051,7 @@ export function DeskBoard({
       setAzimuthIds(readAzimuthListingIds());
       setNestIds(readNestListingIds());
       setFoamIds(readFoamListingIds());
+      setFlockIds(readFlockListingIds());
       setAnnealIds(readAnnealListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
@@ -1158,6 +1167,7 @@ export function DeskBoard({
     const unsubAzimuth = subscribeAzimuth(apply);
     const unsubNest = subscribeNest(apply);
     const unsubFoam = subscribeFoam(apply);
+    const unsubFlock = subscribeFlock(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
@@ -1283,6 +1293,7 @@ export function DeskBoard({
       unsubAzimuth();
       unsubNest();
       unsubFoam();
+      unsubFlock();
       unsubAnneal();
       unsubGrommet();
       unsubDart();
@@ -3146,6 +3157,37 @@ export function DeskBoard({
                             {isListingFoamOverlay(listing.id, foamIds)
                               ? "Leave the pile"
                               : "I will not foam them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFlock(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFlockWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFlockOverlay(listing.id, flockIds)
+                                ? "open"
+                                : "flock"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFlockOverlay(listing.id, flockIds)
+                              ? "Leave the empties"
+                              : "I will not flock them"}
                           </button>
                         </form>
                       ) : null}

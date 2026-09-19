@@ -127,6 +127,7 @@ import { ListingFinalizeNotice } from "@/components/listing-finalize-notice";
 import { ListingAzimuthNotice } from "@/components/listing-azimuth-notice";
 import { ListingNestNotice } from "@/components/listing-nest-notice";
 import { ListingFoamNotice } from "@/components/listing-foam-notice";
+import { ListingFlockNotice } from "@/components/listing-flock-notice";
 import { ListingAnnealNotice } from "@/components/listing-anneal-notice";
 import { ListingGrommetNotice } from "@/components/listing-grommet-notice";
 import { ListingDartNotice } from "@/components/listing-dart-notice";
@@ -335,6 +336,7 @@ import {
   listingGatePath,
   listingQuantizePath,
   listingSubsetPath,
+  listingFlockPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -682,6 +684,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingAzimuthNotice listingId={listing.id} /> : null}
               {physical ? <ListingNestNotice listingId={listing.id} /> : null}
               {physical ? <ListingFoamNotice listingId={listing.id} /> : null}
+              {physical ? <ListingFlockNotice listingId={listing.id} /> : null}
               {physical ? <ListingAnnealNotice listingId={listing.id} /> : null}
               {physical ? <ListingGrommetNotice listingId={listing.id} /> : null}
               {physical ? <ListingDartNotice listingId={listing.id} /> : null}
@@ -1336,6 +1339,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not foam them
+                  </Link>
+                  <Link
+                    href={listingFlockPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not flock them
                   </Link>
                   <Link
                     href={listingAnnealPath(listing.id)}
