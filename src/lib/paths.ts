@@ -1042,6 +1042,14 @@ export function listingFinalizeWritePath() {
   return "/listings/finalize";
 }
 
+export function listingAzimuthPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/azimuth`;
+}
+
+export function listingAzimuthWritePath() {
+  return "/listings/azimuth";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

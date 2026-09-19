@@ -447,6 +447,12 @@ import {
   subscribeFinalize,
 } from "@/lib/listing-finalize";
 import {
+  canTapeAzimuth,
+  isListingAzimuthOverlay,
+  readAzimuthListingIds,
+  subscribeAzimuth,
+} from "@/lib/listing-azimuth";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -560,6 +566,7 @@ import {
   listingStitchWritePath,
   listingCinchWritePath,
   listingFinalizeWritePath,
+  listingAzimuthWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -725,6 +732,7 @@ export function DeskBoard({
   const [stitchIds, setStitchIds] = useState<string[]>([]);
   const [cinchIds, setCinchIds] = useState<string[]>([]);
   const [finalizeIds, setFinalizeIds] = useState<string[]>([]);
+  const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -824,6 +832,7 @@ export function DeskBoard({
       setStitchIds(readStitchListingIds());
       setCinchIds(readCinchListingIds());
       setFinalizeIds(readFinalizeListingIds());
+      setAzimuthIds(readAzimuthListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -912,6 +921,7 @@ export function DeskBoard({
     const unsubStitch = subscribeStitch(apply);
     const unsubCinch = subscribeCinch(apply);
     const unsubFinalize = subscribeFinalize(apply);
+    const unsubAzimuth = subscribeAzimuth(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1010,6 +1020,7 @@ export function DeskBoard({
       unsubStitch();
       unsubCinch();
       unsubFinalize();
+      unsubAzimuth();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2384,6 +2395,37 @@ export function DeskBoard({
                             {isListingFinalizeOverlay(listing.id, finalizeIds)
                               ? "Leave the session"
                               : "I will not finalize it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAzimuth(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAzimuthWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAzimuthOverlay(listing.id, azimuthIds)
+                                ? "open"
+                                : "azimuth"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingAzimuthOverlay(listing.id, azimuthIds)
+                              ? "Leave the heading"
+                              : "I will not azimuth it"}
                           </button>
                         </form>
                       ) : null}
