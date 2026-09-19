@@ -87,6 +87,12 @@ import {
   subscribeTypeset,
 } from "@/lib/listing-typeset";
 import {
+  canTapeRevise,
+  isListingReviseOverlay,
+  readReviseListingIds,
+  subscribeRevise,
+} from "@/lib/listing-revise";
+import {
   canTapeLoop,
   isListingLoopOverlay,
   readLoopListingIds,
@@ -177,6 +183,7 @@ import {
   listingShotWritePath,
   listingWarmWritePath,
   listingTypesetWritePath,
+  listingReviseWritePath,
   listingTwistWritePath,
   listingZipWritePath,
   listingWhoseWritePath,
@@ -248,6 +255,7 @@ export function DeskBoard({
   const [warmIds, setWarmIds] = useState<string[]>([]);
   const [whoseIds, setWhoseIds] = useState<string[]>([]);
   const [typesetIds, setTypesetIds] = useState<string[]>([]);
+  const [reviseIds, setReviseIds] = useState<string[]>([]);
   const [loopIds, setLoopIds] = useState<string[]>([]);
   const [twistIds, setTwistIds] = useState<string[]>([]);
   const [stretchIds, setStretchIds] = useState<string[]>([]);
@@ -287,6 +295,7 @@ export function DeskBoard({
       setWarmIds(readWarmListingIds());
       setWhoseIds(readWhoseListingIds());
       setTypesetIds(readTypesetListingIds());
+      setReviseIds(readReviseListingIds());
       setLoopIds(readLoopListingIds());
       setTwistIds(readTwistListingIds());
       setStretchIds(readStretchListingIds());
@@ -315,6 +324,7 @@ export function DeskBoard({
     const unsubWarm = subscribeWarm(apply);
     const unsubWhose = subscribeWhose(apply);
     const unsubTypeset = subscribeTypeset(apply);
+    const unsubRevise = subscribeRevise(apply);
     const unsubLoop = subscribeLoop(apply);
     const unsubTwist = subscribeTwist(apply);
     const unsubStretch = subscribeStretch(apply);
@@ -353,6 +363,7 @@ export function DeskBoard({
       unsubWarm();
       unsubWhose();
       unsubTypeset();
+      unsubRevise();
       unsubLoop();
       unsubTwist();
       unsubStretch();
@@ -980,6 +991,37 @@ export function DeskBoard({
                             {isListingTypesetOverlay(listing.id, typesetIds)
                               ? "Leave the page"
                               : "I will not typeset"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRevise(listing) ? (
+                        <form
+                          method="post"
+                          action={listingReviseWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingReviseOverlay(listing.id, reviseIds)
+                                ? "open"
+                                : "revise"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingReviseOverlay(listing.id, reviseIds)
+                              ? "Leave the page"
+                              : "I will not revise"}
                           </button>
                         </form>
                       ) : null}

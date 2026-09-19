@@ -626,6 +626,14 @@ export function listingInsideWritePath() {
   return "/listings/inside";
 }
 
+export function listingRevisePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/revise`;
+}
+
+export function listingReviseWritePath() {
+  return "/listings/revise";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
