@@ -25,6 +25,7 @@ import { ListingBentNotice } from "@/components/listing-bent-notice";
 import { ListingCordNotice } from "@/components/listing-cord-notice";
 import { ListingWashNotice } from "@/components/listing-wash-notice";
 import { ListingRemoteNotice } from "@/components/listing-remote-notice";
+import { ListingSkipNotice } from "@/components/listing-skip-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -71,6 +72,7 @@ import {
   listingCordPath,
   listingWashPath,
   listingRemotePath,
+  listingSkipPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -255,6 +257,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCordNotice listingId={listing.id} /> : null}
               {physical ? <ListingWashNotice listingId={listing.id} /> : null}
               {physical ? <ListingRemoteNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSkipNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -407,6 +410,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The remote walked
+                  </Link>
+                  <Link
+                    href={listingSkipPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The skip stays
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

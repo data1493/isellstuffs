@@ -202,6 +202,14 @@ export function listingRemoteWritePath() {
   return "/listings/remote";
 }
 
+export function listingSkipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/skip`;
+}
+
+export function listingSkipWritePath() {
+  return "/listings/skip";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
