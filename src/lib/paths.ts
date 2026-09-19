@@ -1138,6 +1138,14 @@ export function listingFoamWritePath() {
   return "/listings/foam";
 }
 
+export function listingLigaturePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ligature`;
+}
+
+export function listingLigatureWritePath() {
+  return "/listings/ligature";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
