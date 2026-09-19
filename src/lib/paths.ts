@@ -466,6 +466,14 @@ export function listingDumpWritePath() {
   return "/listings/dump";
 }
 
+export function listingPhonePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/phone`;
+}
+
+export function listingPhoneWritePath() {
+  return "/listings/phone";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

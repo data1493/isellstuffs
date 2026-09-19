@@ -58,6 +58,7 @@ import { ListingCrackNotice } from "@/components/listing-crack-notice";
 import { ListingInkNotice } from "@/components/listing-ink-notice";
 import { ListingSoleNotice } from "@/components/listing-sole-notice";
 import { ListingDumpNotice } from "@/components/listing-dump-notice";
+import { ListingPhoneNotice } from "@/components/listing-phone-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -137,6 +138,7 @@ import {
   listingInkPath,
   listingSolePath,
   listingDumpPath,
+  listingPhonePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -360,6 +362,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingInkNotice listingId={listing.id} /> : null}
               {physical ? <ListingSoleNotice listingId={listing.id} /> : null}
               {physical ? <ListingDumpNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPhoneNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -656,6 +659,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don't dump
+                  </Link>
+                  <Link
+                    href={listingPhonePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't know the phone
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

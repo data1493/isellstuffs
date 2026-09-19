@@ -39,7 +39,14 @@ import {
   subscribeDump,
 } from "@/lib/listing-dump";
 import {
+  canTapePhone,
+  isListingPhoneOverlay,
+  readPhoneListingIds,
+  subscribePhone,
+} from "@/lib/listing-phone";
+import {
   listingDumpWritePath,
+  listingPhoneWritePath,
   listingPath,
   sellDeskStallPath,
   sellHoursPath,
@@ -100,6 +107,7 @@ export function DeskBoard({
   const [packed, setPacked] = useState(false);
   const [weekendPins, setWeekendPins] = useState(weekendPinSeed);
   const [dumpIds, setDumpIds] = useState<string[]>([]);
+  const [phoneIds, setPhoneIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -119,6 +127,7 @@ export function DeskBoard({
       setPacked(isStallPacked(stall.id));
       setWeekendPins(readWeekendPinIds());
       setDumpIds(readDumpListingIds());
+      setPhoneIds(readPhoneListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -127,6 +136,7 @@ export function DeskBoard({
 
     apply();
     const unsubDump = subscribeDump(apply);
+    const unsubPhone = subscribePhone(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -145,6 +155,7 @@ export function DeskBoard({
       window.removeEventListener(WEEKEND_PINS_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
       unsubDump();
+      unsubPhone();
     };
   }, [listings, stall.id]);
 
@@ -326,6 +337,37 @@ export function DeskBoard({
                             {isListingDumpOverlay(listing.id, dumpIds)
                               ? "Leave the cart"
                               : "I don't dump"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePhone(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPhoneWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPhoneOverlay(listing.id, phoneIds)
+                                ? "open"
+                                : "phone"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPhoneOverlay(listing.id, phoneIds)
+                              ? "Leave the tangle"
+                              : "I don't know the phone"}
                           </button>
                         </form>
                       ) : null}
