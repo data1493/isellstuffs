@@ -201,6 +201,12 @@ import {
   subscribeEven,
 } from "@/lib/listing-even";
 import {
+  canTapeTune,
+  isListingTuneOverlay,
+  readTuneListingIds,
+  subscribeTune,
+} from "@/lib/listing-tune";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -215,6 +221,7 @@ import {
   listingDongleWritePath,
   listingEvenWritePath,
   listingLoopWritePath,
+  listingTuneWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -316,6 +323,7 @@ export function DeskBoard({
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
+  const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -362,6 +370,7 @@ export function DeskBoard({
       setSprayIds(readSprayListingIds());
       setDongleIds(readDongleListingIds());
       setEvenIds(readEvenListingIds());
+      setTuneIds(readTuneListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -397,6 +406,7 @@ export function DeskBoard({
     const unsubSpray = subscribeSpray(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubEven = subscribeEven(apply);
+    const unsubTune = subscribeTune(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -442,6 +452,7 @@ export function DeskBoard({
       unsubSpray();
       unsubDongle();
       unsubEven();
+      unsubTune();
     };
   }, [listings, stall.id]);
 
@@ -1274,6 +1285,37 @@ export function DeskBoard({
                             {isListingLoopOverlay(listing.id, loopIds)
                               ? "Leave the loop"
                               : "I will not slice the loop"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTune(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTuneWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTuneOverlay(listing.id, tuneIds)
+                                ? "open"
+                                : "tune"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTuneOverlay(listing.id, tuneIds)
+                              ? "Leave the one-shots"
+                              : "I will not tune it"}
                           </button>
                         </form>
                       ) : null}

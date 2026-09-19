@@ -682,6 +682,14 @@ export function listingEvenWritePath() {
   return "/listings/even";
 }
 
+export function listingTunePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tune`;
+}
+
+export function listingTuneWritePath() {
+  return "/listings/tune";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

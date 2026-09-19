@@ -85,6 +85,7 @@ import { ListingLedNotice } from "@/components/listing-led-notice";
 import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingEvenNotice } from "@/components/listing-even-notice";
+import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -191,6 +192,7 @@ import {
   listingSprayPath,
   listingDonglePath,
   listingEvenPath,
+  listingTunePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -405,6 +407,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingWarmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingTuneNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -962,6 +965,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not slice the loop
+                  </Link>
+                  <Link
+                    href={listingTunePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not tune it
                   </Link>
                   <Link
                     href={listingSlantPath(listing.id)}
