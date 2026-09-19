@@ -1,5 +1,5 @@
 import {
-  listings,
+  allListings,
   mallHubs,
   type HubId,
   type Listing,
@@ -56,7 +56,7 @@ export function filterListings(filters: {
   hubId?: HubId;
   type?: Listing["type"];
 }): Listing[] {
-  return listings.filter((listing) => {
+  return allListings().filter((listing) => {
     if (filters.hubId && listing.hubId !== filters.hubId) return false;
     if (filters.type && listing.type !== filters.type) return false;
     return true;

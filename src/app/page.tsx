@@ -205,9 +205,17 @@ export default function Home() {
           Want a stall?
         </h2>
         <p className="mt-4 max-w-xl text-muted-foreground">
-          Booth applications are not open. Walk the floor first — the hubs,
-          the paid corners, the sold stickers still on the tables.
+          Put something on a table. Physical and digital from the same booth.
+          The mall keeps 10% from the stall, not on top of the buyer.
         </p>
+        <div className="mt-6">
+          <Button
+            className="rounded-full px-5"
+            render={<Link href="/sell" />}
+          >
+            Open a stall
+          </Button>
+        </div>
       </MallSection>
     </div>
   );

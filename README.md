@@ -30,6 +30,17 @@ Paid corners are a product. `/advertise` is the rate card. One campaign also has
 
 Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them.
 
+## Sell
+
+List on a stall the mall already has. No account. No database. No Connect onboarding.
+
+| Route | What it is |
+| --- | --- |
+| `/sell` | Why sell here, the 10% mall cut, physical vs digital |
+| `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
+
+New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads.
+
 ## Listing and stall pages
 
 Open a listing or a stall directly. Home, explore, and hub browse are owned elsewhere — these routes do not replace them.

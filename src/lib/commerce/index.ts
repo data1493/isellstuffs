@@ -35,6 +35,7 @@ export {
 export {
   stalls,
   listings,
+  allListings,
   adSlots,
   stallById,
   stallBySlug,

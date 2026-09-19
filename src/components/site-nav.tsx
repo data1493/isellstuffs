@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 const nav = [
   { href: "/explore", label: "Explore" },
   { href: "/hubs", label: "Hubs" },
+  { href: "/sell", label: "Sell" },
   { href: "/advertise", label: "Advertise" },
   { href: "/#how-it-works", label: "How it works" },
 ];
@@ -22,6 +23,9 @@ function navActive(pathname: string, href: string) {
   }
   if (href === "/advertise") {
     return pathname === "/advertise" || pathname.startsWith("/campaigns/");
+  }
+  if (href === "/sell") {
+    return pathname === "/sell" || pathname.startsWith("/sell/");
   }
   return false;
 }

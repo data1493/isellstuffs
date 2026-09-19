@@ -1,3 +1,4 @@
+import { readSellerListings } from "../seller-overlay";
 import { money } from "./money";
 import type { AdSlot, DigitalListing, Listing, PhysicalListing, Stall } from "./types";
 
@@ -186,6 +187,18 @@ const digitalListings = [
 /** 12 stand-in SKUs. Swap later without rewriting the contract. */
 export const listings: Listing[] = [...physicalListings, ...digitalListings];
 
+/** Fixture rows plus the local seller overlay. Shop lookups use this. */
+export function allListings(): Listing[] {
+  const overlay = readSellerListings();
+  if (overlay.length === 0) {
+    return listings;
+  }
+
+  const seen = new Set(listings.map((listing) => listing.id));
+  const extra = overlay.filter((listing) => !seen.has(listing.id));
+  return extra.length === 0 ? listings : [...listings, ...extra];
+}
+
 export const adSlots = [
   {
     id: "slot-featured-half-working",
@@ -232,23 +245,23 @@ export function stallBySlug(slug: string): Stall | undefined {
 }
 
 export function listingById(id: string): Listing | undefined {
-  return listings.find((listing) => listing.id === id);
+  return allListings().find((listing) => listing.id === id);
 }
 
 export function listingsByStall(stallId: string): Listing[] {
-  return listings.filter((listing) => listing.stallId === stallId);
+  return allListings().filter((listing) => listing.stallId === stallId);
 }
 
 export function listingsByHub(hubId: Listing["hubId"]): Listing[] {
-  return listings.filter((listing) => listing.hubId === hubId);
+  return allListings().filter((listing) => listing.hubId === hubId);
 }
 
 export function listingsByType(type: Listing["type"]): Listing[] {
-  return listings.filter((listing) => listing.type === type);
+  return allListings().filter((listing) => listing.type === type);
 }
 
 export function cartEligibleListings(): Listing[] {
-  return listings.filter(
+  return allListings().filter(
     (listing) => listing.cartEligible && listing.status === "available",
   );
 }

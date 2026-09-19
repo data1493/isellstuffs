@@ -5,6 +5,7 @@ import { HeaderSearch } from "@/components/header-search";
 import { SiteNav } from "@/components/site-nav";
 import { ToteHeaderButton } from "@/components/tote-nav-link";
 import { Button } from "@/components/ui/button";
+import { sellPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {
@@ -25,7 +26,7 @@ export function SiteHeader() {
             <Button
               size="sm"
               className="h-8 rounded-full px-3 text-sm font-medium sm:h-9 sm:px-4"
-              render={<Link href="/#open-a-stall" />}
+              render={<Link href={sellPath()} />}
             >
               Open a stall
             </Button>

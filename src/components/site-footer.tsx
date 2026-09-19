@@ -6,6 +6,7 @@ import { site } from "@/lib/site";
 const browse = [
   { href: "/explore", label: "Explore" },
   { href: "/hubs", label: "Hubs" },
+  { href: "/sell", label: "Sell" },
   { href: "/advertise", label: "Advertise" },
   { href: "/cart", label: "Tote" },
 ];

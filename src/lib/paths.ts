@@ -16,6 +16,14 @@ export function advertisePath() {
   return "/advertise";
 }
 
+export function sellPath() {
+  return "/sell";
+}
+
+export function sellNewPath() {
+  return "/sell/new";
+}
+
 export function campaignPath(slug: string) {
   return `/campaigns/${slug}`;
 }
