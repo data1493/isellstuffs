@@ -315,6 +315,13 @@ import {
   stallSpongePath,
 } from "@/lib/booth-sponge";
 import {
+  BOOTH_SPINDLE_COOKIE_NAME,
+  BOOTH_SPINDLE_PAPER_LINE,
+  boothSpindleFor,
+  parseBoothSpindle,
+  stallSpindlePath,
+} from "@/lib/booth-spindle";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -602,6 +609,10 @@ export default async function StallPage({
   const sponge = boothSpongeFor(
     stall.id,
     parseBoothSponge(jar.get(BOOTH_SPONGE_COOKIE_NAME)?.value),
+  );
+  const spindle = boothSpindleFor(
+    stall.id,
+    parseBoothSpindle(jar.get(BOOTH_SPINDLE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1422,6 +1433,23 @@ export default async function StallPage({
             <p data-booth-sponge-empty={stall.id} hidden />
           )}
 
+          {spindle ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a spindle"
+              title="Still a jewel."
+              body={
+                <p data-booth-spindle-note={stall.id}>
+                  {spindle.note} {BOOTH_SPINDLE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-spindle-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1798,6 +1826,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a sponge
+          </Link>
+
+          <Link
+            href={stallSpindlePath(stall.slug)}
+            data-booth-spindle-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a spindle
           </Link>
 
           <Link
