@@ -50,6 +50,14 @@ export function listingHandsWritePath() {
   return "/listings/hands";
 }
 
+export function listingWithPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/with`;
+}
+
+export function listingWithWritePath() {
+  return "/listings/with";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

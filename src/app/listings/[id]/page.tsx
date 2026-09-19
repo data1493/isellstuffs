@@ -9,6 +9,7 @@ import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { ListingFirmNotice } from "@/components/listing-firm-notice";
 import { ListingHandsNotice } from "@/components/listing-hands-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
+import { ListingWithNotice } from "@/components/listing-with-notice";
 import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
 import { PickupNote } from "@/components/pickup-note";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
@@ -38,6 +39,7 @@ import {
   listingPath,
   listingTagPath,
   listingVanPath,
+  listingWithPath,
   stallPath,
 } from "@/lib/paths";
 import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
@@ -198,6 +200,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingVanNotice listingId={listing.id} /> : null}
               {physical ? <ListingFirmNotice listingId={listing.id} /> : null}
               {physical ? <ListingHandsNotice listingId={listing.id} /> : null}
+              {physical ? <ListingWithNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -236,6 +239,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     In someone&apos;s hands
+                  </Link>
+                  <Link
+                    href={listingWithPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    These two go together
                   </Link>
                 </p>
               ) : null}

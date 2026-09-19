@@ -83,6 +83,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | That's the price | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/firm |
 | Look, don't bag | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/look |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
+| These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | More in the van | http://127.0.0.1:44721/listings/gtk-cable-drawer/van |
 | Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
@@ -128,6 +129,8 @@ Physical listings can sit as a display piece at `/listings/[id]/look`. Native `P
 Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /listings/van` (form: `listingId`, `intent=van|table`) writes `iss:van-listing-ids` / cookie `iss-van-listing-ids`. More out back. Ask. Still baggable — `status` and `cartEligible` stay put. Gift cards and PDFs are refused. Garage is home. Look is not for sale. Not a sold sticker.
 
 Physical listings can walk off in someone's hands at `/listings/[id]/hands`. Native `POST /listings/hands` (form: `listingId`, `intent=hands|open`) writes `iss:hands-listing-ids` / cookie `iss-hands-listing-ids`. Shop lookups stamp `cartEligible: false` and leave `status` alone. Hands drops that id from the tote. Put-back restores Add to cart. Gift cards and PDFs are refused. Look stays on the table. Not a sold sticker. Not a van note.
+
+Physical listings can walk with a mate at `/listings/[id]/with`. Native `POST /listings/with` (form: `listingId`, `mateId`, `intent=with|apart`) writes `iss:listing-with-pairs` / cookie `iss-listing-with-pairs`. Two titles on the same table — windbreaker with sneakers. Not a bundle SKU. Still two prices. `status`, `cartEligible`, and tote math stay put. Gift cards, PDFs, and a lamp on another stall are refused. Van is more of one pile.
 
 A stallholder can tape a sticky on the booth at `/stalls/[slug]/scrap`. “cash only after 2” stays after reload. Cookie `iss-stall-scraps` + `iss:stall-scraps`. Native `POST /stalls/[slug]/scrap/tape` (form: `note`) and peel. Not a hunt. Not an offer on a lamp. Not `/stalls/[slug]/tape`.
 
@@ -235,7 +238,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 
