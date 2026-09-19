@@ -56,6 +56,7 @@ export function LotBoothCard({
   harpNote,
   flashNote,
   reloadNote,
+  innersNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -94,6 +95,7 @@ export function LotBoothCard({
   harpNote?: string;
   flashNote?: string;
   reloadNote?: string;
+  innersNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -466,6 +468,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-reload-empty={stall.id} hidden />
+          )}
+          {innersNote ? (
+            <p
+              data-booth-inners-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have inners. {innersNote}
+            </p>
+          ) : (
+            <p data-booth-inners-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

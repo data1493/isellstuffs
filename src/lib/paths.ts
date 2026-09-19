@@ -1136,6 +1136,14 @@ export function stallReloadWritePath() {
   return "/stalls/reload";
 }
 
+export function stallInnersPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/inners`;
+}
+
+export function stallInnersWritePath() {
+  return "/stalls/inners";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

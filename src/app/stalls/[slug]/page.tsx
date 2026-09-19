@@ -238,6 +238,13 @@ import {
   stallReloadPath,
 } from "@/lib/booth-reload";
 import {
+  BOOTH_INNERS_COOKIE_NAME,
+  BOOTH_INNERS_PAPER_LINE,
+  boothInnersFor,
+  parseBoothInners,
+  stallInnersPath,
+} from "@/lib/booth-inners";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -481,6 +488,10 @@ export default async function StallPage({
   const reload = boothReloadFor(
     stall.id,
     parseBoothReload(jar.get(BOOTH_RELOAD_COOKIE_NAME)?.value),
+  );
+  const innersNote = boothInnersFor(
+    stall.id,
+    parseBoothInners(jar.get(BOOTH_INNERS_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1114,6 +1125,23 @@ export default async function StallPage({
             <p data-booth-reload-empty={stall.id} hidden />
           )}
 
+          {innersNote ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have inners"
+              title="Grocery bag."
+              body={
+                <p data-booth-inners-note={stall.id}>
+                  {innersNote.note} {BOOTH_INNERS_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-inners-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1402,6 +1430,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t reload
+          </Link>
+
+          <Link
+            href={stallInnersPath(stall.slug)}
+            data-booth-inners-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have inners
           </Link>
 
           <Link
