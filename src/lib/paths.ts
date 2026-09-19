@@ -1282,6 +1282,14 @@ export function listingPreflightWritePath() {
   return "/listings/preflight";
 }
 
+export function listingOverburnPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/overburn`;
+}
+
+export function listingOverburnWritePath() {
+  return "/listings/overburn";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

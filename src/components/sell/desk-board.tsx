@@ -657,6 +657,12 @@ import {
   subscribeBevel,
 } from "@/lib/listing-bevel";
 import {
+  canTapeOverburn,
+  isListingOverburnOverlay,
+  readOverburnListingIds,
+  subscribeOverburn,
+} from "@/lib/listing-overburn";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -875,6 +881,7 @@ import {
   listingHoneWritePath,
   listingRinseWritePath,
   listingBevelWritePath,
+  listingOverburnWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingFluxWritePath,
@@ -1091,6 +1098,7 @@ export function DeskBoard({
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [rinseIds, setRinseIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
+  const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
@@ -1238,6 +1246,7 @@ export function DeskBoard({
       setHoneIds(readHoneListingIds());
       setRinseIds(readRinseListingIds());
       setBevelIds(readBevelListingIds());
+      setOverburnIds(readOverburnListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setFluxIds(readFluxListingIds());
@@ -1374,6 +1383,7 @@ export function DeskBoard({
     const unsubHone = subscribeHone(apply);
     const unsubRinse = subscribeRinse(apply);
     const unsubBevel = subscribeBevel(apply);
+    const unsubOverburn = subscribeOverburn(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubFlux = subscribeFlux(apply);
@@ -1520,6 +1530,7 @@ export function DeskBoard({
       unsubHone();
       unsubRinse();
       unsubBevel();
+      unsubOverburn();
       unsubDolby();
       unsubPancake();
       unsubFlux();
@@ -3036,6 +3047,37 @@ export function DeskBoard({
                             {isListingBevelOverlay(listing.id, bevelIds)
                               ? "Leave the catch"
                               : "I will not bevel it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeOverburn(listing) ? (
+                        <form
+                          method="post"
+                          action={listingOverburnWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingOverburnOverlay(listing.id, overburnIds)
+                                ? "open"
+                                : "overburn"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingOverburnOverlay(listing.id, overburnIds)
+                              ? "Leave the extra"
+                              : "I will not overburn it"}
                           </button>
                         </form>
                       ) : null}

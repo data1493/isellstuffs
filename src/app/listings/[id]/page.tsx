@@ -165,6 +165,7 @@ import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
+import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -359,6 +360,7 @@ import {
   listingHonePath,
   listingRinsePath,
   listingBevelPath,
+  listingOverburnPath,
   listingDolbyPath,
   listingPancakePath,
   listingFluxPath,
@@ -761,6 +763,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingGlazeNotice listingId={listing.id} /> : null}
               {physical ? <ListingPickleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
+              {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1501,6 +1504,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not bevel it
+                  </Link>
+                  <Link
+                    href={listingOverburnPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not overburn it
                   </Link>
                   <Link
                     href={listingDegaussPath(listing.id)}
