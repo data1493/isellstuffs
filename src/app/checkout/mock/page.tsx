@@ -30,12 +30,13 @@ export const metadata: Metadata = checkoutMockMetadata();
 export default async function MockCheckoutPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string | string[] }>;
+  searchParams: Promise<{ session_id?: string | string[]; error?: string | string[] }>;
 }) {
   const params = await searchParams;
   const sessionId = Array.isArray(params.session_id)
     ? params.session_id[0]
     : params.session_id;
+  const confirmError = Array.isArray(params.error) ? params.error[0] : params.error;
   const jar = await cookies();
   const session = parseCheckoutSession(jar.get(CHECKOUT_COOKIE)?.value);
   const match = session && (!sessionId || session.id === sessionId) ? session : null;
@@ -107,7 +108,7 @@ export default async function MockCheckoutPage({
                 <CardTitle>Payment</CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
-                <PayForm session={match} />
+                <PayForm session={match} confirmError={confirmError} />
               </CardContent>
             </Card>
           </div>

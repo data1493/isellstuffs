@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { AS_IS_STAMP, asIsOnSlip } from "@/lib/as-is";
 import { formatPlanMoney } from "@/lib/checkout";
 import { isGiftListing, isPhysicalListing } from "@/lib/commerce";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
@@ -87,6 +88,9 @@ export function OrderSlipCard({ order }: { order: OrderSlip }) {
             lines are the listing ids from checkout. Nothing live moved. The
             mall does not keep a warehouse invoice.
           </p>
+          {asIsOnSlip(order) ? (
+            <p className="text-base leading-7 text-muted-foreground">{AS_IS_STAMP}</p>
+          ) : null}
         </div>
       </MallHero>
 

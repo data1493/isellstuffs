@@ -7,6 +7,11 @@ import { MallPayError } from "@/components/mall-notice";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AS_IS_CHECK_LABEL,
+  AS_IS_REJECT,
+  slipHasPhysicalLines,
+} from "@/lib/as-is";
 import { formatPlanMoney, type CheckoutSessionSummary } from "@/lib/checkout";
 import { getStripe, isStripeJsConfigured } from "@/lib/stripe-browser";
 import { cn } from "@/lib/utils";
@@ -56,7 +61,13 @@ function isEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-export function PayForm({ session }: { session: CheckoutSessionSummary }) {
+export function PayForm({
+  session,
+  confirmError,
+}: {
+  session: CheckoutSessionSummary;
+  confirmError?: string;
+}) {
   const stripeConfigured = isStripeJsConfigured();
   const [stripeReady, setStripeReady] = useState<"loading" | "ready" | "missing">(
     stripeConfigured ? "loading" : "missing",
@@ -68,8 +79,13 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
   const [cvc, setCvc] = useState("");
   const [postal, setPostal] = useState("");
   const [busy, setBusy] = useState<"pay" | "cancel" | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(confirmError ?? null);
   const [fieldError, setFieldError] = useState<string | null>(null);
+  const [asIs, setAsIs] = useState(false);
+  const needsAsIs = useMemo(
+    () => slipHasPhysicalLines(session.listingIds),
+    [session.listingIds],
+  );
 
   useEffect(() => {
     if (!stripeConfigured) {
@@ -132,6 +148,10 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
         setError("Use Stripe’s test card 4242 4242 4242 4242, or a documented decline card.");
         return;
       }
+      if (needsAsIs && !asIs) {
+        setError(AS_IS_REJECT);
+        return;
+      }
     }
 
     setBusy(action);
@@ -144,6 +164,7 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
           action,
           email,
           name,
+          asIs: asIs ? "1" : undefined,
         }),
       });
       const data = (await response.json()) as { url?: string; error?: string };
@@ -267,6 +288,20 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
           </div>
         </div>
       </fieldset>
+
+      {needsAsIs ? (
+        <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
+          <input
+            type="checkbox"
+            name="asIs"
+            value="1"
+            checked={asIs}
+            onChange={(event) => setAsIs(event.target.checked)}
+            className="mt-1 size-4 shrink-0 accent-foreground"
+          />
+          <span>{AS_IS_CHECK_LABEL}</span>
+        </label>
+      ) : null}
 
       {fieldError ? (
         <p role="alert" className="text-sm text-destructive">

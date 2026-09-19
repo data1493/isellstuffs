@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { AS_IS_STAMP, asIsOnSlip } from "@/lib/as-is";
 import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/checkout";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { isPhysicalListing, listingById } from "@/lib/commerce";
@@ -78,6 +79,9 @@ export default async function CheckoutSuccessPage({
               {session?.buyerEmail ? ` and filed a slip for ${session.buyerEmail}` : ""}.
               Nothing live moved. Stalls are owed their cut on paper.
             </p>
+            {asIsOnSlip(session) ? (
+              <p className="text-base leading-7 text-muted-foreground">{AS_IS_STAMP}</p>
+            ) : null}
           </div>
         </MallWidth>
       </section>

@@ -105,6 +105,7 @@ export function orderSlipFromSession(
     currency: session.currency,
     buyerEmail: session.buyerEmail,
     buyerName: session.buyerName,
+    asIs: session.asIs === true ? true : undefined,
     transfers: session.transfers.map((transfer) => ({ ...transfer })),
     paidAt,
   };

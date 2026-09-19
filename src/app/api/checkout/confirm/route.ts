@@ -2,6 +2,11 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import {
+  assertPhysicalAsIs,
+  readAsIsFlag,
+  stampAsIs,
+} from "@/lib/as-is";
+import {
   CHECKOUT_COOKIE,
   CHECKOUT_COOKIE_MAX_AGE,
   CheckoutError,
@@ -31,6 +36,7 @@ async function readBody(request: NextRequest): Promise<{
   action?: unknown;
   email?: unknown;
   name?: unknown;
+  asIs?: unknown;
   asForm: boolean;
 }> {
   const contentType = request.headers.get("content-type") ?? "";
@@ -44,6 +50,7 @@ async function readBody(request: NextRequest): Promise<{
       action: form.get("action"),
       email: form.get("email"),
       name: form.get("name"),
+      asIs: form.get("asIs"),
       asForm: true,
     };
   }
@@ -53,6 +60,7 @@ async function readBody(request: NextRequest): Promise<{
     action?: unknown;
     email?: unknown;
     name?: unknown;
+    asIs?: unknown;
   };
   return { ...body, asForm: false };
 }
@@ -117,11 +125,20 @@ export async function POST(request: NextRequest) {
       throw new CheckoutError("Enter a real-looking email for the receipt.");
     }
 
-    const next = {
-      ...session,
-      buyerEmail: email,
-      buyerName: name || undefined,
-    };
+    const asIs = readAsIsFlag(body.asIs);
+    assertPhysicalAsIs(session.listingIds, asIs);
+
+    const next = asIs
+      ? stampAsIs({
+          ...session,
+          buyerEmail: email,
+          buyerName: name || undefined,
+        })
+      : {
+          ...session,
+          buyerEmail: email,
+          buyerName: name || undefined,
+        };
 
     jar.set(CHECKOUT_COOKIE, serializeCheckoutSession(next), {
       httpOnly: true,

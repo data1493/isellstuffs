@@ -56,6 +56,8 @@ export type CheckoutSessionSummary = {
   currency: Money["currency"];
   buyerEmail?: string;
   buyerName?: string;
+  /** Physical slips only. Set when the buyer eats the condition at the register. */
+  asIs?: boolean;
   transfers: Array<{
     stallId: string;
     boothName: string;
@@ -207,6 +209,11 @@ export function parseCheckoutSession(
       !Array.isArray(parsed.listingIds)
     ) {
       return null;
+    }
+    if (parsed.asIs === true) {
+      parsed.asIs = true;
+    } else {
+      delete parsed.asIs;
     }
     return parsed as CheckoutSessionSummary;
   } catch {
