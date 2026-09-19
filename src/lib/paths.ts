@@ -1298,6 +1298,14 @@ export function listingHoneWritePath() {
   return "/listings/hone";
 }
 
+export function listingPicklePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pickle`;
+}
+
+export function listingPickleWritePath() {
+  return "/listings/pickle";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

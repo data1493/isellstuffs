@@ -573,6 +573,12 @@ import {
   subscribeGlaze,
 } from "@/lib/listing-glaze";
 import {
+  canTapePickle,
+  isListingPickleOverlay,
+  readPickleListingIds,
+  subscribePickle,
+} from "@/lib/listing-pickle";
+import {
   canTapePuck,
   isListingPuckOverlay,
   readPuckListingIds,
@@ -783,6 +789,7 @@ import {
   listingSergeWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
+  listingPickleWritePath,
   listingPuckWritePath,
   listingHoneWritePath,
   listingBevelWritePath,
@@ -984,6 +991,7 @@ export function DeskBoard({
   const [sergeIds, setSergeIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
+  const [pickleIds, setPickleIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -1117,6 +1125,7 @@ export function DeskBoard({
       setSergeIds(readSergeListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
+      setPickleIds(readPickleListingIds());
       setPuckIds(readPuckListingIds());
       setHoneIds(readHoneListingIds());
       setBevelIds(readBevelListingIds());
@@ -1239,6 +1248,7 @@ export function DeskBoard({
     const unsubSerge = subscribeSerge(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
+    const unsubPickle = subscribePickle(apply);
     const unsubPuck = subscribePuck(apply);
     const unsubHone = subscribeHone(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -1371,6 +1381,7 @@ export function DeskBoard({
       unsubSerge();
       unsubPeen();
       unsubGlaze();
+      unsubPickle();
       unsubPuck();
       unsubHone();
       unsubBevel();
@@ -2727,6 +2738,37 @@ export function DeskBoard({
                             {isListingGlazeOverlay(listing.id, glazeIds)
                               ? "Leave the chip"
                               : "I will not glaze it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePickle(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPickleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPickleOverlay(listing.id, pickleIds)
+                                ? "open"
+                                : "pickle"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPickleOverlay(listing.id, pickleIds)
+                              ? "Leave the craze"
+                              : "I will not pickle it"}
                           </button>
                         </form>
                       ) : null}
