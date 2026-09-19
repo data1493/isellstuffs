@@ -33,6 +33,7 @@ import {
   savedPath,
   searchPath,
   watchedPath,
+  wantedPath,
   sellDeskPath,
   sellDeskStallPath,
   stallPath,
@@ -395,6 +396,16 @@ export function watchedMetadata(): Metadata {
     description:
       "Booths marked on this browser. Same folding tables next weekend. Not the later pile. No account.",
     path: watchedPath(),
+    robots: noIndex,
+  });
+}
+
+export function wantedMetadata(): Metadata {
+  return shareMetadata({
+    title: "Hunt board",
+    description:
+      "Tape what you are looking for. A scrap on the cork in this browser. Not a listing. Not the later pile. Not a watched table.",
+    path: wantedPath(),
     robots: noIndex,
   });
 }

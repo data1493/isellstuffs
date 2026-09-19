@@ -24,6 +24,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
 | `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Scoop with **Bag the pile** (`POST /saved/bag`) into the existing tote. Not a second cart |
 | `/watched` | Watched tables. Mark a booth, not a SKU. Cookie `iss-watched-stall-ids` + `iss:watched-stall-ids`. Same folding tables next weekend. Not the later pile |
+| `/wanted` | Hunt board. Tape what you are looking for. Cookie `iss-wanted-hunts` + `iss:wanted-hunts`. A scrap on the cork — not a listing, not `/saved`, not `/watched` |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
@@ -76,6 +77,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Gift credit desk | http://127.0.0.1:44721/gift |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
 | Watched tables | http://127.0.0.1:44721/watched |
+| Hunt board | http://127.0.0.1:44721/wanted |
 | Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
 | Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |
@@ -168,7 +170,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/checkout/*`, `/saved`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/checkout/*`, `/saved`, `/watched`, `/wanted`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

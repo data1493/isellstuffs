@@ -151,6 +151,18 @@ export function savedPath() {
   return "/saved";
 }
 
+export function wantedPath() {
+  return "/wanted";
+}
+
+export function wantedTapePath() {
+  return "/wanted/tape";
+}
+
+export function wantedPeelPath() {
+  return "/wanted/peel";
+}
+
 export function savedBagPath() {
   return "/saved/bag";
 }
