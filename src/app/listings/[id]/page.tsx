@@ -6,6 +6,7 @@ import { ListingMissing } from "@/components/mall-missing";
 import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
+import { ListingVanNotice } from "@/components/listing-van-notice";
 import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
 import { PickupNote } from "@/components/pickup-note";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
@@ -32,6 +33,7 @@ import {
   listingOfferPath,
   listingPath,
   listingTagPath,
+  listingVanPath,
   stallPath,
 } from "@/lib/paths";
 import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
@@ -189,6 +191,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
               <ListingBuyBox listing={listing} />
 
+              {physical ? <ListingVanNotice listingId={listing.id} /> : null}
+
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
                   <Link
@@ -208,6 +212,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Look, don't bag
+                  </Link>
+                  <Link
+                    href={listingVanPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    More in the van
                   </Link>
                 </p>
               ) : null}

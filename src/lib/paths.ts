@@ -26,6 +26,14 @@ export function listingLookWritePath() {
   return "/listings/look";
 }
 
+export function listingVanPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/van`;
+}
+
+export function listingVanWritePath() {
+  return "/listings/van";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
