@@ -64,6 +64,7 @@ import { ListingRipNotice } from "@/components/listing-rip-notice";
 import { ListingCardsNotice } from "@/components/listing-cards-notice";
 import { ListingZipNotice } from "@/components/listing-zip-notice";
 import { ListingWhoseNotice } from "@/components/listing-whose-notice";
+import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -149,6 +150,7 @@ import {
   listingCardsPath,
   listingZipPath,
   listingWhosePath,
+  listingTypesetPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -337,6 +339,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingGradeNotice listingId={listing.id} /> : null}
               {!physical ? (
                 <ListingWorkbookNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingTypesetNotice listingId={listing.id} />
               ) : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
@@ -719,6 +724,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     There is no workbook
+                  </Link>
+                  <Link
+                    href={listingTypesetPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not typeset
                   </Link>
                   <Link
                     href={listingStemsPath(listing.id)}

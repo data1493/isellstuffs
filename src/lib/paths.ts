@@ -514,6 +514,14 @@ export function listingWhoseWritePath() {
   return "/listings/whose";
 }
 
+export function listingTypesetPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/typeset`;
+}
+
+export function listingTypesetWritePath() {
+  return "/listings/typeset";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

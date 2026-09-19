@@ -75,11 +75,18 @@ import {
   subscribeWhose,
 } from "@/lib/listing-whose";
 import {
+  canTapeTypeset,
+  isListingTypesetOverlay,
+  readTypesetListingIds,
+  subscribeTypeset,
+} from "@/lib/listing-typeset";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingPhoneWritePath,
   listingRipWritePath,
   listingShotWritePath,
+  listingTypesetWritePath,
   listingZipWritePath,
   listingWhoseWritePath,
   listingPath,
@@ -148,6 +155,7 @@ export function DeskBoard({
   const [zipIds, setZipIds] = useState<string[]>([]);
   const [shotIds, setShotIds] = useState<string[]>([]);
   const [whoseIds, setWhoseIds] = useState<string[]>([]);
+  const [typesetIds, setTypesetIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -173,6 +181,7 @@ export function DeskBoard({
       setZipIds(readZipListingIds());
       setShotIds(readShotListingIds());
       setWhoseIds(readWhoseListingIds());
+      setTypesetIds(readTypesetListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -187,6 +196,7 @@ export function DeskBoard({
     const unsubZip = subscribeZip(apply);
     const unsubShot = subscribeShot(apply);
     const unsubWhose = subscribeWhose(apply);
+    const unsubTypeset = subscribeTypeset(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -211,6 +221,7 @@ export function DeskBoard({
       unsubZip();
       unsubShot();
       unsubWhose();
+      unsubTypeset();
     };
   }, [listings, stall.id]);
 
@@ -578,6 +589,37 @@ export function DeskBoard({
                             {isListingWhoseOverlay(listing.id, whoseIds)
                               ? "Leave the mug"
                               : "I will not say whose"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTypeset(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTypesetWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTypesetOverlay(listing.id, typesetIds)
+                                ? "open"
+                                : "typeset"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTypesetOverlay(listing.id, typesetIds)
+                              ? "Leave the page"
+                              : "I will not typeset"}
                           </button>
                         </form>
                       ) : null}
