@@ -35,6 +35,7 @@ import { ListingNeedleNotice } from "@/components/listing-needle-notice";
 import { ListingBookNotice } from "@/components/listing-book-notice";
 import { ListingHissNotice } from "@/components/listing-hiss-notice";
 import { ListingToeNotice } from "@/components/listing-toe-notice";
+import { ListingKeyNotice } from "@/components/listing-key-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -91,6 +92,7 @@ import {
   listingBookPath,
   listingHissPath,
   listingToePath,
+  listingKeyPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -285,6 +287,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBookNotice listingId={listing.id} /> : null}
               {physical ? <ListingHissNotice listingId={listing.id} /> : null}
               {physical ? <ListingToeNotice listingId={listing.id} /> : null}
+              {physical ? <ListingKeyNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -485,6 +488,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The peel stays
+                  </Link>
+                  <Link
+                    href={listingKeyPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The key walked
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

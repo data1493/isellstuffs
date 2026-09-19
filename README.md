@@ -109,6 +109,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | The booklet walked | http://127.0.0.1:44721/listings/ysk-burned-cdr/book |
 | The hiss stays | http://127.0.0.1:44721/listings/mdb-mixtape-93/hiss |
 | The peel stays | http://127.0.0.1:44721/listings/clo-split-soles/toe |
+| The key walked | http://127.0.0.1:44721/listings/mdb-jewel-stack/key |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | Scan the liner | http://127.0.0.1:44721/listings/mdb-mixtape-93/scan |
@@ -221,6 +222,8 @@ Physical listings can tape a missing booklet at `/listings/[id]/book`. Native `P
 Physical listings can tape cassette hiss at `/listings/[id]/hiss`. Native `POST /listings/hiss` (form: `listingId`, `intent=hiss|open`) writes `iss:hiss-listing-ids` / cookie `iss-hiss-listing-ids`. The hiss stays. That's the cassette. Skip is the LP scratch. Plays is I spun the Sharpie disc. This is the mixtape hiss. Still tote. Not skip. Not a play count. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the mixtape. Skip stays the chorus.
 
 Physical listings can tape a peeled sole at `/listings/[id]/toe`. Native `POST /listings/toe` (form: `listingId`, `intent=toe|open`) writes `iss:toe-listing-ids` / cookie `iss-toe-listing-ids`. The peel stays. The sole already peeled. Laces is the pair that stayed home. This is the sneaker peel. Still tote. Not laces. Not `/offer/peel`. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the Closet sneakers. Laces stays the pair that stayed home.
+
+Physical listings can tape a missing cabinet key at `/listings/[id]/key`. Native `POST /listings/key` (form: `listingId`, `intent=key|open`) writes `iss:key-listing-ids` / cookie `iss-key-listing-ids`. The key walked. The key is not in the box. Remote is the clicker. Strap is the bag strap. This is the cabinet key that walked. Still tote. Not remote. Not lost. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the jewel-case stack. Remote stays the living-room clicker. Strap stays the bag strap.
 
 Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /listings/van` (form: `listingId`, `intent=van|table`) writes `iss:van-listing-ids` / cookie `iss-van-listing-ids`. More out back. Ask. Still baggable — `status` and `cartEligible` stay put. Gift cards and PDFs are refused. Garage is home. Look is not for sale. Not a sold sticker.
 

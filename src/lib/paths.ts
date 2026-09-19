@@ -282,6 +282,14 @@ export function listingStemsWritePath() {
   return "/listings/stems";
 }
 
+export function listingKeyPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/key`;
+}
+
+export function listingKeyWritePath() {
+  return "/listings/key";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
