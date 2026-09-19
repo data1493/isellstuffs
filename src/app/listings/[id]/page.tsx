@@ -82,6 +82,7 @@ import { ListingMinsNotice } from "@/components/listing-mins-notice";
 import { ListingPolishNotice } from "@/components/listing-polish-notice";
 import { ListingInsideNotice } from "@/components/listing-inside-notice";
 import { ListingTinesNotice } from "@/components/listing-tines-notice";
+import { ListingRustNotice } from "@/components/listing-rust-notice";
 import { ListingCapNotice } from "@/components/listing-cap-notice";
 import { ListingSaucerNotice } from "@/components/listing-saucer-notice";
 import { ListingLedNotice } from "@/components/listing-led-notice";
@@ -200,6 +201,7 @@ import {
   listingPolishPath,
   listingInsidePath,
   listingTinesPath,
+  listingRustPath,
   listingCapPath,
   listingSaucerPath,
   listingLedPath,
@@ -471,6 +473,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBakeNotice listingId={listing.id} /> : null}
               {physical ? <ListingInsideNotice listingId={listing.id} /> : null}
               {physical ? <ListingTinesNotice listingId={listing.id} /> : null}
+              {physical ? <ListingRustNotice listingId={listing.id} /> : null}
               {physical ? <ListingCapNotice listingId={listing.id} /> : null}
               {physical ? <ListingSaucerNotice listingId={listing.id} /> : null}
               {physical ? <ListingLedNotice listingId={listing.id} /> : null}
@@ -857,6 +860,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not replace a tine
+                  </Link>
+                  <Link
+                    href={listingRustPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The rust stays
                   </Link>
                   <Link
                     href={listingCapPath(listing.id)}

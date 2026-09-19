@@ -650,6 +650,14 @@ export function listingTinesWritePath() {
   return "/listings/tines";
 }
 
+export function listingRustPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rust`;
+}
+
+export function listingRustWritePath() {
+  return "/listings/rust";
+}
+
 export function listingCapPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/cap`;
 }

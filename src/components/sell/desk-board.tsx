@@ -189,6 +189,12 @@ import {
   subscribeTines,
 } from "@/lib/listing-tines";
 import {
+  canTapeRust,
+  isListingRustOverlay,
+  readRustListingIds,
+  subscribeRust,
+} from "@/lib/listing-rust";
+import {
   canTapeCap,
   isListingCapOverlay,
   readCapListingIds,
@@ -284,6 +290,7 @@ import {
   listingGumWritePath,
   listingInsideWritePath,
   listingTinesWritePath,
+  listingRustWritePath,
   listingCapWritePath,
   listingSaucerWritePath,
   listingLedWritePath,
@@ -399,6 +406,7 @@ export function DeskBoard({
   const [gumIds, setGumIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
+  const [rustIds, setRustIds] = useState<string[]>([]);
   const [capIds, setCapIds] = useState<string[]>([]);
   const [saucerIds, setSaucerIds] = useState<string[]>([]);
   const [ledIds, setLedIds] = useState<string[]>([]);
@@ -457,6 +465,7 @@ export function DeskBoard({
       setGumIds(readGumListingIds());
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
+      setRustIds(readRustListingIds());
       setCapIds(readCapListingIds());
       setSaucerIds(readSaucerListingIds());
       setLedIds(readLedListingIds());
@@ -504,6 +513,7 @@ export function DeskBoard({
     const unsubGum = subscribeGum(apply);
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
+    const unsubRust = subscribeRust(apply);
     const unsubCap = subscribeCap(apply);
     const unsubSaucer = subscribeSaucer(apply);
     const unsubLed = subscribeLed(apply);
@@ -561,6 +571,7 @@ export function DeskBoard({
       unsubGum();
       unsubInside();
       unsubTines();
+      unsubRust();
       unsubCap();
       unsubSaucer();
       unsubLed();
@@ -1964,6 +1975,37 @@ export function DeskBoard({
                             {isListingGumOverlay(listing.id, gumIds)
                               ? "Leave the residue"
                               : "The stickers stay"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRust(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRustWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRustOverlay(listing.id, rustIds)
+                                ? "open"
+                                : "rust"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRustOverlay(listing.id, rustIds)
+                              ? "Leave the wires"
+                              : "The rust stays"}
                           </button>
                         </form>
                       ) : null}
