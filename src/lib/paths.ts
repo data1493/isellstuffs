@@ -762,6 +762,14 @@ export function listingSaucerWritePath() {
   return "/listings/saucer";
 }
 
+export function listingGumPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gum`;
+}
+
+export function listingGumWritePath() {
+  return "/listings/gum";
+}
+
 export function listingBalancePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/balance`;
 }

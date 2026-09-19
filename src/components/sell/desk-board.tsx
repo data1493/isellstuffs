@@ -267,6 +267,12 @@ import {
   subscribeIcons,
 } from "@/lib/listing-icons";
 import {
+  canTapeGum,
+  isListingGumOverlay,
+  readGumListingIds,
+  subscribeGum,
+} from "@/lib/listing-gum";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingMinsWritePath,
@@ -275,6 +281,7 @@ import {
   listingGlassWritePath,
   listingPolishWritePath,
   listingTrayWritePath,
+  listingGumWritePath,
   listingInsideWritePath,
   listingTinesWritePath,
   listingCapWritePath,
@@ -389,6 +396,7 @@ export function DeskBoard({
   const [minsIds, setMinsIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
   const [trayIds, setTrayIds] = useState<string[]>([]);
+  const [gumIds, setGumIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
   const [capIds, setCapIds] = useState<string[]>([]);
@@ -446,6 +454,7 @@ export function DeskBoard({
       setMinsIds(readMinsListingIds());
       setPolishIds(readPolishListingIds());
       setTrayIds(readTrayListingIds());
+      setGumIds(readGumListingIds());
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
       setCapIds(readCapListingIds());
@@ -492,6 +501,7 @@ export function DeskBoard({
     const unsubMins = subscribeMins(apply);
     const unsubPolish = subscribePolish(apply);
     const unsubTray = subscribeTray(apply);
+    const unsubGum = subscribeGum(apply);
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
     const unsubCap = subscribeCap(apply);
@@ -548,6 +558,7 @@ export function DeskBoard({
       unsubMins();
       unsubPolish();
       unsubTray();
+      unsubGum();
       unsubInside();
       unsubTines();
       unsubCap();
@@ -1922,6 +1933,37 @@ export function DeskBoard({
                             {isListingTinesOverlay(listing.id, tinesIds)
                               ? "Leave the splay"
                               : "I will not replace a tine"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGum(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGumWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGumOverlay(listing.id, gumIds)
+                                ? "open"
+                                : "gum"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGumOverlay(listing.id, gumIds)
+                              ? "Leave the residue"
+                              : "The stickers stay"}
                           </button>
                         </form>
                       ) : null}
