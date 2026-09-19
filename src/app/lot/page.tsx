@@ -14,6 +14,12 @@ import {
   parseBackSoon,
 } from "@/lib/back-soon";
 import {
+  BOOTH_COVER_COOKIE_NAME,
+  BOOTH_COVER_MIRROR_SCRIPT,
+  coverSitterFor,
+  parseBoothCover,
+} from "@/lib/booth-cover";
+import {
   MOVED_SPOT_COOKIE_NAME,
   MOVED_SPOT_MIRROR_SCRIPT,
   parseMovedSpot,
@@ -32,6 +38,7 @@ export default async function LotPage() {
   const rows = lotBoard(jar.get(PACKED_COOKIE_NAME)?.value);
   const lunchMap = parseBackSoon(jar.get(BACK_SOON_COOKIE_NAME)?.value);
   const spotMap = parseMovedSpot(jar.get(MOVED_SPOT_COOKIE_NAME)?.value);
+  const coverMap = parseBoothCover(jar.get(BOOTH_COVER_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -41,6 +48,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: PACKED_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BACK_SOON_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: MOVED_SPOT_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_COVER_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -51,6 +59,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: PACKED_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BACK_SOON_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: MOVED_SPOT_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_COVER_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -112,6 +121,7 @@ export default async function LotPage() {
                     row={row}
                     lunchNote={lunchMap[row.stall.id]?.note}
                     spotNote={spotMap[row.stall.id]?.note}
+                    sitterName={coverSitterFor(row.stall.id, coverMap)?.boothName}
                   />
                 </li>
               ))}
@@ -138,6 +148,7 @@ export default async function LotPage() {
                     row={row}
                     lunchNote={lunchMap[row.stall.id]?.note}
                     spotNote={spotMap[row.stall.id]?.note}
+                    sitterName={coverSitterFor(row.stall.id, coverMap)?.boothName}
                   />
                 </li>
               ))}

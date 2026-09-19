@@ -38,6 +38,12 @@ import {
   parseBackSoon,
 } from "@/lib/back-soon";
 import {
+  BOOTH_COVER_COOKIE_NAME,
+  BOOTH_COVER_PAPER_LINE,
+  coverSitterFor,
+  parseBoothCover,
+} from "@/lib/booth-cover";
+import {
   MOVED_SPOT_COOKIE_NAME,
   MOVED_SPOT_PAPER_LINE,
   movedSpotFor,
@@ -47,6 +53,7 @@ import { isStallPacked } from "@/lib/packed-stall";
 import {
   lotPath,
   stallBackPath,
+  stallCoverPath,
   stallPath,
   stallScrapPath,
   stallSpotPath,
@@ -105,6 +112,10 @@ export default async function StallPage({
   const gravel = movedSpotFor(
     stall.id,
     parseMovedSpot(jar.get(MOVED_SPOT_COOKIE_NAME)?.value),
+  );
+  const sitter = coverSitterFor(
+    stall.id,
+    parseBoothCover(jar.get(BOOTH_COVER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -180,6 +191,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {sitter ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Neighbor is sitting"
+              title="Covered."
+              body={
+                <p data-booth-cover-sitter={stall.id}>
+                  {sitter.boothName} {BOOTH_COVER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -196,6 +222,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Moved two spots
+          </Link>
+
+          <Link
+            href={stallCoverPath(stall.slug)}
+            data-booth-cover-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Neighbor is sitting
           </Link>
 
           <Link

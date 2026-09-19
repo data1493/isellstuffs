@@ -96,6 +96,14 @@ export function stallSpotWritePath() {
   return "/stalls/spot";
 }
 
+export function stallCoverPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/cover`;
+}
+
+export function stallCoverWritePath() {
+  return "/stalls/cover";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

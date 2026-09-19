@@ -22,10 +22,12 @@ export function LotBoothCard({
   row,
   lunchNote,
   spotNote,
+  sitterName,
 }: {
   row: LotBooth;
   lunchNote?: string;
   spotNote?: string;
+  sitterName?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -77,6 +79,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Moved two spots. {spotNote}
+            </p>
+          ) : null}
+          {sitterName ? (
+            <p
+              data-booth-cover-sitter={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Neighbor is sitting. {sitterName}
             </p>
           ) : null}
           {packed ? (
