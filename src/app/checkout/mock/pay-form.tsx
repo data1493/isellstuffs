@@ -159,11 +159,10 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
   return (
     <form
       className="space-y-6"
-      onSubmit={(event) => {
-        event.preventDefault();
-        void submit("pay");
-      }}
+      action="/api/checkout/confirm"
+      method="post"
     >
+      <input type="hidden" name="sessionId" value={session.id} />
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
         <p>
           {stripeReady === "ready"
@@ -278,6 +277,8 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button
           type="submit"
+          name="action"
+          value="pay"
           size="lg"
           className="rounded-full sm:flex-1"
           disabled={busy !== null || stripeReady === "loading"}
@@ -285,12 +286,13 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
           {busy === "pay" ? "Taking the slip…" : `Pay ${total}`}
         </Button>
         <Button
-          type="button"
+          type="submit"
+          name="action"
+          value="cancel"
           size="lg"
           variant="outline"
           className="rounded-full"
           disabled={busy !== null}
-          onClick={() => void submit("cancel")}
         >
           {busy === "cancel" ? "Leaving…" : "Cancel"}
         </Button>

@@ -13,14 +13,78 @@ function isEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = (await request.json()) as {
-      sessionId?: unknown;
-      action?: unknown;
-      email?: unknown;
-      name?: unknown;
+function requestOrigin(request: NextRequest): string {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  if (forwardedHost) {
+    return `${forwardedProto ?? "http"}://${forwardedHost}`;
+  }
+  const origin = request.headers.get("origin");
+  if (origin) {
+    return origin;
+  }
+  return request.nextUrl.origin;
+}
+
+async function readBody(request: NextRequest): Promise<{
+  sessionId?: unknown;
+  action?: unknown;
+  email?: unknown;
+  name?: unknown;
+  asForm: boolean;
+}> {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (
+    contentType.includes("application/x-www-form-urlencoded") ||
+    contentType.includes("multipart/form-data")
+  ) {
+    const form = await request.formData();
+    return {
+      sessionId: form.get("sessionId"),
+      action: form.get("action"),
+      email: form.get("email"),
+      name: form.get("name"),
+      asForm: true,
     };
+  }
+
+  const body = (await request.json()) as {
+    sessionId?: unknown;
+    action?: unknown;
+    email?: unknown;
+    name?: unknown;
+  };
+  return { ...body, asForm: false };
+}
+
+function reply(
+  asForm: boolean,
+  origin: string,
+  payload: { url?: string; error?: string },
+  status = 200,
+) {
+  if (asForm) {
+    const target = payload.url
+      ? new URL(payload.url, origin)
+      : new URL("/checkout/mock", origin);
+    if (payload.error) {
+      target.searchParams.set("error", payload.error);
+    }
+    return NextResponse.redirect(target, 303);
+  }
+  return NextResponse.json(
+    payload.url ? { url: payload.url } : { error: payload.error },
+    { status },
+  );
+}
+
+export async function POST(request: NextRequest) {
+  const origin = requestOrigin(request);
+  let asForm = false;
+
+  try {
+    const body = await readBody(request);
+    asForm = body.asForm;
 
     const action = body.action;
     if (action !== "pay" && action !== "cancel") {
@@ -33,12 +97,16 @@ export async function POST(request: NextRequest) {
       throw new CheckoutError("This checkout expired. Start again from the tote.");
     }
 
-    if (typeof body.sessionId === "string" && body.sessionId !== session.id) {
+    if (
+      typeof body.sessionId === "string" &&
+      body.sessionId.length > 0 &&
+      body.sessionId !== session.id
+    ) {
       throw new CheckoutError("This checkout slip does not match.");
     }
 
     if (action === "cancel") {
-      return NextResponse.json({
+      return reply(asForm, origin, {
         url: `/checkout/cancel?session_id=${encodeURIComponent(session.id)}`,
       });
     }
@@ -62,13 +130,13 @@ export async function POST(request: NextRequest) {
       maxAge: CHECKOUT_COOKIE_MAX_AGE,
     });
 
-    return NextResponse.json({
+    return reply(asForm, origin, {
       url: `/checkout/success?session_id=${encodeURIComponent(session.id)}`,
     });
   } catch (error) {
     if (error instanceof CheckoutError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
+      return reply(asForm, origin, { error: error.message }, error.status);
     }
-    return NextResponse.json({ error: "Could not finish checkout." }, { status: 502 });
+    return reply(asForm, origin, { error: "Could not finish checkout." }, 502);
   }
 }
