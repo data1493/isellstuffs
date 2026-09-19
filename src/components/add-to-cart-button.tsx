@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import { buttonVariants } from "@/components/ui/button";
-import { CART_COOKIE_NAME, CART_STORAGE_KEY, parseCartListingIds } from "@/lib/cart";
+import { CART_COOKIE_NAME, CART_MIRROR_SCRIPT, parseCartListingIds } from "@/lib/cart";
 import { isCartEligible, listingById } from "@/lib/commerce";
 import {
   addToCartLabel,
@@ -11,8 +11,6 @@ import {
 } from "@/lib/listing-display";
 import { listingPath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
-
-const syncScript = `try{var m=document.cookie.match(/(?:^|; )${CART_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(CART_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}`;
 
 export async function AddToCartButton({
   listingId,
@@ -60,7 +58,7 @@ export async function AddToCartButton({
       method="post"
       className={cn("space-y-2", compact && "min-w-0 flex-1")}
     >
-      <script dangerouslySetInnerHTML={{ __html: syncScript }} />
+      <script dangerouslySetInnerHTML={{ __html: CART_MIRROR_SCRIPT }} />
       <input type="hidden" name="listingId" value={listing.id} />
       <input
         type="hidden"

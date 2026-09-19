@@ -27,28 +27,81 @@ function canUseStorage() {
   return typeof window !== "undefined";
 }
 
+function sameListingIds(left: readonly string[], right: readonly string[]) {
+  return (
+    left.length === right.length && left.every((id, index) => id === right[index])
+  );
+}
+
+function mergeListingIds(
+  ...groups: readonly (readonly string[])[]
+): string[] {
+  const seen = new Set<string>();
+  const merged: string[] = [];
+  for (const group of groups) {
+    for (const id of group) {
+      if (seen.has(id)) {
+        continue;
+      }
+      seen.add(id);
+      merged.push(id);
+    }
+  }
+  return merged.length === 0 ? emptyIds : merged;
+}
+
+function decodeCartRaw(raw: string): string {
+  let value = raw;
+  try {
+    value = decodeURIComponent(raw);
+  } catch {
+    value = raw;
+  }
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    try {
+      const unquoted = JSON.parse(value);
+      if (typeof unquoted === "string") {
+        return unquoted;
+      }
+    } catch {
+      // keep the decoded value
+    }
+  }
+  return value;
+}
+
 export function parseCartListingIds(raw: string | null | undefined): string[] {
   if (!raw) {
     return emptyIds;
   }
 
-  try {
-    let value = raw;
+  const candidates = [raw, decodeCartRaw(raw)];
+  for (const value of candidates) {
     try {
-      value = decodeURIComponent(raw);
+      const parsed: unknown = JSON.parse(value);
+      if (!Array.isArray(parsed)) {
+        continue;
+      }
+      const ids = parsed.filter((id): id is string => typeof id === "string");
+      if (ids.length > 0) {
+        return ids;
+      }
     } catch {
-      value = raw;
+      // try the next encoding
     }
-    const parsed: unknown = JSON.parse(value);
-    if (!Array.isArray(parsed)) {
-      return emptyIds;
-    }
-    const ids = parsed.filter((id): id is string => typeof id === "string");
-    return ids.length === 0 ? emptyIds : ids;
-  } catch {
-    return emptyIds;
   }
+  return emptyIds;
 }
+
+/** Raw JSON the bag POST and the client cookie share. Next encodes Set-Cookie. */
+export function cartCookieValue(listingIds: readonly string[]): string {
+  return JSON.stringify(listingIds);
+}
+
+export const CART_MIRROR_SCRIPT = `try{var m=document.cookie.match(/(?:^|; )${CART_COOKIE_NAME}=([^;]*)/);if(m){var v=decodeURIComponent(m[1]);if(Array.isArray(JSON.parse(v))){localStorage.setItem(${JSON.stringify(CART_STORAGE_KEY)},v);window.dispatchEvent(new Event(${JSON.stringify(CART_CHANGED_EVENT)}));}}}catch(e){}`;
 
 function readCookieRaw(): string | null {
   if (!canUseStorage()) {
@@ -60,46 +113,25 @@ function readCookieRaw(): string | null {
   return hit ? hit.slice(prefix.length) : null;
 }
 
-function snapshotFromRaw(raw: string | null) {
-  if (raw === cachedRaw) {
-    return cachedIds;
-  }
-  cachedRaw = raw;
-  cachedIds = parseCartListingIds(raw);
-  return cachedIds;
-}
-
 export function readCartListingIds(): string[] {
   if (!canUseStorage()) {
     return emptyIds;
   }
-  const fromStorage = window.localStorage.getItem(CART_STORAGE_KEY);
-  if (fromStorage) {
-    const stored = snapshotFromRaw(fromStorage);
-    if (stored.length > 0) {
-      return stored;
-    }
-  }
-  const fromCookie = readCookieRaw();
-  if (fromCookie) {
-    const ids = snapshotFromRaw(fromCookie);
-    if (ids.length > 0) {
-      try {
-        window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(ids));
-      } catch {
-        // blocked storage
-      }
-      return ids;
-    }
-  }
-  return snapshotFromRaw(fromStorage ?? null);
+  const fromStorage = parseCartListingIds(
+    window.localStorage.getItem(CART_STORAGE_KEY),
+  );
+  const fromCookie = parseCartListingIds(readCookieRaw());
+  const merged = mergeListingIds(fromStorage, fromCookie);
+  cachedRaw = cartCookieValue(merged);
+  cachedIds = merged;
+  return merged;
 }
 
 export function writeCartListingIds(listingIds: string[]) {
   if (!canUseStorage()) {
     return;
   }
-  const raw = JSON.stringify(listingIds);
+  const raw = cartCookieValue(listingIds);
   try {
     window.localStorage.setItem(CART_STORAGE_KEY, raw);
   } catch {
@@ -113,6 +145,25 @@ export function writeCartListingIds(listingIds: string[]) {
   cachedRaw = raw;
   cachedIds = listingIds.length === 0 ? emptyIds : listingIds;
   window.dispatchEvent(new Event(CART_CHANGED_EVENT));
+}
+
+/**
+ * Mirror the server bag (cookie parsed by `cookies()`) into the client store.
+ * POST /listings/bag writes the cookie; /cart must not stay empty when that
+ * cookie already lists the SKU.
+ */
+export function seedCartListingIds(listingIds: readonly string[] = emptyIds) {
+  if (!canUseStorage()) {
+    return;
+  }
+  const current = readCartListingIds();
+  const merged = mergeListingIds(current, listingIds);
+  const stored = parseCartListingIds(window.localStorage.getItem(CART_STORAGE_KEY));
+  const cookied = parseCartListingIds(readCookieRaw());
+  if (sameListingIds(merged, stored) && sameListingIds(merged, cookied)) {
+    return;
+  }
+  writeCartListingIds(merged);
 }
 
 export function isListingInCart(

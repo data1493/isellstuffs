@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { CartView } from "@/app/cart/cart-view";
-import { CART_COOKIE_NAME, CART_STORAGE_KEY, parseCartListingIds } from "@/lib/cart";
+import { CART_COOKIE_NAME, CART_MIRROR_SCRIPT, parseCartListingIds } from "@/lib/cart";
 import { cartMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = cartMetadata();
-
-const syncScript = `try{var m=document.cookie.match(/(?:^|; )${CART_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(CART_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}`;
 
 export default async function CartPage({
   searchParams,
@@ -23,7 +21,7 @@ export default async function CartPage({
 
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: syncScript }} />
+      <script dangerouslySetInnerHTML={{ __html: CART_MIRROR_SCRIPT }} />
       <CartView initialAdd={add} initialListingIds={initialListingIds} />
     </>
   );

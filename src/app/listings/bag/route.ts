@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   addListingIdToCart,
   CART_COOKIE_NAME,
+  cartCookieValue,
   parseCartListingIds,
 } from "@/lib/cart";
 
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
   if (result.ok) {
     response.cookies.set({
       name: CART_COOKIE_NAME,
-      value: JSON.stringify(result.listingIds),
+      value: cartCookieValue(result.listingIds),
       path: "/",
       sameSite: "lax",
       httpOnly: false,
