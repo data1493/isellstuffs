@@ -71,9 +71,9 @@ export default async function ExplorePage({
           with rules.
         </p>
 
-        <div className="mt-8 space-y-4 rounded-2xl border border-border bg-card px-4 py-4 sm:px-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="w-12 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+        <div className="mt-8 space-y-4 rounded-2xl border border-border bg-card px-3 py-4 sm:px-5">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="w-12 shrink-0 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Hub
             </span>
             <FilterChip href={exploreHref({ type })} active={!hubId}>
@@ -89,8 +89,8 @@ export default async function ExplorePage({
               </FilterChip>
             ))}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="w-12 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="w-12 shrink-0 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Kind
             </span>
             <FilterChip href={exploreHref({ hubId })} active={!type}>

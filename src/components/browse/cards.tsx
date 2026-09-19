@@ -108,7 +108,7 @@ export function ListingGrid({ listings }: { listings: Listing[] }) {
   return (
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {listings.map((listing) => (
-        <li key={listing.id}>
+        <li key={listing.id} className="min-w-0">
           <ListingCard listing={listing} />
         </li>
       ))}
@@ -126,8 +126,8 @@ export function HubTile({
   const atmosphere = hubAtmosphere[hub.id];
 
   return (
-    <Link href={hub.href} className="group block h-full">
-      <Card className="h-full gap-0 overflow-hidden py-0 ring-1 ring-foreground/10 transition-colors group-hover:bg-secondary/30">
+    <Link href={hub.href} className="group block h-full min-w-0">
+      <Card className="h-full min-w-0 gap-0 overflow-hidden py-0 ring-1 ring-foreground/10 transition-colors group-hover:bg-secondary/30">
         <div className={cn("px-5 py-4", atmosphere.wash)}>
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-foreground/60">
             {atmosphere.floor}

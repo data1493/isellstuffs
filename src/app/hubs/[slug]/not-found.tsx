@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { MallNotice } from "@/components/mall-notice";
 import { Button } from "@/components/ui/button";
 import { mallHubs } from "@/lib/commerce";
 import { missingHubMetadata } from "@/lib/seo";
@@ -9,19 +10,13 @@ export const metadata: Metadata = missingHubMetadata();
 
 export default function HubNotFound() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-      <div className="rounded-2xl border border-dashed border-border bg-[oklch(0.97_0.015_85)] px-5 py-14 text-center sm:px-8">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Not on the map
-        </p>
-        <h1 className="mt-3 font-heading text-3xl tracking-tight text-balance sm:text-4xl">
-          That aisle is not in this mall.
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground text-pretty">
-          No artisan-home wing. No junk drawer. The floors are Yard Sale,
-          Closet Overflow, Garage Tech, and Download Stall.
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+    <MallNotice
+      tone="missing"
+      eyebrow="Not on the map"
+      title="That aisle is not in this mall."
+      body="No artisan-home wing. No junk drawer. The floors are Yard Sale, Closet Overflow, Garage Tech, and Download Stall."
+      actions={
+        <>
           <Button className="rounded-full px-5" render={<Link href="/hubs" />}>
             See the hubs
           </Button>
@@ -32,20 +27,21 @@ export default function HubNotFound() {
           >
             Explore the concourse
           </Button>
-        </div>
-        <ul className="mt-8 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
-          {mallHubs.map((hub) => (
-            <li key={hub.id}>
-              <Link
-                href={hub.href}
-                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                {hub.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+        </>
+      }
+    >
+      <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-center text-sm">
+        {mallHubs.map((hub) => (
+          <li key={hub.id}>
+            <Link
+              href={hub.href}
+              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              {hub.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </MallNotice>
   );
 }

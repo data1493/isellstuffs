@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 
 import { PayForm } from "@/app/checkout/mock/pay-form";
+import { MallNotice } from "@/components/mall-notice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,21 +40,26 @@ export default async function MockCheckoutPage({
 
   if (!match) {
     return (
-      <div className="mx-auto flex w-full max-w-xl flex-col gap-6 px-4 py-16 sm:px-6">
-        <Badge variant="outline" className="w-fit rounded-full">
-          Expired slip
-        </Badge>
-        <h1 className="font-heading text-4xl tracking-tight">
-          This checkout went cold.
-        </h1>
-        <p className="leading-7 text-muted-foreground">
-          Start again from the tote. Nothing was charged. You do not need a
-          Stripe secret to pay in test mode.
-        </p>
-        <Button className="w-fit rounded-full" render={<Link href="/cart" />}>
-          Back to tote
-        </Button>
-      </div>
+      <MallNotice
+        tone="cancel"
+        eyebrow="Expired slip"
+        title="This checkout went cold."
+        body="Start again from the tote. Nothing was charged. You do not need a Stripe secret to pay in test mode."
+        actions={
+          <>
+            <Button className="rounded-full px-5" render={<Link href="/cart" />}>
+              Back to tote
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-full px-5"
+              render={<Link href="/" />}
+            >
+              Concourse
+            </Button>
+          </>
+        }
+      />
     );
   }
 

@@ -3,16 +3,16 @@
 import { BrowseError } from "@/components/browse/states";
 
 export default function HubsError({
-  retry,
+  reset,
 }: {
   error: Error & { digest?: string };
-  retry: () => void;
+  reset: () => void;
 }) {
   return (
     <BrowseError
       title="This aisle went dark."
       body="The hub did not load. Try again, or walk back to the concourse and pick another floor."
-      onRetry={retry}
+      onRetry={reset}
     />
   );
 }

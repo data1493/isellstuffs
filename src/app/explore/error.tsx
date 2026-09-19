@@ -4,10 +4,10 @@ import { BrowseError } from "@/components/browse/states";
 
 export default function ExploreError({
   error,
-  retry,
+  reset,
 }: {
   error: Error & { digest?: string };
-  retry: () => void;
+  reset: () => void;
 }) {
   return (
     <BrowseError
@@ -17,7 +17,7 @@ export default function ExploreError({
           ? "We could not load the floor. Try again, or pick a hub and walk an aisle."
           : "This aisle did not load. Try again, or walk back to the homepage."
       }
-      onRetry={retry}
+      onRetry={reset}
     />
   );
 }

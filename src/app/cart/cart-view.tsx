@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { useCart } from "@/hooks/use-cart";
+import { MallLoading, MallPayError } from "@/components/mall-notice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -150,16 +151,20 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
     }
   }
 
+  const bagEmpty = payable.length === 0 && gone.length === 0;
+
   if (!mounted) {
-    return (
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <p className="text-sm text-muted-foreground">Pulling your tote off the hook…</p>
-      </div>
-    );
+    return <MallLoading label="Pulling your tote off the hook…" />;
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 pb-28 sm:px-6 sm:py-14 lg:pb-14">
+    <div
+      className={
+        bagEmpty
+          ? "mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 sm:px-6 sm:py-14"
+          : "mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 pb-28 sm:px-6 sm:py-14 lg:pb-14"
+      }
+    >
       <header className="max-w-2xl space-y-4">
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="rounded-full">
@@ -181,53 +186,46 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
         </p>
       </header>
 
-      {error ? (
-        <p
-          role="alert"
-          className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-        >
-          {error}
-        </p>
-      ) : null}
+      {error ? <MallPayError body={error} /> : null}
 
+      {bagEmpty ? (
+        <div className="rounded-2xl border border-dashed border-border bg-[oklch(0.97_0.015_85)] px-5 py-12 text-center sm:px-8 sm:py-14">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Empty tote
+          </p>
+          <h2 className="mt-3 font-heading text-3xl tracking-tight text-balance sm:text-4xl">
+            The bag is slack.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground text-pretty">
+            Nothing in here yet. Add a find from a listing or a stall — same bag
+            those pages write — or toss a stand-in SKU in from the tables
+            below.
+          </p>
+          <div className="mt-6 flex flex-col items-stretch justify-center gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:[&_a]:w-auto [&_a]:w-full">
+            <Button
+              className="rounded-full px-5"
+              render={<Link href="/listings/ysk-wobbly-lamp" />}
+            >
+              Open a listing
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-full px-5"
+              render={<Link href="/stalls/folding-table-tuesday" />}
+            >
+              Visit a stall
+            </Button>
+          </div>
+        </div>
+      ) : (
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.8fr)]">
         <section className="space-y-5">
           <div className="flex items-end justify-between gap-3">
             <h2 className="font-heading text-2xl tracking-tight">In the tote</h2>
             <p className="text-sm text-muted-foreground">
-              {payable.length === 0
-                ? "Empty"
-                : `${payable.length} ${payable.length === 1 ? "find" : "finds"} from ${groups.length} ${groups.length === 1 ? "stall" : "stalls"}`}
+              {`${payable.length} ${payable.length === 1 ? "find" : "finds"} from ${groups.length} ${groups.length === 1 ? "stall" : "stalls"}`}
             </p>
           </div>
-
-          {payable.length === 0 && gone.length === 0 ? (
-            <Card className="border-dashed bg-card">
-              <CardHeader className="gap-3">
-                <CardTitle className="font-heading text-2xl">
-                  The bag is slack.
-                </CardTitle>
-                <CardDescription className="text-base leading-6">
-                  Add a find from a{" "}
-                  <Link
-                    href="/listings/ysk-wobbly-lamp"
-                    className="underline-offset-4 hover:underline"
-                  >
-                    listing
-                  </Link>{" "}
-                  or{" "}
-                  <Link
-                    href="/stalls/folding-table-tuesday"
-                    className="underline-offset-4 hover:underline"
-                  >
-                    stall
-                  </Link>
-                  — same bag those pages write. Or toss a stand-in SKU in from
-                  the tables below.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          ) : null}
 
           <ul className="space-y-6">
             {groups.map((group) => (
@@ -379,6 +377,7 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
           </Card>
         </aside>
       </div>
+      )}
 
       <section className="space-y-5">
         <div className="max-w-2xl">
@@ -446,28 +445,28 @@ export function CartView({ initialAdd }: { initialAdd?: string }) {
         </Link>
       </p>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card/95 p-3 backdrop-blur-sm lg:hidden">
-        <div className="mx-auto flex max-w-6xl items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">
-              {payable.length === 0 ? "Tote is empty" : `You pay ${formatMoney(subtotal)}`}
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              {payable.length === 0
-                ? "Grab something still on the tables"
-                : `${groups.length} ${groups.length === 1 ? "stall" : "stalls"} · mall keeps ${formatMoney(mallCut)}`}
-            </p>
+      {bagEmpty ? null : (
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card/95 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm lg:hidden">
+          <div className="mx-auto flex max-w-6xl items-center gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">
+                You pay {formatMoney(subtotal)}
+              </p>
+              <p className="truncate text-xs text-muted-foreground">
+                {`${groups.length} ${groups.length === 1 ? "stall" : "stalls"} · mall keeps ${formatMoney(mallCut)}`}
+              </p>
+            </div>
+            <Button
+              size="lg"
+              className="rounded-full"
+              disabled={payable.length === 0 || paying}
+              onClick={() => void pay()}
+            >
+              {paying ? "Opening…" : "Checkout"}
+            </Button>
           </div>
-          <Button
-            size="lg"
-            className="rounded-full"
-            disabled={payable.length === 0 || paying}
-            onClick={() => void pay()}
-          >
-            {paying ? "Opening…" : "Checkout"}
-          </Button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

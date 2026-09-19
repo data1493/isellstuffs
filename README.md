@@ -16,7 +16,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/hubs` | The four aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
 
-Empty filters and unknown hub slugs get intentional empty / not-found copy.
+Empty filters, an empty tote, canceled or failed pay, and missing listing / stall / hub pages use the same designed empty and error panels. Those states are built for a phone-width viewport.
 
 ## Listing and stall pages
 

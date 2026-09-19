@@ -60,17 +60,17 @@ export default async function HubPage({ params }: HubPageProps) {
           <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/70 text-pretty">
             {hub.rule} {atmosphere.refuse}
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <Button
               variant="outline"
-              className="rounded-full bg-card/70 px-5"
+              className="w-full rounded-full bg-card/70 px-5 sm:w-auto"
               render={<Link href={exploreHref({ hubId: hub.id })} />}
             >
               See {hub.name} on the concourse
             </Button>
             <Button
               variant="ghost"
-              className="rounded-full px-5"
+              className="w-full rounded-full px-5 sm:w-auto"
               render={<Link href="/hubs" />}
             >
               All hubs

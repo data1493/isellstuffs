@@ -1,7 +1,5 @@
+import { MallLoading } from "@/components/mall-notice";
+
 export default function CheckoutLoading() {
-  return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
-      <p className="text-sm text-muted-foreground">Opening the pay wall…</p>
-    </div>
-  );
+  return <MallLoading label="Opening the pay wall…" />;
 }

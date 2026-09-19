@@ -25,7 +25,7 @@ export function BrowseEmpty({
         {body}
       </p>
       <Button
-        className="mt-6 rounded-full px-5"
+        className="mt-6 w-full rounded-full px-5 sm:w-auto"
         render={<Link href={actionHref} />}
       >
         {actionLabel}
@@ -55,7 +55,7 @@ export function BrowseError({
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground text-pretty">
           {body}
         </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-6 flex flex-col items-stretch justify-center gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:[&_a]:w-auto sm:[&_button]:w-auto [&_a]:w-full [&_button]:w-full">
           {onRetry ? (
             <Button className="rounded-full px-5" onClick={onRetry}>
               Try the aisle again

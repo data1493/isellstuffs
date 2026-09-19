@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import { MallPayError } from "@/components/mall-notice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -272,14 +273,7 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
           {fieldError}
         </p>
       ) : null}
-      {error ? (
-        <p
-          role="alert"
-          className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-        >
-          {error}
-        </p>
-      ) : null}
+      {error ? <MallPayError body={error} /> : null}
 
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button

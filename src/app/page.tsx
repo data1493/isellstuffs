@@ -100,7 +100,7 @@ export default function Home() {
           </div>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {mallHubs.map((hub) => (
-              <li key={hub.id}>
+              <li key={hub.id} className="min-w-0">
                 <HubTile hub={hub} count={listingsByHub(hub.id).length} />
               </li>
             ))}
