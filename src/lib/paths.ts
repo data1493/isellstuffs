@@ -826,6 +826,14 @@ export function listingSpliceWritePath() {
   return "/listings/splice";
 }
 
+export function listingRadioPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/radio`;
+}
+
+export function listingRadioWritePath() {
+  return "/listings/radio";
+}
+
 export function listingVentPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/vent`;
 }

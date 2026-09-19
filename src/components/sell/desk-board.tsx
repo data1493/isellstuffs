@@ -297,6 +297,12 @@ import {
   subscribeSplice,
 } from "@/lib/listing-splice";
 import {
+  canTapeRadio,
+  isListingRadioOverlay,
+  readRadioListingIds,
+  subscribeRadio,
+} from "@/lib/listing-radio";
+import {
   canTapeVent,
   isListingVentOverlay,
   readVentListingIds,
@@ -372,6 +378,7 @@ import {
   listingCenterWritePath,
   listingWarpWritePath,
   listingSpliceWritePath,
+  listingRadioWritePath,
   listingVentWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
@@ -501,6 +508,7 @@ export function DeskBoard({
   const [centerIds, setCenterIds] = useState<string[]>([]);
   const [warpIds, setWarpIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
+  const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [normIds, setNormIds] = useState<string[]>([]);
@@ -571,6 +579,7 @@ export function DeskBoard({
       setCenterIds(readCenterListingIds());
       setWarpIds(readWarpListingIds());
       setSpliceIds(readSpliceListingIds());
+      setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
       setTuneIds(readTuneListingIds());
       setNormIds(readNormListingIds());
@@ -630,6 +639,7 @@ export function DeskBoard({
     const unsubCenter = subscribeCenter(apply);
     const unsubWarp = subscribeWarp(apply);
     const unsubSplice = subscribeSplice(apply);
+    const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
     const unsubTune = subscribeTune(apply);
     const unsubNorm = subscribeNorm(apply);
@@ -699,6 +709,7 @@ export function DeskBoard({
       unsubCenter();
       unsubWarp();
       unsubSplice();
+      unsubRadio();
       unsubVent();
       unsubTune();
       unsubNorm();
@@ -1507,6 +1518,37 @@ export function DeskBoard({
                             {isListingSpliceOverlay(listing.id, spliceIds)
                               ? "Leave the talkover"
                               : "I will not splice"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRadio(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRadioWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRadioOverlay(listing.id, radioIds)
+                                ? "open"
+                                : "radio"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRadioOverlay(listing.id, radioIds)
+                              ? "Leave the radio edit"
+                              : "The radio edit stays"}
                           </button>
                         </form>
                       ) : null}
