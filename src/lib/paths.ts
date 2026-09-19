@@ -738,6 +738,14 @@ export function listingVentWritePath() {
   return "/listings/vent";
 }
 
+export function listingTrayPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tray`;
+}
+
+export function listingTrayWritePath() {
+  return "/listings/tray";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

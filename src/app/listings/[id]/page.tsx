@@ -89,6 +89,7 @@ import { ListingLinkNotice } from "@/components/listing-link-notice";
 import { ListingCenterNotice } from "@/components/listing-center-notice";
 import { ListingSpliceNotice } from "@/components/listing-splice-notice";
 import { ListingVentNotice } from "@/components/listing-vent-notice";
+import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingVersoNotice } from "@/components/listing-verso-notice";
 import { ListingIconsNotice } from "@/components/listing-icons-notice";
@@ -202,6 +203,7 @@ import {
   listingCenterPath,
   listingSplicePath,
   listingVentPath,
+  listingTrayPath,
   listingTunePath,
   listingVersoPath,
   listingIconsPath,
@@ -468,6 +470,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCenterNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpliceNotice listingId={listing.id} /> : null}
               {physical ? <ListingVentNotice listingId={listing.id} /> : null}
+              {physical ? <ListingTrayNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -896,6 +899,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not vent
+                  </Link>
+                  <Link
+                    href={listingTrayPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not tray it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

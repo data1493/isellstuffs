@@ -159,6 +159,12 @@ import {
   subscribePolish,
 } from "@/lib/listing-polish";
 import {
+  canTapeTray,
+  isListingTrayOverlay,
+  readTrayListingIds,
+  subscribeTray,
+} from "@/lib/listing-tray";
+import {
   canTapeInside,
   isListingInsideOverlay,
   readInsideListingIds,
@@ -249,6 +255,7 @@ import {
   listingGlueWritePath,
   listingGlassWritePath,
   listingPolishWritePath,
+  listingTrayWritePath,
   listingInsideWritePath,
   listingTinesWritePath,
   listingCapWritePath,
@@ -358,6 +365,7 @@ export function DeskBoard({
   const [glassIds, setGlassIds] = useState<string[]>([]);
   const [doubleIds, setDoubleIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
+  const [trayIds, setTrayIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
   const [capIds, setCapIds] = useState<string[]>([]);
@@ -411,6 +419,7 @@ export function DeskBoard({
       setGlassIds(readGlassListingIds());
       setDoubleIds(readDoubleListingIds());
       setPolishIds(readPolishListingIds());
+      setTrayIds(readTrayListingIds());
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
       setCapIds(readCapListingIds());
@@ -453,6 +462,7 @@ export function DeskBoard({
     const unsubGlass = subscribeGlass(apply);
     const unsubDouble = subscribeDouble(apply);
     const unsubPolish = subscribePolish(apply);
+    const unsubTray = subscribeTray(apply);
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
     const unsubCap = subscribeCap(apply);
@@ -505,6 +515,7 @@ export function DeskBoard({
       unsubGlass();
       unsubDouble();
       unsubPolish();
+      unsubTray();
       unsubInside();
       unsubTines();
       unsubCap();
@@ -793,6 +804,37 @@ export function DeskBoard({
                             {isListingPolishOverlay(listing.id, polishIds)
                               ? "Leave the scratch"
                               : "I will not polish"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTray(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTrayWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTrayOverlay(listing.id, trayIds)
+                                ? "open"
+                                : "tray"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTrayOverlay(listing.id, trayIds)
+                              ? "Leave this jewel"
+                              : "I will not tray it"}
                           </button>
                         </form>
                       ) : null}
