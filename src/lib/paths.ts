@@ -1210,6 +1210,14 @@ export function listingGateWritePath() {
   return "/listings/gate";
 }
 
+export function listingQuantizePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/quantize`;
+}
+
+export function listingQuantizeWritePath() {
+  return "/listings/quantize";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

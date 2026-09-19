@@ -579,6 +579,12 @@ import {
   subscribeGate,
 } from "@/lib/listing-gate";
 import {
+  canTapeQuantize,
+  isListingQuantizeOverlay,
+  readQuantizeListingIds,
+  subscribeQuantize,
+} from "@/lib/listing-quantize";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -719,6 +725,7 @@ import {
   listingCollateWritePath,
   listingScaleWritePath,
   listingGateWritePath,
+  listingQuantizeWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -924,6 +931,7 @@ export function DeskBoard({
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
+  const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1046,6 +1054,7 @@ export function DeskBoard({
       setCollateIds(readCollateListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
+      setQuantizeIds(readQuantizeListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1157,6 +1166,7 @@ export function DeskBoard({
     const unsubCollate = subscribeCollate(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
+    const unsubQuantize = subscribeQuantize(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1278,6 +1288,7 @@ export function DeskBoard({
       unsubCollate();
       unsubScale();
       unsubGate();
+      unsubQuantize();
     };
   }, [listings, stall.id]);
 
@@ -4094,6 +4105,37 @@ export function DeskBoard({
                             {isListingGateOverlay(listing.id, gateIds)
                               ? "Leave the shots"
                               : "I will not gate it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeQuantize(listing) ? (
+                        <form
+                          method="post"
+                          action={listingQuantizeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingQuantizeOverlay(listing.id, quantizeIds)
+                                ? "open"
+                                : "quantize"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingQuantizeOverlay(listing.id, quantizeIds)
+                              ? "Leave the twelve shots"
+                              : "I will not quantize them"}
                           </button>
                         </form>
                       ) : null}
