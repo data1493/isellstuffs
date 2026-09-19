@@ -132,6 +132,7 @@ import { ListingDartNotice } from "@/components/listing-dart-notice";
 import { ListingTinNotice } from "@/components/listing-tin-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
+import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -299,6 +300,7 @@ import {
   listingTinPath,
   listingPaginatePath,
   listingContrastPath,
+  listingGatePath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -547,6 +549,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingTuneNotice listingId={listing.id} /> : null}
               {!physical ? <ListingNormNotice listingId={listing.id} /> : null}
               {!physical ? <ListingCrushNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingGateNotice listingId={listing.id} /> : null}
               {!physical ? <ListingRightsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
               {!physical ? <ListingIconsNotice listingId={listing.id} /> : null}
@@ -1492,6 +1495,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not crush it
+                  </Link>
+                  <Link
+                    href={listingGatePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not gate it
                   </Link>
                   <Link
                     href={listingRightsPath(listing.id)}

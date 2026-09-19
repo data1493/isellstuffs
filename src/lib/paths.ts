@@ -1106,6 +1106,14 @@ export function listingTinWritePath() {
   return "/listings/tin";
 }
 
+export function listingGatePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gate`;
+}
+
+export function listingGateWritePath() {
+  return "/listings/gate";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

@@ -495,6 +495,12 @@ import {
   subscribePaginate,
 } from "@/lib/listing-paginate";
 import {
+  canTapeGate,
+  isListingGateOverlay,
+  readGateListingIds,
+  subscribeGate,
+} from "@/lib/listing-gate";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -615,6 +621,7 @@ import {
   listingDartWritePath,
   listingTinWritePath,
   listingPaginateWritePath,
+  listingGateWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -804,6 +811,7 @@ export function DeskBoard({
   const [boldIds, setBoldIds] = useState<string[]>([]);
   const [variableIds, setVariableIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
+  const [gateIds, setGateIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -911,6 +919,7 @@ export function DeskBoard({
       setBoldIds(readBoldListingIds());
       setVariableIds(readVariableListingIds());
       setPaginateIds(readPaginateListingIds());
+      setGateIds(readGateListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1007,6 +1016,7 @@ export function DeskBoard({
     const unsubBold = subscribeBold(apply);
     const unsubVariable = subscribeVariable(apply);
     const unsubPaginate = subscribePaginate(apply);
+    const unsubGate = subscribeGate(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1113,6 +1123,7 @@ export function DeskBoard({
       unsubBold();
       unsubVariable();
       unsubPaginate();
+      unsubGate();
     };
   }, [listings, stall.id]);
 
@@ -3526,6 +3537,37 @@ export function DeskBoard({
                             {isListingCrushOverlay(listing.id, crushIds)
                               ? "Leave the twelve shots"
                               : "I will not crush it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGate(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGateWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGateOverlay(listing.id, gateIds)
+                                ? "open"
+                                : "gate"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGateOverlay(listing.id, gateIds)
+                              ? "Leave the shots"
+                              : "I will not gate it"}
                           </button>
                         </form>
                       ) : null}
