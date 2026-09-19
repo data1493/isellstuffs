@@ -602,6 +602,14 @@ export function listingWarmWritePath() {
   return "/listings/warm";
 }
 
+export function listingDoublePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/double`;
+}
+
+export function listingDoubleWritePath() {
+  return "/listings/double";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

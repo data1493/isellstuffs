@@ -75,6 +75,7 @@ import { ListingSlantNotice } from "@/components/listing-slant-notice";
 import { ListingVgNotice } from "@/components/listing-vg-notice";
 import { ListingBakeNotice } from "@/components/listing-bake-notice";
 import { ListingGlassNotice } from "@/components/listing-glass-notice";
+import { ListingDoubleNotice } from "@/components/listing-double-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -171,6 +172,7 @@ import {
   listingVgPath,
   listingBakePath,
   listingGlassPath,
+  listingDoublePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -370,6 +372,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
               {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingDoubleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingWrongNotice listingId={listing.id} /> : null}
               {!physical ? (
                 <ListingFoundryNotice listingId={listing.id} />
@@ -828,6 +831,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not type the cards
+                  </Link>
+                  <Link
+                    href={listingDoublePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not double it
                   </Link>
                   <Link
                     href={listingWrongPath(listing.id)}
