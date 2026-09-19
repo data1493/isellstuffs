@@ -642,6 +642,14 @@ export function listingReviseWritePath() {
   return "/listings/revise";
 }
 
+export function listingGridPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/grid`;
+}
+
+export function listingGridWritePath() {
+  return "/listings/grid";
+}
+
 export function listingTinesPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tines`;
 }
