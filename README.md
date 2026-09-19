@@ -19,7 +19,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page. Hub-takeover bookings from `iss-ad-bookings` swap the aisle hero |
 | `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags. Still-here is a count, not a SKU grid. |
-| `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. |
+| `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. Desk pins (`iss:weekend-pins`) append after that table. |
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
@@ -55,7 +55,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
-| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). Overlay rows can take a tested/kinda chip (`POST /sell/desk/tested`) — catalog fixtures are refused. The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). Overlay rows can take a tested/kinda chip (`POST /sell/desk/tested`) — catalog fixtures are refused. Still-here rows can tape onto `/this-week` (`POST /sell/desk/weekend`) without rewriting the mall-keeper editor. The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
 | `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Files stay in the folder. |
 | `/sell/taken` | Close a driveway handoff when the buyer walked. `POST /sell/taken` (form: `slipId`, `listingId`, `intent=taken\|waiting`). Cookie `iss-taken-handoffs` + `iss:taken-handoffs`. Taken lines drop off the queue. Not a refund. Not a sold sticker. |
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |

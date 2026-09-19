@@ -103,6 +103,10 @@ export function sellDeskQueuePath() {
   return "/sell/desk/queue";
 }
 
+export function sellDeskWeekendPath() {
+  return "/sell/desk/weekend";
+}
+
 export function sellFoldersPath() {
   return "/sell/folders";
 }

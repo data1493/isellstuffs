@@ -23,19 +23,26 @@ import {
   thisWeekWindow,
   type WeekPick,
 } from "@/lib/week-pick";
+import {
+  appendWeekendPins,
+  WEEKEND_PINS_COOKIE_NAME,
+  WEEKEND_PINS_STORAGE_KEY,
+} from "@/lib/weekend-table-pin";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = thisWeekMetadata();
 
-const syncScript = `try{var m=document.cookie.match(/(?:^|; )${WEEK_PICKS_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(WEEK_PICKS_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}`;
+const syncScript = `try{var m=document.cookie.match(/(?:^|; )${WEEK_PICKS_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(WEEK_PICKS_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}try{var p=document.cookie.match(/(?:^|; )${WEEKEND_PINS_COOKIE_NAME}=([^;]*)/);if(p){localStorage.setItem(${JSON.stringify(WEEKEND_PINS_STORAGE_KEY)},decodeURIComponent(p[1]));}}catch(e){}`;
 
 export default async function ThisWeekPage() {
   const jar = await cookies();
   const { ids, fromOverlay } = resolveWeekPickIds(
     jar.get(WEEK_PICKS_COOKIE_NAME)?.value,
   );
-  const picks = thisWeekPicks(ids);
+  const picks = thisWeekPicks(
+    appendWeekendPins(ids, jar.get(WEEKEND_PINS_COOKIE_NAME)?.value),
+  );
   const mix = thisWeekMix(picks);
 
   return (

@@ -10,6 +10,7 @@ import { PackButton } from "@/components/sell/pack-button";
 import { SoldButton } from "@/components/sell/sold-button";
 import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
 import { TestedPin } from "@/components/sell/tested-pin";
+import { WeekendPin } from "@/components/sell/weekend-pin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -66,6 +67,11 @@ import {
   canPinTestedKinda,
   isTestedKindaPinned,
 } from "@/lib/tested-kinda-pin";
+import {
+  WEEKEND_PINS_CHANGED_EVENT,
+  canPinWeekend,
+  readWeekendPinIds,
+} from "@/lib/weekend-table-pin";
 import { feePercent, splitOnTag } from "@/lib/seller-payouts";
 import {
   SELLER_STALLS_CHANGED,
@@ -81,6 +87,7 @@ export function DeskBoard({
 }) {
   const [rows, setRows] = useState(listings);
   const [packed, setPacked] = useState(false);
+  const [weekendPins, setWeekendPins] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -98,6 +105,7 @@ export function DeskBoard({
         ),
       );
       setPacked(isStallPacked(stall.id));
+      setWeekendPins(readWeekendPinIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -111,6 +119,7 @@ export function DeskBoard({
     window.addEventListener(FILE_GONE_CHANGED_EVENT, apply);
     window.addEventListener(PACKED_CHANGED_EVENT, apply);
     window.addEventListener(TESTED_KINDA_CHANGED_EVENT, apply);
+    window.addEventListener(WEEKEND_PINS_CHANGED_EVENT, apply);
     window.addEventListener("storage", apply);
     return () => {
       window.removeEventListener(SELLER_LISTINGS_CHANGED, apply);
@@ -119,6 +128,7 @@ export function DeskBoard({
       window.removeEventListener(FILE_GONE_CHANGED_EVENT, apply);
       window.removeEventListener(PACKED_CHANGED_EVENT, apply);
       window.removeEventListener(TESTED_KINDA_CHANGED_EVENT, apply);
+      window.removeEventListener(WEEKEND_PINS_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
     };
   }, [listings, stall.id]);
@@ -180,7 +190,7 @@ export function DeskBoard({
         <p className="mb-3 text-sm leading-6 text-muted-foreground">
           Sold sticker is on the table. File pulled from the folder. Putting
           back is restock, not a refund. We turned it on. Not a mall pick. Not
-          paid.
+          paid. Taped this weekend. Not a mall pick. Not paid.
         </p>
         <ul className="grid gap-3">
           {rows.map((listing) => {
@@ -254,6 +264,15 @@ export function DeskBoard({
                         <TestedPin
                           listingId={listing.id}
                           intent={pinned ? "drop" : "pin"}
+                          returnTo={sellDeskStallPath(stall.slug)}
+                        />
+                      ) : null}
+                      {canPinWeekend(listing) ? (
+                        <WeekendPin
+                          listingId={listing.id}
+                          intent={
+                            weekendPins.includes(listing.id) ? "drop" : "pin"
+                          }
                           returnTo={sellDeskStallPath(stall.slug)}
                         />
                       ) : null}
