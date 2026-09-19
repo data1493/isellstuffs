@@ -22,6 +22,7 @@ import { ListingLacesNotice } from "@/components/listing-laces-notice";
 import { ListingCasesNotice } from "@/components/listing-cases-notice";
 import { ListingHeatNotice } from "@/components/listing-heat-notice";
 import { ListingBentNotice } from "@/components/listing-bent-notice";
+import { ListingCordNotice } from "@/components/listing-cord-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -65,6 +66,7 @@ import {
   listingCasesPath,
   listingHeatPath,
   listingBentPath,
+  listingCordPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -246,6 +248,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCasesNotice listingId={listing.id} /> : null}
               {physical ? <ListingHeatNotice listingId={listing.id} /> : null}
               {physical ? <ListingBentNotice listingId={listing.id} /> : null}
+              {physical ? <ListingCordNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -380,6 +383,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Leave it bent
+                  </Link>
+                  <Link
+                    href={listingCordPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Rewired
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

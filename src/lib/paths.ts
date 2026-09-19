@@ -178,6 +178,14 @@ export function listingBentWritePath() {
   return "/listings/bent";
 }
 
+export function listingCordPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cord`;
+}
+
+export function listingCordWritePath() {
+  return "/listings/cord";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
