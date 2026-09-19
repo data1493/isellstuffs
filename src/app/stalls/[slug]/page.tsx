@@ -58,6 +58,12 @@ import {
   parseBoothKids,
 } from "@/lib/booth-kids";
 import {
+  BOOTH_POLY_COOKIE_NAME,
+  BOOTH_POLY_PAPER_LINE,
+  boothPolyFor,
+  parseBoothPoly,
+} from "@/lib/booth-poly";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -98,6 +104,7 @@ import {
   stallScrapPath,
   stallFilmPath,
   stallKidsPath,
+  stallPolyPath,
   stallShadePath,
   stallSharePath,
   stallSpotPath,
@@ -195,6 +202,10 @@ export default async function StallPage({
   const kids = boothKidsFor(
     stall.id,
     parseBoothKids(jar.get(BOOTH_KIDS_COOKIE_NAME)?.value),
+  );
+  const poly = boothPolyFor(
+    stall.id,
+    parseBoothPoly(jar.get(BOOTH_POLY_COOKIE_NAME)?.value),
   );
 
   return (
@@ -390,6 +401,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {poly ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Keep the poly on"
+              title="The crate stays sealed."
+              body={
+                <p data-booth-poly-note={stall.id}>
+                  {poly.note} {BOOTH_POLY_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -470,6 +496,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Kids touch it, you buy it
+          </Link>
+
+          <Link
+            href={stallPolyPath(stall.slug)}
+            data-booth-poly-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Keep the poly on
           </Link>
 
           <Link

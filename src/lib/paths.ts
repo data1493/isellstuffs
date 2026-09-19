@@ -272,6 +272,14 @@ export function stallKidsWritePath() {
   return "/stalls/kids";
 }
 
+export function stallPolyPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/poly`;
+}
+
+export function stallPolyWritePath() {
+  return "/stalls/poly";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

@@ -30,6 +30,11 @@ import {
   parseBoothKids,
 } from "@/lib/booth-kids";
 import {
+  BOOTH_POLY_COOKIE_NAME,
+  BOOTH_POLY_MIRROR_SCRIPT,
+  parseBoothPoly,
+} from "@/lib/booth-poly";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -82,6 +87,7 @@ export default async function LotPage() {
   const shadeMap = parseBoothShade(jar.get(BOOTH_SHADE_COOKIE_NAME)?.value);
   const filmMap = parseBoothFilm(jar.get(BOOTH_FILM_COOKIE_NAME)?.value);
   const kidsMap = parseBoothKids(jar.get(BOOTH_KIDS_COOKIE_NAME)?.value);
+  const polyMap = parseBoothPoly(jar.get(BOOTH_POLY_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -99,6 +105,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SHADE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FILM_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_KIDS_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_POLY_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -117,6 +124,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SHADE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FILM_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_KIDS_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_POLY_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -186,6 +194,7 @@ export default async function LotPage() {
                     shadeNote={shadeMap[row.stall.id]?.note}
                     filmNote={filmMap[row.stall.id]?.note}
                     kidsNote={kidsMap[row.stall.id]?.note}
+                    polyNote={polyMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -220,6 +229,7 @@ export default async function LotPage() {
                     shadeNote={shadeMap[row.stall.id]?.note}
                     filmNote={filmMap[row.stall.id]?.note}
                     kidsNote={kidsMap[row.stall.id]?.note}
+                    polyNote={polyMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

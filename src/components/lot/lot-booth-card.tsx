@@ -30,6 +30,7 @@ export function LotBoothCard({
   shadeNote,
   filmNote,
   kidsNote,
+  polyNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -42,6 +43,7 @@ export function LotBoothCard({
   shadeNote?: string;
   filmNote?: string;
   kidsNote?: string;
+  polyNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -157,6 +159,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Kids touch it, you buy it. {kidsNote}
+            </p>
+          ) : null}
+          {polyNote ? (
+            <p
+              data-booth-poly-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Keep the poly on. {polyNote}
             </p>
           ) : null}
           {packed ? (
