@@ -26,6 +26,7 @@ import { ListingCordNotice } from "@/components/listing-cord-notice";
 import { ListingWashNotice } from "@/components/listing-wash-notice";
 import { ListingRemoteNotice } from "@/components/listing-remote-notice";
 import { ListingSkipNotice } from "@/components/listing-skip-notice";
+import { ListingGradeNotice } from "@/components/listing-grade-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -73,6 +74,7 @@ import {
   listingWashPath,
   listingRemotePath,
   listingSkipPath,
+  listingGradePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -258,6 +260,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingWashNotice listingId={listing.id} /> : null}
               {physical ? <ListingRemoteNotice listingId={listing.id} /> : null}
               {physical ? <ListingSkipNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingGradeNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -425,6 +428,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Scan the liner
+                  </Link>
+                  <Link
+                    href={listingGradePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't grade your lot
                   </Link>
                 </p>
               )}

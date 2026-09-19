@@ -210,6 +210,14 @@ export function listingSkipWritePath() {
   return "/listings/skip";
 }
 
+export function listingGradePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/grade`;
+}
+
+export function listingGradeWritePath() {
+  return "/listings/grade";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
