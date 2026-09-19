@@ -6,8 +6,9 @@ import { MallHero, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { listingPath } from "@/lib/paths";
+import type { SavedBagNotice } from "@/lib/saved-bag";
 
-export function SavedEmpty() {
+export function SavedEmpty({ bag }: { bag?: SavedBagNotice }) {
   return (
     <div>
       <MallHero>
@@ -35,8 +36,16 @@ export function SavedEmpty() {
           padded={false}
           tone="empty"
           eyebrow="Later pile"
-          title="Nothing in the later pile."
-          body="Park a listing from its page. Saving does not put it in the tote. Cold or blocked storage looks the same — not a crash."
+          title={
+            bag === "empty"
+              ? "Nothing still here to bag."
+              : "Nothing in the later pile."
+          }
+          body={
+            bag === "empty"
+              ? "The pile is empty. Saving still does not bag. Cold or blocked storage looks the same — not a crash."
+              : "Park a listing from its page. Saving does not put it in the tote. Cold or blocked storage looks the same — not a crash."
+          }
           actions={
             <>
               <Button

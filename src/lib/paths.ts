@@ -143,6 +143,10 @@ export function savedPath() {
   return "/saved";
 }
 
+export function savedBagPath() {
+  return "/saved/bag";
+}
+
 export function ordersPath() {
   return "/orders";
 }

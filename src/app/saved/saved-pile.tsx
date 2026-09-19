@@ -3,9 +3,10 @@ import Link from "next/link";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { MallNotice } from "@/components/mall-notice";
 import { MallHero, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   formatMoney,
   isCartEligible,
@@ -13,7 +14,8 @@ import {
   stallById,
 } from "@/lib/commerce";
 import { listingHubName } from "@/lib/listing-display";
-import { listingPath, savedPath, stallPath } from "@/lib/paths";
+import { listingPath, savedBagPath, savedPath, stallPath } from "@/lib/paths";
+import type { SavedBagNotice } from "@/lib/saved-bag";
 import { cn } from "@/lib/utils";
 
 function DropFromPileButton({ listingId }: { listingId: string }) {
@@ -35,7 +37,63 @@ function DropFromPileButton({ listingId }: { listingId: string }) {
   );
 }
 
-export function SavedPile({ listingIds }: { listingIds: string[] }) {
+function BagThePileButton() {
+  return (
+    <form action={savedBagPath()} method="post" className="w-full max-w-xl">
+      <button
+        type="submit"
+        className={cn(
+          buttonVariants({ variant: "default", size: "lg" }),
+          "w-full rounded-full px-5",
+        )}
+      >
+        Bag the pile
+      </button>
+    </form>
+  );
+}
+
+function PileBagNotice({ bag }: { bag: SavedBagNotice }) {
+  if (bag === "scooped") {
+    return (
+      <MallNotice
+        padded={false}
+        tone="empty"
+        titleAs="h2"
+        eyebrow="Scooped"
+        title="Scooped into the tote. The pile is still a pile."
+        body="Eligible finds are in the bag. Sold and file-gone stayed parked. Saving still does not bag."
+        actions={
+          <Button
+            className="rounded-full px-5"
+            render={<Link href="/cart" />}
+          >
+            Open the tote
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <MallNotice
+      padded={false}
+      tone="empty"
+      titleAs="h2"
+      eyebrow="Later pile"
+      title="Nothing still here to bag."
+      body="Sold, pulled, and missing SKUs stay in the pile. The tote did not change."
+    />
+  );
+}
+
+export function SavedPile({
+  listingIds,
+  bag,
+}: {
+  listingIds: string[];
+  bag?: SavedBagNotice;
+}) {
   const rows = listingIds.map((id) => {
     const listing = listingById(id);
     const stall = listing ? stallById(listing.stallId) : undefined;
@@ -66,6 +124,8 @@ export function SavedPile({ listingIds }: { listingIds: string[] }) {
             in the tote. Adding to the tote does not drop them from here.
           </p>
         </div>
+        <BagThePileButton />
+        {bag ? <PileBagNotice bag={bag} /> : null}
       </MallHero>
 
       <MallWidth className="flex flex-col gap-8 py-12 sm:py-16">

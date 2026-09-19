@@ -22,7 +22,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
-| `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Not a second cart |
+| `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Scoop with **Bag the pile** (`POST /saved/bag`) into the existing tote. Not a second cart |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
@@ -89,7 +89,7 @@ Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — pric
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag.
 
-Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile.
+Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile. **Bag the pile** POSTs to `/saved/bag` and copies still-here ids onto the existing tote writer (`@/lib/cart`). Sold, file-gone, and missing SKUs stay parked. The pile cookie stays.
 
 ## Cart and checkout
 
