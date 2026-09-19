@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { PickupNote } from "@/components/pickup-note";
 import { StallCardCopy } from "@/components/stalls/stall-card-copy";
 import { StallListingCard } from "@/components/stall-listing-card";
 import { StallMixBar } from "@/components/stall-mix-bar";
@@ -79,6 +80,10 @@ export default async function StallPage({ params }: StallPageProps) {
           />
 
           <StallMixBar physical={physical.length} digital={digital.length} />
+
+          {physical.length > 0 ? (
+            <PickupNote stall={stall} className="max-w-2xl" />
+          ) : null}
 
           {promo ? (
             <aside className="max-w-2xl rounded-xl bg-secondary/60 p-4 ring-1 ring-primary/20">

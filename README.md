@@ -70,6 +70,8 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
+Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field.
+
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag.
 
 Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile.

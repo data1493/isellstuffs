@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
+import { PickupNote } from "@/components/pickup-note";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -179,6 +180,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </div>
 
               <ListingBuyBox listing={listing} />
+
+              {physical && stall ? <PickupNote stall={stall} /> : null}
 
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div className="rounded-xl bg-card/80 p-4 ring-1 ring-foreground/10">
