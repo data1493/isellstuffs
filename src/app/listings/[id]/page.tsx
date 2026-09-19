@@ -115,6 +115,7 @@ import { ListingShimNotice } from "@/components/listing-shim-notice";
 import { ListingFillNotice } from "@/components/listing-fill-notice";
 import { ListingWindNotice } from "@/components/listing-wind-notice";
 import { ListingSocketNotice } from "@/components/listing-socket-notice";
+import { ListingSandNotice } from "@/components/listing-sand-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -263,6 +264,7 @@ import {
   listingFillPath,
   listingWindPath,
   listingSocketPath,
+  listingSandPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -577,6 +579,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingFillNotice listingId={listing.id} /> : null}
               {physical ? <ListingWindNotice listingId={listing.id} /> : null}
               {physical ? <ListingSocketNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSandNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1137,6 +1140,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not socket it
+                  </Link>
+                  <Link
+                    href={listingSandPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not sand it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (

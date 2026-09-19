@@ -393,6 +393,12 @@ import {
   subscribeSocket,
 } from "@/lib/listing-socket";
 import {
+  canTapeSand,
+  isListingSandOverlay,
+  readSandListingIds,
+  subscribeSand,
+} from "@/lib/listing-sand";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -485,6 +491,7 @@ import {
   listingFillWritePath,
   listingWindWritePath,
   listingSocketWritePath,
+  listingSandWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -639,6 +646,7 @@ export function DeskBoard({
   const [fillIds, setFillIds] = useState<string[]>([]);
   const [windIds, setWindIds] = useState<string[]>([]);
   const [socketIds, setSocketIds] = useState<string[]>([]);
+  const [sandIds, setSandIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -727,6 +735,7 @@ export function DeskBoard({
       setFillIds(readFillListingIds());
       setWindIds(readWindListingIds());
       setSocketIds(readSocketListingIds());
+      setSandIds(readSandListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -804,6 +813,7 @@ export function DeskBoard({
     const unsubFill = subscribeFill(apply);
     const unsubWind = subscribeWind(apply);
     const unsubSocket = subscribeSocket(apply);
+    const unsubSand = subscribeSand(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -891,6 +901,7 @@ export function DeskBoard({
       unsubFill();
       unsubWind();
       unsubSocket();
+      unsubSand();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -1984,6 +1995,37 @@ export function DeskBoard({
                             {isListingSocketOverlay(listing.id, socketIds)
                               ? "Leave the neck"
                               : "I will not socket it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSand(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSandWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSandOverlay(listing.id, sandIds)
+                                ? "open"
+                                : "sand"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSandOverlay(listing.id, sandIds)
+                              ? "Leave the chip"
+                              : "I will not sand it"}
                           </button>
                         </form>
                       ) : null}
