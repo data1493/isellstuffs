@@ -1649,6 +1649,14 @@ export function stallThimbleWritePath() {
   return "/stalls/thimble";
 }
 
+export function stallSpudgerPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/spudger`;
+}
+
+export function stallSpudgerWritePath() {
+  return "/stalls/spudger";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

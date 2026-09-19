@@ -71,6 +71,7 @@ export function LotBoothCard({
   slipmatNote,
   trivetNote,
   thimbleNote,
+  spudgerNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -124,6 +125,7 @@ export function LotBoothCard({
   slipmatNote?: string;
   trivetNote?: string;
   thimbleNote?: string;
+  spudgerNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -646,6 +648,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-thimble-empty={stall.id} hidden />
+          )}
+          {spudgerNote ? (
+            <p
+              data-booth-spudger-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a spudger. {spudgerNote}
+            </p>
+          ) : (
+            <p data-booth-spudger-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
