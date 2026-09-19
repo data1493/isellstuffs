@@ -201,6 +201,12 @@ import {
   subscribeEven,
 } from "@/lib/listing-even";
 import {
+  canTapeLink,
+  isListingLinkOverlay,
+  readLinkListingIds,
+  subscribeLink,
+} from "@/lib/listing-link";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -220,6 +226,7 @@ import {
   listingSprayWritePath,
   listingDongleWritePath,
   listingEvenWritePath,
+  listingLinkWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
   listingSlantWritePath,
@@ -323,6 +330,7 @@ export function DeskBoard({
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
+  const [linkIds, setLinkIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
@@ -370,6 +378,7 @@ export function DeskBoard({
       setSprayIds(readSprayListingIds());
       setDongleIds(readDongleListingIds());
       setEvenIds(readEvenListingIds());
+      setLinkIds(readLinkListingIds());
       setTuneIds(readTuneListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
@@ -406,6 +415,7 @@ export function DeskBoard({
     const unsubSpray = subscribeSpray(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubEven = subscribeEven(apply);
+    const unsubLink = subscribeLink(apply);
     const unsubTune = subscribeTune(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
@@ -452,6 +462,7 @@ export function DeskBoard({
       unsubSpray();
       unsubDongle();
       unsubEven();
+      unsubLink();
       unsubTune();
     };
   }, [listings, stall.id]);
@@ -913,6 +924,37 @@ export function DeskBoard({
                             {isListingEvenOverlay(listing.id, evenIds)
                               ? "Leave the pair"
                               : "I will not even the wear"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLink(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLinkWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLinkOverlay(listing.id, linkIds)
+                                ? "open"
+                                : "link"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLinkOverlay(listing.id, linkIds)
+                              ? "Leave the brick"
+                              : "I don't have a link"}
                           </button>
                         </form>
                       ) : null}

@@ -85,6 +85,7 @@ import { ListingLedNotice } from "@/components/listing-led-notice";
 import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingEvenNotice } from "@/components/listing-even-notice";
+import { ListingLinkNotice } from "@/components/listing-link-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
@@ -192,6 +193,7 @@ import {
   listingSprayPath,
   listingDonglePath,
   listingEvenPath,
+  listingLinkPath,
   listingTunePath,
   listingSizePath,
   listingSmokePath,
@@ -450,6 +452,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSprayNotice listingId={listing.id} /> : null}
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
               {physical ? <ListingEvenNotice listingId={listing.id} /> : null}
+              {physical ? <ListingLinkNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -854,6 +857,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not even the wear
+                  </Link>
+                  <Link
+                    href={listingLinkPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't have a link
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
