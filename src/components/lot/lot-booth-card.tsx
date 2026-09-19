@@ -31,6 +31,7 @@ export function LotBoothCard({
   filmNote,
   kidsNote,
   polyNote,
+  wrapNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -44,6 +45,7 @@ export function LotBoothCard({
   filmNote?: string;
   kidsNote?: string;
   polyNote?: string;
+  wrapNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -167,6 +169,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Keep the poly on. {polyNote}
+            </p>
+          ) : null}
+          {wrapNote ? (
+            <p
+              data-booth-wrap-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I wrap breakables. {wrapNote}
             </p>
           ) : null}
           {packed ? (

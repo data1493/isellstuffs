@@ -280,6 +280,14 @@ export function stallPolyWritePath() {
   return "/stalls/poly";
 }
 
+export function stallWrapPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/wrap`;
+}
+
+export function stallWrapWritePath() {
+  return "/stalls/wrap";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

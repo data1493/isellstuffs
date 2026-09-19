@@ -64,6 +64,12 @@ import {
   parseBoothPoly,
 } from "@/lib/booth-poly";
 import {
+  BOOTH_WRAP_COOKIE_NAME,
+  BOOTH_WRAP_PAPER_LINE,
+  boothWrapFor,
+  parseBoothWrap,
+} from "@/lib/booth-wrap";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -105,6 +111,7 @@ import {
   stallFilmPath,
   stallKidsPath,
   stallPolyPath,
+  stallWrapPath,
   stallShadePath,
   stallSharePath,
   stallSpotPath,
@@ -206,6 +213,10 @@ export default async function StallPage({
   const poly = boothPolyFor(
     stall.id,
     parseBoothPoly(jar.get(BOOTH_POLY_COOKIE_NAME)?.value),
+  );
+  const wrap = boothWrapFor(
+    stall.id,
+    parseBoothWrap(jar.get(BOOTH_WRAP_COOKIE_NAME)?.value),
   );
 
   return (
@@ -416,6 +427,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {wrap ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I wrap breakables"
+              title="The mug still walks naked."
+              body={
+                <p data-booth-wrap-note={stall.id}>
+                  {wrap.note} {BOOTH_WRAP_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -504,6 +530,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Keep the poly on
+          </Link>
+
+          <Link
+            href={stallWrapPath(stall.slug)}
+            data-booth-wrap-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I wrap breakables
           </Link>
 
           <Link
