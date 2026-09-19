@@ -123,6 +123,7 @@ import { ListingVersoNotice } from "@/components/listing-verso-notice";
 import { ListingYearNotice } from "@/components/listing-year-notice";
 import { ListingIconsNotice } from "@/components/listing-icons-notice";
 import { ListingHintNotice } from "@/components/listing-hint-notice";
+import { ListingProfileNotice } from "@/components/listing-profile-notice";
 import { ListingBoldNotice } from "@/components/listing-bold-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
@@ -268,6 +269,7 @@ import {
   listingYearPath,
   listingIconsPath,
   listingHintPath,
+  listingProfilePath,
   listingBoldPath,
   listingSizePath,
   listingSmokePath,
@@ -494,6 +496,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingWarmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBalanceNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLogNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingProfileNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
               {!physical ? <ListingTuneNotice listingId={listing.id} /> : null}
@@ -1272,6 +1275,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not unlog
+                  </Link>
+                  <Link
+                    href={listingProfilePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not profile it
                   </Link>
                   <Link
                     href={listingBpmPath(listing.id)}

@@ -914,6 +914,14 @@ export function listingHintWritePath() {
   return "/listings/hint";
 }
 
+export function listingProfilePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/profile`;
+}
+
+export function listingProfileWritePath() {
+  return "/listings/profile";
+}
+
 export function listingShimPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/shim`;
 }

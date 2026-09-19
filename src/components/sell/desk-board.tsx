@@ -423,6 +423,12 @@ import {
   subscribeHint,
 } from "@/lib/listing-hint";
 import {
+  canTapeProfile,
+  isListingProfileOverlay,
+  readProfileListingIds,
+  subscribeProfile,
+} from "@/lib/listing-profile";
+import {
   canTapeBold,
   isListingBoldOverlay,
   readBoldListingIds,
@@ -482,6 +488,7 @@ import {
   listingYearWritePath,
   listingIconsWritePath,
   listingHintWritePath,
+  listingProfileWritePath,
   listingBoldWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -627,6 +634,7 @@ export function DeskBoard({
   const [yearIds, setYearIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
   const [hintIds, setHintIds] = useState<string[]>([]);
+  const [profileIds, setProfileIds] = useState<string[]>([]);
   const [boldIds, setBoldIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
@@ -712,6 +720,7 @@ export function DeskBoard({
       setYearIds(readYearListingIds());
       setIconsIds(readIconsListingIds());
       setHintIds(readHintListingIds());
+      setProfileIds(readProfileListingIds());
       setBoldIds(readBoldListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
@@ -786,6 +795,7 @@ export function DeskBoard({
     const unsubYear = subscribeYear(apply);
     const unsubIcons = subscribeIcons(apply);
     const unsubHint = subscribeHint(apply);
+    const unsubProfile = subscribeProfile(apply);
     const unsubBold = subscribeBold(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
@@ -870,6 +880,7 @@ export function DeskBoard({
       unsubYear();
       unsubIcons();
       unsubHint();
+      unsubProfile();
       unsubBold();
     };
   }, [listings, stall.id]);
@@ -2385,6 +2396,37 @@ export function DeskBoard({
                             {isListingLogOverlay(listing.id, logIds)
                               ? "Leave the parking-lot looks"
                               : "I will not unlog"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeProfile(listing) ? (
+                        <form
+                          method="post"
+                          action={listingProfileWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingProfileOverlay(listing.id, profileIds)
+                                ? "open"
+                                : "profile"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingProfileOverlay(listing.id, profileIds)
+                              ? "Leave the three looks"
+                              : "I will not profile it"}
                           </button>
                         </form>
                       ) : null}
