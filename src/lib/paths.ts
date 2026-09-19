@@ -1026,6 +1026,14 @@ export function listingFerriteWritePath() {
   return "/listings/ferrite";
 }
 
+export function listingCinchPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cinch`;
+}
+
+export function listingCinchWritePath() {
+  return "/listings/cinch";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

@@ -435,6 +435,12 @@ import {
   subscribeStitch,
 } from "@/lib/listing-stitch";
 import {
+  canTapeCinch,
+  isListingCinchOverlay,
+  readCinchListingIds,
+  subscribeCinch,
+} from "@/lib/listing-cinch";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -546,6 +552,7 @@ import {
   listingContentsWritePath,
   listingDubWritePath,
   listingStitchWritePath,
+  listingCinchWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -709,6 +716,7 @@ export function DeskBoard({
   const [contentsIds, setContentsIds] = useState<string[]>([]);
   const [dubIds, setDubIds] = useState<string[]>([]);
   const [stitchIds, setStitchIds] = useState<string[]>([]);
+  const [cinchIds, setCinchIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -806,6 +814,7 @@ export function DeskBoard({
       setContentsIds(readContentsListingIds());
       setDubIds(readDubListingIds());
       setStitchIds(readStitchListingIds());
+      setCinchIds(readCinchListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -892,6 +901,7 @@ export function DeskBoard({
     const unsubContents = subscribeContents(apply);
     const unsubDub = subscribeDub(apply);
     const unsubStitch = subscribeStitch(apply);
+    const unsubCinch = subscribeCinch(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -988,6 +998,7 @@ export function DeskBoard({
       unsubContents();
       unsubDub();
       unsubStitch();
+      unsubCinch();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2300,6 +2311,37 @@ export function DeskBoard({
                             {isListingStitchOverlay(listing.id, stitchIds)
                               ? "Leave the split"
                               : "I will not stitch them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCinch(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCinchWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCinchOverlay(listing.id, cinchIds)
+                                ? "open"
+                                : "cinch"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCinchOverlay(listing.id, cinchIds)
+                              ? "Leave the waist"
+                              : "I will not cinch it"}
                           </button>
                         </form>
                       ) : null}
