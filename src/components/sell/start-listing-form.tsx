@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ListingTypeBadge } from "@/components/listing-type-badge";
+import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,15 +31,6 @@ function dollarsToCents(value: string) {
   return Math.round(dollars * 100);
 }
 
-function fieldValue(target: EventTarget | null) {
-  if (
-    !(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)
-  ) {
-    return "";
-  }
-  return target.value;
-}
-
 export function StartListingForm({
   stall,
   type,
@@ -63,11 +55,11 @@ export function StartListingForm({
           id: "preview",
           stallId: stall.id,
           type: "digital",
-          title: title || "Untitled file",
-          summary: summary || "A file from this stall.",
+          title: title.trim() || "Untitled file",
+          summary: summary.trim() || "A file from this stall.",
           hubId: "download-stall",
           price: money(cents),
-          fileFormat: fileFormat || "PDF",
+          fileFormat: fileFormat.trim() || "PDF",
           cartEligible: true,
           status: "available",
         }
@@ -75,11 +67,11 @@ export function StartListingForm({
           id: "preview",
           stallId: stall.id,
           type: "physical",
-          title: title || "Untitled junk",
-          summary: summary || "Something that can sit on a folding table.",
+          title: title.trim() || "Untitled junk",
+          summary: summary.trim() || "Something that can sit on a folding table.",
           hubId,
           price: money(cents),
-          condition: condition || "scuffed",
+          condition: condition.trim() || "Tested, kinda",
           cartEligible: true,
           status: "available",
         };
@@ -119,8 +111,8 @@ export function StartListingForm({
         </div>
 
         {type === "physical" ? (
-          <div className="space-y-2">
-            <Label htmlFor="hubId">Aisle</Label>
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-medium">Aisle</legend>
             <input type="hidden" name="hubId" value={hubId} />
             <div className="grid gap-2">
               {mallHubs
@@ -133,15 +125,21 @@ export function StartListingForm({
                       type="button"
                       aria-pressed={selected}
                       onClick={() => setHubId(hub.id)}
-                      className={`w-full rounded-xl px-4 py-3 text-left ring-1 transition-shadow ${
+                      className={cn(
+                        "w-full rounded-xl px-4 py-3 text-left ring-1 transition-shadow",
                         selected
-                          ? "bg-card ring-foreground/20"
-                          : "bg-card/50 ring-foreground/10 hover:ring-foreground/20"
-                      }`}
+                          ? "bg-card ring-2 ring-foreground"
+                          : "bg-card/50 ring-foreground/10 hover:ring-foreground/20",
+                      )}
                     >
-                      <p className="font-heading text-lg tracking-tight">
-                        {hub.name}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-heading text-lg tracking-tight">
+                          {hub.name}
+                        </p>
+                        {selected ? (
+                          <Badge variant="secondary">This aisle</Badge>
+                        ) : null}
+                      </div>
                       <p className="mt-1 text-sm leading-6 text-muted-foreground">
                         {hub.rule}
                       </p>
@@ -149,7 +147,7 @@ export function StartListingForm({
                   );
                 })}
             </div>
-          </div>
+          </fieldset>
         ) : (
           <div className="rounded-xl bg-card/80 p-4 ring-1 ring-foreground/10">
             <input type="hidden" name="hubId" value="download-stall" />
@@ -171,15 +169,19 @@ export function StartListingForm({
           <Input
             id="title"
             name="title"
-            defaultValue=""
-            onInput={(event) => setTitle(fieldValue(event.target))}
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
             placeholder={
               type === "physical"
-                ? "Tape drawer lamp"
+                ? "Wobbly lamp, shade optional"
                 : "How to price your junk (PDF)"
             }
+            autoComplete="off"
             required
           />
+          <p className="text-sm leading-6 text-muted-foreground">
+            Gray example text is not the tag. Type the name.
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -187,13 +189,14 @@ export function StartListingForm({
           <Textarea
             id="summary"
             name="summary"
-            defaultValue=""
-            onInput={(event) => setSummary(fieldValue(event.target))}
+            value={summary}
+            onChange={(event) => setSummary(event.target.value)}
             placeholder={
               type === "physical"
                 ? "Lights up if you twist the neck. Box is tired."
                 : "One page. A rule of thumb. Written on a folding table."
             }
+            autoComplete="off"
             required
           />
         </div>
@@ -208,8 +211,8 @@ export function StartListingForm({
               inputMode="decimal"
               min="0.01"
               step="0.01"
-              defaultValue="8"
-              onInput={(event) => setPrice(fieldValue(event.target) || "8")}
+              value={price}
+              onChange={(event) => setPrice(event.target.value || "8")}
               required
             />
             <p className="text-sm leading-6 text-muted-foreground">
@@ -222,9 +225,10 @@ export function StartListingForm({
               <Input
                 id="condition"
                 name="condition"
-                defaultValue=""
-                onInput={(event) => setCondition(fieldValue(event.target))}
-                placeholder="scuffed"
+                value={condition}
+                onChange={(event) => setCondition(event.target.value)}
+                placeholder="Has a crack, still lights up"
+                autoComplete="off"
                 required
               />
             </div>
@@ -234,15 +238,16 @@ export function StartListingForm({
               <Input
                 id="fileFormat"
                 name="fileFormat"
-                defaultValue="PDF"
-                onInput={(event) => {
-                  const next = fieldValue(event.target) || "PDF";
-                  setFileFormat(next);
-                  if (!isGiftFileFormat(next)) {
+                value={fileFormat}
+                onChange={(event) => {
+                  const value = event.target.value || "PDF";
+                  setFileFormat(value);
+                  if (!isGiftFileFormat(value)) {
                     setGiftError(null);
                   }
                 }}
                 placeholder="PDF"
+                autoComplete="off"
                 required
               />
             </div>
