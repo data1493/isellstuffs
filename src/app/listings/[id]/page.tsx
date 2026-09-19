@@ -67,6 +67,7 @@ import { ListingWhoseNotice } from "@/components/listing-whose-notice";
 import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
 import { ListingLoopNotice } from "@/components/listing-loop-notice";
 import { ListingTwistNotice } from "@/components/listing-twist-notice";
+import { ListingStretchNotice } from "@/components/listing-stretch-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -155,6 +156,7 @@ import {
   listingTypesetPath,
   listingLoopPath,
   listingTwistPath,
+  listingStretchPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -383,6 +385,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCrackNotice listingId={listing.id} /> : null}
               {physical ? <ListingInkNotice listingId={listing.id} /> : null}
               {physical ? <ListingSoleNotice listingId={listing.id} /> : null}
+              {physical ? <ListingStretchNotice listingId={listing.id} /> : null}
               {physical ? <ListingDumpNotice listingId={listing.id} /> : null}
               {physical ? <ListingPhoneNotice listingId={listing.id} /> : null}
               {physical ? <ListingRipNotice listingId={listing.id} /> : null}
@@ -679,6 +682,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not resole
+                  </Link>
+                  <Link
+                    href={listingStretchPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not stretch
                   </Link>
                   <Link
                     href={listingDumpPath(listing.id)}
