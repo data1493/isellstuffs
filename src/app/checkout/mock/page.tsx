@@ -22,6 +22,10 @@ import {
   parseCheckoutSession,
 } from "@/lib/checkout";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
+import {
+  CHECKOUT_HOURS_COPY,
+  checkoutHoursForStall,
+} from "@/lib/checkout-hours";
 import { listingById } from "@/lib/commerce";
 import { checkoutMockMetadata } from "@/lib/seo";
 
@@ -126,33 +130,59 @@ export default async function MockCheckoutPage({
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-5">
-                {groups.map((group) => (
-                  <div key={group.stall.id} className="space-y-2">
-                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                      {group.stall.boothName}
-                    </p>
-                    <ul className="space-y-3">
-                      {group.lines.map(({ listing }) => (
-                        <li key={listing.id} className="flex justify-between gap-3 text-sm">
-                          <span>
-                            <span className="block font-medium leading-5">
-                              {listing.title}
-                            </span>
-                            <span className="block text-xs text-muted-foreground">
-                              {listingDetail(listing)}
-                            </span>
+                {groups.map((group) => {
+                  const pickup = checkoutHoursForStall(
+                    match.listingIds,
+                    group.stall.id,
+                  );
+
+                  return (
+                    <div key={group.stall.id} className="space-y-2">
+                      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                        {group.stall.boothName}
+                      </p>
+                      {pickup ? (
+                        <p
+                          data-checkout-hours=""
+                          data-checkout-hours-stall={group.stall.id}
+                          className="text-xs leading-5 text-muted-foreground"
+                        >
+                          <span data-checkout-hours-text="">{pickup.hours}</span>
+                          {" · "}
+                          <span data-checkout-hours-place="">
+                            {pickup.place}
                           </span>
-                          <span className="shrink-0 font-heading">
-                            {formatPlanMoney(
-                              listing.price.amountCents,
-                              listing.price.currency,
-                            )}
+                          <span className="mt-0.5 block">
+                            {CHECKOUT_HOURS_COPY}
                           </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                        </p>
+                      ) : null}
+                      <ul className="space-y-3">
+                        {group.lines.map(({ listing }) => (
+                          <li
+                            key={listing.id}
+                            className="flex justify-between gap-3 text-sm"
+                          >
+                            <span>
+                              <span className="block font-medium leading-5">
+                                {listing.title}
+                              </span>
+                              <span className="block text-xs text-muted-foreground">
+                                {listingDetail(listing)}
+                              </span>
+                            </span>
+                            <span className="shrink-0 font-heading">
+                              {formatPlanMoney(
+                                listing.price.amountCents,
+                                listing.price.currency,
+                              )}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
 
                 <Separator />
 

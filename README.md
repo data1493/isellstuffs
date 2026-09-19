@@ -106,7 +106,7 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | Route | What it is |
 | --- | --- |
 | `/cart` | Tote. Same listing ids listing/stall pages wrote |
-| `/checkout/mock` | Local test pay wall when no Stripe secret is set |
+| `/checkout/mock` | Local test pay wall when no Stripe secret is set. Physical booths on the slip aside show driveway hours from `@/lib/pickup-display` before you pay. Files and the gift card do not. |
 | `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” and join the sold overlay — the lamp leaves `avail=open`, the PDF stays for sale |
 | `/checkout/cancel` | Walked away. Tote stays |
 | `/folder` | Current slip’s digital lines, or last week’s files still in `iss:orders`. Cold tab: “No folder on this slip.” |
