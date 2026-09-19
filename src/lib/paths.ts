@@ -690,6 +690,14 @@ export function listingTuneWritePath() {
   return "/listings/tune";
 }
 
+export function listingVersoPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/verso`;
+}
+
+export function listingVersoWritePath() {
+  return "/listings/verso";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

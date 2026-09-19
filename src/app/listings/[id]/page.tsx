@@ -86,6 +86,7 @@ import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
 import { ListingEvenNotice } from "@/components/listing-even-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
+import { ListingVersoNotice } from "@/components/listing-verso-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -193,6 +194,7 @@ import {
   listingDonglePath,
   listingEvenPath,
   listingTunePath,
+  listingVersoPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -391,6 +393,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? (
                 <ListingRememberNotice listingId={listing.id} />
               ) : null}
+              {!physical ? <ListingVersoNotice listingId={listing.id} /> : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
@@ -893,6 +896,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not remember better
+                  </Link>
+                  <Link
+                    href={listingVersoPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not write Side B
                   </Link>
                   <Link
                     href={listingStemsPath(listing.id)}
