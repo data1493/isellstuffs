@@ -121,6 +121,7 @@ import { ListingRightsNotice } from "@/components/listing-rights-notice";
 import { ListingVersoNotice } from "@/components/listing-verso-notice";
 import { ListingYearNotice } from "@/components/listing-year-notice";
 import { ListingIconsNotice } from "@/components/listing-icons-notice";
+import { ListingHintNotice } from "@/components/listing-hint-notice";
 import { ListingBoldNotice } from "@/components/listing-bold-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
@@ -264,6 +265,7 @@ import {
   listingVersoPath,
   listingYearPath,
   listingIconsPath,
+  listingHintPath,
   listingBoldPath,
   listingSizePath,
   listingSmokePath,
@@ -497,6 +499,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingRightsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
               {!physical ? <ListingIconsNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingHintNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBoldNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -1302,6 +1305,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not draw the icons
+                  </Link>
+                  <Link
+                    href={listingHintPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not hint it
                   </Link>
                   <Link
                     href={listingBoldPath(listing.id)}

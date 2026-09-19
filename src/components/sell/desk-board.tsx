@@ -411,6 +411,12 @@ import {
   subscribeIcons,
 } from "@/lib/listing-icons";
 import {
+  canTapeHint,
+  isListingHintOverlay,
+  readHintListingIds,
+  subscribeHint,
+} from "@/lib/listing-hint";
+import {
   canTapeBold,
   isListingBoldOverlay,
   readBoldListingIds,
@@ -468,6 +474,7 @@ import {
   listingVersoWritePath,
   listingYearWritePath,
   listingIconsWritePath,
+  listingHintWritePath,
   listingBoldWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -611,6 +618,7 @@ export function DeskBoard({
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [yearIds, setYearIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
+  const [hintIds, setHintIds] = useState<string[]>([]);
   const [boldIds, setBoldIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
@@ -694,6 +702,7 @@ export function DeskBoard({
       setVersoIds(readVersoListingIds());
       setYearIds(readYearListingIds());
       setIconsIds(readIconsListingIds());
+      setHintIds(readHintListingIds());
       setBoldIds(readBoldListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
@@ -766,6 +775,7 @@ export function DeskBoard({
     const unsubVerso = subscribeVerso(apply);
     const unsubYear = subscribeYear(apply);
     const unsubIcons = subscribeIcons(apply);
+    const unsubHint = subscribeHint(apply);
     const unsubBold = subscribeBold(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
@@ -848,6 +858,7 @@ export function DeskBoard({
       unsubVerso();
       unsubYear();
       unsubIcons();
+      unsubHint();
       unsubBold();
     };
   }, [listings, stall.id]);
@@ -2828,6 +2839,37 @@ export function DeskBoard({
                             {isListingIconsOverlay(listing.id, iconsIds)
                               ? "Leave the two weights"
                               : "I will not draw the icons"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHint(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHintWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHintOverlay(listing.id, hintIds)
+                                ? "open"
+                                : "hint"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingHintOverlay(listing.id, hintIds)
+                              ? "Leave the two weights"
+                              : "I will not hint it"}
                           </button>
                         </form>
                       ) : null}
