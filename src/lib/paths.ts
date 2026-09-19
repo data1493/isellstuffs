@@ -722,6 +722,14 @@ export function listingBeepWritePath() {
   return "/listings/beep";
 }
 
+export function listingRecapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/recap`;
+}
+
+export function listingRecapWritePath() {
+  return "/listings/recap";
+}
+
 export function listingEvenPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/even`;
 }

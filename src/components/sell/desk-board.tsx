@@ -255,6 +255,12 @@ import {
   subscribeBeep,
 } from "@/lib/listing-beep";
 import {
+  canTapeRecap,
+  isListingRecapOverlay,
+  readRecapListingIds,
+  subscribeRecap,
+} from "@/lib/listing-recap";
+import {
   canTapeEven,
   isListingEvenOverlay,
   readEvenListingIds,
@@ -341,6 +347,7 @@ import {
   listingLiningWritePath,
   listingDongleWritePath,
   listingBeepWritePath,
+  listingRecapWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -466,6 +473,7 @@ export function DeskBoard({
   const [liningIds, setLiningIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [beepIds, setBeepIds] = useState<string[]>([]);
+  const [recapIds, setRecapIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
   const [cementIds, setCementIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
@@ -532,6 +540,7 @@ export function DeskBoard({
       setLiningIds(readLiningListingIds());
       setDongleIds(readDongleListingIds());
       setBeepIds(readBeepListingIds());
+      setRecapIds(readRecapListingIds());
       setEvenIds(readEvenListingIds());
       setCementIds(readCementListingIds());
       setLinkIds(readLinkListingIds());
@@ -587,6 +596,7 @@ export function DeskBoard({
     const unsubLining = subscribeLining(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubBeep = subscribeBeep(apply);
+    const unsubRecap = subscribeRecap(apply);
     const unsubEven = subscribeEven(apply);
     const unsubCement = subscribeCement(apply);
     const unsubLink = subscribeLink(apply);
@@ -652,6 +662,7 @@ export function DeskBoard({
       unsubLining();
       unsubDongle();
       unsubBeep();
+      unsubRecap();
       unsubEven();
       unsubCement();
       unsubLink();
@@ -1246,6 +1257,37 @@ export function DeskBoard({
                             {isListingBeepOverlay(listing.id, beepIds)
                               ? "Leave the tangle"
                               : "I will not beep it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRecap(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRecapWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRecapOverlay(listing.id, recapIds)
+                                ? "open"
+                                : "recap"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRecapOverlay(listing.id, recapIds)
+                              ? "Leave the save luck"
+                              : "I will not recap"}
                           </button>
                         </form>
                       ) : null}
