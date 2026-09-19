@@ -195,6 +195,12 @@ import {
   subscribeDongle,
 } from "@/lib/listing-dongle";
 import {
+  canTapeEven,
+  isListingEvenOverlay,
+  readEvenListingIds,
+  subscribeEven,
+} from "@/lib/listing-even";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -207,6 +213,7 @@ import {
   listingLedWritePath,
   listingSprayWritePath,
   listingDongleWritePath,
+  listingEvenWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -308,6 +315,7 @@ export function DeskBoard({
   const [ledIds, setLedIds] = useState<string[]>([]);
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
+  const [evenIds, setEvenIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -353,6 +361,7 @@ export function DeskBoard({
       setLedIds(readLedListingIds());
       setSprayIds(readSprayListingIds());
       setDongleIds(readDongleListingIds());
+      setEvenIds(readEvenListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -387,6 +396,7 @@ export function DeskBoard({
     const unsubLed = subscribeLed(apply);
     const unsubSpray = subscribeSpray(apply);
     const unsubDongle = subscribeDongle(apply);
+    const unsubEven = subscribeEven(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -431,6 +441,7 @@ export function DeskBoard({
       unsubLed();
       unsubSpray();
       unsubDongle();
+      unsubEven();
     };
   }, [listings, stall.id]);
 
@@ -860,6 +871,37 @@ export function DeskBoard({
                             {isListingDongleOverlay(listing.id, dongleIds)
                               ? "Leave the pile"
                               : "I don't have a dongle"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeEven(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEvenWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEvenOverlay(listing.id, evenIds)
+                                ? "open"
+                                : "even"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingEvenOverlay(listing.id, evenIds)
+                              ? "Leave the pair"
+                              : "I will not even the wear"}
                           </button>
                         </form>
                       ) : null}

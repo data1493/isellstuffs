@@ -674,6 +674,14 @@ export function listingDongleWritePath() {
   return "/listings/dongle";
 }
 
+export function listingEvenPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/even`;
+}
+
+export function listingEvenWritePath() {
+  return "/listings/even";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
