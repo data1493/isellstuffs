@@ -1202,6 +1202,14 @@ export function listingBevelWritePath() {
   return "/listings/bevel";
 }
 
+export function listingDolbyPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dolby`;
+}
+
+export function listingDolbyWritePath() {
+  return "/listings/dolby";
+}
+
 export function listingCollatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/collate`;
 }

@@ -555,6 +555,12 @@ import {
   subscribePuck,
 } from "@/lib/listing-puck";
 import {
+  canTapeDolby,
+  isListingDolbyOverlay,
+  readDolbyListingIds,
+  subscribeDolby,
+} from "@/lib/listing-dolby";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -728,6 +734,7 @@ import {
   listingGlazeWritePath,
   listingPuckWritePath,
   listingBevelWritePath,
+  listingDolbyWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingScaleWritePath,
@@ -919,6 +926,7 @@ export function DeskBoard({
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
+  const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1043,6 +1051,7 @@ export function DeskBoard({
       setGlazeIds(readGlazeListingIds());
       setPuckIds(readPuckListingIds());
       setBevelIds(readBevelListingIds());
+      setDolbyIds(readDolbyListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1156,6 +1165,7 @@ export function DeskBoard({
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPuck = subscribePuck(apply);
     const unsubBevel = subscribeBevel(apply);
+    const unsubDolby = subscribeDolby(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1279,6 +1289,7 @@ export function DeskBoard({
       unsubGlaze();
       unsubPuck();
       unsubBevel();
+      unsubDolby();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2690,6 +2701,37 @@ export function DeskBoard({
                             {isListingBevelOverlay(listing.id, bevelIds)
                               ? "Leave the catch"
                               : "I will not bevel it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDolby(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDolbyWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDolbyOverlay(listing.id, dolbyIds)
+                                ? "open"
+                                : "dolby"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDolbyOverlay(listing.id, dolbyIds)
+                              ? "Leave the hiss"
+                              : "I will not Dolby it"}
                           </button>
                         </form>
                       ) : null}
