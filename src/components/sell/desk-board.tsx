@@ -513,6 +513,12 @@ import {
   subscribeDegauss,
 } from "@/lib/listing-degauss";
 import {
+  canTapeKnurl,
+  isListingKnurlOverlay,
+  readKnurlListingIds,
+  subscribeKnurl,
+} from "@/lib/listing-knurl";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -654,6 +660,7 @@ import {
   listingLatheWritePath,
   listingHandleWritePath,
   listingDegaussWritePath,
+  listingKnurlWritePath,
   listingPaginateWritePath,
   listingGateWritePath,
   listingContrastWritePath,
@@ -834,6 +841,7 @@ export function DeskBoard({
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
   const [degaussIds, setDegaussIds] = useState<string[]>([]);
+  const [knurlIds, setKnurlIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -947,6 +955,7 @@ export function DeskBoard({
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
       setDegaussIds(readDegaussListingIds());
+      setKnurlIds(readKnurlListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1049,6 +1058,7 @@ export function DeskBoard({
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
     const unsubDegauss = subscribeDegauss(apply);
+    const unsubKnurl = subscribeKnurl(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1161,6 +1171,7 @@ export function DeskBoard({
       unsubLathe();
       unsubHandle();
       unsubDegauss();
+      unsubKnurl();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2476,6 +2487,37 @@ export function DeskBoard({
                             {isListingDegaussOverlay(listing.id, degaussIds)
                               ? "Leave the tape"
                               : "I will not degauss it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeKnurl(listing) ? (
+                        <form
+                          method="post"
+                          action={listingKnurlWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingKnurlOverlay(listing.id, knurlIds)
+                                ? "open"
+                                : "knurl"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingKnurlOverlay(listing.id, knurlIds)
+                              ? "Leave the lid"
+                              : "I will not knurl it"}
                           </button>
                         </form>
                       ) : null}

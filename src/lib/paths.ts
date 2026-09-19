@@ -1130,6 +1130,14 @@ export function listingDegaussWritePath() {
   return "/listings/degauss";
 }
 
+export function listingKnurlPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/knurl`;
+}
+
+export function listingKnurlWritePath() {
+  return "/listings/knurl";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }
