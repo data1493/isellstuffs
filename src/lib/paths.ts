@@ -386,6 +386,14 @@ export function listingClipWritePath() {
   return "/listings/clip";
 }
 
+export function listingLinePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/line`;
+}
+
+export function listingLineWritePath() {
+  return "/listings/line";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

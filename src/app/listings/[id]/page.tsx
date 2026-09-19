@@ -42,6 +42,7 @@ import { ListingChipNotice } from "@/components/listing-chip-notice";
 import { ListingKnobNotice } from "@/components/listing-knob-notice";
 import { ListingBoxNotice } from "@/components/listing-box-notice";
 import { ListingHairNotice } from "@/components/listing-hair-notice";
+import { ListingLineNotice } from "@/components/listing-line-notice";
 import { ListingVibeNotice } from "@/components/listing-vibe-notice";
 import { ListingClipNotice } from "@/components/listing-clip-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
@@ -111,6 +112,7 @@ import {
   listingKnobPath,
   listingBoxPath,
   listingHairPath,
+  listingLinePath,
   listingVibePath,
   listingClipPath,
   listingWrongPath,
@@ -328,6 +330,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBoxNotice listingId={listing.id} /> : null}
               {physical ? <ListingOilNotice listingId={listing.id} /> : null}
               {physical ? <ListingHairNotice listingId={listing.id} /> : null}
+              {physical ? <ListingLineNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -576,6 +579,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Pet hair stays
+                  </Link>
+                  <Link
+                    href={listingLinePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The line stays
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
