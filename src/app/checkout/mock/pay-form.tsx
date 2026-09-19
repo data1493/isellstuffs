@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { MallPayError } from "@/components/mall-notice";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatPlanMoney, type CheckoutSessionSummary } from "@/lib/checkout";
 import { getStripe, isStripeJsConfigured } from "@/lib/stripe-browser";
+import { cn } from "@/lib/utils";
 
 const TEST_SUCCESS = "4242424242424242";
 const TEST_DECLINE: Record<string, string> = {
@@ -275,27 +276,25 @@ export function PayForm({ session }: { session: CheckoutSessionSummary }) {
       {error ? <MallPayError body={error} /> : null}
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <Button
+        <button
           type="submit"
           name="action"
           value="pay"
-          size="lg"
-          className="rounded-full sm:flex-1"
           disabled={busy !== null || stripeReady === "loading"}
+          className={cn(buttonVariants({ size: "lg" }), "rounded-full sm:flex-1")}
         >
           {busy === "pay" ? "Taking the slip…" : `Pay ${total}`}
-        </Button>
-        <Button
+        </button>
+        <button
           type="submit"
           name="action"
           value="cancel"
-          size="lg"
-          variant="outline"
-          className="rounded-full"
+          formNoValidate
           disabled={busy !== null}
+          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full")}
         >
           {busy === "cancel" ? "Leaving…" : "Cancel"}
-        </Button>
+        </button>
       </div>
 
       <p className="text-center text-xs text-muted-foreground">

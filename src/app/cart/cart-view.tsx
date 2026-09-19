@@ -11,7 +11,7 @@ import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { MallNotice, MallPayError } from "@/components/mall-notice";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -41,6 +41,7 @@ import {
 } from "@/lib/listing-display";
 import { listingPath, stallPath } from "@/lib/paths";
 import { getStripe } from "@/lib/stripe-browser";
+import { cn } from "@/lib/utils";
 
 type CheckoutMode = "stripe-test" | "local-mock";
 
@@ -384,14 +385,13 @@ export function CartView({
                 <CardFooter className="hidden flex-col items-stretch gap-2 border-0 bg-transparent lg:flex">
                   <form action="/cart/pay" method="post" className="flex flex-col">
                     {checkoutFields}
-                    <Button
+                    <button
                       type="submit"
-                      size="lg"
-                      className="rounded-full"
                       disabled={payable.length === 0}
+                      className={cn(buttonVariants({ size: "lg" }), "rounded-full")}
                     >
                       {`Checkout · ${formatMoney(subtotal)}`}
-                    </Button>
+                    </button>
                   </form>
                   <p className="text-center text-xs leading-5 text-muted-foreground">
                     {mode === "stripe-test"
@@ -488,14 +488,13 @@ export function CartView({
             </div>
             <form action="/cart/pay" method="post">
               {checkoutFields}
-              <Button
+              <button
                 type="submit"
-                size="lg"
-                className="rounded-full"
                 disabled={payable.length === 0}
+                className={cn(buttonVariants({ size: "lg" }), "rounded-full")}
               >
                 Checkout
-              </Button>
+              </button>
             </form>
           </div>
         </div>
