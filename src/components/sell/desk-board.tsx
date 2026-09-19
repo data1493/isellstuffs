@@ -39,6 +39,12 @@ import {
   subscribeCards,
 } from "@/lib/listing-cards";
 import {
+  canTapeGrease,
+  isListingGreaseOverlay,
+  readGreaseListingIds,
+  subscribeGrease,
+} from "@/lib/listing-grease";
+import {
   canTapeDump,
   isListingDumpOverlay,
   readDumpListingIds,
@@ -352,6 +358,7 @@ import {
 } from "@/lib/listing-gum";
 import {
   listingCardsWritePath,
+  listingGreaseWritePath,
   listingDoubleWritePath,
   listingMinsWritePath,
   listingDumpWritePath,
@@ -467,6 +474,7 @@ export function DeskBoard({
   const [phoneIds, setPhoneIds] = useState<string[]>([]);
   const [ripIds, setRipIds] = useState<string[]>([]);
   const [cardsIds, setCardsIds] = useState<string[]>([]);
+  const [greaseIds, setGreaseIds] = useState<string[]>([]);
   const [zipIds, setZipIds] = useState<string[]>([]);
   const [shotIds, setShotIds] = useState<string[]>([]);
   const [warmIds, setWarmIds] = useState<string[]>([]);
@@ -538,6 +546,7 @@ export function DeskBoard({
       setPhoneIds(readPhoneListingIds());
       setRipIds(readRipListingIds());
       setCardsIds(readCardsListingIds());
+      setGreaseIds(readGreaseListingIds());
       setZipIds(readZipListingIds());
       setShotIds(readShotListingIds());
       setWarmIds(readWarmListingIds());
@@ -598,6 +607,7 @@ export function DeskBoard({
     const unsubPhone = subscribePhone(apply);
     const unsubRip = subscribeRip(apply);
     const unsubCards = subscribeCards(apply);
+    const unsubGrease = subscribeGrease(apply);
     const unsubZip = subscribeZip(apply);
     const unsubShot = subscribeShot(apply);
     const unsubWarm = subscribeWarm(apply);
@@ -668,6 +678,7 @@ export function DeskBoard({
       unsubPhone();
       unsubRip();
       unsubCards();
+      unsubGrease();
       unsubZip();
       unsubShot();
       unsubWarm();
@@ -1673,6 +1684,37 @@ export function DeskBoard({
                             {isListingCardsOverlay(listing.id, cardsIds)
                               ? "Leave the scans"
                               : "I will not type them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGrease(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGreaseWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGreaseOverlay(listing.id, greaseIds)
+                                ? "open"
+                                : "grease"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGreaseOverlay(listing.id, greaseIds)
+                              ? "Leave the grease"
+                              : "The grease stays"}
                           </button>
                         </form>
                       ) : null}

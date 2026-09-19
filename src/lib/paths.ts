@@ -498,6 +498,14 @@ export function listingCardsWritePath() {
   return "/listings/cards";
 }
 
+export function listingGreasePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/grease`;
+}
+
+export function listingGreaseWritePath() {
+  return "/listings/grease";
+}
+
 export function listingZipPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/zip`;
 }

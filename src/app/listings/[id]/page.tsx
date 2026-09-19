@@ -64,6 +64,7 @@ import { ListingDumpNotice } from "@/components/listing-dump-notice";
 import { ListingPhoneNotice } from "@/components/listing-phone-notice";
 import { ListingRipNotice } from "@/components/listing-rip-notice";
 import { ListingCardsNotice } from "@/components/listing-cards-notice";
+import { ListingGreaseNotice } from "@/components/listing-grease-notice";
 import { ListingZipNotice } from "@/components/listing-zip-notice";
 import { ListingWhoseNotice } from "@/components/listing-whose-notice";
 import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
@@ -195,6 +196,7 @@ import {
   listingPhonePath,
   listingRipPath,
   listingCardsPath,
+  listingGreasePath,
   listingZipPath,
   listingWhosePath,
   listingTypesetPath,
@@ -448,6 +450,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
               {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingGreaseNotice listingId={listing.id} /> : null}
               {!physical ? <ListingDoubleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingMinsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingExpireNotice listingId={listing.id} /> : null}
@@ -1108,6 +1111,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not type the cards
+                  </Link>
+                  <Link
+                    href={listingGreasePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The grease stays
                   </Link>
                   <Link
                     href={listingDoublePath(listing.id)}
