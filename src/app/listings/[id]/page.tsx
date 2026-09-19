@@ -109,6 +109,7 @@ import { ListingVentNotice } from "@/components/listing-vent-notice";
 import { ListingGasketNotice } from "@/components/listing-gasket-notice";
 import { ListingGlowNotice } from "@/components/listing-glow-notice";
 import { ListingEtchNotice } from "@/components/listing-etch-notice";
+import { ListingShimNotice } from "@/components/listing-shim-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -249,6 +250,7 @@ import {
   listingGasketPath,
   listingGlowPath,
   listingEtchPath,
+  listingShimPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -546,6 +548,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingCenterNotice listingId={listing.id} /> : null}
               {physical ? <ListingWarpNotice listingId={listing.id} /> : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
+              {physical ? <ListingShimNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpliceNotice listingId={listing.id} /> : null}
               {physical ? <ListingRadioNotice listingId={listing.id} /> : null}
               {physical ? <ListingVentNotice listingId={listing.id} /> : null}
@@ -1035,6 +1038,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not read the runout
+                  </Link>
+                  <Link
+                    href={listingShimPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not shim it
                   </Link>
                   <Link
                     href={listingSplicePath(listing.id)}
