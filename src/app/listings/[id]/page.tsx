@@ -65,6 +65,7 @@ import { ListingCardsNotice } from "@/components/listing-cards-notice";
 import { ListingZipNotice } from "@/components/listing-zip-notice";
 import { ListingWhoseNotice } from "@/components/listing-whose-notice";
 import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
+import { ListingLoopNotice } from "@/components/listing-loop-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -151,6 +152,7 @@ import {
   listingZipPath,
   listingWhosePath,
   listingTypesetPath,
+  listingLoopPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -356,6 +358,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? <ListingShotNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
@@ -784,6 +787,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     BPM is a guess
+                  </Link>
+                  <Link
+                    href={listingLoopPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not slice the loop
                   </Link>
                 </p>
               )}

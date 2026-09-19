@@ -522,6 +522,14 @@ export function listingTypesetWritePath() {
   return "/listings/typeset";
 }
 
+export function listingLoopPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/loop`;
+}
+
+export function listingLoopWritePath() {
+  return "/listings/loop";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
