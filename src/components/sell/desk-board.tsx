@@ -663,6 +663,12 @@ import {
   subscribeCollate,
 } from "@/lib/listing-collate";
 import {
+  canTapePreflight,
+  isListingPreflightOverlay,
+  readPreflightListingIds,
+  subscribePreflight,
+} from "@/lib/listing-preflight";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -869,6 +875,7 @@ import {
   listingScribeWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
+  listingPreflightWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
@@ -1100,6 +1107,7 @@ export function DeskBoard({
   const [outlineIds, setOutlineIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
+  const [preflightIds, setPreflightIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
@@ -1245,6 +1253,7 @@ export function DeskBoard({
       setOutlineIds(readOutlineListingIds());
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
+      setPreflightIds(readPreflightListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
@@ -1379,6 +1388,7 @@ export function DeskBoard({
     const unsubOutline = subscribeOutline(apply);
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
+    const unsubPreflight = subscribePreflight(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
@@ -1523,6 +1533,7 @@ export function DeskBoard({
       unsubOutline();
       unsubPaginate();
       unsubCollate();
+      unsubPreflight();
       unsubScale();
       unsubGate();
       unsubQuantize();
@@ -5463,6 +5474,37 @@ export function DeskBoard({
                             {isListingCollateOverlay(listing.id, collateIds)
                               ? "Leave the one-pager"
                               : "I will not collate them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePreflight(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPreflightWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPreflightOverlay(listing.id, preflightIds)
+                                ? "open"
+                                : "preflight"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPreflightOverlay(listing.id, preflightIds)
+                              ? "Leave the page"
+                              : "I will not preflight it"}
                           </button>
                         </form>
                       ) : null}

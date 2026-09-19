@@ -160,6 +160,7 @@ import { ListingTemperNotice } from "@/components/listing-temper-notice";
 import { ListingScribeNotice } from "@/components/listing-scribe-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
+import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
@@ -588,6 +589,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingCollateNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingPreflightNotice listingId={listing.id} />
               ) : null}
               {!physical ? (
                 <ListingConsultNotice listingId={listing.id} />

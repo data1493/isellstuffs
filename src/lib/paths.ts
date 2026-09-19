@@ -1274,6 +1274,14 @@ export function listingDeoxWritePath() {
   return "/listings/deox";
 }
 
+export function listingPreflightPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/preflight`;
+}
+
+export function listingPreflightWritePath() {
+  return "/listings/preflight";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }
