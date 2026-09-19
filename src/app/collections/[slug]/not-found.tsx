@@ -3,16 +3,9 @@ import Link from "next/link";
 
 import { CollectionMissing } from "@/components/collections/collection-empty";
 import { mallCollections } from "@/lib/collections";
-import { collectionsPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
+import { missingCollectionMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = shareMetadata({
-  title: "Rack not on the map",
-  description:
-    "That collection was never taped. Under a ten, files tonight, and tested kinda are the racks we lined up.",
-  path: collectionsPath(),
-  robots: { index: false, follow: true },
-});
+export const metadata: Metadata = missingCollectionMetadata();
 
 export default function CollectionSlugNotFound() {
   return (

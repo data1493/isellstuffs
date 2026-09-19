@@ -138,7 +138,12 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/hubs`, `/hubs/[slug]` | Aisle name, rule, listing count |
 | `/listings/[id]` | `{title} · {price}` plus condition/format, stall, status. Product + Offer JSON-LD |
 | `/stalls/[slug]` | Booth name, mix of objects and files |
-| `/cart`, `/checkout/*`, `/saved` | Real titles. `noindex` — not catalog URLs |
+| `/about` | The mall story — flea-market mall, 10% cut, labeled ads, not a warehouse |
+| `/help` | How this mall works — browse, tote, mock pay, folder slip, list a stall |
+| `/this-week` | Weekend stall drop. Objects and files, not a paid stamp |
+| `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
+| `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
+| `/cart`, `/checkout/*`, `/saved`, `/orders` | Real titles. `noindex` — not catalog URLs |
 | Unknown path | Root 404: “Not on the map” |
 
 Optional: set `NEXT_PUBLIC_SITE_URL` so canonical and OG URLs are absolute. Local fallback is `http://127.0.0.1:44721`.

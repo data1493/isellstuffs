@@ -10,15 +10,9 @@ import {
   collectionRack,
   mallCollections,
 } from "@/lib/collections";
-import { collectionsPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
+import { collectionsMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = shareMetadata({
-  title: "Racks, not aisles",
-  description:
-    "Curated collections from the stand-in catalog. Under a ten, files tonight, and tested kinda — themes a stallholder taped, not a fifth hub.",
-  path: collectionsPath(),
-});
+export const metadata: Metadata = collectionsMetadata();
 
 export default function CollectionsPage() {
   return (

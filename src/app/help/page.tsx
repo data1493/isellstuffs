@@ -13,15 +13,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { helpFeePercent, helpJsonLd, helpSteps } from "@/lib/help";
-import { aboutPath, feesPath, helpPath, sellNewPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { aboutPath, feesPath, sellNewPath } from "@/lib/paths";
+import { helpMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = shareMetadata({
-  title: "Help",
-  description: `How ${site.name} works: browse the floor, bag a tote, mock-pay, open a folder slip, or list a stall. The mall keeps ${helpFeePercent}%. Not the origin story or the fee board.`,
-  path: helpPath(),
-});
+export const metadata: Metadata = helpMetadata();
 
 export default function HelpPage() {
   const steps = helpSteps();

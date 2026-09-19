@@ -10,8 +10,8 @@ import { WeekPickCard } from "@/components/this-week/week-pick-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/commerce";
-import { listingPath, thisWeekEditPath, thisWeekPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
+import { listingPath, thisWeekEditPath } from "@/lib/paths";
+import { thisWeekMetadata } from "@/lib/seo";
 import {
   resolveWeekPickIds,
   WEEK_PICKS_COOKIE_NAME,
@@ -26,12 +26,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = shareMetadata({
-  title: "This week on the table",
-  description:
-    "A weekend stall drop. Mall picks from the stand-in catalog — objects and files, not paid stamps.",
-  path: thisWeekPath(),
-});
+export const metadata: Metadata = thisWeekMetadata();
 
 const syncScript = `try{var m=document.cookie.match(/(?:^|; )${WEEK_PICKS_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(WEEK_PICKS_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}`;
 

@@ -22,16 +22,12 @@ import {
   sellPath,
   thisWeekPath,
 } from "@/lib/paths";
-import { absoluteUrl, shareMetadata } from "@/lib/seo";
+import { aboutMetadata, absoluteUrl } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 const feePercent = PLATFORM_FEE_BPS / 100;
 
-export const metadata: Metadata = shareMetadata({
-  title: "About",
-  description: `${site.name} is a flea-market mall. Independent stalls sell physical finds and digital files from the same table. The mall keeps ${feePercent}%. Paid corners are labeled.`,
-  path: aboutPath(),
-});
+export const metadata: Metadata = aboutMetadata();
 
 function aboutJsonLd() {
   return {

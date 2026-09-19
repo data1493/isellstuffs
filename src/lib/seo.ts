@@ -22,7 +22,20 @@ import {
   type ExploreSort,
 } from "@/lib/browse";
 import { listingFact, listingFactLabel, listingStatusLabel } from "@/lib/listing-display";
-import { listingPath, savedPath, searchPath, stallPath } from "@/lib/paths";
+import {
+  aboutPath,
+  collectionPath,
+  collectionsPath,
+  helpPath,
+  listingPath,
+  orderPath,
+  ordersPath,
+  savedPath,
+  searchPath,
+  sellDeskPath,
+  stallPath,
+  thisWeekPath,
+} from "@/lib/paths";
 import { site } from "@/lib/site";
 
 const fallbackOrigin = "http://127.0.0.1:44721";
@@ -371,6 +384,93 @@ export function savedMetadata(): Metadata {
       "Listings parked on this browser. Not the tote. Parked, not paid. No account.",
     path: savedPath(),
     robots: noIndex,
+  });
+}
+
+export function aboutMetadata(): Metadata {
+  return shareMetadata({
+    title: "The mall story",
+    description:
+      `${site.name} is a flea-market mall. Independent stalls sell physical finds and digital files from the same table. The mall keeps 10%. Paid corners are labeled. Not a warehouse.`,
+    path: aboutPath(),
+  });
+}
+
+export function helpMetadata(): Metadata {
+  return shareMetadata({
+    title: "How this mall works",
+    description:
+      `Browse the floor, bag a tote, mock-pay, open a folder slip, or list a stall. The mall keeps 10% from the stall. Not the origin story or the fee board.`,
+    path: helpPath(),
+  });
+}
+
+export function ordersMetadata(): Metadata {
+  return shareMetadata({
+    title: "Order slips",
+    description:
+      "Stand-in receipts from the last paid tote in this browser. Reconstructed from checkout listing ids. No account. No database.",
+    path: ordersPath(),
+    robots: noIndex,
+  });
+}
+
+export function orderSlipMetadata(id: string): Metadata {
+  return shareMetadata({
+    title: "Order slip",
+    description:
+      "Stand-in receipt reconstructed from the listing ids on a paid tote. Not a warehouse invoice.",
+    path: orderPath(id),
+    robots: noIndex,
+  });
+}
+
+export function sellDeskMetadata(): Metadata {
+  return shareMetadata({
+    title: "Your table tonight",
+    description:
+      "The stallholder home for Folding Table Tuesday. List something, check paper payouts, read the cut, or rewrite the booth card. No account.",
+    path: sellDeskPath(),
+  });
+}
+
+export function thisWeekMetadata(): Metadata {
+  return shareMetadata({
+    title: "This week on the table",
+    description:
+      "A weekend stall drop. Mall picks from the stand-in catalog — objects and files, not paid stamps.",
+    path: thisWeekPath(),
+  });
+}
+
+export function collectionsMetadata(): Metadata {
+  return shareMetadata({
+    title: "Racks, not aisles",
+    description:
+      "Curated collections from the stand-in catalog. Under a ten, files tonight, and tested kinda — themes a stallholder taped, not a fifth hub.",
+    path: collectionsPath(),
+  });
+}
+
+export function collectionMetadata(input: {
+  name: string;
+  description: string;
+  slug: string;
+}): Metadata {
+  return shareMetadata({
+    title: input.name,
+    description: input.description,
+    path: collectionPath(input.slug),
+  });
+}
+
+export function missingCollectionMetadata(): Metadata {
+  return shareMetadata({
+    title: "Rack not on the map",
+    description:
+      "That collection was never taped. Under a ten, files tonight, and tested kinda are the racks we lined up.",
+    path: collectionsPath(),
+    robots: noIndexFollow,
   });
 }
 

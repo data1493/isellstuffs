@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   feesPath,
-  sellDeskPath,
   sellNewPath,
   sellPath,
   sellPayoutsPath,
@@ -17,16 +16,11 @@ import {
   stallPath,
 } from "@/lib/paths";
 import { deskListings, deskStall } from "@/lib/seller-desk";
-import { shareMetadata } from "@/lib/seo";
+import { sellDeskMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = shareMetadata({
-  title: "Stall desk",
-  description:
-    "The stallholder home for Folding Table Tuesday. List something, check paper payouts, read the cut, or rewrite the booth card.",
-  path: sellDeskPath(),
-});
+export const metadata: Metadata = sellDeskMetadata();
 
 const shortcuts = [
   {

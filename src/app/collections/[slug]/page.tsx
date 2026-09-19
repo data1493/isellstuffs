@@ -19,8 +19,8 @@ import {
   collectionSlugs,
   otherCollections,
 } from "@/lib/collections";
-import { collectionPath, collectionsPath, listingPath } from "@/lib/paths";
-import { shareMetadata } from "@/lib/seo";
+import { collectionsPath, listingPath } from "@/lib/paths";
+import { collectionMetadata, missingCollectionMetadata } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -38,20 +38,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const collection = collectionBySlug(slug);
   if (!collection) {
-    return shareMetadata({
-      title: "Rack not on the map",
-      description:
-        "That collection was never taped. Under a ten, files tonight, and tested kinda are the racks we lined up.",
-      path: collectionsPath(),
-      robots: { index: false, follow: true },
-    });
+    return missingCollectionMetadata();
   }
 
   const items = collectionRack(collection.slug);
-  return shareMetadata({
-    title: collection.name,
+  return collectionMetadata({
+    name: collection.name,
     description: collectionShareLine(collection, items),
-    path: collectionPath(collection.slug),
+    slug: collection.slug,
   });
 }
 
