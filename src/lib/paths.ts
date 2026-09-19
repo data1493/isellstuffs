@@ -1800,6 +1800,14 @@ export function stallSquareWritePath() {
   return "/stalls/square";
 }
 
+export function stallJigPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/jig`;
+}
+
+export function stallJigWritePath() {
+  return "/stalls/jig";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

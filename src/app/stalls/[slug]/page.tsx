@@ -371,6 +371,13 @@ import {
   stallSquarePath,
 } from "@/lib/booth-square";
 import {
+  BOOTH_JIG_COOKIE_NAME,
+  BOOTH_JIG_PAPER_LINE,
+  boothJigFor,
+  parseBoothJig,
+  stallJigPath,
+} from "@/lib/booth-jig";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -690,6 +697,10 @@ export default async function StallPage({
   const square = boothSquareFor(
     stall.id,
     parseBoothSquare(jar.get(BOOTH_SQUARE_COOKIE_NAME)?.value),
+  );
+  const jig = boothJigFor(
+    stall.id,
+    parseBoothJig(jar.get(BOOTH_JIG_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1646,6 +1657,23 @@ export default async function StallPage({
             <p data-booth-square-empty={stall.id} hidden />
           )}
 
+          {jig ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a jig"
+              title="Still a table."
+              body={
+                <p data-booth-jig-note={stall.id}>
+                  {jig.note} {BOOTH_JIG_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-jig-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2086,6 +2114,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a square
+          </Link>
+
+          <Link
+            href={stallJigPath(stall.slug)}
+            data-booth-jig-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a jig
           </Link>
 
           <Link

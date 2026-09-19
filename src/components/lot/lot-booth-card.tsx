@@ -75,6 +75,7 @@ export function LotBoothCard({
   funnelNote,
   preampNote,
   squareNote,
+  jigNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -132,6 +133,7 @@ export function LotBoothCard({
   funnelNote?: string;
   preampNote?: string;
   squareNote?: string;
+  jigNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -694,6 +696,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-square-empty={stall.id} hidden />
+          )}
+          {jigNote ? (
+            <p
+              data-booth-jig-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a jig. {jigNote}
+            </p>
+          ) : (
+            <p data-booth-jig-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
