@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { ListingGrid } from "@/components/browse/cards";
 import { HubTakeover } from "@/components/browse/paid";
-import { BrowseEmpty } from "@/components/browse/states";
+import { BrowseEmpty, HubNotFound } from "@/components/browse/states";
 import { Button } from "@/components/ui/button";
 import { adSlots, listingsByHub, mallHubs } from "@/lib/commerce";
 import { exploreHref, hubAtmosphere, hubBySlug } from "@/lib/browse";
 import { hubMetadata, missingHubMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
+
+export const dynamicParams = false;
 
 type HubPageProps = {
   params: Promise<{ slug: string }>;
@@ -34,7 +35,7 @@ export default async function HubPage({ params }: HubPageProps) {
   const { slug } = await params;
   const hub = hubBySlug(slug);
   if (!hub) {
-    notFound();
+    return <HubNotFound />;
   }
 
   const atmosphere = hubAtmosphere[hub.id];

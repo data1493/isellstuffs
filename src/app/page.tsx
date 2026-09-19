@@ -84,6 +84,10 @@ export default function Home() {
 
       {homepageTakeover ? <HomepageTakeover slot={homepageTakeover} /> : null}
 
+      {featuredStallSlot ? (
+        <FeaturedBooth slot={featuredStallSlot} eyebrow="Paid the good corner" />
+      ) : null}
+
       <section id="hubs" className="scroll-mt-6">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="max-w-2xl">
@@ -107,10 +111,6 @@ export default function Home() {
           </ul>
         </div>
       </section>
-
-      {featuredStallSlot ? (
-        <FeaturedBooth slot={featuredStallSlot} eyebrow="Paid the good corner" />
-      ) : null}
 
       <section className="scroll-mt-6">
         <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">

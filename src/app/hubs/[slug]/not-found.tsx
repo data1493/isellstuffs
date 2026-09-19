@@ -8,7 +8,7 @@ import { missingHubMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = missingHubMetadata();
 
-export default function HubNotFound() {
+export default function HubSlugNotFound() {
   return (
     <MallNotice
       tone="missing"
