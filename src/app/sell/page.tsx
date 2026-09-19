@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { PLATFORM_FEE_BPS } from "@/lib/checkout";
 import { formatMoney, mallHubs, money, stalls } from "@/lib/commerce";
-import { advertisePath, feesPath, sellNewPath, sellPath, stallPath } from "@/lib/paths";
+import { advertisePath, feesPath, sellNewPath, sellPath, sellPayoutsPath, stallPath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -92,6 +92,14 @@ export default function SellPage() {
           >
             Walk the floor first
           </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-11 w-full rounded-full px-5 sm:w-auto"
+            render={<Link href={sellPayoutsPath()} />}
+          >
+            See paper payouts
+          </Button>
         </div>
       </MallHero>
 
@@ -167,6 +175,13 @@ export default function SellPage() {
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted-foreground">
           Payouts are a stand-in. There is no live Connect onboarding. You are
           putting something on a table, not opening a merchant account.{" "}
+          <Link
+            href={sellPayoutsPath()}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            See what the stall would get
+          </Link>
+          {" · "}
           <Link
             href={feesPath()}
             className="font-medium text-foreground underline-offset-4 hover:underline"
