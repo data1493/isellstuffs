@@ -141,6 +141,7 @@ import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingSergeNotice } from "@/components/listing-serge-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
+import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
@@ -319,6 +320,7 @@ import {
   listingSergePath,
   listingPeenPath,
   listingPaginatePath,
+  listingCollatePath,
   listingContrastPath,
   listingGatePath,
   listingTrayPath,
@@ -536,6 +538,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingPaginateNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingCollateNotice listingId={listing.id} />
               ) : null}
               {!physical ? (
                 <ListingConsultNotice listingId={listing.id} />
@@ -1439,6 +1444,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not paginate it
+                  </Link>
+                  <Link
+                    href={listingCollatePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not collate them
                   </Link>
                   <Link
                     href={listingConsultPath(listing.id)}

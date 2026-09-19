@@ -549,6 +549,12 @@ import {
   subscribePaginate,
 } from "@/lib/listing-paginate";
 import {
+  canTapeCollate,
+  isListingCollateOverlay,
+  readCollateListingIds,
+  subscribeCollate,
+} from "@/lib/listing-collate";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -696,6 +702,7 @@ import {
   listingSergeWritePath,
   listingPeenWritePath,
   listingPaginateWritePath,
+  listingCollateWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingContrastWritePath,
@@ -898,6 +905,7 @@ export function DeskBoard({
   const [variableIds, setVariableIds] = useState<string[]>([]);
   const [ligatureIds, setLigatureIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
+  const [collateIds, setCollateIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [card, setCard] = useState({
@@ -1017,6 +1025,7 @@ export function DeskBoard({
       setVariableIds(readVariableListingIds());
       setLigatureIds(readLigatureListingIds());
       setPaginateIds(readPaginateListingIds());
+      setCollateIds(readCollateListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       const patch = stallCardById(stall.id);
@@ -1125,6 +1134,7 @@ export function DeskBoard({
     const unsubVariable = subscribeVariable(apply);
     const unsubLigature = subscribeLigature(apply);
     const unsubPaginate = subscribePaginate(apply);
+    const unsubCollate = subscribeCollate(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
@@ -1243,6 +1253,7 @@ export function DeskBoard({
       unsubVariable();
       unsubLigature();
       unsubPaginate();
+      unsubCollate();
       unsubScale();
       unsubGate();
     };
@@ -4371,6 +4382,37 @@ export function DeskBoard({
                             {isListingPaginateOverlay(listing.id, paginateIds)
                               ? "Leave the one page"
                               : "I will not paginate it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCollate(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCollateWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCollateOverlay(listing.id, collateIds)
+                                ? "open"
+                                : "collate"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCollateOverlay(listing.id, collateIds)
+                              ? "Leave the one-pager"
+                              : "I will not collate them"}
                           </button>
                         </form>
                       ) : null}

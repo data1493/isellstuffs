@@ -1177,6 +1177,13 @@ export function listingPeenPath(id: string) {
 export function listingPeenWritePath() {
   return "/listings/peen";
 }
+
+export function listingCollatePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/collate`;
+}
+
+export function listingCollateWritePath() {
+  return "/listings/collate";
 }
 
 export function listingGatePath(id: string) {
