@@ -85,6 +85,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Ask before you flip it | http://127.0.0.1:44721/listings/mdb-scratched-lp/ask |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
+| Scan the liner | http://127.0.0.1:44721/listings/mdb-mixtape-93/scan |
 | More in the van | http://127.0.0.1:44721/listings/gtk-cable-drawer/van |
 | Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
@@ -136,6 +137,8 @@ Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /lis
 Physical listings can walk off in someone's hands at `/listings/[id]/hands`. Native `POST /listings/hands` (form: `listingId`, `intent=hands|open`) writes `iss:hands-listing-ids` / cookie `iss-hands-listing-ids`. Shop lookups stamp `cartEligible: false` and leave `status` alone. Hands drops that id from the tote. Put-back restores Add to cart. Gift cards and PDFs are refused. Look stays on the table. Not a sold sticker. Not a van note.
 
 Physical listings can walk with a mate at `/listings/[id]/with`. Native `POST /listings/with` (form: `listingId`, `mateId`, `intent=with|apart`) writes `iss:listing-with-pairs` / cookie `iss-listing-with-pairs`. Two titles on the same table — windbreaker with sneakers. Not a bundle SKU. Still two prices. `status`, `cartEligible`, and tote math stay put. Gift cards, PDFs, and a lamp on another stall are refused. Van is more of one pile.
+
+A paper title can scan to a file at `/listings/[id]/scan`. Native `POST /listings/scan` (form: `listingId`, `mateId`, `intent=scan|apart`) writes `iss:listing-scan-pairs` / cookie `iss-listing-scan-pairs`. The mixtape already has liner notes — paper to that PDF. Not two LPs. That walk is with. Still two prices. `status`, `cartEligible`, and tote math stay put. Gift cards, two files, and a lamp on another stall are refused.
 
 A stallholder can tape a sticky on the booth at `/stalls/[slug]/scrap`. “cash only after 2” stays after reload. Cookie `iss-stall-scraps` + `iss:stall-scraps`. Native `POST /stalls/[slug]/scrap/tape` (form: `note`) and peel. Not a hunt. Not an offer on a lamp. Not `/stalls/[slug]/tape`.
 

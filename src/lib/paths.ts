@@ -66,6 +66,14 @@ export function listingAskWritePath() {
   return "/listings/ask";
 }
 
+export function listingScanPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/scan`;
+}
+
+export function listingScanWritePath() {
+  return "/listings/scan";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

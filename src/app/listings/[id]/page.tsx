@@ -9,6 +9,7 @@ import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { ListingAskNotice } from "@/components/listing-ask-notice";
 import { ListingFirmNotice } from "@/components/listing-firm-notice";
 import { ListingHandsNotice } from "@/components/listing-hands-notice";
+import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
 import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
@@ -39,6 +40,7 @@ import {
   listingLookPath,
   listingOfferPath,
   listingPath,
+  listingScanPath,
   listingTagPath,
   listingVanPath,
   listingWithPath,
@@ -204,6 +206,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingHandsNotice listingId={listing.id} /> : null}
               {physical ? <ListingWithNotice listingId={listing.id} /> : null}
               {physical ? <ListingAskNotice listingId={listing.id} /> : null}
+              <ListingScanNotice listingId={listing.id} />
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -255,8 +258,23 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     Ask before you flip it
                   </Link>
+                  <Link
+                    href={listingScanPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Scan the liner
+                  </Link>
                 </p>
-              ) : null}
+              ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
+                <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
+                  <Link
+                    href={listingScanPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Scan the liner
+                  </Link>
+                </p>
+              )}
 
               {physical && stall ? <PickupNote stall={stall} /> : null}
 
