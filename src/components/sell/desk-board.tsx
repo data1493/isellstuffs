@@ -489,6 +489,12 @@ import {
   subscribeTin,
 } from "@/lib/listing-tin";
 import {
+  canTapeLathe,
+  isListingLatheOverlay,
+  readLatheListingIds,
+  subscribeLathe,
+} from "@/lib/listing-lathe";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -620,6 +626,7 @@ import {
   listingGrommetWritePath,
   listingDartWritePath,
   listingTinWritePath,
+  listingLatheWritePath,
   listingPaginateWritePath,
   listingGateWritePath,
   listingContrastWritePath,
@@ -795,6 +802,7 @@ export function DeskBoard({
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
+  const [latheIds, setLatheIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -903,6 +911,7 @@ export function DeskBoard({
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
       setTinIds(readTinListingIds());
+      setLatheIds(readLatheListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1000,6 +1009,7 @@ export function DeskBoard({
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
     const unsubTin = subscribeTin(apply);
+    const unsubLathe = subscribeLathe(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1107,6 +1117,7 @@ export function DeskBoard({
       unsubDart();
       unsubContrast();
       unsubTin();
+      unsubLathe();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2328,6 +2339,37 @@ export function DeskBoard({
                             {isListingTinOverlay(listing.id, tinIds)
                               ? "Leave the ends"
                               : "I will not tin them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLathe(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLatheWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLatheOverlay(listing.id, latheIds)
+                                ? "open"
+                                : "lathe"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLatheOverlay(listing.id, latheIds)
+                              ? "Leave the scratch"
+                              : "I will not lathe it"}
                           </button>
                         </form>
                       ) : null}

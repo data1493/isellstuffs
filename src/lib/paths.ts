@@ -1106,6 +1106,14 @@ export function listingTinWritePath() {
   return "/listings/tin";
 }
 
+export function listingLathePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/lathe`;
+}
+
+export function listingLatheWritePath() {
+  return "/listings/lathe";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }
