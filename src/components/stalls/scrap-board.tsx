@@ -57,8 +57,8 @@ export function ScrapBoard({
             Tape a sticky on this table.
           </h1>
           <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            {SCRAP_PAPER_LINE} {SCRAP_RELOAD_LINE} Folding Table Tuesday keeps
-            “cash only after 2” on this cork.
+            {SCRAP_PAPER_LINE} {SCRAP_RELOAD_LINE} {stall.boothName} keeps the
+            note on this cork.
           </p>
         </div>
       </MallHero>
