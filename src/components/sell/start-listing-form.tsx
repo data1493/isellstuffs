@@ -1,35 +1,15 @@
-"use client";
-
-import { useState } from "react";
-
-import { ListingTypeBadge } from "@/components/listing-type-badge";
-import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  formatMoney,
-  hubById,
-  mallHubs,
-  money,
-  type HubId,
-  type Listing,
-  type ListingType,
-  type Stall,
-} from "@/lib/commerce";
+import { physicalHubs, type ListingType, type Stall } from "@/lib/commerce";
 import { sellListPath } from "@/lib/paths";
-import { isPhysicalHubId } from "@/lib/seller-listing";
-import { isGiftFileFormat } from "@/lib/sell-start";
+import { digitalAisleCopy } from "@/lib/sell-start";
 import { cn } from "@/lib/utils";
 
-function dollarsToCents(value: string) {
-  const dollars = Number(value);
-  if (!Number.isFinite(dollars) || dollars <= 0) {
-    return 0;
-  }
-  return Math.round(dollars * 100);
-}
+const fieldClass =
+  "h-11 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm";
+
+const areaClass =
+  "min-h-28 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 py-2 text-base outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm";
 
 export function StartListingForm({
   stall,
@@ -38,58 +18,12 @@ export function StartListingForm({
   stall: Stall;
   type: ListingType;
 }) {
-  const [hubId, setHubId] = useState<HubId>(
-    type === "digital" ? "download-stall" : "yard-sale",
-  );
-  const [title, setTitle] = useState("");
-  const [summary, setSummary] = useState("");
-  const [price, setPrice] = useState("8");
-  const [condition, setCondition] = useState("");
-  const [fileFormat, setFileFormat] = useState("PDF");
-  const [giftError, setGiftError] = useState<string | null>(null);
-
-  const cents = dollarsToCents(price) || 800;
-  const preview: Listing =
-    type === "digital"
-      ? {
-          id: "preview",
-          stallId: stall.id,
-          type: "digital",
-          title: title.trim() || "Untitled file",
-          summary: summary.trim() || "A file from this stall.",
-          hubId: "download-stall",
-          price: money(cents),
-          fileFormat: fileFormat.trim() || "PDF",
-          cartEligible: true,
-          status: "available",
-        }
-      : {
-          id: "preview",
-          stallId: stall.id,
-          type: "physical",
-          title: title.trim() || "Untitled junk",
-          summary: summary.trim() || "Something that can sit on a folding table.",
-          hubId,
-          price: money(cents),
-          condition: condition.trim() || "Tested, kinda",
-          cartEligible: true,
-          status: "available",
-        };
-
-  const aisle = hubById(type === "digital" ? "download-stall" : hubId);
+  const physical = type === "physical";
 
   return (
     <form
       action={sellListPath()}
       method="post"
-      onSubmit={(event) => {
-        if (type === "digital" && isGiftFileFormat(fileFormat)) {
-          event.preventDefault();
-          setGiftError(
-            "The mall already sells one gift card. List a file — PDF, WAV, OTF.",
-          );
-        }
-      }}
       className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
     >
       <input type="hidden" name="type" value={type} />
@@ -104,50 +38,29 @@ export function StartListingForm({
             {stall.boothName}
           </p>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            {type === "physical"
+            {physical
               ? "A thing you can hold. Condition is the listing."
-              : "A file from this booth. Download Stall is the aisle."}
+              : digitalAisleCopy()}
           </p>
         </div>
 
-        {type === "physical" ? (
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-medium">Aisle</legend>
-            <input type="hidden" name="hubId" value={hubId} />
-            <div className="grid gap-2">
-              {mallHubs
-                .filter((hub) => isPhysicalHubId(hub.id))
-                .map((hub) => {
-                  const selected = hubId === hub.id;
-                  return (
-                    <button
-                      key={hub.id}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => setHubId(hub.id)}
-                      className={cn(
-                        "w-full rounded-xl px-4 py-3 text-left ring-1 transition-shadow",
-                        selected
-                          ? "bg-card ring-2 ring-foreground"
-                          : "bg-card/50 ring-foreground/10 hover:ring-foreground/20",
-                      )}
-                    >
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-heading text-lg tracking-tight">
-                          {hub.name}
-                        </p>
-                        {selected ? (
-                          <Badge variant="secondary">This aisle</Badge>
-                        ) : null}
-                      </div>
-                      <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                        {hub.rule}
-                      </p>
-                    </button>
-                  );
-                })}
-            </div>
-          </fieldset>
+        {physical ? (
+          <div className="space-y-2">
+            <Label htmlFor="hubId">Aisle</Label>
+            <select
+              id="hubId"
+              name="hubId"
+              defaultValue="yard-sale"
+              required
+              className={fieldClass}
+            >
+              {physicalHubs().map((hub) => (
+                <option key={hub.id} value={hub.id}>
+                  {hub.name} — {hub.rule}
+                </option>
+              ))}
+            </select>
+          </div>
         ) : (
           <div className="rounded-xl bg-card/80 p-4 ring-1 ring-foreground/10">
             <input type="hidden" name="hubId" value="download-stall" />
@@ -158,26 +71,26 @@ export function StartListingForm({
               Download Stall
             </p>
             <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              Digital listings sit here. The stall is still {stall.boothName}.
-              Not a second gift card.
+              Files sit here. The stall is still {stall.boothName}. Not a
+              second gift card.
             </p>
           </div>
         )}
 
         <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
-          <Input
+          <input
             id="title"
             name="title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            type="text"
             placeholder={
-              type === "physical"
+              physical
                 ? "Wobbly lamp, shade optional"
                 : "How to price your junk (PDF)"
             }
             autoComplete="off"
             required
+            className={fieldClass}
           />
           <p className="text-sm leading-6 text-muted-foreground">
             Gray example text is not the tag. Type the name.
@@ -186,82 +99,70 @@ export function StartListingForm({
 
         <div className="space-y-2">
           <Label htmlFor="summary">What it is</Label>
-          <Textarea
+          <textarea
             id="summary"
             name="summary"
-            value={summary}
-            onChange={(event) => setSummary(event.target.value)}
             placeholder={
-              type === "physical"
+              physical
                 ? "Lights up if you twist the neck. Box is tired."
                 : "One page. A rule of thumb. Written on a folding table."
             }
             autoComplete="off"
             required
+            className={areaClass}
           />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="price">Price (USD)</Label>
-            <Input
+            <input
               id="price"
               name="price"
               type="number"
               inputMode="decimal"
               min="0.01"
               step="0.01"
-              value={price}
-              onChange={(event) => setPrice(event.target.value || "8")}
+              defaultValue="8"
               required
+              className={fieldClass}
             />
             <p className="text-sm leading-6 text-muted-foreground">
               The mall keeps 10% from this price, not on top of the buyer.
             </p>
           </div>
-          {type === "physical" ? (
+          {physical ? (
             <div className="space-y-2">
               <Label htmlFor="condition">Condition</Label>
-              <Input
+              <input
                 id="condition"
                 name="condition"
-                value={condition}
-                onChange={(event) => setCondition(event.target.value)}
+                type="text"
                 placeholder="Has a crack, still lights up"
                 autoComplete="off"
                 required
+                className={fieldClass}
               />
             </div>
           ) : (
             <div className="space-y-2">
               <Label htmlFor="fileFormat">File format</Label>
-              <Input
+              <input
                 id="fileFormat"
                 name="fileFormat"
-                value={fileFormat}
-                onChange={(event) => {
-                  const value = event.target.value || "PDF";
-                  setFileFormat(value);
-                  if (!isGiftFileFormat(value)) {
-                    setGiftError(null);
-                  }
-                }}
+                type="text"
+                defaultValue="PDF"
                 placeholder="PDF"
                 autoComplete="off"
                 required
+                className={fieldClass}
               />
+              <p className="text-sm leading-6 text-muted-foreground">
+                A file type. Not GIFT — the mall already sells one card.
+              </p>
             </div>
           )}
         </div>
-
-        {giftError ? (
-          <p
-            role="alert"
-            className="rounded-xl border border-destructive/30 bg-[oklch(0.97_0.02_25)] px-4 py-3 text-sm leading-6 text-foreground"
-          >
-            {giftError}
-          </p>
-        ) : null}
 
         <button
           type="submit"
@@ -274,25 +175,19 @@ export function StartListingForm({
         </button>
       </div>
 
-      <aside className="space-y-4 rounded-2xl bg-card p-5 ring-1 ring-foreground/10 lg:sticky lg:top-28 lg:self-start">
+      <aside className="space-y-4 rounded-2xl bg-card p-5 ring-1 ring-foreground/10 lg:self-start">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Preview
+          This posts to the table
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <ListingTypeBadge listing={preview} />
-          <span className="text-xs text-muted-foreground">{aisle.name}</span>
-        </div>
-        <h2 className="font-heading text-2xl tracking-tight">{preview.title}</h2>
-        <p className="text-sm leading-6 text-muted-foreground">{preview.summary}</p>
-        <p className="font-heading text-xl">{formatMoney(preview.price)}</p>
+        <p className="font-heading text-2xl tracking-tight">{stall.boothName}</p>
         <p className="text-sm leading-6 text-muted-foreground">
-          {type === "physical"
-            ? `Condition: ${preview.type === "physical" ? preview.condition : ""}`
-            : `Format: ${preview.type === "digital" ? preview.fileFormat : ""}`}
+          {physical
+            ? "Physical. Same fields as the dump form. Native POST to /sell/list."
+            : "Digital. Aisle is Download Stall. Same POST as /sell/new."}
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          Lives on {stall.boothName}. Same stall as whatever else is already
-          there.
+          You land on the booth. The desk picks the SKU up from the overlay the
+          mall already reads.
         </p>
       </aside>
     </form>
