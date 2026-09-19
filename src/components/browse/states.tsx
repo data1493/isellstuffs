@@ -14,7 +14,7 @@ export function BrowseEmpty({
   actionLabel?: string;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-border bg-card/60 px-5 py-12 text-center sm:px-8">
+    <div className="rounded-2xl border border-dashed border-border bg-[oklch(0.97_0.015_85)] px-5 py-14 text-center sm:px-8">
       <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
         Picked over
       </p>
@@ -45,7 +45,7 @@ export function BrowseError({
 }) {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-      <div className="rounded-xl border border-destructive/25 bg-card px-5 py-12 text-center sm:px-8">
+      <div className="rounded-2xl border border-destructive/30 bg-[oklch(0.97_0.02_25)] px-5 py-14 text-center sm:px-8">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-destructive">
           Aisle closed
         </p>

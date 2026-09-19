@@ -18,11 +18,11 @@ export default function HubsPage() {
         The map
       </p>
       <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
-        Pick an aisle
+        Four aisles. Pick one with a rule.
       </h1>
       <p className="mt-3 max-w-2xl text-muted-foreground text-pretty">
-        These four hubs earn their own pages. Explore stays the general
-        concourse if you just want to walk the floor.
+        These hubs earn their own pages because they refuse the wrong inventory.
+        Explore stays the general concourse if you just want to walk the floor.
       </p>
       <div className="mt-6">
         <Button
@@ -33,7 +33,7 @@ export default function HubsPage() {
           Explore everything
         </Button>
       </div>
-      <ul className="mt-10 grid gap-3 sm:grid-cols-2">
+      <ul className="mt-10 grid gap-4 sm:grid-cols-2">
         {mallHubs.map((hub) => (
           <li key={hub.id}>
             <HubTile hub={hub} count={listingsByHub(hub.id).length} />

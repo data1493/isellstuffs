@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AdCallout, ListingGrid } from "@/components/browse/cards";
+import { ListingGrid } from "@/components/browse/cards";
+import { HubTakeover } from "@/components/browse/paid";
 import { BrowseEmpty } from "@/components/browse/states";
 import { Button } from "@/components/ui/button";
 import { adSlots, listingsByHub, mallHubs } from "@/lib/commerce";
-import { exploreHref, hubBySlug } from "@/lib/browse";
+import { exploreHref, hubAtmosphere, hubBySlug } from "@/lib/browse";
+import { cn } from "@/lib/utils";
 
 type HubPageProps = {
   params: Promise<{ slug: string }>;
@@ -37,6 +39,7 @@ export default async function HubPage({ params }: HubPageProps) {
     notFound();
   }
 
+  const atmosphere = hubAtmosphere[hub.id];
   const hubListings = listingsByHub(hub.id);
   const takeover = adSlots.find(
     (slot) => slot.kind === "hub-takeover" && slot.hubId === hub.id,
@@ -44,75 +47,81 @@ export default async function HubPage({ params }: HubPageProps) {
   const otherHubs = mallHubs.filter((item) => item.id !== hub.id);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-        Hub aisle
-      </p>
-      <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
-        {hub.name}
-      </h1>
-      <p className="mt-3 max-w-2xl text-lg text-muted-foreground text-pretty">
-        {hub.blurb}
-      </p>
-      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground text-pretty">
-        {hub.rule}
-      </p>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Button
-          variant="outline"
-          className="rounded-full px-5"
-          render={<Link href={exploreHref({ hubId: hub.id })} />}
-        >
-          See {hub.name} on the concourse
-        </Button>
-        <Button
-          variant="ghost"
-          className="rounded-full px-5"
-          render={<Link href="/hubs" />}
-        >
-          All hubs
-        </Button>
-      </div>
-
-      {takeover ? (
-        <div className="mt-10">
-          <AdCallout slot={takeover} />
+    <div>
+      <section className={cn("border-b border-border", atmosphere.wash)}>
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-foreground/55">
+            {atmosphere.floor}
+          </p>
+          <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
+            {hub.name}
+          </h1>
+          <p className="mt-3 max-w-2xl text-lg text-foreground/80 text-pretty">
+            {hub.blurb}
+          </p>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/70 text-pretty">
+            {hub.rule} {atmosphere.refuse}
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              className="rounded-full bg-card/70 px-5"
+              render={<Link href={exploreHref({ hubId: hub.id })} />}
+            >
+              See {hub.name} on the concourse
+            </Button>
+            <Button
+              variant="ghost"
+              className="rounded-full px-5"
+              render={<Link href="/hubs" />}
+            >
+              All hubs
+            </Button>
+          </div>
         </div>
-      ) : null}
+      </section>
 
-      <p className="mt-10 text-sm text-muted-foreground">
-        {hubListings.length} {hubListings.length === 1 ? "thing" : "things"} in
-        this aisle
-      </p>
-      <div className="mt-4">
-        {hubListings.length === 0 ? (
-          <BrowseEmpty
-            title="This aisle is empty."
-            body={`${hub.name} has nothing on the tables right now. Walk the concourse, or try another floor.`}
-            actionHref="/explore"
-          />
-        ) : (
-          <ListingGrid listings={hubListings} />
-        )}
-      </div>
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        {takeover ? (
+          <div className="mb-10">
+            <HubTakeover slot={takeover} />
+          </div>
+        ) : null}
 
-      <aside className="mt-14 border-t border-border pt-10">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Other floors
+        <p className="text-sm text-muted-foreground">
+          {hubListings.length} {hubListings.length === 1 ? "thing" : "things"} in
+          this aisle
         </p>
-        <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {otherHubs.map((item) => (
-            <li key={item.id}>
-              <Link
-                href={item.href}
-                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </aside>
+        <div className="mt-4">
+          {hubListings.length === 0 ? (
+            <BrowseEmpty
+              title="This aisle is empty."
+              body={`${hub.name} has nothing on the tables right now. Walk the concourse, or try another floor.`}
+              actionHref="/explore"
+            />
+          ) : (
+            <ListingGrid listings={hubListings} />
+          )}
+        </div>
+
+        <aside className="mt-14 border-t border-border pt-10">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Other floors
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            {otherHubs.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
     </div>
   );
 }

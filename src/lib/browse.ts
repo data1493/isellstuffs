@@ -5,6 +5,33 @@ import {
   type Listing,
 } from "@/lib/commerce";
 
+/** Presentation only — not a commerce shape. */
+export const hubAtmosphere: Record<
+  HubId,
+  { wash: string; floor: string; refuse: string }
+> = {
+  "yard-sale": {
+    wash: "bg-[oklch(0.88_0.08_85)]",
+    floor: "Driveway table",
+    refuse: "No artisan home.",
+  },
+  "closet-overflow": {
+    wash: "bg-[oklch(0.86_0.05_20)]",
+    floor: "Hall closet",
+    refuse: "No lookbook.",
+  },
+  "garage-tech": {
+    wash: "bg-[oklch(0.84_0.05_145)]",
+    floor: "Workbench",
+    refuse: "Condition is the copy.",
+  },
+  "download-stall": {
+    wash: "bg-[oklch(0.86_0.045_195)]",
+    floor: "Folder on the table",
+    refuse: "Not a second site.",
+  },
+};
+
 export function firstSearchParam(
   value: string | string[] | undefined,
 ): string | undefined {
