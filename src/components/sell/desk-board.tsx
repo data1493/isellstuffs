@@ -483,6 +483,12 @@ import {
   subscribeContrast,
 } from "@/lib/listing-contrast";
 import {
+  canTapeTin,
+  isListingTinOverlay,
+  readTinListingIds,
+  subscribeTin,
+} from "@/lib/listing-tin";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -607,6 +613,7 @@ import {
   listingAnnealWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
+  listingTinWritePath,
   listingPaginateWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
@@ -780,6 +787,7 @@ export function DeskBoard({
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
+  const [tinIds, setTinIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -886,6 +894,7 @@ export function DeskBoard({
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
+      setTinIds(readTinListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -981,6 +990,7 @@ export function DeskBoard({
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
+    const unsubTin = subscribeTin(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1086,6 +1096,7 @@ export function DeskBoard({
       unsubGrommet();
       unsubDart();
       unsubContrast();
+      unsubTin();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2275,6 +2286,37 @@ export function DeskBoard({
                             {isListingFerriteOverlay(listing.id, ferriteIds)
                               ? "Leave the noise"
                               : "I will not ferrite them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTin(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTinWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTinOverlay(listing.id, tinIds)
+                                ? "open"
+                                : "tin"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTinOverlay(listing.id, tinIds)
+                              ? "Leave the ends"
+                              : "I will not tin them"}
                           </button>
                         </form>
                       ) : null}

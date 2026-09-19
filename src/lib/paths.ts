@@ -1098,6 +1098,14 @@ export function listingContrastWritePath() {
   return "/listings/contrast";
 }
 
+export function listingTinPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tin`;
+}
+
+export function listingTinWritePath() {
+  return "/listings/tin";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
