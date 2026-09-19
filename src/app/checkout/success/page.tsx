@@ -19,7 +19,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/checkout";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
-import { listingById } from "@/lib/commerce";
+import { isPhysicalListing, listingById } from "@/lib/commerce";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
 import { folderPath, orderPath, pickupSlipPath } from "@/lib/paths";
 import { pickupHasPhysicalLines } from "@/lib/pickup-slip";
@@ -46,12 +46,15 @@ export default async function CheckoutSuccessPage({
     .filter((listing): listing is NonNullable<typeof listing> => Boolean(listing));
   const groups = session ? groupListingsByStall(session.listingIds) : [];
   const mix = cartMix(listings);
+  const physicalIds = listings
+    .filter(isPhysicalListing)
+    .map((listing) => listing.id);
 
   return (
     <div>
       <ClearCart active={Boolean(sessionId || stored)} />
       <RememberOrder session={session} />
-      <RememberSold listingIds={session?.listingIds ?? []} />
+      <RememberSold listingIds={physicalIds} />
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
         <MallWidth className="flex flex-col gap-6 py-12 sm:py-16">
           <MallCrumb label="Receipt">

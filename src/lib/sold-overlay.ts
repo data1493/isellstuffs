@@ -77,6 +77,15 @@ export function soldCookieValue(listingIds: readonly string[]): string {
 
 export const SOLD_MIRROR_SCRIPT = `try{var m=document.cookie.match(/(?:^|; )${SOLD_COOKIE_NAME}=([^;]*)/);if(m){var v=decodeURIComponent(m[1]);if(Array.isArray(JSON.parse(v))){localStorage.setItem(${JSON.stringify(SOLD_STORAGE_KEY)},v);window.dispatchEvent(new Event(${JSON.stringify(SOLD_CHANGED_EVENT)}));}}}catch(e){}`;
 
+/** Inline stamp so checkout success writes the overlay before React hydrates. */
+export function soldStampScript(listingIds: readonly string[]) {
+  const add = uniqueListingIds(listingIds);
+  if (add.length === 0) {
+    return "";
+  }
+  return `try{var add=${JSON.stringify(add)};var cur=[];try{var raws=localStorage.getItem(${JSON.stringify(SOLD_STORAGE_KEY)});if(raws){cur=JSON.parse(raws)}}catch(e){}if(!Array.isArray(cur))cur=[];for(var i=0;i<add.length;i++){if(cur.indexOf(add[i])<0)cur.push(add[i])}var raw=JSON.stringify(cur);localStorage.setItem(${JSON.stringify(SOLD_STORAGE_KEY)},raw);document.cookie=${JSON.stringify(`${SOLD_COOKIE_NAME}=`)}+encodeURIComponent(raw)+"; Path=/; Max-Age=2592000; SameSite=Lax";window.dispatchEvent(new Event(${JSON.stringify(SOLD_CHANGED_EVENT)}))}catch(e){}`;
+}
+
 function readCookieRaw(): string | null {
   if (!canUseStorage()) {
     return null;
@@ -137,20 +146,41 @@ function peekRequestSoldRaw(): string | undefined {
     if (!req) {
       return undefined;
     }
-    const mod = req(
+    const paths = [
       "next/dist/server/app-render/work-unit-async-storage.external",
-    );
-    const store = mod.workUnitAsyncStorage?.getStore?.();
-    if (!store) {
-      return undefined;
-    }
+      "next/dist/server/app-render/work-unit-async-storage-instance",
+    ];
+    for (const id of paths) {
+      try {
+        const mod = req(id) as {
+          workUnitAsyncStorage?: {
+            getStore?: () => WorkUnitStore | undefined;
+          };
+          workUnitAsyncStorageInstance?: {
+            getStore?: () => WorkUnitStore | undefined;
+          };
+        };
+        const store =
+          mod.workUnitAsyncStorage?.getStore?.() ??
+          mod.workUnitAsyncStorageInstance?.getStore?.();
+        if (!store) {
+          continue;
+        }
 
-    const fromCookies = store.cookies?.get?.(SOLD_COOKIE_NAME)?.value;
-    if (fromCookies) {
-      return fromCookies;
-    }
+        const fromCookies = store.cookies?.get?.(SOLD_COOKIE_NAME)?.value;
+        if (fromCookies) {
+          return fromCookies;
+        }
 
-    return peekCookieHeader(store.headers?.get?.("cookie"));
+        const fromHeader = peekCookieHeader(store.headers?.get?.("cookie"));
+        if (fromHeader) {
+          return fromHeader;
+        }
+      } catch {
+        // try the next Next.js store module
+      }
+    }
+    return undefined;
   } catch {
     return undefined;
   }
@@ -182,7 +212,12 @@ export function readSoldListingIds(): string[] {
 
   const peeked = parseSoldListingIds(peekRequestSoldRaw());
   const stored = serverStore();
-  return uniqueListingIds([...peeked, ...stored]);
+  const merged = uniqueListingIds([...peeked, ...stored]);
+  if (peeked.length > 0) {
+    const g = globalThis as ServerGlobal;
+    g[SERVER_STORE] = merged;
+  }
+  return merged;
 }
 
 export function writeSoldListingIds(listingIds: string[]) {
