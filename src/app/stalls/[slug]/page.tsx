@@ -45,6 +45,12 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BOOTH_STAY_COOKIE_NAME,
+  BOOTH_STAY_PAPER_LINE,
+  boothStayFor,
+  parseBoothStay,
+} from "@/lib/booth-stay";
+import {
   BREAK_BILLS_COOKIE_NAME,
   BREAK_BILLS_PAPER_LINE,
   breakBillsFor,
@@ -73,6 +79,7 @@ import {
   stallScrapPath,
   stallSharePath,
   stallSpotPath,
+  stallStayPath,
 } from "@/lib/paths";
 import {
   TABLE_SHARE_COOKIE_NAME,
@@ -150,6 +157,10 @@ export default async function StallPage({
   const sharer = sharePartnerFor(
     stall.id,
     parseTableShare(jar.get(TABLE_SHARE_COOKIE_NAME)?.value),
+  );
+  const hangers = boothStayFor(
+    stall.id,
+    parseBoothStay(jar.get(BOOTH_STAY_COOKIE_NAME)?.value),
   );
 
   return (
@@ -285,6 +296,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {hangers ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Hangers stay"
+              title="The rack is furniture."
+              body={
+                <p data-booth-stay-note={stall.id}>
+                  {hangers.note} {BOOTH_STAY_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -333,6 +359,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Sharing this table
+          </Link>
+
+          <Link
+            href={stallStayPath(stall.slug)}
+            data-booth-stay-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Hangers stay
           </Link>
 
           <Link

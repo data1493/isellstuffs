@@ -20,6 +20,11 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BOOTH_STAY_COOKIE_NAME,
+  BOOTH_STAY_MIRROR_SCRIPT,
+  parseBoothStay,
+} from "@/lib/booth-stay";
+import {
   BREAK_BILLS_COOKIE_NAME,
   BREAK_BILLS_MIRROR_SCRIPT,
   parseBreakBills,
@@ -58,6 +63,7 @@ export default async function LotPage() {
   const foldMap = parseEarlyFold(jar.get(EARLY_FOLD_COOKIE_NAME)?.value);
   const breakMap = parseBreakBills(jar.get(BREAK_BILLS_COOKIE_NAME)?.value);
   const shareMap = parseTableShare(jar.get(TABLE_SHARE_COOKIE_NAME)?.value);
+  const stayMap = parseBoothStay(jar.get(BOOTH_STAY_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -71,6 +77,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: EARLY_FOLD_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BREAK_BILLS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: TABLE_SHARE_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_STAY_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -85,6 +92,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: EARLY_FOLD_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BREAK_BILLS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: TABLE_SHARE_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_STAY_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -150,6 +158,7 @@ export default async function LotPage() {
                     foldNote={foldMap[row.stall.id]?.note}
                     breakNote={breakMap[row.stall.id]?.note}
                     sharerName={sharePartnerFor(row.stall.id, shareMap)?.boothName}
+                    stayNote={stayMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -180,6 +189,7 @@ export default async function LotPage() {
                     foldNote={foldMap[row.stall.id]?.note}
                     breakNote={breakMap[row.stall.id]?.note}
                     sharerName={sharePartnerFor(row.stall.id, shareMap)?.boothName}
+                    stayNote={stayMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

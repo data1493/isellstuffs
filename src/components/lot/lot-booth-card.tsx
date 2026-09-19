@@ -26,6 +26,7 @@ export function LotBoothCard({
   foldNote,
   breakNote,
   sharerName,
+  stayNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -34,6 +35,7 @@ export function LotBoothCard({
   foldNote?: string;
   breakNote?: string;
   sharerName?: string;
+  stayNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -117,6 +119,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Sharing this table. {sharerName}
+            </p>
+          ) : null}
+          {stayNote ? (
+            <p
+              data-booth-stay-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Hangers stay. {stayNote}
             </p>
           ) : null}
           {packed ? (

@@ -168,6 +168,14 @@ export function stallShareWritePath() {
   return "/stalls/share";
 }
 
+export function stallStayPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/stay`;
+}
+
+export function stallStayWritePath() {
+  return "/stalls/stay";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
