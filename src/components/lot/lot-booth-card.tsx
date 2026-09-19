@@ -32,6 +32,7 @@ export function LotBoothCard({
   kidsNote,
   polyNote,
   wrapNote,
+  shellNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -46,6 +47,7 @@ export function LotBoothCard({
   kidsNote?: string;
   polyNote?: string;
   wrapNote?: string;
+  shellNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -179,6 +181,16 @@ export function LotBoothCard({
               I wrap breakables. {wrapNote}
             </p>
           ) : null}
+          {shellNote ? (
+            <p
+              data-booth-shell-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Don&apos;t open the shell. {shellNote}
+            </p>
+          ) : (
+            <p data-booth-shell-empty={stall.id} hidden />
+          )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
               {LOT_PACKED_COPY}

@@ -70,6 +70,13 @@ import {
   parseBoothWrap,
 } from "@/lib/booth-wrap";
 import {
+  BOOTH_SHELL_COOKIE_NAME,
+  BOOTH_SHELL_PAPER_LINE,
+  boothShellFor,
+  parseBoothShell,
+  stallShellPath,
+} from "@/lib/booth-shell";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -217,6 +224,10 @@ export default async function StallPage({
   const wrap = boothWrapFor(
     stall.id,
     parseBoothWrap(jar.get(BOOTH_WRAP_COOKIE_NAME)?.value),
+  );
+  const shell = boothShellFor(
+    stall.id,
+    parseBoothShell(jar.get(BOOTH_SHELL_COOKIE_NAME)?.value),
   );
 
   return (
@@ -442,6 +453,23 @@ export default async function StallPage({
             />
           ) : null}
 
+          {shell ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Don't open the shell"
+              title="Don't crack the blister."
+              body={
+                <p data-booth-shell-note={stall.id}>
+                  {shell.note} {BOOTH_SHELL_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-shell-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -538,6 +566,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I wrap breakables
+          </Link>
+
+          <Link
+            href={stallShellPath(stall.slug)}
+            data-booth-shell-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Don&apos;t open the shell
           </Link>
 
           <Link

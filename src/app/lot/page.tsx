@@ -40,6 +40,11 @@ import {
   parseBoothWrap,
 } from "@/lib/booth-wrap";
 import {
+  BOOTH_SHELL_COOKIE_NAME,
+  BOOTH_SHELL_MIRROR_SCRIPT,
+  parseBoothShell,
+} from "@/lib/booth-shell";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -94,6 +99,7 @@ export default async function LotPage() {
   const kidsMap = parseBoothKids(jar.get(BOOTH_KIDS_COOKIE_NAME)?.value);
   const polyMap = parseBoothPoly(jar.get(BOOTH_POLY_COOKIE_NAME)?.value);
   const wrapMap = parseBoothWrap(jar.get(BOOTH_WRAP_COOKIE_NAME)?.value);
+  const shellMap = parseBoothShell(jar.get(BOOTH_SHELL_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -113,6 +119,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_KIDS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_POLY_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WRAP_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_SHELL_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -133,6 +140,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_KIDS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_POLY_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WRAP_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_SHELL_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -204,6 +212,7 @@ export default async function LotPage() {
                     kidsNote={kidsMap[row.stall.id]?.note}
                     polyNote={polyMap[row.stall.id]?.note}
                     wrapNote={wrapMap[row.stall.id]?.note}
+                    shellNote={shellMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -240,6 +249,7 @@ export default async function LotPage() {
                     kidsNote={kidsMap[row.stall.id]?.note}
                     polyNote={polyMap[row.stall.id]?.note}
                     wrapNote={wrapMap[row.stall.id]?.note}
+                    shellNote={shellMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
