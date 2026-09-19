@@ -139,6 +139,7 @@ import { ListingScaleNotice } from "@/components/listing-scale-notice";
 import { ListingRivetNotice } from "@/components/listing-rivet-notice";
 import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingSergeNotice } from "@/components/listing-serge-notice";
+import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
@@ -316,6 +317,7 @@ import {
   listingRivetPath,
   listingBraidPath,
   listingSergePath,
+  listingPeenPath,
   listingPaginatePath,
   listingContrastPath,
   listingGatePath,
@@ -672,6 +674,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingKnurlNotice listingId={listing.id} /> : null}
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
               {physical ? <ListingBraidNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPeenNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1376,6 +1379,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not braid them
+                  </Link>
+                  <Link
+                    href={listingPeenPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not peen it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (

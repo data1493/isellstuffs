@@ -537,6 +537,12 @@ import {
   subscribeSerge,
 } from "@/lib/listing-serge";
 import {
+  canTapePeen,
+  isListingPeenOverlay,
+  readPeenListingIds,
+  subscribePeen,
+} from "@/lib/listing-peen";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -688,6 +694,7 @@ import {
   listingRivetWritePath,
   listingBraidWritePath,
   listingSergeWritePath,
+  listingPeenWritePath,
   listingPaginateWritePath,
   listingScaleWritePath,
   listingGateWritePath,
@@ -873,6 +880,7 @@ export function DeskBoard({
   const [rivetIds, setRivetIds] = useState<string[]>([]);
   const [braidIds, setBraidIds] = useState<string[]>([]);
   const [sergeIds, setSergeIds] = useState<string[]>([]);
+  const [peenIds, setPeenIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -991,6 +999,7 @@ export function DeskBoard({
       setRivetIds(readRivetListingIds());
       setBraidIds(readBraidListingIds());
       setSergeIds(readSergeListingIds());
+      setPeenIds(readPeenListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1098,6 +1107,7 @@ export function DeskBoard({
     const unsubRivet = subscribeRivet(apply);
     const unsubBraid = subscribeBraid(apply);
     const unsubSerge = subscribeSerge(apply);
+    const unsubPeen = subscribePeen(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1215,6 +1225,7 @@ export function DeskBoard({
       unsubRivet();
       unsubBraid();
       unsubSerge();
+      unsubPeen();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2624,6 +2635,37 @@ export function DeskBoard({
                             {isListingRivetOverlay(listing.id, rivetIds)
                               ? "Leave the shade"
                               : "I will not rivet it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePeen(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPeenWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPeenOverlay(listing.id, peenIds)
+                                ? "open"
+                                : "peen"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPeenOverlay(listing.id, peenIds)
+                              ? "Leave the splay"
+                              : "I will not peen it"}
                           </button>
                         </form>
                       ) : null}

@@ -1170,6 +1170,15 @@ export function listingSergeWritePath() {
   return "/listings/serge";
 }
 
+export function listingPeenPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/peen`;
+}
+
+export function listingPeenWritePath() {
+  return "/listings/peen";
+}
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }
