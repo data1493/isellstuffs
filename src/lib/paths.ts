@@ -362,6 +362,14 @@ export function listingBoxWritePath() {
   return "/listings/box";
 }
 
+export function listingOilPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/oil`;
+}
+
+export function listingOilWritePath() {
+  return "/listings/oil";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
