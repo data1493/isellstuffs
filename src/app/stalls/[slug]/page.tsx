@@ -182,6 +182,13 @@ import {
   stallBulbPath,
 } from "@/lib/booth-bulb";
 import {
+  BOOTH_METER_COOKIE_NAME,
+  BOOTH_METER_PAPER_LINE,
+  boothMeterFor,
+  parseBoothMeter,
+  stallMeterPath,
+} from "@/lib/booth-meter";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -393,6 +400,10 @@ export default async function StallPage({
   const bulb = boothBulbFor(
     stall.id,
     parseBoothBulb(jar.get(BOOTH_BULB_COOKIE_NAME)?.value),
+  );
+  const meter = boothMeterFor(
+    stall.id,
+    parseBoothMeter(jar.get(BOOTH_METER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -890,6 +901,23 @@ export default async function StallPage({
             <p data-booth-bulb-empty={stall.id} hidden />
           )}
 
+          {meter ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a meter"
+              title="Sold as a pile."
+              body={
+                <p data-booth-meter-note={stall.id}>
+                  {meter.note} {BOOTH_METER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-meter-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1114,6 +1142,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a bulb
+          </Link>
+
+          <Link
+            href={stallMeterPath(stall.slug)}
+            data-booth-meter-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a meter
           </Link>
 
           <Link

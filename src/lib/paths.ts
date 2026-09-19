@@ -816,6 +816,14 @@ export function stallBulbWritePath() {
   return "/stalls/bulb";
 }
 
+export function stallMeterPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/meter`;
+}
+
+export function stallMeterWritePath() {
+  return "/stalls/meter";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
