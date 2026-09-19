@@ -114,6 +114,14 @@ export function listingCellsWritePath() {
   return "/listings/cells";
 }
 
+export function listingSmokePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/smoke`;
+}
+
+export function listingSmokeWritePath() {
+  return "/listings/smoke";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
