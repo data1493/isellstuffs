@@ -17,7 +17,16 @@ export const metadata: Metadata = shareMetadata({
   path: sellNewPath(),
 });
 
-export default function NewListingPage() {
+type NewListingPageProps = {
+  searchParams: Promise<{ error?: string | string[] }>;
+};
+
+export default async function NewListingPage({
+  searchParams,
+}: NewListingPageProps) {
+  const params = await searchParams;
+  const error = Array.isArray(params.error) ? params.error[0] : params.error;
+
   return (
     <div>
       <MallHero>
@@ -52,7 +61,7 @@ export default function NewListingPage() {
       </MallHero>
 
       <MallWidth className="py-12 sm:py-16">
-        <ListingForm />
+        <ListingForm error={error} />
       </MallWidth>
     </div>
   );

@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useState } from "react";
 
 import { ListingTypeBadge } from "@/components/listing-type-badge";
-import { createSellerListing } from "@/app/sell/actions";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,9 +17,9 @@ import {
   type Listing,
   type ListingType,
 } from "@/lib/commerce";
+import { sellListPath } from "@/lib/paths";
 import { isPhysicalHubId } from "@/lib/seller-listing";
-import { addSellerListing } from "@/lib/seller-overlay";
-import { listingPath, stallPath } from "@/lib/paths";
+import { cn } from "@/lib/utils";
 
 const typeOptions: Array<{
   id: ListingType;
@@ -48,10 +46,14 @@ function dollarsToCents(value: string) {
   return Math.round(dollars * 100);
 }
 
-export function ListingForm() {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+function fieldValue(target: EventTarget | null) {
+  if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)) {
+    return "";
+  }
+  return target.value;
+}
+
+export function ListingForm({ error }: { error?: string }) {
   const [type, setType] = useState<ListingType>("physical");
   const [hubId, setHubId] = useState<HubId>("yard-sale");
   const [stallId, setStallId] = useState<string>(stalls[0].id);
@@ -61,58 +63,43 @@ export function ListingForm() {
   const [condition, setCondition] = useState("");
   const [fileFormat, setFileFormat] = useState("PDF");
 
-  const preview = useMemo((): Listing => {
-    const cents = dollarsToCents(price) || 700;
-    if (type === "digital") {
-      return {
-        id: "preview",
-        stallId,
-        type: "digital",
-        title: title || "Untitled file",
-        summary: summary || "A file from this stall.",
-        hubId: "download-stall",
-        price: money(cents),
-        fileFormat: fileFormat || "PDF",
-        cartEligible: true,
-        status: "available",
-      };
-    }
-
-    return {
-      id: "preview",
-      stallId,
-      type: "physical",
-      title: title || "Untitled junk",
-      summary: summary || "Something that can sit on a folding table.",
-      hubId,
-      price: money(cents),
-      condition: condition || "Tested, kinda",
-      cartEligible: true,
-      status: "available",
-    };
-  }, [condition, fileFormat, hubId, price, stallId, summary, title, type]);
+  const cents = dollarsToCents(price) || 700;
+  const preview: Listing =
+    type === "digital"
+      ? {
+          id: "preview",
+          stallId,
+          type: "digital",
+          title: title || "Untitled file",
+          summary: summary || "A file from this stall.",
+          hubId: "download-stall",
+          price: money(cents),
+          fileFormat: fileFormat || "PDF",
+          cartEligible: true,
+          status: "available",
+        }
+      : {
+          id: "preview",
+          stallId,
+          type: "physical",
+          title: title || "Untitled junk",
+          summary: summary || "Something that can sit on a folding table.",
+          hubId,
+          price: money(cents),
+          condition: condition || "Tested, kinda",
+          cartEligible: true,
+          status: "available",
+        };
 
   const stall = stalls.find((item) => item.id === stallId);
   const aisle = hubById(type === "digital" ? "download-stall" : hubId);
 
-  function onSubmit(formData: FormData) {
-    setError(null);
-    startTransition(async () => {
-      const result = await createSellerListing(formData);
-      if (!result.ok) {
-        setError(result.error);
-        return;
-      }
-
-      addSellerListing(result.listing);
-      const booth = stalls.find((item) => item.id === result.listing.stallId);
-      router.push(booth ? stallPath(booth.slug) : listingPath(result.listing.id));
-      router.refresh();
-    });
-  }
-
   return (
-    <form action={onSubmit} className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+    <form
+      action={sellListPath()}
+      method="post"
+      className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
+    >
       <div className="space-y-6">
         <fieldset className="space-y-3">
           <legend className="text-sm font-medium">What kind of thing?</legend>
@@ -154,7 +141,7 @@ export function ListingForm() {
           <select
             id="stallId"
             name="stallId"
-            value={stallId}
+            defaultValue={stalls[0].id}
             onChange={(event) => setStallId(event.target.value)}
             className="h-9 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           >
@@ -223,8 +210,8 @@ export function ListingForm() {
           <Input
             id="title"
             name="title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            defaultValue=""
+            onInput={(event) => setTitle(fieldValue(event.target))}
             placeholder={
               type === "physical"
                 ? "Wobbly lamp, shade optional"
@@ -239,8 +226,8 @@ export function ListingForm() {
           <Textarea
             id="summary"
             name="summary"
-            value={summary}
-            onChange={(event) => setSummary(event.target.value)}
+            defaultValue=""
+            onInput={(event) => setSummary(fieldValue(event.target))}
             placeholder={
               type === "physical"
                 ? "Lights up if you twist the neck. Box is tired."
@@ -260,8 +247,8 @@ export function ListingForm() {
               inputMode="decimal"
               min="0.01"
               step="0.01"
-              value={price}
-              onChange={(event) => setPrice(event.target.value)}
+              defaultValue="7"
+              onInput={(event) => setPrice(fieldValue(event.target) || "7")}
               required
             />
             <p className="text-sm leading-6 text-muted-foreground">
@@ -274,8 +261,8 @@ export function ListingForm() {
               <Input
                 id="condition"
                 name="condition"
-                value={condition}
-                onChange={(event) => setCondition(event.target.value)}
+                defaultValue=""
+                onInput={(event) => setCondition(fieldValue(event.target))}
                 placeholder="Has a crack, still lights up"
                 required
               />
@@ -286,8 +273,8 @@ export function ListingForm() {
               <Input
                 id="fileFormat"
                 name="fileFormat"
-                value={fileFormat}
-                onChange={(event) => setFileFormat(event.target.value)}
+                defaultValue="PDF"
+                onInput={(event) => setFileFormat(fieldValue(event.target) || "PDF")}
                 placeholder="PDF"
                 required
               />
@@ -304,14 +291,15 @@ export function ListingForm() {
           </p>
         ) : null}
 
-        <Button
+        <button
           type="submit"
-          size="lg"
-          disabled={pending}
-          className="h-11 w-full rounded-full px-5 sm:w-auto"
+          className={cn(
+            buttonVariants({ size: "lg" }),
+            "h-11 w-full rounded-full px-5 sm:w-auto",
+          )}
         >
-          {pending ? "Putting it on the table…" : "Put it on the table"}
-        </Button>
+          Put it on the table
+        </button>
       </div>
 
       <aside className="space-y-4 rounded-2xl bg-card p-5 ring-1 ring-foreground/10 lg:sticky lg:top-28 lg:self-start">

@@ -1,7 +1,7 @@
 /**
  * Local seller stand-in. No database.
  *
- * Server: in-memory overlay (same Node process as the shop).
+ * Server: process-wide store plus `.data/seller-listings.json`.
  * Browser: localStorage key `iss:seller-listings`.
  * Same locked Listing shape as `@/lib/commerce`.
  */
@@ -10,7 +10,12 @@ import type { Listing } from "./commerce/types";
 export const SELLER_LISTINGS_KEY = "iss:seller-listings";
 export const SELLER_LISTINGS_CHANGED = "iss:seller-listings-changed";
 
-let memory: Listing[] = [];
+const SERVER_STORE = Symbol.for("iss.seller-listings");
+const DATA_FILE = ".data/seller-listings.json";
+
+type ServerGlobal = typeof globalThis & {
+  [SERVER_STORE]?: Listing[];
+};
 
 function canUseStorage() {
   return typeof window !== "undefined";
@@ -78,11 +83,45 @@ function readLocalListings(): Listing[] {
   return parseSellerListings(window.localStorage.getItem(SELLER_LISTINGS_KEY));
 }
 
+function readFileListings(): Listing[] {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { readFileSync } = require("fs") as typeof import("fs");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { join } = require("path") as typeof import("path");
+    return parseSellerListings(readFileSync(join(process.cwd(), DATA_FILE), "utf8"));
+  } catch {
+    return [];
+  }
+}
+
+function writeFileListings(next: Listing[]) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { mkdirSync, writeFileSync } = require("fs") as typeof import("fs");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { dirname, join } = require("path") as typeof import("path");
+    const file = join(process.cwd(), DATA_FILE);
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, JSON.stringify(next));
+  } catch {
+    // local stand-in — ignore a blocked write
+  }
+}
+
+function serverStore(): Listing[] {
+  const g = globalThis as ServerGlobal;
+  if (!g[SERVER_STORE]) {
+    g[SERVER_STORE] = readFileListings();
+  }
+  return g[SERVER_STORE];
+}
+
 export function readSellerListings(): Listing[] {
   if (canUseStorage()) {
     return readLocalListings();
   }
-  return memory;
+  return serverStore();
 }
 
 export function replaceSellerListings(next: Listing[]) {
@@ -91,7 +130,9 @@ export function replaceSellerListings(next: Listing[]) {
     window.dispatchEvent(new Event(SELLER_LISTINGS_CHANGED));
     return;
   }
-  memory = next;
+  const g = globalThis as ServerGlobal;
+  g[SERVER_STORE] = next;
+  writeFileListings(next);
 }
 
 export function addSellerListing(listing: Listing) {

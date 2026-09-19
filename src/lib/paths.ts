@@ -37,6 +37,10 @@ export function sellNewPath() {
   return "/sell/new";
 }
 
+export function sellListPath() {
+  return "/sell/list";
+}
+
 export function feesPath() {
   return "/fees";
 }
