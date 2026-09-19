@@ -129,9 +129,16 @@ import {
   subscribeBake,
 } from "@/lib/listing-bake";
 import {
+  canTapeGlass,
+  isListingGlassOverlay,
+  readGlassListingIds,
+  subscribeGlass,
+} from "@/lib/listing-glass";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
+  listingGlassWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -220,6 +227,7 @@ export function DeskBoard({
   const [slantIds, setSlantIds] = useState<string[]>([]);
   const [vgIds, setVgIds] = useState<string[]>([]);
   const [bakeIds, setBakeIds] = useState<string[]>([]);
+  const [glassIds, setGlassIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -254,6 +262,7 @@ export function DeskBoard({
       setSlantIds(readSlantListingIds());
       setVgIds(readVgListingIds());
       setBakeIds(readBakeListingIds());
+      setGlassIds(readGlassListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -277,6 +286,7 @@ export function DeskBoard({
     const unsubSlant = subscribeSlant(apply);
     const unsubVg = subscribeVg(apply);
     const unsubBake = subscribeBake(apply);
+    const unsubGlass = subscribeGlass(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -310,6 +320,7 @@ export function DeskBoard({
       unsubSlant();
       unsubVg();
       unsubBake();
+      unsubGlass();
     };
   }, [listings, stall.id]);
 
@@ -522,6 +533,37 @@ export function DeskBoard({
                             {isListingGlueOverlay(listing.id, glueIds)
                               ? "Leave the crack"
                               : "I will not glue"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGlass(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGlassWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGlassOverlay(listing.id, glassIds)
+                                ? "open"
+                                : "glass"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGlassOverlay(listing.id, glassIds)
+                              ? "Leave the lid"
+                              : "I will not replace the glass"}
                           </button>
                         </form>
                       ) : null}

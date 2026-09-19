@@ -73,6 +73,7 @@ import { ListingGlueNotice } from "@/components/listing-glue-notice";
 import { ListingSlantNotice } from "@/components/listing-slant-notice";
 import { ListingVgNotice } from "@/components/listing-vg-notice";
 import { ListingBakeNotice } from "@/components/listing-bake-notice";
+import { ListingGlassNotice } from "@/components/listing-glass-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -167,6 +168,7 @@ import {
   listingSlantPath,
   listingVgPath,
   listingBakePath,
+  listingGlassPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -402,6 +404,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingStretchNotice listingId={listing.id} /> : null}
               {physical ? <ListingDumpNotice listingId={listing.id} /> : null}
               {physical ? <ListingGlueNotice listingId={listing.id} /> : null}
+              {physical ? <ListingGlassNotice listingId={listing.id} /> : null}
               {physical ? <ListingPhoneNotice listingId={listing.id} /> : null}
               {physical ? <ListingRipNotice listingId={listing.id} /> : null}
               {physical ? <ListingZipNotice listingId={listing.id} /> : null}
@@ -717,6 +720,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not glue
+                  </Link>
+                  <Link
+                    href={listingGlassPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not replace the glass
                   </Link>
                   <Link
                     href={listingPhonePath(listing.id)}

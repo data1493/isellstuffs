@@ -586,6 +586,14 @@ export function listingBakeWritePath() {
   return "/listings/bake";
 }
 
+export function listingGlassPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/glass`;
+}
+
+export function listingGlassWritePath() {
+  return "/listings/glass";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
