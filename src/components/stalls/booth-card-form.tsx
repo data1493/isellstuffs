@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { saveStallCard } from "@/app/stalls/[slug]/edit/actions";
@@ -9,31 +8,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { Stall } from "@/lib/commerce";
-import { stallPath } from "@/lib/paths";
+import { parseStallCard } from "@/lib/stall-card";
 import { upsertStallCard } from "@/lib/stall-overlay";
 
 export function BoothCardForm({ stall }: { stall: Stall }) {
-  const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [boothName, setBoothName] = useState(stall.boothName);
-  const [blurb, setBlurb] = useState(stall.blurb);
-
-  const previewName = boothName.trim() || stall.boothName;
-  const previewBlurb = blurb.trim() || stall.blurb;
+  const [previewName, setPreviewName] = useState(stall.boothName);
+  const [previewBlurb, setPreviewBlurb] = useState(stall.blurb);
 
   function onSubmit(formData: FormData) {
     setError(null);
+    const parsed = parseStallCard(formData);
+    if (!parsed.ok) {
+      setError(parsed.error);
+      return;
+    }
+
+    upsertStallCard(parsed.patch);
     startTransition(async () => {
       const result = await saveStallCard(formData);
-      if (!result.ok) {
+      if (result && !result.ok) {
         setError(result.error);
-        return;
       }
-
-      upsertStallCard(result.patch);
-      router.push(stallPath(stall.slug));
-      router.refresh();
     });
   }
 
@@ -50,8 +47,8 @@ export function BoothCardForm({ stall }: { stall: Stall }) {
           <Input
             id="boothName"
             name="boothName"
-            value={boothName}
-            onChange={(event) => setBoothName(event.target.value)}
+            defaultValue={stall.boothName}
+            onInput={(event) => setPreviewName(event.currentTarget.value)}
             placeholder="Folding Table Tuesday"
             autoComplete="organization"
             required
@@ -67,8 +64,8 @@ export function BoothCardForm({ stall }: { stall: Stall }) {
           <Textarea
             id="blurb"
             name="blurb"
-            value={blurb}
-            onChange={(event) => setBlurb(event.target.value)}
+            defaultValue={stall.blurb}
+            onInput={(event) => setPreviewBlurb(event.currentTarget.value)}
             placeholder="Whatever did not sell in the driveway last weekend."
             required
           />
@@ -101,8 +98,12 @@ export function BoothCardForm({ stall }: { stall: Stall }) {
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           Preview
         </p>
-        <h2 className="font-heading text-2xl tracking-tight">{previewName}</h2>
-        <p className="text-sm leading-6 text-muted-foreground">{previewBlurb}</p>
+        <h2 className="font-heading text-2xl tracking-tight">
+          {previewName.trim() || stall.boothName}
+        </h2>
+        <p className="text-sm leading-6 text-muted-foreground">
+          {previewBlurb.trim() || stall.blurb}
+        </p>
         <p className="text-sm leading-6 text-muted-foreground">
           Local overlay. No account. No database. Reload the stall and the
           shop already reads this card.

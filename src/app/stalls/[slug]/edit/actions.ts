@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { stallById } from "@/lib/commerce";
 import { stallEditPath, stallPath } from "@/lib/paths";
@@ -18,10 +19,14 @@ export async function saveStallCard(
   upsertStallCard(parsed.patch);
   const stall = stallById(parsed.patch.stallId);
 
-  if (stall) {
-    revalidatePath(stallPath(stall.slug));
-    revalidatePath(stallEditPath(stall.slug));
+  if (!stall) {
+    return {
+      ok: false,
+      error: "That stall is not on this floor. You can only rewrite a booth that already exists.",
+    };
   }
 
-  return parsed;
+  revalidatePath(stallPath(stall.slug));
+  revalidatePath(stallEditPath(stall.slug));
+  redirect(stallPath(stall.slug));
 }

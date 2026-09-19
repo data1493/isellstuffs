@@ -25,10 +25,11 @@ export function StallCardCopy({
   useEffect(() => {
     function apply() {
       const patch = stallCardById(stallId);
-      if (!patch) {
-        return;
-      }
-      setCard({ boothName: patch.boothName, blurb: patch.blurb });
+      setCard(
+        patch
+          ? { boothName: patch.boothName, blurb: patch.blurb }
+          : { boothName, blurb },
+      );
     }
 
     apply();
@@ -38,7 +39,7 @@ export function StallCardCopy({
       window.removeEventListener(SELLER_STALLS_CHANGED, apply);
       window.removeEventListener("storage", apply);
     };
-  }, [stallId]);
+  }, [blurb, boothName, stallId]);
 
   return (
     <div className="max-w-2xl space-y-3">
