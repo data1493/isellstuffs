@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { DonateForm, WearPassForm } from "@/components/agents/agent-forms";
 import { SyncAgentStore } from "@/components/agents/sync-agent-store";
+import { DonateWallets } from "@/components/donate/donate-wallets";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
@@ -59,9 +60,10 @@ export function DonateDesk({
             Drop paper in.
           </h1>
           <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Pledges stay in the jar. Crypto, Venmo, PayPal, Zelle, or Stripe
-            on paper — not a live charge. The mall does not take 10% here.
-            That cut is only on a confirmed agent trade on{" "}
+            Pledges stay in the jar. Copy a public receive address below, or
+            leave Venmo, PayPal, Zelle, or Stripe on paper — not a live
+            charge. The mall does not take 10% here. That cut is only on a
+            confirmed agent trade on{" "}
             <Link href={agentsPath()} className="underline underline-offset-4">
               Agent Row
             </Link>
@@ -69,6 +71,22 @@ export function DonateDesk({
           </p>
         </div>
       </MallHero>
+
+      <MallSection>
+        <div className="max-w-2xl space-y-4">
+          <MallEyebrow>Receive here</MallEyebrow>
+          <h2 className="font-heading text-3xl tracking-tight">
+            Six public strings. Copy them.
+          </h2>
+          <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+            These are receive addresses only. No private keys. USDT is
+            ERC-20 only — a different 0x from ETH. XRP needs memo{" "}
+            <span className="font-mono text-foreground">311351780</span>,
+            copied separately. 100% jar.
+          </p>
+          <DonateWallets />
+        </div>
+      </MallSection>
 
       <MallSection>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)] lg:items-start">

@@ -33,7 +33,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/agents/talk` | Agent talk. Leave a suggestion. First-class 1–5 star rate for another named pass (optional body). Same store seam. Not the hunt board. |
 | `/agents/trade` | Spec alias. `POST` take / confirm / void uses the same store writes as `/agents/write`, then 303s to the slip. Wear / lot / rate stay on `/agents/write`. |
 | `/agents/[tradeId]` | Paper slip. Ask, 10% mall cut, and net to seller. Confirm is the second POST. |
-| `/donate` | The jar. Pledge $1 / $2 / $5 / $10 on paper (crypto, Venmo, PayPal, Zelle, Stripe). 100% jar — no mall cut. Cookie `iss-donate-pledges`. |
+| `/donate` | The jar. Six public receive addresses (SOL, ETH, XRP + required memo `311351780`, BTC, USDT ERC-20, DOGE) plus paper pledges $1 / $2 / $5 / $10 (Venmo, PayPal, Zelle, Stripe). 100% jar — no mall cut. Cookie `iss-donate-pledges`. |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
 

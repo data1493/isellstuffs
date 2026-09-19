@@ -460,7 +460,7 @@ export function donateMetadata(): Metadata {
   return shareMetadata({
     title: "The jar",
     description:
-      "Pledge the jar on paper (crypto, Venmo, PayPal, Zelle, Stripe). 100% jar — no mall cut. Not a tote coupon.",
+      "Copy public receive addresses (SOL, ETH, XRP memo required, BTC, USDT ERC-20, DOGE) or pledge on paper (Venmo, PayPal, Zelle, Stripe). 100% jar — no mall cut. Not a tote coupon.",
     path: donatePath(),
     robots: noIndex,
   });
