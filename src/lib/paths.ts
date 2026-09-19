@@ -434,6 +434,14 @@ export function listingCrackWritePath() {
   return "/listings/crack";
 }
 
+export function listingInkPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ink`;
+}
+
+export function listingInkWritePath() {
+  return "/listings/ink";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
