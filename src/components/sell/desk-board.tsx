@@ -249,6 +249,12 @@ import {
   subscribeDongle,
 } from "@/lib/listing-dongle";
 import {
+  canTapeBeep,
+  isListingBeepOverlay,
+  readBeepListingIds,
+  subscribeBeep,
+} from "@/lib/listing-beep";
+import {
   canTapeEven,
   isListingEvenOverlay,
   readEvenListingIds,
@@ -328,6 +334,7 @@ import {
   listingSprayWritePath,
   listingLiningWritePath,
   listingDongleWritePath,
+  listingBeepWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -451,6 +458,7 @@ export function DeskBoard({
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [liningIds, setLiningIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
+  const [beepIds, setBeepIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
   const [cementIds, setCementIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
@@ -515,6 +523,7 @@ export function DeskBoard({
       setSprayIds(readSprayListingIds());
       setLiningIds(readLiningListingIds());
       setDongleIds(readDongleListingIds());
+      setBeepIds(readBeepListingIds());
       setEvenIds(readEvenListingIds());
       setCementIds(readCementListingIds());
       setLinkIds(readLinkListingIds());
@@ -568,6 +577,7 @@ export function DeskBoard({
     const unsubSpray = subscribeSpray(apply);
     const unsubLining = subscribeLining(apply);
     const unsubDongle = subscribeDongle(apply);
+    const unsubBeep = subscribeBeep(apply);
     const unsubEven = subscribeEven(apply);
     const unsubCement = subscribeCement(apply);
     const unsubLink = subscribeLink(apply);
@@ -631,6 +641,7 @@ export function DeskBoard({
       unsubSpray();
       unsubLining();
       unsubDongle();
+      unsubBeep();
       unsubEven();
       unsubCement();
       unsubLink();
@@ -1193,6 +1204,37 @@ export function DeskBoard({
                             {isListingDongleOverlay(listing.id, dongleIds)
                               ? "Leave the pile"
                               : "I don't have a dongle"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBeep(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBeepWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBeepOverlay(listing.id, beepIds)
+                                ? "open"
+                                : "beep"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBeepOverlay(listing.id, beepIds)
+                              ? "Leave the tangle"
+                              : "I will not beep it"}
                           </button>
                         </form>
                       ) : null}

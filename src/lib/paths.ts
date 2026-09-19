@@ -714,6 +714,14 @@ export function listingDongleWritePath() {
   return "/listings/dongle";
 }
 
+export function listingBeepPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/beep`;
+}
+
+export function listingBeepWritePath() {
+  return "/listings/beep";
+}
+
 export function listingEvenPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/even`;
 }
