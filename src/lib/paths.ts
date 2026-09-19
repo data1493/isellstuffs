@@ -322,6 +322,14 @@ export function listingVibeWritePath() {
   return "/listings/vibe";
 }
 
+export function listingWrongPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/wrong`;
+}
+
+export function listingWrongWritePath() {
+  return "/listings/wrong";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
