@@ -47,6 +47,9 @@ export function standInPublicFile(listing: DigitalListing): string {
   if (format.includes("OTF")) {
     return "stand-in-files/stand-in-otf.txt";
   }
+  if (format.includes("GIFT")) {
+    return "stand-in-files/stand-in-gift.txt";
+  }
   return "stand-in-files/stand-in.txt";
 }
 

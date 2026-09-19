@@ -1,15 +1,28 @@
 import {
   hubById,
+  isGiftListing,
   isPhysicalListing,
   type Listing,
 } from "@/lib/commerce";
 
 export function listingTypeLabel(listing: Listing) {
-  return listing.type === "physical" ? "Physical" : "Digital";
+  if (isPhysicalListing(listing)) {
+    return "Physical";
+  }
+  if (isGiftListing(listing)) {
+    return "Gift card";
+  }
+  return "Digital";
 }
 
 export function listingFactLabel(listing: Listing) {
-  return isPhysicalListing(listing) ? "Condition" : "File format";
+  if (isPhysicalListing(listing)) {
+    return "Condition";
+  }
+  if (isGiftListing(listing)) {
+    return "What you get";
+  }
+  return "File format";
 }
 
 export function listingFact(listing: Listing) {
@@ -23,7 +36,13 @@ export function listingStatusLabel(listing: Listing) {
   if (listing.status === "file-gone") {
     return "File gone";
   }
-  return isPhysicalListing(listing) ? "On the table" : "File ready";
+  if (isPhysicalListing(listing)) {
+    return "On the table";
+  }
+  if (isGiftListing(listing)) {
+    return "On the desk";
+  }
+  return "File ready";
 }
 
 export function listingHub(listing: Listing) {
@@ -35,13 +54,23 @@ export function listingHubName(listing: Listing) {
 }
 
 export function addToCartLabel(listing: Listing) {
-  return isPhysicalListing(listing) ? "Add to cart" : "Add the file";
+  if (isPhysicalListing(listing)) {
+    return "Add to cart";
+  }
+  if (isGiftListing(listing)) {
+    return "Add the gift card";
+  }
+  return "Add the file";
 }
 
 export function inCartLabel(listing: Listing) {
-  return isPhysicalListing(listing)
-    ? "In your cart"
-    : "File is in the cart";
+  if (isPhysicalListing(listing)) {
+    return "In your cart";
+  }
+  if (isGiftListing(listing)) {
+    return "Gift card is in the tote";
+  }
+  return "File is in the cart";
 }
 
 export function unavailableCartLabel(listing: Listing) {
@@ -64,6 +93,9 @@ export function fulfillmentCopy(listing: Listing) {
   if (isPhysicalListing(listing)) {
     return "One of these on the table. Condition is the listing. Pickup and shipping land with checkout.";
   }
+  if (isGiftListing(listing)) {
+    return "Mall credit from the gift desk. Not a PDF. After checkout you get a stand-in code — no Stripe gift, no reload API.";
+  }
   return "A file from this stall, not a second shop. You get the download after checkout.";
 }
 
@@ -72,21 +104,78 @@ export function addedCopy(listing: Listing, count: number) {
   if (isPhysicalListing(listing)) {
     return `Added. ${bag}. Checkout is a later aisle.`;
   }
+  if (isGiftListing(listing)) {
+    return `Gift card added. ${bag}. Same tote as the junk.`;
+  }
   return `File added. ${bag}. Same stall as the junk.`;
 }
 
 export function alreadyInCartCopy(listing: Listing) {
-  return isPhysicalListing(listing)
-    ? "Already on your list. One of each SKU."
-    : "That file is already in the bag. One of each SKU.";
+  if (isPhysicalListing(listing)) {
+    return "Already on your list. One of each SKU.";
+  }
+  if (isGiftListing(listing)) {
+    return "That card is already in the tote. One of each SKU.";
+  }
+  return "That file is already in the bag. One of each SKU.";
 }
 
 export function listingKindEyebrow(listing: Listing) {
-  return isPhysicalListing(listing)
-    ? "Thing you can hold"
-    : "File from the same stall";
+  if (isPhysicalListing(listing)) {
+    return "Thing you can hold";
+  }
+  if (isGiftListing(listing)) {
+    return "Mall gift card";
+  }
+  return "File from the same stall";
 }
 
 export function listingMediaKicker(listing: Listing) {
-  return isPhysicalListing(listing) ? "No photo yet" : "No preview yet";
+  if (isPhysicalListing(listing)) {
+    return "No photo yet";
+  }
+  if (isGiftListing(listing)) {
+    return "No plastic card";
+  }
+  return "No preview yet";
+}
+
+export function listingHeroEyebrow(listing: Listing) {
+  if (isPhysicalListing(listing)) {
+    return "Object on the table";
+  }
+  if (isGiftListing(listing)) {
+    return "Mall gift card";
+  }
+  return "Download under the table";
+}
+
+export function listingBuyKicker(listing: Listing) {
+  if (isPhysicalListing(listing)) {
+    return "Take it home";
+  }
+  if (isGiftListing(listing)) {
+    return "Give the mall";
+  }
+  return "Take the file";
+}
+
+export function listingMediaPreviewLine(listing: Listing) {
+  if (isPhysicalListing(listing)) {
+    return "The condition is the picture.";
+  }
+  if (isGiftListing(listing)) {
+    return "The denomination is the card.";
+  }
+  return "The format is the preview.";
+}
+
+export function listingSiblingKicker(listing: Listing) {
+  if (isPhysicalListing(listing)) {
+    return "files live here too";
+  }
+  if (isGiftListing(listing)) {
+    return "the desk is just the card";
+  }
+  return "objects live here too";
 }

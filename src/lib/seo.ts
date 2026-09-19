@@ -5,6 +5,7 @@ import {
   hubById,
   hubFloorList,
   isCartEligible,
+  isGiftListing,
   isPhysicalListing,
   listingsByHub,
   listingsByStall,
@@ -13,7 +14,7 @@ import {
   type Listing,
   type Stall,
 } from "@/lib/commerce";
-import { listingFact, listingStatusLabel } from "@/lib/listing-display";
+import { listingFact, listingFactLabel, listingStatusLabel } from "@/lib/listing-display";
 import { listingPath, searchPath, stallPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
@@ -254,7 +255,7 @@ export function listingMetadata(listing: Listing): Metadata {
   const hub = hubById(listing.hubId);
   const price = formatMoney(listing.price);
   const fact = listingFact(listing);
-  const factLabel = isPhysicalListing(listing) ? "Condition" : "Format";
+  const factLabel = listingFactLabel(listing);
   const status = listingStatusLabel(listing);
 
   const title = `${listing.title} · ${price}`;
@@ -389,16 +390,22 @@ export function listingProductJsonLd(listing: Listing) {
     sku: listing.id,
     url,
     category: hub.name,
-    additionalType: isPhysicalListing(listing)
-      ? "https://schema.org/Product"
-      : "https://schema.org/DigitalDocument",
+    additionalType: isGiftListing(listing)
+      ? "https://schema.org/GiftCard"
+      : isPhysicalListing(listing)
+        ? "https://schema.org/Product"
+        : "https://schema.org/DigitalDocument",
     itemCondition: isPhysicalListing(listing)
       ? "https://schema.org/UsedCondition"
       : undefined,
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: isPhysicalListing(listing) ? "condition" : "fileFormat",
+        name: isPhysicalListing(listing)
+          ? "condition"
+          : isGiftListing(listing)
+            ? "giftCode"
+            : "fileFormat",
         value: fact,
       },
       {

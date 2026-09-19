@@ -3,6 +3,7 @@ import { formatMoney, isPhysicalListing, type Listing } from "@/lib/commerce";
 import { listingPath } from "@/lib/paths";
 import {
   fulfillmentCopy,
+  listingBuyKicker,
   listingFact,
   listingFactLabel,
 } from "@/lib/listing-display";
@@ -21,7 +22,7 @@ export function ListingBuyBox({ listing }: { listing: Listing }) {
       )}
     >
       <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-        {physical ? "Take it home" : "Take the file"}
+        {listingBuyKicker(listing)}
       </p>
       <p className="mt-2 font-heading text-4xl tracking-tight sm:text-5xl">
         {formatMoney(listing.price)}

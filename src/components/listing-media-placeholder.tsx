@@ -1,6 +1,7 @@
-import { FileDown, Hand } from "lucide-react";
+import { FileDown, Gift, Hand } from "lucide-react";
 
 import {
+  isGiftListing,
   isPhysicalListing,
   type Listing,
 } from "@/lib/commerce";
@@ -9,6 +10,7 @@ import {
   listingHubName,
   listingKindEyebrow,
   listingMediaKicker,
+  listingMediaPreviewLine,
   listingTypeLabel,
 } from "@/lib/listing-display";
 import { cn } from "@/lib/utils";
@@ -23,7 +25,8 @@ export function ListingMediaPlaceholder({
   className?: string;
 }) {
   const physical = isPhysicalListing(listing);
-  const Icon = physical ? Hand : FileDown;
+  const gift = isGiftListing(listing);
+  const Icon = physical ? Hand : gift ? Gift : FileDown;
 
   return (
     <div
@@ -81,10 +84,7 @@ export function ListingMediaPlaceholder({
               compact ? "mt-2 text-xs" : "mt-3 text-sm leading-6",
             )}
           >
-            {listingMediaKicker(listing)}.{" "}
-            {physical
-              ? "The condition is the picture."
-              : "The format is the preview."}
+            {listingMediaKicker(listing)}. {listingMediaPreviewLine(listing)}
           </p>
         </div>
       </div>

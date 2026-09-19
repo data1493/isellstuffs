@@ -47,6 +47,13 @@ export const stalls = [
     featured: false,
     blurb: "Utensils and mugs from three apartments. Nothing matches. Everything still works.",
   },
+  {
+    id: "gift-desk",
+    slug: "gift-desk",
+    boothName: "Gift Desk",
+    featured: false,
+    blurb: "Mall credit from a desk, not a folder of PDFs. One card. After checkout you get a stand-in code — no Stripe gift API.",
+  },
 ] as const satisfies readonly Stall[];
 
 const physicalListings = [
@@ -290,6 +297,19 @@ const digitalListings = [
     hubId: "download-stall",
     price: money(200),
     fileFormat: "PDF",
+    cartEligible: true,
+    status: "available",
+  },
+  {
+    id: "dl-mall-gift-card",
+    stallId: "gift-desk",
+    type: "digital",
+    title: "$25 mall gift card",
+    summary:
+      "Credit for this floor. Not a PDF. Not a payment-provider gift. After checkout you get a stand-in code the desk can read on paper.",
+    hubId: "download-stall",
+    price: money(2500),
+    fileFormat: "Gift code",
     cartEligible: true,
     status: "available",
   },

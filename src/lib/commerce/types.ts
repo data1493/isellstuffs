@@ -79,6 +79,14 @@ export function isDigitalListing(listing: Listing): listing is DigitalListing {
   return listing.type === "digital";
 }
 
+/**
+ * Stand-in mall gift card. Still a digital listing — not a Stripe / payment-provider gift SKU.
+ * Detected by fileFormat so the PDP can talk like a desk, not a PDF.
+ */
+export function isGiftListing(listing: Listing): listing is DigitalListing {
+  return isDigitalListing(listing) && listing.fileFormat.toUpperCase().includes("GIFT");
+}
+
 export function isCartEligible(listing: Listing): boolean {
   return listing.cartEligible && listing.status === "available";
 }

@@ -1,0 +1,8 @@
+i sell stuffs — mall gift card (stand-in)
+
+Code: MALL-GIFT-25-DESK
+Amount: $25
+
+This is not a Stripe Gift API code.
+Not a reload. Not a payment-provider SKU.
+The gift desk honors it on paper.

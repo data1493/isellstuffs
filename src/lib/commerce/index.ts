@@ -20,6 +20,7 @@ export {
   adSlotKinds,
   isPhysicalListing,
   isDigitalListing,
+  isGiftListing,
   isCartEligible,
   isFeaturedStallSlot,
   type ListingType,

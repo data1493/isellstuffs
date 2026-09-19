@@ -49,7 +49,7 @@ export const mallHubs = [
     name: "Download Stall",
     slug: "download-stall",
     href: "/hubs/download-stall",
-    blurb: "PDFs, beats, presets, zines, fonts, packs.",
+    blurb: "PDFs, beats, presets, zines, fonts, packs, and mall gift cards.",
     rule: "Digital is a listing type, not a separate site. Same stall as the junk.",
   },
 ] as const;

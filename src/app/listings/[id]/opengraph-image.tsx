@@ -4,7 +4,12 @@ import {
   listings,
   stallById,
 } from "@/lib/commerce";
-import { listingFact, listingHubName, listingStatusLabel } from "@/lib/listing-display";
+import {
+  listingFact,
+  listingHubName,
+  listingStatusLabel,
+  listingTypeLabel,
+} from "@/lib/listing-display";
 import { ogContentType, ogImage, ogSize } from "@/lib/og-image";
 
 export const alt = "Listing on i sell stuffs";
@@ -34,7 +39,7 @@ export default async function ListingOpenGraphImage({
   const stall = stallById(listing.stallId);
 
   return ogImage({
-    kicker: `${listing.type === "physical" ? "Physical" : "Digital"} · ${listingHubName(listing)}`,
+    kicker: `${listingTypeLabel(listing)} · ${listingHubName(listing)}`,
     title: listing.title,
     detail: `${formatMoney(listing.price)} · ${listingFact(listing)} · ${listingStatusLabel(listing)}`,
     footer: stall?.boothName ?? "the mall",

@@ -1,9 +1,13 @@
 import { Badge } from "@/components/ui/badge";
-import { isPhysicalListing, type Listing } from "@/lib/commerce";
+import { isGiftListing, isPhysicalListing, type Listing } from "@/lib/commerce";
 import { listingTypeLabel } from "@/lib/listing-display";
 
 export function ListingTypeBadge({ listing }: { listing: Listing }) {
   if (isPhysicalListing(listing)) {
+    return <Badge variant="secondary">{listingTypeLabel(listing)}</Badge>;
+  }
+
+  if (isGiftListing(listing)) {
     return <Badge variant="secondary">{listingTypeLabel(listing)}</Badge>;
   }
 

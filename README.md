@@ -56,6 +56,8 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Page | Example |
 | --- | --- |
 | Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
+| Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
+| Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
 | Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |
@@ -141,7 +143,7 @@ Other agents should import from `@/lib/commerce`. Do not invent listing, stall, 
 | Money helpers | `@/lib/commerce/money` |
 | Stand-in catalog | `@/lib/commerce/catalog` |
 
-Locked listing fields: `price`, `type` (`physical` \| `digital`), `condition` **or** `fileFormat`, `stallId`, `cartEligible`. One stall holds mixed listings (`slug`, `boothName`, `featured`). Ad slots are labeled campaign fixtures: featured stall, homepage takeover, hub takeover.
+Locked listing fields: `price`, `type` (`physical` \| `digital`), `condition` **or** `fileFormat`, `stallId`, `cartEligible`. One stall holds mixed listings (`slug`, `boothName`, `featured`). A mall gift card is still a digital listing (`fileFormat` includes `GIFT`) — stand-in code, not a payment-provider gift API. Ad slots are labeled campaign fixtures: featured stall, homepage takeover, hub takeover.
 
 Hubs that earn aisle pages: Yard Sale, Closet Overflow, Garage Tech, Media Bin, Kitchen Drawer, Download Stall. Homepage + `/browse` stay the general concourse.
 

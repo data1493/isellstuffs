@@ -20,7 +20,9 @@ import {
 } from "@/lib/commerce";
 import {
   listingFact,
+  listingHeroEyebrow,
   listingHub,
+  listingSiblingKicker,
   listingStatusLabel,
 } from "@/lib/listing-display";
 import { listingPath, stallPath } from "@/lib/paths";
@@ -166,9 +168,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
               <div className="space-y-3">
                 <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                  {physical
-                    ? "Object on the table"
-                    : "Download under the table"}
+                  {listingHeroEyebrow(listing)}
                 </p>
                 <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-5xl">
                   {listing.title}
@@ -226,10 +226,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                  Same stall ·{" "}
-                  {physical
-                    ? "files live here too"
-                    : "objects live here too"}
+                  Same stall · {listingSiblingKicker(listing)}
                 </p>
                 <h2 className="mt-2 font-heading text-3xl tracking-tight">
                   Also on {stall.boothName}
