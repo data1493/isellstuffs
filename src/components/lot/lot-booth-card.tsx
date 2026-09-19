@@ -38,6 +38,7 @@ export function LotBoothCard({
   stackNote,
   matchNote,
   seatNote,
+  fixNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -58,6 +59,7 @@ export function LotBoothCard({
   stackNote?: string;
   matchNote?: string;
   seatNote?: string;
+  fixNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -250,6 +252,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-seat-empty={stall.id} hidden />
+          )}
+          {fixNote ? (
+            <p
+              data-booth-fix-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t fix. {fixNote}
+            </p>
+          ) : (
+            <p data-booth-fix-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

@@ -112,6 +112,13 @@ import {
   stallSeatPath,
 } from "@/lib/booth-seat";
 import {
+  BOOTH_FIX_COOKIE_NAME,
+  BOOTH_FIX_PAPER_LINE,
+  boothFixFor,
+  parseBoothFix,
+  stallFixPath,
+} from "@/lib/booth-fix";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -283,6 +290,10 @@ export default async function StallPage({
   const seat = boothSeatFor(
     stall.id,
     parseBoothSeat(jar.get(BOOTH_SEAT_COOKIE_NAME)?.value),
+  );
+  const fix = boothFixFor(
+    stall.id,
+    parseBoothFix(jar.get(BOOTH_FIX_COOKIE_NAME)?.value),
   );
 
   return (
@@ -610,6 +621,23 @@ export default async function StallPage({
             <p data-booth-seat-empty={stall.id} hidden />
           )}
 
+          {fix ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't fix"
+              title="I sell it, I don't repair it."
+              body={
+                <p data-booth-fix-note={stall.id}>
+                  {fix.note} {BOOTH_FIX_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-fix-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -754,6 +782,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Don&apos;t sit on the crate
+          </Link>
+
+          <Link
+            href={stallFixPath(stall.slug)}
+            data-booth-fix-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t fix
           </Link>
 
           <Link
