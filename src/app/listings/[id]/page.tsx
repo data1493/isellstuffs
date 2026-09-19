@@ -43,6 +43,7 @@ import { ListingKnobNotice } from "@/components/listing-knob-notice";
 import { ListingBoxNotice } from "@/components/listing-box-notice";
 import { ListingHairNotice } from "@/components/listing-hair-notice";
 import { ListingLineNotice } from "@/components/listing-line-notice";
+import { ListingSongsNotice } from "@/components/listing-songs-notice";
 import { ListingVibeNotice } from "@/components/listing-vibe-notice";
 import { ListingClipNotice } from "@/components/listing-clip-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
@@ -113,6 +114,7 @@ import {
   listingBoxPath,
   listingHairPath,
   listingLinePath,
+  listingSongsPath,
   listingVibePath,
   listingClipPath,
   listingWrongPath,
@@ -331,6 +333,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingOilNotice listingId={listing.id} /> : null}
               {physical ? <ListingHairNotice listingId={listing.id} /> : null}
               {physical ? <ListingLineNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSongsNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -585,6 +588,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The line stays
+                  </Link>
+                  <Link
+                    href={listingSongsPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not title the songs
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

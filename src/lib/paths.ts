@@ -394,6 +394,14 @@ export function listingLineWritePath() {
   return "/listings/line";
 }
 
+export function listingSongsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/songs`;
+}
+
+export function listingSongsWritePath() {
+  return "/listings/songs";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
