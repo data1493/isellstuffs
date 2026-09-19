@@ -250,6 +250,14 @@ export function listingNeedleWritePath() {
   return "/listings/needle";
 }
 
+export function listingBookPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/book`;
+}
+
+export function listingBookWritePath() {
+  return "/listings/book";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
