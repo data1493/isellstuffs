@@ -6,6 +6,7 @@ import {
   aboutPath,
   collectionsPath,
   feesPath,
+  helpPath,
   savedPath,
   sellDeskPath,
   thisWeekPath,
@@ -14,6 +15,7 @@ import { site } from "@/lib/site";
 
 const browse = [
   { href: aboutPath(), label: "About" },
+  { href: helpPath(), label: "Help" },
   { href: "/explore", label: "Explore" },
   { href: "/hubs", label: "Hubs" },
   { href: thisWeekPath(), label: "This week" },

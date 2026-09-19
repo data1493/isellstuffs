@@ -57,6 +57,10 @@ export function aboutPath() {
   return "/about";
 }
 
+export function helpPath() {
+  return "/help";
+}
+
 export function thisWeekPath() {
   return "/this-week";
 }
