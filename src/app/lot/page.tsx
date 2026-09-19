@@ -220,6 +220,11 @@ import {
   parseBoothSpindle,
 } from "@/lib/booth-spindle";
 import {
+  BOOTH_SLIPMAT_COOKIE_NAME,
+  BOOTH_SLIPMAT_MIRROR_SCRIPT,
+  parseBoothSlipmat,
+} from "@/lib/booth-slipmat";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -310,6 +315,7 @@ export default async function LotPage() {
   const clampMap = parseBoothClamp(jar.get(BOOTH_CLAMP_COOKIE_NAME)?.value);
   const spongeMap = parseBoothSponge(jar.get(BOOTH_SPONGE_COOKIE_NAME)?.value);
   const spindleMap = parseBoothSpindle(jar.get(BOOTH_SPINDLE_COOKIE_NAME)?.value);
+  const slipmatMap = parseBoothSlipmat(jar.get(BOOTH_SLIPMAT_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -365,6 +371,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_CLAMP_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SPONGE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SPINDLE_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_SLIPMAT_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -421,6 +428,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_CLAMP_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SPONGE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SPINDLE_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_SLIPMAT_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -528,6 +536,7 @@ export default async function LotPage() {
                     clampNote={clampMap[row.stall.id]?.note}
                     spongeNote={spongeMap[row.stall.id]?.note}
                     spindleNote={spindleMap[row.stall.id]?.note}
+                    slipmatNote={slipmatMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -600,6 +609,7 @@ export default async function LotPage() {
                     clampNote={clampMap[row.stall.id]?.note}
                     spongeNote={spongeMap[row.stall.id]?.note}
                     spindleNote={spindleMap[row.stall.id]?.note}
+                    slipmatNote={slipmatMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

@@ -1536,6 +1536,14 @@ export function stallSpindleWritePath() {
   return "/stalls/spindle";
 }
 
+export function stallSlipmatPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/slipmat`;
+}
+
+export function stallSlipmatWritePath() {
+  return "/stalls/slipmat";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

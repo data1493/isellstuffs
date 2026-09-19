@@ -322,6 +322,13 @@ import {
   stallSpindlePath,
 } from "@/lib/booth-spindle";
 import {
+  BOOTH_SLIPMAT_COOKIE_NAME,
+  BOOTH_SLIPMAT_PAPER_LINE,
+  boothSlipmatFor,
+  parseBoothSlipmat,
+  stallSlipmatPath,
+} from "@/lib/booth-slipmat";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -613,6 +620,10 @@ export default async function StallPage({
   const spindle = boothSpindleFor(
     stall.id,
     parseBoothSpindle(jar.get(BOOTH_SPINDLE_COOKIE_NAME)?.value),
+  );
+  const slipmat = boothSlipmatFor(
+    stall.id,
+    parseBoothSlipmat(jar.get(BOOTH_SLIPMAT_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1450,6 +1461,23 @@ export default async function StallPage({
             <p data-booth-spindle-empty={stall.id} hidden />
           )}
 
+          {slipmat ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a slipmat"
+              title="Still a crate. Still no deck."
+              body={
+                <p data-booth-slipmat-note={stall.id}>
+                  {slipmat.note} {BOOTH_SLIPMAT_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-slipmat-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1834,6 +1862,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a spindle
+          </Link>
+
+          <Link
+            href={stallSlipmatPath(stall.slug)}
+            data-booth-slipmat-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a slipmat
           </Link>
 
           <Link

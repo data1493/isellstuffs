@@ -68,6 +68,7 @@ export function LotBoothCard({
   clampNote,
   spongeNote,
   spindleNote,
+  slipmatNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -118,6 +119,7 @@ export function LotBoothCard({
   clampNote?: string;
   spongeNote?: string;
   spindleNote?: string;
+  slipmatNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -610,6 +612,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-spindle-empty={stall.id} hidden />
+          )}
+          {slipmatNote ? (
+            <p
+              data-booth-slipmat-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a slipmat. {slipmatNote}
+            </p>
+          ) : (
+            <p data-booth-slipmat-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
