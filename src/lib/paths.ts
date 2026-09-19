@@ -1314,6 +1314,14 @@ export function listingCubeWritePath() {
   return "/listings/cube";
 }
 
+export function listingPancakePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pancake`;
+}
+
+export function listingPancakeWritePath() {
+  return "/listings/pancake";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

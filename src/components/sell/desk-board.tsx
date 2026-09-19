@@ -597,6 +597,12 @@ import {
   subscribeDolby,
 } from "@/lib/listing-dolby";
 import {
+  canTapePancake,
+  isListingPancakeOverlay,
+  readPancakeListingIds,
+  subscribePancake,
+} from "@/lib/listing-pancake";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -800,6 +806,7 @@ import {
   listingHoneWritePath,
   listingBevelWritePath,
   listingDolbyWritePath,
+  listingPancakeWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingScaleWritePath,
@@ -1003,6 +1010,7 @@ export function DeskBoard({
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
+  const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1138,6 +1146,7 @@ export function DeskBoard({
       setHoneIds(readHoneListingIds());
       setBevelIds(readBevelListingIds());
       setDolbyIds(readDolbyListingIds());
+      setPancakeIds(readPancakeListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1262,6 +1271,7 @@ export function DeskBoard({
     const unsubHone = subscribeHone(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubDolby = subscribeDolby(apply);
+    const unsubPancake = subscribePancake(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1396,6 +1406,7 @@ export function DeskBoard({
       unsubHone();
       unsubBevel();
       unsubDolby();
+      unsubPancake();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2904,6 +2915,37 @@ export function DeskBoard({
                             {isListingDolbyOverlay(listing.id, dolbyIds)
                               ? "Leave the hiss"
                               : "I will not Dolby it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePancake(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPancakeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPancakeOverlay(listing.id, pancakeIds)
+                                ? "open"
+                                : "pancake"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPancakeOverlay(listing.id, pancakeIds)
+                              ? "Leave the flop"
+                              : "I will not pancake it"}
                           </button>
                         </form>
                       ) : null}
