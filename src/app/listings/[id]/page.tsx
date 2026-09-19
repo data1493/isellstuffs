@@ -111,6 +111,7 @@ import { ListingGlowNotice } from "@/components/listing-glow-notice";
 import { ListingEtchNotice } from "@/components/listing-etch-notice";
 import { ListingPadNotice } from "@/components/listing-pad-notice";
 import { ListingShimNotice } from "@/components/listing-shim-notice";
+import { ListingFillNotice } from "@/components/listing-fill-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -253,6 +254,7 @@ import {
   listingEtchPath,
   listingPadPath,
   listingShimPath,
+  listingFillPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -559,6 +561,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingTrayNotice listingId={listing.id} /> : null}
               {physical ? <ListingMasterNotice listingId={listing.id} /> : null}
               {physical ? <ListingGumNotice listingId={listing.id} /> : null}
+              {physical ? <ListingFillNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1095,6 +1098,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The stickers stay
+                  </Link>
+                  <Link
+                    href={listingFillPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not fill it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (

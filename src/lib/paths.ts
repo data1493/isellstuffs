@@ -914,6 +914,14 @@ export function listingShimWritePath() {
   return "/listings/shim";
 }
 
+export function listingFillPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fill`;
+}
+
+export function listingFillWritePath() {
+  return "/listings/fill";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
