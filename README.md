@@ -2,7 +2,21 @@
 
 A flea-market mall for independent stalls — not a single-seller shop. Sellers list physical finds and digital goods from the same stall. Category hubs are the map of the floor.
 
-This repo is a flea-market mall (Wave 0 shell + Wave 1 commerce contracts). Checkout, Connect, ads UI, auth, and a database are not in this wave.
+This repo is a flea-market mall (Wave 0 shell + Wave 1 commerce contracts + Wave 2 browse). Checkout, Connect, ads UI, auth, and a database are not in this wave.
+
+## Browse
+
+Walk the stand-in catalog without leaving the mall map.
+
+| Route | What it is |
+| --- | --- |
+| `/` | Home: hubs, labeled ads, a slice of the tables |
+| `/explore` | General concourse. Filter by hub or physical/digital |
+| `/browse` | Redirects to `/explore` |
+| `/hubs` | The four aisle map |
+| `/hubs/[slug]` | Opinionated hub page |
+
+Empty filters and unknown hub slugs get intentional empty / not-found copy. Listing, stall, cart, and checkout pages belong to other waves.
 
 ## Run locally
 

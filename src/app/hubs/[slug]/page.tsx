@@ -1,0 +1,118 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { AdCallout, ListingGrid } from "@/components/browse/cards";
+import { BrowseEmpty } from "@/components/browse/states";
+import { Button } from "@/components/ui/button";
+import { adSlots, listingsByHub, mallHubs } from "@/lib/commerce";
+import { exploreHref, hubBySlug } from "@/lib/browse";
+
+type HubPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export function generateStaticParams() {
+  return mallHubs.map((hub) => ({ slug: hub.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: HubPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const hub = hubBySlug(slug);
+  if (!hub) {
+    return { title: "Aisle not on the map" };
+  }
+  return {
+    title: hub.name,
+    description: hub.blurb,
+  };
+}
+
+export default async function HubPage({ params }: HubPageProps) {
+  const { slug } = await params;
+  const hub = hubBySlug(slug);
+  if (!hub) {
+    notFound();
+  }
+
+  const hubListings = listingsByHub(hub.id);
+  const takeover = adSlots.find(
+    (slot) => slot.kind === "hub-takeover" && slot.hubId === hub.id,
+  );
+  const otherHubs = mallHubs.filter((item) => item.id !== hub.id);
+
+  return (
+    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        Hub aisle
+      </p>
+      <h1 className="mt-2 font-heading text-4xl tracking-tight text-balance sm:text-5xl">
+        {hub.name}
+      </h1>
+      <p className="mt-3 max-w-2xl text-lg text-muted-foreground text-pretty">
+        {hub.blurb}
+      </p>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground text-pretty">
+        {hub.rule}
+      </p>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Button
+          variant="outline"
+          className="rounded-full px-5"
+          render={<Link href={exploreHref({ hubId: hub.id })} />}
+        >
+          See {hub.name} on the concourse
+        </Button>
+        <Button
+          variant="ghost"
+          className="rounded-full px-5"
+          render={<Link href="/hubs" />}
+        >
+          All hubs
+        </Button>
+      </div>
+
+      {takeover ? (
+        <div className="mt-10">
+          <AdCallout slot={takeover} />
+        </div>
+      ) : null}
+
+      <p className="mt-10 text-sm text-muted-foreground">
+        {hubListings.length} {hubListings.length === 1 ? "thing" : "things"} in
+        this aisle
+      </p>
+      <div className="mt-4">
+        {hubListings.length === 0 ? (
+          <BrowseEmpty
+            title="This aisle is empty."
+            body={`${hub.name} has nothing on the tables right now. Walk the concourse, or try another floor.`}
+            actionHref="/explore"
+          />
+        ) : (
+          <ListingGrid listings={hubListings} />
+        )}
+      </div>
+
+      <aside className="mt-14 border-t border-border pt-10">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          Other floors
+        </p>
+        <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+          {otherHubs.map((item) => (
+            <li key={item.id}>
+              <Link
+                href={item.href}
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                {item.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  );
+}

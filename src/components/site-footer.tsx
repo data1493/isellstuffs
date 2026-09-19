@@ -17,9 +17,23 @@ export function SiteFooter() {
             Many stalls. One mall. Physical and digital from the same table.
           </p>
         </div>
-        <p className="text-xs text-muted-foreground">
-          A marketplace in progress. Browse the floor — checkout comes later.
-        </p>
+        <nav
+          aria-label="Browse"
+          className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
+        >
+          <Link
+            href="/explore"
+            className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Explore
+          </Link>
+          <Link
+            href="/hubs"
+            className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Hubs
+          </Link>
+        </nav>
       </div>
     </footer>
   );

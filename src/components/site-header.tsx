@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { site } from "@/lib/site";
 
 const nav = [
-  { href: "#hubs", label: "Browse the mall" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#same-stall", label: "Physical + digital" },
+  { href: "/explore", label: "Explore" },
+  { href: "/hubs", label: "Hubs" },
+  { href: "/#how-it-works", label: "How it works" },
 ];
 
 export function SiteHeader() {
@@ -25,7 +25,7 @@ export function SiteHeader() {
           <Button
             size="lg"
             className="rounded-full px-4 font-medium"
-            render={<a href="#open-a-stall" />}
+            render={<Link href="/#open-a-stall" />}
           >
             Open a stall
           </Button>
@@ -35,13 +35,13 @@ export function SiteHeader() {
           className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm"
         >
           {nav.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
