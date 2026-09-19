@@ -754,6 +754,14 @@ export function listingTrayWritePath() {
   return "/listings/tray";
 }
 
+export function listingSaucerPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/saucer`;
+}
+
+export function listingSaucerWritePath() {
+  return "/listings/saucer";
+}
+
 export function listingBalancePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/balance`;
 }

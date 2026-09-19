@@ -83,6 +83,7 @@ import { ListingPolishNotice } from "@/components/listing-polish-notice";
 import { ListingInsideNotice } from "@/components/listing-inside-notice";
 import { ListingTinesNotice } from "@/components/listing-tines-notice";
 import { ListingCapNotice } from "@/components/listing-cap-notice";
+import { ListingSaucerNotice } from "@/components/listing-saucer-notice";
 import { ListingLedNotice } from "@/components/listing-led-notice";
 import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingDongleNotice } from "@/components/listing-dongle-notice";
@@ -199,6 +200,7 @@ import {
   listingInsidePath,
   listingTinesPath,
   listingCapPath,
+  listingSaucerPath,
   listingLedPath,
   listingSprayPath,
   listingDonglePath,
@@ -468,6 +470,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingInsideNotice listingId={listing.id} /> : null}
               {physical ? <ListingTinesNotice listingId={listing.id} /> : null}
               {physical ? <ListingCapNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSaucerNotice listingId={listing.id} /> : null}
               {physical ? <ListingLedNotice listingId={listing.id} /> : null}
               {physical ? <ListingSprayNotice listingId={listing.id} /> : null}
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
@@ -857,6 +860,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don't have a cap
+                  </Link>
+                  <Link
+                    href={listingSaucerPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't have a saucer
                   </Link>
                   <Link
                     href={listingLedPath(listing.id)}

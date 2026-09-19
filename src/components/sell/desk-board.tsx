@@ -195,6 +195,12 @@ import {
   subscribeCap,
 } from "@/lib/listing-cap";
 import {
+  canTapeSaucer,
+  isListingSaucerOverlay,
+  readSaucerListingIds,
+  subscribeSaucer,
+} from "@/lib/listing-saucer";
+import {
   canTapeLed,
   isListingLedOverlay,
   readLedListingIds,
@@ -272,6 +278,7 @@ import {
   listingInsideWritePath,
   listingTinesWritePath,
   listingCapWritePath,
+  listingSaucerWritePath,
   listingLedWritePath,
   listingSprayWritePath,
   listingDongleWritePath,
@@ -385,6 +392,7 @@ export function DeskBoard({
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
   const [capIds, setCapIds] = useState<string[]>([]);
+  const [saucerIds, setSaucerIds] = useState<string[]>([]);
   const [ledIds, setLedIds] = useState<string[]>([]);
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
@@ -441,6 +449,7 @@ export function DeskBoard({
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
       setCapIds(readCapListingIds());
+      setSaucerIds(readSaucerListingIds());
       setLedIds(readLedListingIds());
       setSprayIds(readSprayListingIds());
       setDongleIds(readDongleListingIds());
@@ -486,6 +495,7 @@ export function DeskBoard({
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
     const unsubCap = subscribeCap(apply);
+    const unsubSaucer = subscribeSaucer(apply);
     const unsubLed = subscribeLed(apply);
     const unsubSpray = subscribeSpray(apply);
     const unsubDongle = subscribeDongle(apply);
@@ -541,6 +551,7 @@ export function DeskBoard({
       unsubInside();
       unsubTines();
       unsubCap();
+      unsubSaucer();
       unsubLed();
       unsubSpray();
       unsubDongle();
@@ -919,6 +930,37 @@ export function DeskBoard({
                             {isListingCapOverlay(listing.id, capIds)
                               ? "Leave it open"
                               : "I don't have a cap"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSaucer(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSaucerWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSaucerOverlay(listing.id, saucerIds)
+                                ? "open"
+                                : "saucer"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSaucerOverlay(listing.id, saucerIds)
+                              ? "Leave the mug open"
+                              : "I don't have a saucer"}
                           </button>
                         </form>
                       ) : null}
