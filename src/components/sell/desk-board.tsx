@@ -351,6 +351,12 @@ import {
   subscribeGlow,
 } from "@/lib/listing-glow";
 import {
+  canTapeEtch,
+  isListingEtchOverlay,
+  readEtchListingIds,
+  subscribeEtch,
+} from "@/lib/listing-etch";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -424,6 +430,7 @@ import {
   listingBeepWritePath,
   listingRecapWritePath,
   listingGlowWritePath,
+  listingEtchWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -569,6 +576,7 @@ export function DeskBoard({
   const [linkIds, setLinkIds] = useState<string[]>([]);
   const [centerIds, setCenterIds] = useState<string[]>([]);
   const [warpIds, setWarpIds] = useState<string[]>([]);
+  const [etchIds, setEtchIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -648,6 +656,7 @@ export function DeskBoard({
       setLinkIds(readLinkListingIds());
       setCenterIds(readCenterListingIds());
       setWarpIds(readWarpListingIds());
+      setEtchIds(readEtchListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -716,6 +725,7 @@ export function DeskBoard({
     const unsubLink = subscribeLink(apply);
     const unsubCenter = subscribeCenter(apply);
     const unsubWarp = subscribeWarp(apply);
+    const unsubEtch = subscribeEtch(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -794,6 +804,7 @@ export function DeskBoard({
       unsubLink();
       unsubCenter();
       unsubWarp();
+      unsubEtch();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -1668,6 +1679,37 @@ export function DeskBoard({
                             {isListingWarpOverlay(listing.id, warpIds)
                               ? "Leave the warp"
                               : "I will not flatten"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeEtch(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEtchWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEtchOverlay(listing.id, etchIds)
+                                ? "open"
+                                : "etch"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingEtchOverlay(listing.id, etchIds)
+                              ? "Leave the skip"
+                              : "I will not read the runout"}
                           </button>
                         </form>
                       ) : null}

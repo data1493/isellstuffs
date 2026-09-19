@@ -108,6 +108,7 @@ import { ListingRadioNotice } from "@/components/listing-radio-notice";
 import { ListingVentNotice } from "@/components/listing-vent-notice";
 import { ListingGasketNotice } from "@/components/listing-gasket-notice";
 import { ListingGlowNotice } from "@/components/listing-glow-notice";
+import { ListingEtchNotice } from "@/components/listing-etch-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -247,6 +248,7 @@ import {
   listingVentPath,
   listingGasketPath,
   listingGlowPath,
+  listingEtchPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -543,6 +545,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingLinkNotice listingId={listing.id} /> : null}
               {physical ? <ListingCenterNotice listingId={listing.id} /> : null}
               {physical ? <ListingWarpNotice listingId={listing.id} /> : null}
+              {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpliceNotice listingId={listing.id} /> : null}
               {physical ? <ListingRadioNotice listingId={listing.id} /> : null}
               {physical ? <ListingVentNotice listingId={listing.id} /> : null}
@@ -1026,6 +1029,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not flatten
+                  </Link>
+                  <Link
+                    href={listingEtchPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not read the runout
                   </Link>
                   <Link
                     href={listingSplicePath(listing.id)}

@@ -890,6 +890,14 @@ export function listingGlowWritePath() {
   return "/listings/glow";
 }
 
+export function listingEtchPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/etch`;
+}
+
+export function listingEtchWritePath() {
+  return "/listings/etch";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
