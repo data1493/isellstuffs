@@ -18,6 +18,14 @@ export function listingOfferPeelPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/offer/peel`;
 }
 
+export function listingLookPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/look`;
+}
+
+export function listingLookWritePath() {
+  return "/listings/look";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

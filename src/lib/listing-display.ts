@@ -4,6 +4,7 @@ import {
   isPhysicalListing,
   type Listing,
 } from "@/lib/commerce";
+import { isListingLookOverlay } from "@/lib/look-overlay";
 import { isStallPacked } from "@/lib/packed-stall";
 
 export function listingTypeLabel(listing: Listing) {
@@ -84,6 +85,9 @@ export function unavailableCartLabel(listing: Listing) {
   if (isPhysicalListing(listing) && isStallPacked(listing.stallId)) {
     return "Packed up — next weekend";
   }
+  if (isPhysicalListing(listing) && isListingLookOverlay(listing.id)) {
+    return "Look only — not for sale";
+  }
   return "Not for the cart";
 }
 
@@ -96,6 +100,9 @@ export function fulfillmentCopy(listing: Listing) {
   }
   if (isPhysicalListing(listing) && isStallPacked(listing.stallId)) {
     return "This booth packed up. The table went in the car. Not a refund. Not a sold sticker. Come next weekend.";
+  }
+  if (isPhysicalListing(listing) && isListingLookOverlay(listing.id)) {
+    return "This sits on the table. Look, don't bag. Not sold. The booth is still out.";
   }
   if (isPhysicalListing(listing)) {
     return "One of these on the table. Condition is the listing. Pickup and shipping land with checkout.";

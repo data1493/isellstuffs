@@ -27,7 +27,13 @@ import {
   listingSiblingKicker,
   listingStatusLabel,
 } from "@/lib/listing-display";
-import { listingOfferPath, listingPath, listingTagPath, stallPath } from "@/lib/paths";
+import {
+  listingLookPath,
+  listingOfferPath,
+  listingPath,
+  listingTagPath,
+  stallPath,
+} from "@/lib/paths";
 import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -196,6 +202,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Tape an offer
+                  </Link>
+                  <Link
+                    href={listingLookPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Look, don't bag
                   </Link>
                 </p>
               ) : null}
