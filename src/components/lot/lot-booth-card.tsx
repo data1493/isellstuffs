@@ -51,6 +51,7 @@ export function LotBoothCard({
   meterNote,
   copyNote,
   shrinkNote,
+  dishesNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -84,6 +85,7 @@ export function LotBoothCard({
   meterNote?: string;
   copyNote?: string;
   shrinkNote?: string;
+  dishesNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -406,6 +408,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-shrink-empty={stall.id} hidden />
+          )}
+          {dishesNote ? (
+            <p
+              data-booth-dishes-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t do dishes. {dishesNote}
+            </p>
+          ) : (
+            <p data-booth-dishes-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

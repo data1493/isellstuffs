@@ -936,6 +936,14 @@ export function stallShrinkWritePath() {
   return "/stalls/shrink";
 }
 
+export function stallDishesPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/dishes`;
+}
+
+export function stallDishesWritePath() {
+  return "/stalls/dishes";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

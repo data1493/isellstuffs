@@ -135,6 +135,11 @@ import {
   parseBoothShrink,
 } from "@/lib/booth-shrink";
 import {
+  BOOTH_DISHES_COOKIE_NAME,
+  BOOTH_DISHES_MIRROR_SCRIPT,
+  parseBoothDishes,
+} from "@/lib/booth-dishes";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -208,6 +213,7 @@ export default async function LotPage() {
   const meterMap = parseBoothMeter(jar.get(BOOTH_METER_COOKIE_NAME)?.value);
   const copyMap = parseBoothCopy(jar.get(BOOTH_COPY_COOKIE_NAME)?.value);
   const shrinkMap = parseBoothShrink(jar.get(BOOTH_SHRINK_COOKIE_NAME)?.value);
+  const dishesMap = parseBoothDishes(jar.get(BOOTH_DISHES_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -246,6 +252,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_METER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_COPY_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SHRINK_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_DISHES_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -285,6 +292,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_METER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_COPY_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SHRINK_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_DISHES_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -375,6 +383,7 @@ export default async function LotPage() {
                     meterNote={meterMap[row.stall.id]?.note}
                     copyNote={copyMap[row.stall.id]?.note}
                     shrinkNote={shrinkMap[row.stall.id]?.note}
+                    dishesNote={dishesMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -430,6 +439,7 @@ export default async function LotPage() {
                     meterNote={meterMap[row.stall.id]?.note}
                     copyNote={copyMap[row.stall.id]?.note}
                     shrinkNote={shrinkMap[row.stall.id]?.note}
+                    dishesNote={dishesMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

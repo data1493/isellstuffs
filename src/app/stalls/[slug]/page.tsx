@@ -203,6 +203,13 @@ import {
   stallShrinkPath,
 } from "@/lib/booth-shrink";
 import {
+  BOOTH_DISHES_COOKIE_NAME,
+  BOOTH_DISHES_PAPER_LINE,
+  boothDishesFor,
+  parseBoothDishes,
+  stallDishesPath,
+} from "@/lib/booth-dishes";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -426,6 +433,10 @@ export default async function StallPage({
   const shrink = boothShrinkFor(
     stall.id,
     parseBoothShrink(jar.get(BOOTH_SHRINK_COOKIE_NAME)?.value),
+  );
+  const dishes = boothDishesFor(
+    stall.id,
+    parseBoothDishes(jar.get(BOOTH_DISHES_COOKIE_NAME)?.value),
   );
 
   return (
@@ -974,6 +985,23 @@ export default async function StallPage({
             <p data-booth-shrink-empty={stall.id} hidden />
           )}
 
+          {dishes ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't do dishes"
+              title="Chip stays."
+              body={
+                <p data-booth-dishes-note={stall.id}>
+                  {dishes.note} {BOOTH_DISHES_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-dishes-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1222,6 +1250,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t shrink-wrap
+          </Link>
+
+          <Link
+            href={stallDishesPath(stall.slug)}
+            data-booth-dishes-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t do dishes
           </Link>
 
           <Link
