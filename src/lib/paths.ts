@@ -874,6 +874,14 @@ export function listingGasketWritePath() {
   return "/listings/gasket";
 }
 
+export function listingGlowPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/glow`;
+}
+
+export function listingGlowWritePath() {
+  return "/listings/glow";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }

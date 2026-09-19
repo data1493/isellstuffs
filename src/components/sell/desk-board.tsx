@@ -345,6 +345,12 @@ import {
   subscribeGasket,
 } from "@/lib/listing-gasket";
 import {
+  canTapeGlow,
+  isListingGlowOverlay,
+  readGlowListingIds,
+  subscribeGlow,
+} from "@/lib/listing-glow";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -411,6 +417,7 @@ import {
   listingDongleWritePath,
   listingBeepWritePath,
   listingRecapWritePath,
+  listingGlowWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -549,6 +556,7 @@ export function DeskBoard({
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [beepIds, setBeepIds] = useState<string[]>([]);
   const [recapIds, setRecapIds] = useState<string[]>([]);
+  const [glowIds, setGlowIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
   const [cementIds, setCementIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
@@ -626,6 +634,7 @@ export function DeskBoard({
       setDongleIds(readDongleListingIds());
       setBeepIds(readBeepListingIds());
       setRecapIds(readRecapListingIds());
+      setGlowIds(readGlowListingIds());
       setEvenIds(readEvenListingIds());
       setCementIds(readCementListingIds());
       setLinkIds(readLinkListingIds());
@@ -692,6 +701,7 @@ export function DeskBoard({
     const unsubDongle = subscribeDongle(apply);
     const unsubBeep = subscribeBeep(apply);
     const unsubRecap = subscribeRecap(apply);
+    const unsubGlow = subscribeGlow(apply);
     const unsubEven = subscribeEven(apply);
     const unsubCement = subscribeCement(apply);
     const unsubLink = subscribeLink(apply);
@@ -768,6 +778,7 @@ export function DeskBoard({
       unsubDongle();
       unsubBeep();
       unsubRecap();
+      unsubGlow();
       unsubEven();
       unsubCement();
       unsubLink();
@@ -1460,6 +1471,37 @@ export function DeskBoard({
                             {isListingRecapOverlay(listing.id, recapIds)
                               ? "Leave the save luck"
                               : "I will not recap"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGlow(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGlowWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGlowOverlay(listing.id, glowIds)
+                                ? "open"
+                                : "glow"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGlowOverlay(listing.id, glowIds)
+                              ? "Leave the line"
+                              : "I don't have a backlight"}
                           </button>
                         </form>
                       ) : null}

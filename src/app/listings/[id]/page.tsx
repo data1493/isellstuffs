@@ -107,6 +107,7 @@ import { ListingSpliceNotice } from "@/components/listing-splice-notice";
 import { ListingRadioNotice } from "@/components/listing-radio-notice";
 import { ListingVentNotice } from "@/components/listing-vent-notice";
 import { ListingGasketNotice } from "@/components/listing-gasket-notice";
+import { ListingGlowNotice } from "@/components/listing-glow-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -244,6 +245,7 @@ import {
   listingRadioPath,
   listingVentPath,
   listingGasketPath,
+  listingGlowPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -532,6 +534,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDongleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBeepNotice listingId={listing.id} /> : null}
               {physical ? <ListingRecapNotice listingId={listing.id} /> : null}
+              {physical ? <ListingGlowNotice listingId={listing.id} /> : null}
               {physical ? <ListingEvenNotice listingId={listing.id} /> : null}
               {physical ? <ListingCementNotice listingId={listing.id} /> : null}
               {physical ? <ListingLinkNotice listingId={listing.id} /> : null}
@@ -984,6 +987,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not recap
+                  </Link>
+                  <Link
+                    href={listingGlowPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't have a backlight
                   </Link>
                   <Link
                     href={listingEvenPath(listing.id)}
