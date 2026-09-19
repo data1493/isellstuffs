@@ -111,10 +111,17 @@ import {
   subscribeGlue,
 } from "@/lib/listing-glue";
 import {
+  canTapeSlant,
+  isListingSlantOverlay,
+  readSlantListingIds,
+  subscribeSlant,
+} from "@/lib/listing-slant";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
   listingLoopWritePath,
+  listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
   listingRememberWritePath,
@@ -196,6 +203,7 @@ export function DeskBoard({
   const [stretchIds, setStretchIds] = useState<string[]>([]);
   const [rememberIds, setRememberIds] = useState<string[]>([]);
   const [glueIds, setGlueIds] = useState<string[]>([]);
+  const [slantIds, setSlantIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -227,6 +235,7 @@ export function DeskBoard({
       setStretchIds(readStretchListingIds());
       setRememberIds(readRememberListingIds());
       setGlueIds(readGlueListingIds());
+      setSlantIds(readSlantListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -247,6 +256,7 @@ export function DeskBoard({
     const unsubStretch = subscribeStretch(apply);
     const unsubRemember = subscribeRemember(apply);
     const unsubGlue = subscribeGlue(apply);
+    const unsubSlant = subscribeSlant(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -277,6 +287,7 @@ export function DeskBoard({
       unsubStretch();
       unsubRemember();
       unsubGlue();
+      unsubSlant();
     };
   }, [listings, stall.id]);
 
@@ -768,6 +779,37 @@ export function DeskBoard({
                             {isListingLoopOverlay(listing.id, loopIds)
                               ? "Leave the loop"
                               : "I will not slice the loop"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSlant(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSlantWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSlantOverlay(listing.id, slantIds)
+                                ? "open"
+                                : "slant"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSlantOverlay(listing.id, slantIds)
+                              ? "Leave the two weights"
+                              : "I will not cut a slant"}
                           </button>
                         </form>
                       ) : null}

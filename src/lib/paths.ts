@@ -562,6 +562,14 @@ export function listingGlueWritePath() {
   return "/listings/glue";
 }
 
+export function listingSlantPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/slant`;
+}
+
+export function listingSlantWritePath() {
+  return "/listings/slant";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

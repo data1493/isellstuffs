@@ -70,6 +70,7 @@ import { ListingTwistNotice } from "@/components/listing-twist-notice";
 import { ListingStretchNotice } from "@/components/listing-stretch-notice";
 import { ListingRememberNotice } from "@/components/listing-remember-notice";
 import { ListingGlueNotice } from "@/components/listing-glue-notice";
+import { ListingSlantNotice } from "@/components/listing-slant-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -161,6 +162,7 @@ import {
   listingStretchPath,
   listingRememberPath,
   listingGluePath,
+  listingSlantPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -370,6 +372,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingShotNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
               {physical ? <ListingRingNotice listingId={listing.id} /> : null}
@@ -831,6 +834,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not slice the loop
+                  </Link>
+                  <Link
+                    href={listingSlantPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not cut a slant
                   </Link>
                 </p>
               )}
