@@ -41,6 +41,16 @@ export function sellNewPath() {
   return "/sell/new";
 }
 
+export function sellStartPath(stall?: string, type?: string) {
+  if (stall && type) {
+    return `/sell/start/${stall}/${type}`;
+  }
+  if (stall) {
+    return `/sell/start/${stall}`;
+  }
+  return "/sell/start";
+}
+
 export function sellListPath() {
   return "/sell/list";
 }

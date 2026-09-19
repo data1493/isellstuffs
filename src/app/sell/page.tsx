@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { PLATFORM_FEE_BPS } from "@/lib/checkout";
 import { formatMoney, mallHubs, money, stalls } from "@/lib/commerce";
-import { advertisePath, feesPath, sellDeskPath, sellNewPath, sellPath, sellPayoutsPath, stallPath } from "@/lib/paths";
+import { advertisePath, feesPath, sellDeskPath, sellNewPath, sellPath, sellPayoutsPath, sellStartPath, stallPath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -83,6 +83,13 @@ export default function SellPage() {
             render={<Link href={sellNewPath()} />}
           >
             List something
+          </Button>
+          <Button
+            size="lg"
+            className="h-11 w-full rounded-full px-5 sm:w-auto"
+            render={<Link href={sellStartPath()} />}
+          >
+            Start at the first table
           </Button>
           <Button
             size="lg"

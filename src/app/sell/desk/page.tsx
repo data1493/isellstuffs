@@ -12,6 +12,7 @@ import {
   sellNewPath,
   sellPath,
   sellPayoutsPath,
+  sellStartPath,
   stallEditPath,
   stallPath,
 } from "@/lib/paths";
@@ -108,6 +109,14 @@ export default function SellDeskPage() {
             render={<Link href={sellNewPath()} />}
           >
             List something
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-11 w-full rounded-full px-5 sm:w-auto"
+            render={<Link href={sellStartPath()} />}
+          >
+            Walk it
           </Button>
           <Button
             size="lg"
