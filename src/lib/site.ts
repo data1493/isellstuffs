@@ -6,6 +6,7 @@ export const site = {
     "Independent stalls under one roof. Sellers list physical finds and digital goods from the same stall.",
 };
 
+/** Wave 0 homepage placeholders. Locked mall hubs live in `@/lib/commerce`. */
 export const hubs = [
   {
     name: "Vintage & Finds",

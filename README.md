@@ -2,7 +2,7 @@
 
 A flea-market mall for independent stalls — not a single-seller shop. Sellers list physical finds and digital goods from the same stall. Category hubs are the map of the floor.
 
-This repo is the marketplace foundation (Wave 0): the Next.js app, brand shell, and a placeholder home. Checkout, Connect, ads, auth, and a database are not in this wave.
+This repo is a flea-market mall (Wave 0 shell + Wave 1 commerce contracts). Checkout, Connect, ads UI, auth, and a database are not in this wave.
 
 ## Run locally
 
@@ -22,10 +22,26 @@ npm start
 
 `npm start` uses the same port.
 
+## Commerce contracts (import these)
+
+Other agents should import from `@/lib/commerce`. Do not invent listing, stall, or ad-slot shapes.
+
+| Module | Path |
+| --- | --- |
+| Barrel | `@/lib/commerce` |
+| Types | `@/lib/commerce/types` |
+| Locked hubs | `@/lib/commerce/hubs` |
+| Money helpers | `@/lib/commerce/money` |
+| Stand-in catalog (12 SKUs) | `@/lib/commerce/catalog` |
+
+Locked listing fields: `price`, `type` (`physical` \| `digital`), `condition` **or** `fileFormat`, `stallId`, `cartEligible`. One stall holds mixed listings (`slug`, `boothName`, `featured`). Ad slots are labeled campaign fixtures: featured stall, homepage takeover, hub takeover.
+
+Hubs that earn aisle pages: Yard Sale, Closet Overflow, Garage Tech, Download Stall. Homepage + `/browse` stay the general concourse.
+
 ## Stack
 
 Next.js, TypeScript, Tailwind CSS, and shadcn/ui at the repo root.
 
 ## Assets
 
-Keep this repo light. Product photos and other bulky files stay off git (local T9 drive on the owner’s machine). Wave 0 uses typography and color only — no photo packs.
+Keep this repo light. Product photos and other bulky files stay off git (local T9 drive on the owner’s machine). Catalog fixtures are text placeholders only — no photo packs, no T9 writes from cloud agents.
