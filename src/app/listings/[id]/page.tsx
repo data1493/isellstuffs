@@ -48,6 +48,7 @@ import { ListingVibeNotice } from "@/components/listing-vibe-notice";
 import { ListingClipNotice } from "@/components/listing-clip-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
 import { ListingFoundryNotice } from "@/components/listing-foundry-notice";
+import { ListingConvertNotice } from "@/components/listing-convert-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
 import { ListingOilNotice } from "@/components/listing-oil-notice";
 import { ListingSleeveNotice } from "@/components/listing-sleeve-notice";
@@ -120,6 +121,7 @@ import {
   listingClipPath,
   listingWrongPath,
   listingFoundryPath,
+  listingConvertPath,
   listingManualPath,
   listingOilPath,
   listingSleevePath,
@@ -318,6 +320,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingWrongNotice listingId={listing.id} /> : null}
               {!physical ? (
                 <ListingFoundryNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingConvertNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -654,6 +659,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Not a foundry seat
+                  </Link>
+                  <Link
+                    href={listingConvertPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't convert
                   </Link>
                 </p>
               )}

@@ -410,6 +410,14 @@ export function listingSleeveWritePath() {
   return "/listings/sleeve";
 }
 
+export function listingConvertPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/convert`;
+}
+
+export function listingConvertWritePath() {
+  return "/listings/convert";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
