@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
+import { HeaderSearch } from "@/components/header-search";
 import { SiteNav } from "@/components/site-nav";
 import { ToteHeaderButton } from "@/components/tote-nav-link";
 import { Button } from "@/components/ui/button";
@@ -29,7 +31,16 @@ export function SiteHeader() {
             </Button>
           </div>
         </div>
-        <SiteNav />
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <SiteNav />
+          <Suspense
+            fallback={
+              <div className="h-8 w-full rounded-full bg-muted/60 sm:max-w-[16rem]" />
+            }
+          >
+            <HeaderSearch className="w-full sm:max-w-[16rem] sm:shrink-0" />
+          </Suspense>
+        </div>
       </div>
     </header>
   );

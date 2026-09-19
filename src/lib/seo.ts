@@ -13,7 +13,7 @@ import {
   type Stall,
 } from "@/lib/commerce";
 import { listingFact, listingStatusLabel } from "@/lib/listing-display";
-import { listingPath, stallPath } from "@/lib/paths";
+import { listingPath, searchPath, stallPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
 const fallbackOrigin = "http://127.0.0.1:44721";
@@ -188,6 +188,26 @@ export function exploreMetadata(filters: {
     description:
       "The general mall floor. Filter the stand-in catalog by hub or physical/digital. Paid corners are labeled.",
     path: "/explore",
+  });
+}
+
+export function searchMetadata(query?: string): Metadata {
+  const q = query?.trim().replace(/\s+/g, " ") ?? "";
+
+  if (!q) {
+    return shareMetadata({
+      title: "Search the tables",
+      description:
+        "Look up a listing title, a stall, a hub, or physical versus digital. Same stand-in catalog as the concourse.",
+      path: searchPath(),
+    });
+  }
+
+  return shareMetadata({
+    title: `Search · ${q}`,
+    description: `Stand-in SKUs that match “${q}” by title, stall, hub, or physical/digital.`,
+    path: searchPath(q),
+    robots: noIndexFollow,
   });
 }
 

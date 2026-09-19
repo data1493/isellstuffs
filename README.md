@@ -13,6 +13,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/` | Home: hubs, labeled ads, a slice of the tables |
 | `/explore` | General concourse. Filter by hub or physical/digital |
 | `/browse` | Redirects to `/explore` |
+| `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The four aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
 
@@ -97,6 +98,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | --- | --- |
 | `/` | Mall name + four-hub pitch. WebSite JSON-LD |
 | `/explore` | Concourse title; hub/type query strings get their own title and description |
+| `/search` | Bare search is indexed. Query URLs are `noindex` |
 | `/hubs`, `/hubs/[slug]` | Aisle name, rule, listing count |
 | `/listings/[id]` | `{title} · {price}` plus condition/format, stall, status. Product + Offer JSON-LD |
 | `/stalls/[slug]` | Booth name, mix of objects and files |
