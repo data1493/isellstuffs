@@ -230,6 +230,11 @@ import {
   parseBoothTrivet,
 } from "@/lib/booth-trivet";
 import {
+  BOOTH_THIMBLE_COOKIE_NAME,
+  BOOTH_THIMBLE_MIRROR_SCRIPT,
+  parseBoothThimble,
+} from "@/lib/booth-thimble";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -322,6 +327,7 @@ export default async function LotPage() {
   const spindleMap = parseBoothSpindle(jar.get(BOOTH_SPINDLE_COOKIE_NAME)?.value);
   const slipmatMap = parseBoothSlipmat(jar.get(BOOTH_SLIPMAT_COOKIE_NAME)?.value);
   const trivetMap = parseBoothTrivet(jar.get(BOOTH_TRIVET_COOKIE_NAME)?.value);
+  const thimbleMap = parseBoothThimble(jar.get(BOOTH_THIMBLE_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -379,6 +385,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SPINDLE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SLIPMAT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_TRIVET_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_THIMBLE_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -437,6 +444,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SPINDLE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SLIPMAT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_TRIVET_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_THIMBLE_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -546,6 +554,7 @@ export default async function LotPage() {
                     spindleNote={spindleMap[row.stall.id]?.note}
                     slipmatNote={slipmatMap[row.stall.id]?.note}
                     trivetNote={trivetMap[row.stall.id]?.note}
+                    thimbleNote={thimbleMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -620,6 +629,7 @@ export default async function LotPage() {
                     spindleNote={spindleMap[row.stall.id]?.note}
                     slipmatNote={slipmatMap[row.stall.id]?.note}
                     trivetNote={trivetMap[row.stall.id]?.note}
+                    thimbleNote={thimbleMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

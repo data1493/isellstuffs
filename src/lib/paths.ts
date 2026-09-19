@@ -1608,6 +1608,14 @@ export function stallTrivetWritePath() {
   return "/stalls/trivet";
 }
 
+export function stallThimblePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/thimble`;
+}
+
+export function stallThimbleWritePath() {
+  return "/stalls/thimble";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

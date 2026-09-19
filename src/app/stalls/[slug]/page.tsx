@@ -336,6 +336,13 @@ import {
   stallTrivetPath,
 } from "@/lib/booth-trivet";
 import {
+  BOOTH_THIMBLE_COOKIE_NAME,
+  BOOTH_THIMBLE_PAPER_LINE,
+  boothThimbleFor,
+  parseBoothThimble,
+  stallThimblePath,
+} from "@/lib/booth-thimble";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -635,6 +642,10 @@ export default async function StallPage({
   const trivet = boothTrivetFor(
     stall.id,
     parseBoothTrivet(jar.get(BOOTH_TRIVET_COOKIE_NAME)?.value),
+  );
+  const thimble = boothThimbleFor(
+    stall.id,
+    parseBoothThimble(jar.get(BOOTH_THIMBLE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1506,6 +1517,23 @@ export default async function StallPage({
             <p data-booth-trivet-empty={stall.id} hidden />
           )}
 
+          {thimble ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a thimble"
+              title="Still a closet. Still worn twice."
+              body={
+                <p data-booth-thimble-note={stall.id}>
+                  {thimble.note} {BOOTH_THIMBLE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-thimble-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1906,6 +1934,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a trivet
+          </Link>
+
+          <Link
+            href={stallThimblePath(stall.slug)}
+            data-booth-thimble-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a thimble
           </Link>
 
           <Link
