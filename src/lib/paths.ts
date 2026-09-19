@@ -1234,6 +1234,14 @@ export function listingQuantizeWritePath() {
   return "/listings/quantize";
 }
 
+export function listingSubsetPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/subset`;
+}
+
+export function listingSubsetWritePath() {
+  return "/listings/subset";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

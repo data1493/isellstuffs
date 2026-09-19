@@ -597,6 +597,12 @@ import {
   subscribeQuantize,
 } from "@/lib/listing-quantize";
 import {
+  canTapeSubset,
+  isListingSubsetOverlay,
+  readSubsetListingIds,
+  subscribeSubset,
+} from "@/lib/listing-subset";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -740,6 +746,7 @@ import {
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
+  listingSubsetWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -948,6 +955,7 @@ export function DeskBoard({
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
+  const [subsetIds, setSubsetIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1073,6 +1081,7 @@ export function DeskBoard({
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
+      setSubsetIds(readSubsetListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1187,6 +1196,7 @@ export function DeskBoard({
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
+    const unsubSubset = subscribeSubset(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1311,6 +1321,7 @@ export function DeskBoard({
       unsubScale();
       unsubGate();
       unsubQuantize();
+      unsubSubset();
     };
   }, [listings, stall.id]);
 
@@ -4220,6 +4231,37 @@ export function DeskBoard({
                             {isListingQuantizeOverlay(listing.id, quantizeIds)
                               ? "Leave the twelve shots"
                               : "I will not quantize them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSubset(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSubsetWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSubsetOverlay(listing.id, subsetIds)
+                                ? "open"
+                                : "subset"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSubsetOverlay(listing.id, subsetIds)
+                              ? "Leave the two weights"
+                              : "I will not subset it"}
                           </button>
                         </form>
                       ) : null}
