@@ -37,14 +37,22 @@ export type WeekPick = {
   note: string;
 };
 
-export function thisWeekPicks(): WeekPick[] {
-  return thisWeekPickIds.flatMap((id) => {
+/** Stall-keeper tape for a pick. Fixture notes stay; overlay SKUs get a short line. */
+export function weekPickNote(id: string) {
+  if (id in thisWeekNotes) {
+    return thisWeekNotes[id as ThisWeekPickId];
+  }
+  return "Taped this weekend. Titles and prices stay on the stall.";
+}
+
+export function thisWeekPicks(ids: readonly string[] = thisWeekPickIds): WeekPick[] {
+  return ids.flatMap((id) => {
     const listing = listingById(id);
     if (!listing) return [];
     if (listing.status === "sold" || listing.status === "file-gone") {
       return [];
     }
-    return [{ listing, note: thisWeekNotes[id] }];
+    return [{ listing, note: weekPickNote(id) }];
   });
 }
 

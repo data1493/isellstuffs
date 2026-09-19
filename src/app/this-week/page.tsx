@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
@@ -9,44 +10,92 @@ import { WeekPickCard } from "@/components/this-week/week-pick-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/commerce";
-import { listingPath, thisWeekPath } from "@/lib/paths";
+import { listingPath, thisWeekEditPath, thisWeekPath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
+import {
+  resolveWeekPickIds,
+  WEEK_PICKS_COOKIE_NAME,
+  WEEK_PICKS_STORAGE_KEY,
+} from "@/lib/week-overlay";
 import {
   thisWeekMix,
   thisWeekPicks,
-  thisWeekShareLine,
   thisWeekWindow,
+  type WeekPick,
 } from "@/lib/week-pick";
 
-const picks = thisWeekPicks();
-const mix = thisWeekMix(picks);
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = shareMetadata({
   title: "This week on the table",
-  description: `${thisWeekShareLine(picks)} Mall picks — not paid stamps.`,
+  description:
+    "A weekend stall drop. Mall picks from the stand-in catalog — objects and files, not paid stamps.",
   path: thisWeekPath(),
 });
 
-export default function ThisWeekPage() {
-  if (picks.length === 0) {
-    return (
-      <MallNotice
-        tone="empty"
-        eyebrow="Weekend table"
-        title="Nothing taped down this weekend."
-        body="The mall pick list is empty. Sold and file-gone do not get a second life here. Walk the concourse for what is still on the floor."
-        actions={
+const syncScript = `try{var m=document.cookie.match(/(?:^|; )${WEEK_PICKS_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(WEEK_PICKS_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}`;
+
+export default async function ThisWeekPage() {
+  const jar = await cookies();
+  const { ids, fromOverlay } = resolveWeekPickIds(
+    jar.get(WEEK_PICKS_COOKIE_NAME)?.value,
+  );
+  const picks = thisWeekPicks(ids);
+  const mix = thisWeekMix(picks);
+
+  return (
+    <>
+      <script dangerouslySetInnerHTML={{ __html: syncScript }} />
+      {picks.length === 0 ? (
+        <ThisWeekEmpty fromOverlay={fromOverlay} />
+      ) : (
+        <ThisWeekTable picks={picks} mix={mix} fromOverlay={fromOverlay} />
+      )}
+    </>
+  );
+}
+
+function ThisWeekEmpty({ fromOverlay }: { fromOverlay: boolean }) {
+  return (
+    <MallNotice
+      tone="empty"
+      eyebrow="Weekend table"
+      title="Nothing taped down this weekend."
+      body={
+        fromOverlay
+          ? "This browser's overlay is empty. Sold and file-gone do not get a second life here. Tape a few stand-in SKUs, or walk the concourse."
+          : "The mall pick list is empty. Sold and file-gone do not get a second life here. Walk the concourse for what is still on the floor."
+      }
+      actions={
+        <>
           <Button
+            className="rounded-full px-5"
+            render={<Link href={thisWeekEditPath()} />}
+          >
+            Tape the weekend table
+          </Button>
+          <Button
+            variant="outline"
             className="rounded-full px-5"
             render={<Link href="/explore" />}
           >
             Explore the concourse
           </Button>
-        }
-      />
-    );
-  }
+        </>
+      }
+    />
+  );
+}
 
+function ThisWeekTable({
+  picks,
+  mix,
+  fromOverlay,
+}: {
+  picks: WeekPick[];
+  mix: { physical: number; digital: number };
+  fromOverlay: boolean;
+}) {
   return (
     <div>
       <MallHero>
@@ -63,6 +112,11 @@ export default function ThisWeekPage() {
           <Badge variant="secondary" className="rounded-full">
             Not a paid stamp
           </Badge>
+          {fromOverlay ? (
+            <Badge variant="outline" className="rounded-full">
+              Local table
+            </Badge>
+          ) : null}
         </div>
 
         <div className="max-w-2xl space-y-4">
@@ -125,6 +179,13 @@ export default function ThisWeekPage() {
         </ul>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button
+            className="rounded-full px-5"
+            render={<Link href={thisWeekEditPath()} />}
+          >
+            Tape a different table
+          </Button>
+          <Button
+            variant="outline"
             className="rounded-full px-5"
             render={<Link href="/explore" />}
           >

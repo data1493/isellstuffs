@@ -17,7 +17,8 @@ Walk the stand-in catalog without leaving the mall map.
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
-| `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone |
+| `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. |
+| `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
 | `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Not a second cart |

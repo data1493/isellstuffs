@@ -61,6 +61,10 @@ export function thisWeekPath() {
   return "/this-week";
 }
 
+export function thisWeekEditPath() {
+  return "/this-week/edit";
+}
+
 export function collectionsPath() {
   return "/collections";
 }
