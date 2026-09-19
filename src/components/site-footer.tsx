@@ -11,6 +11,7 @@ import {
   pickupPath,
   savedPath,
   sellDeskPath,
+  sellDeskQueuePath,
   sellStartPath,
   thisWeekPath,
 } from "@/lib/paths";
@@ -31,6 +32,7 @@ const browse = [
   { href: yardSaleTuesdayLanderPath, label: "Yard Sale campaign" },
   { href: "/cart", label: "Tote" },
   { href: pickupPath(), label: "Pickup" },
+  { href: sellDeskQueuePath(), label: "Driveway queue" },
   { href: giftPath(), label: "Gift desk" },
   { href: savedPath(), label: "Later pile" },
 ];

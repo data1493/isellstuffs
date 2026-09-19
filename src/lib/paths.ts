@@ -91,6 +91,10 @@ export function sellDeskGonePath() {
   return "/sell/desk/gone";
 }
 
+export function sellDeskQueuePath() {
+  return "/sell/desk/queue";
+}
+
 export function sellListingEditPath(id: string) {
   return `/sell/listings/${encodeURIComponent(id)}/edit`;
 }

@@ -52,6 +52,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
 | `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). Overlay rows can retape. Other booths you listed on get a line here. |
+| `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Files stay in the folder. |
 | `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
 | `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
@@ -102,6 +103,7 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | `/folder/[slip]` | One paid slip’s booth folder. Reads the checkout cookie, then `iss:orders` after that cookie dies. Stand-in downloads, not a CDN |
 | `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” |
 | `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder |
+| `/sell/desk/queue` | Stallholder twin of pickup. Mixed tote lists the lamp and Tuesday driveway hours, not the PDF |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |
 | `/orders/[id]` | Reconstruct the tote from checkout listing ids |
 | `/orders/[id]/email` | Printed receipt email of that slip. Same lines. Nothing is sent |
