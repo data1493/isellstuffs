@@ -76,6 +76,7 @@ export function LotBoothCard({
   preampNote,
   squareNote,
   jigNote,
+  wickNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -134,6 +135,7 @@ export function LotBoothCard({
   preampNote?: string;
   squareNote?: string;
   jigNote?: string;
+  wickNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -706,6 +708,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-jig-empty={stall.id} hidden />
+          )}
+          {wickNote ? (
+            <p
+              data-booth-wick-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a wick. {wickNote}
+            </p>
+          ) : (
+            <p data-booth-wick-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

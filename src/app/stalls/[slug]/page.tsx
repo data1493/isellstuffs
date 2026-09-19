@@ -378,6 +378,13 @@ import {
   stallJigPath,
 } from "@/lib/booth-jig";
 import {
+  BOOTH_WICK_COOKIE_NAME,
+  BOOTH_WICK_PAPER_LINE,
+  boothWickFor,
+  parseBoothWick,
+  stallWickPath,
+} from "@/lib/booth-wick";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -701,6 +708,10 @@ export default async function StallPage({
   const jig = boothJigFor(
     stall.id,
     parseBoothJig(jar.get(BOOTH_JIG_COOKIE_NAME)?.value),
+  );
+  const wick = boothWickFor(
+    stall.id,
+    parseBoothWick(jar.get(BOOTH_WICK_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1674,6 +1685,23 @@ export default async function StallPage({
             <p data-booth-jig-empty={stall.id} hidden />
           )}
 
+          {wick ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a wick"
+              title="Still a table."
+              body={
+                <p data-booth-wick-note={stall.id}>
+                  {wick.note} {BOOTH_WICK_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-wick-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2122,6 +2150,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a jig
+          </Link>
+
+          <Link
+            href={stallWickPath(stall.slug)}
+            data-booth-wick-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a wick
           </Link>
 
           <Link

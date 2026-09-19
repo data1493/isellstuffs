@@ -1848,6 +1848,14 @@ export function stallJigWritePath() {
   return "/stalls/jig";
 }
 
+export function stallWickPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/wick`;
+}
+
+export function stallWickWritePath() {
+  return "/stalls/wick";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
