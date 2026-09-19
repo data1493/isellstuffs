@@ -722,6 +722,14 @@ export function listingCenterWritePath() {
   return "/listings/center";
 }
 
+export function listingSplicePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/splice`;
+}
+
+export function listingSpliceWritePath() {
+  return "/listings/splice";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

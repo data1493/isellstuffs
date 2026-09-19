@@ -213,6 +213,12 @@ import {
   subscribeCenter,
 } from "@/lib/listing-center";
 import {
+  canTapeSplice,
+  isListingSpliceOverlay,
+  readSpliceListingIds,
+  subscribeSplice,
+} from "@/lib/listing-splice";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -246,6 +252,7 @@ import {
   listingEvenWritePath,
   listingLinkWritePath,
   listingCenterWritePath,
+  listingSpliceWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
   listingVersoWritePath,
@@ -353,6 +360,7 @@ export function DeskBoard({
   const [evenIds, setEvenIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
   const [centerIds, setCenterIds] = useState<string[]>([]);
+  const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
@@ -404,6 +412,7 @@ export function DeskBoard({
       setEvenIds(readEvenListingIds());
       setLinkIds(readLinkListingIds());
       setCenterIds(readCenterListingIds());
+      setSpliceIds(readSpliceListingIds());
       setTuneIds(readTuneListingIds());
       setVersoIds(readVersoListingIds());
       setIconsIds(readIconsListingIds());
@@ -444,6 +453,7 @@ export function DeskBoard({
     const unsubEven = subscribeEven(apply);
     const unsubLink = subscribeLink(apply);
     const unsubCenter = subscribeCenter(apply);
+    const unsubSplice = subscribeSplice(apply);
     const unsubTune = subscribeTune(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubIcons = subscribeIcons(apply);
@@ -494,6 +504,7 @@ export function DeskBoard({
       unsubEven();
       unsubLink();
       unsubCenter();
+      unsubSplice();
       unsubTune();
       unsubVerso();
       unsubIcons();
@@ -1019,6 +1030,37 @@ export function DeskBoard({
                             {isListingCenterOverlay(listing.id, centerIds)
                               ? "Leave the hole"
                               : "I will not center it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSplice(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSpliceWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSpliceOverlay(listing.id, spliceIds)
+                                ? "open"
+                                : "splice"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSpliceOverlay(listing.id, spliceIds)
+                              ? "Leave the talkover"
+                              : "I will not splice"}
                           </button>
                         </form>
                       ) : null}
