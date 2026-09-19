@@ -57,10 +57,17 @@ import {
   subscribeRip,
 } from "@/lib/listing-rip";
 import {
+  canTapeZip,
+  isListingZipOverlay,
+  readZipListingIds,
+  subscribeZip,
+} from "@/lib/listing-zip";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingPhoneWritePath,
   listingRipWritePath,
+  listingZipWritePath,
   listingPath,
   sellDeskStallPath,
   sellHoursPath,
@@ -124,6 +131,7 @@ export function DeskBoard({
   const [phoneIds, setPhoneIds] = useState<string[]>([]);
   const [ripIds, setRipIds] = useState<string[]>([]);
   const [cardsIds, setCardsIds] = useState<string[]>([]);
+  const [zipIds, setZipIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -146,6 +154,7 @@ export function DeskBoard({
       setPhoneIds(readPhoneListingIds());
       setRipIds(readRipListingIds());
       setCardsIds(readCardsListingIds());
+      setZipIds(readZipListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -157,6 +166,7 @@ export function DeskBoard({
     const unsubPhone = subscribePhone(apply);
     const unsubRip = subscribeRip(apply);
     const unsubCards = subscribeCards(apply);
+    const unsubZip = subscribeZip(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -178,6 +188,7 @@ export function DeskBoard({
       unsubPhone();
       unsubRip();
       unsubCards();
+      unsubZip();
     };
   }, [listings, stall.id]);
 
@@ -452,6 +463,37 @@ export function DeskBoard({
                             {isListingCardsOverlay(listing.id, cardsIds)
                               ? "Leave the scans"
                               : "I will not type them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeZip(listing) ? (
+                        <form
+                          method="post"
+                          action={listingZipWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingZipOverlay(listing.id, zipIds)
+                                ? "open"
+                                : "zip"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingZipOverlay(listing.id, zipIds)
+                              ? "Leave the disc"
+                              : "I don't have the zip"}
                           </button>
                         </form>
                       ) : null}

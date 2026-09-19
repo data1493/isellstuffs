@@ -135,6 +135,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | I don't know the phone | http://127.0.0.1:44721/listings/gtk-cable-drawer/phone |
 | I don't rip | http://127.0.0.1:44721/listings/mdb-mixtape-93/rip |
 | I will not type the cards | http://127.0.0.1:44721/listings/dl-drawer-recipes/cards |
+| I don't have the zip | http://127.0.0.1:44721/listings/ysk-burned-cdr/zip |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | Scan the liner | http://127.0.0.1:44721/listings/mdb-mixtape-93/scan |
@@ -304,6 +305,8 @@ Physical listings can tape a dump refusal at `/listings/[id]/dump`. Native `POST
 Physical listings can tape a phone note at `/listings/[id]/phone`. Native `POST /listings/phone` (form: `listingId`, `intent=phone|open`) writes `iss:phone-listing-ids` / cookie `iss-phone-listing-ids`. I don't know the phone. Some ends look honest. Parts is sold as a tangle. Pile is won't split. Van is more in the van. Walkers still ask if the brick fits their iPhone. Still tote. Not parts. Not a phone counter. Not pile. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The Game Boy, lamp, and whisk stay empty if you taped the cable drawer. Parts stays the tangle. Pile stays won't split. Van stays more out back.
 
 Physical listings can tape a rip refusal at `/listings/[id]/rip`. Native `POST /listings/rip` (form: `listingId`, `intent=rip|open`) writes `iss:rip-listing-ids` / cookie `iss-rip-listing-ids`. I don't rip. Take the tape. Hiss is the hiss. Songs is no titles. Scan is the liner PDF pair. Walkers still want a WAV of SUMMER 93. Still tote. Not hiss. Not a transfer shop. Not stick. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the mixtape. Hiss stays the cassette hiss. Songs stays the untitled mixtape. Scan stays paper to a file.
+
+Physical listings can tape leftover-jewel honesty at `/listings/[id]/zip`. Native `POST /listings/zip` (form: `listingId`, `intent=zip|open`) writes `iss:zip-listing-ids` / cookie `iss-zip-listing-ids`. I don't have the zip. The disc is the leftover. Stick is I don't email the zip. Burn is no fresh disc. Print is Beats will not run the PDF. Ink is the Sharpie stays. Plays is I spun it once. Walkers still open the BEATS 07 jewel expecting the folder zip. Pay and open the folder. Still tote. Not stick. Not a USB shop. Not ink. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and sample-pack zips are refused. The mixtape, LP, and Game Boy stay empty if you taped the CD-R. Stick stays the email. Ink stays the Sharpie. Plays stays the spin count.
 
 Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /listings/van` (form: `listingId`, `intent=van|table`) writes `iss:van-listing-ids` / cookie `iss-van-listing-ids`. More out back. Ask. Still baggable — `status` and `cartEligible` stay put. Gift cards and PDFs are refused. Garage is home. Look is not for sale. Not a sold sticker.
 

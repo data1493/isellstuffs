@@ -490,6 +490,14 @@ export function listingCardsWritePath() {
   return "/listings/cards";
 }
 
+export function listingZipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/zip`;
+}
+
+export function listingZipWritePath() {
+  return "/listings/zip";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
