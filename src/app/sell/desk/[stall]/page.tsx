@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { DeskFrame } from "@/components/sell/desk-frame";
 import { DeskPackedUp } from "@/components/sell/desk-packed-up";
+import { FolderTapeDoor } from "@/components/sell/folder-tape-door";
 import { OtherBoothDesks } from "@/components/sell/other-booth-desks";
 import { sellDeskPath } from "@/lib/paths";
 import {
@@ -60,6 +61,7 @@ export default async function SellDeskStallPage({ params }: StallDeskProps) {
           </Link>
           .
         </p>
+        <FolderTapeDoor stallId={stall.id} />
         <OtherBoothDesks
           excludeStallId={stall.id}
           seed={overlayDeskStalls(readSellerListings(), stall.id)}
