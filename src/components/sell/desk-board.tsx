@@ -117,6 +117,12 @@ import {
   subscribeSlant,
 } from "@/lib/listing-slant";
 import {
+  canTapeVg,
+  isListingVgOverlay,
+  readVgListingIds,
+  subscribeVg,
+} from "@/lib/listing-vg";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
@@ -126,6 +132,7 @@ import {
   listingPhoneWritePath,
   listingRememberWritePath,
   listingRipWritePath,
+  listingVgWritePath,
   listingShotWritePath,
   listingTypesetWritePath,
   listingTwistWritePath,
@@ -204,6 +211,7 @@ export function DeskBoard({
   const [rememberIds, setRememberIds] = useState<string[]>([]);
   const [glueIds, setGlueIds] = useState<string[]>([]);
   const [slantIds, setSlantIds] = useState<string[]>([]);
+  const [vgIds, setVgIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -236,6 +244,7 @@ export function DeskBoard({
       setRememberIds(readRememberListingIds());
       setGlueIds(readGlueListingIds());
       setSlantIds(readSlantListingIds());
+      setVgIds(readVgListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -257,6 +266,7 @@ export function DeskBoard({
     const unsubRemember = subscribeRemember(apply);
     const unsubGlue = subscribeGlue(apply);
     const unsubSlant = subscribeSlant(apply);
+    const unsubVg = subscribeVg(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -288,6 +298,7 @@ export function DeskBoard({
       unsubRemember();
       unsubGlue();
       unsubSlant();
+      unsubVg();
     };
   }, [listings, stall.id]);
 
@@ -872,6 +883,37 @@ export function DeskBoard({
                             {isListingRememberOverlay(listing.id, rememberIds)
                               ? "Leave the page"
                               : "I will not remember better"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVg(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVgWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVgOverlay(listing.id, vgIds)
+                                ? "open"
+                                : "vg"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVgOverlay(listing.id, vgIds)
+                              ? "Leave the record"
+                              : "I will not VG it"}
                           </button>
                         </form>
                       ) : null}

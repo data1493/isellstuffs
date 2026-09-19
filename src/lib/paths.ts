@@ -570,6 +570,14 @@ export function listingSlantWritePath() {
   return "/listings/slant";
 }
 
+export function listingVgPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/vg`;
+}
+
+export function listingVgWritePath() {
+  return "/listings/vg";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
