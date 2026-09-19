@@ -182,6 +182,7 @@ import { ListingProfileNotice } from "@/components/listing-profile-notice";
 import { ListingBoldNotice } from "@/components/listing-bold-notice";
 import { ListingVariableNotice } from "@/components/listing-variable-notice";
 import { ListingLigatureNotice } from "@/components/listing-ligature-notice";
+import { ListingOutlineNotice } from "@/components/listing-outline-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -382,6 +383,7 @@ import {
   listingBoldPath,
   listingVariablePath,
   listingLigaturePath,
+  listingOutlinePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -637,6 +639,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingLigatureNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingOutlineNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -1829,6 +1834,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not ligature it
+                  </Link>
+                  <Link
+                    href={listingOutlinePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not outline them
                   </Link>
                   <Link
                     href={listingSubsetPath(listing.id)}

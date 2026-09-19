@@ -1258,6 +1258,14 @@ export function listingSwageWritePath() {
   return "/listings/swage";
 }
 
+export function listingOutlinePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/outline`;
+}
+
+export function listingOutlineWritePath() {
+  return "/listings/outline";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

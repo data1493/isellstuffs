@@ -735,6 +735,12 @@ import {
   subscribeLigature,
 } from "@/lib/listing-ligature";
 import {
+  canTapeOutline,
+  isListingOutlineOverlay,
+  readOutlineListingIds,
+  subscribeOutline,
+} from "@/lib/listing-outline";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -889,6 +895,7 @@ import {
   listingBoldWritePath,
   listingVariableWritePath,
   listingLigatureWritePath,
+  listingOutlineWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1082,6 +1089,7 @@ export function DeskBoard({
   const [boldIds, setBoldIds] = useState<string[]>([]);
   const [variableIds, setVariableIds] = useState<string[]>([]);
   const [ligatureIds, setLigatureIds] = useState<string[]>([]);
+  const [outlineIds, setOutlineIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
@@ -1225,6 +1233,7 @@ export function DeskBoard({
       setBoldIds(readBoldListingIds());
       setVariableIds(readVariableListingIds());
       setLigatureIds(readLigatureListingIds());
+      setOutlineIds(readOutlineListingIds());
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
       setScaleIds(readScaleListingIds());
@@ -1357,6 +1366,7 @@ export function DeskBoard({
     const unsubBold = subscribeBold(apply);
     const unsubVariable = subscribeVariable(apply);
     const unsubLigature = subscribeLigature(apply);
+    const unsubOutline = subscribeOutline(apply);
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
     const unsubScale = subscribeScale(apply);
@@ -1499,6 +1509,7 @@ export function DeskBoard({
       unsubBold();
       unsubVariable();
       unsubLigature();
+      unsubOutline();
       unsubPaginate();
       unsubCollate();
       unsubScale();
@@ -5317,6 +5328,37 @@ export function DeskBoard({
                             {isListingLigatureOverlay(listing.id, ligatureIds)
                               ? "Leave the food court"
                               : "I will not ligature it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeOutline(listing) ? (
+                        <form
+                          method="post"
+                          action={listingOutlineWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingOutlineOverlay(listing.id, outlineIds)
+                                ? "open"
+                                : "outline"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingOutlineOverlay(listing.id, outlineIds)
+                              ? "Leave the file"
+                              : "I will not outline them"}
                           </button>
                         </form>
                       ) : null}
