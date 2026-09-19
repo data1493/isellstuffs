@@ -1162,6 +1162,14 @@ export function listingBraidWritePath() {
   return "/listings/braid";
 }
 
+export function listingSergePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/serge`;
+}
+
+export function listingSergeWritePath() {
+  return "/listings/serge";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }
