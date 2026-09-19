@@ -24,12 +24,14 @@ export function LotBoothCard({
   spotNote,
   sitterName,
   foldNote,
+  breakNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
   spotNote?: string;
   sitterName?: string;
   foldNote?: string;
+  breakNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -97,6 +99,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Folding up at noon. {foldNote}
+            </p>
+          ) : null}
+          {breakNote ? (
+            <p
+              data-break-bills-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I can break a twenty. {breakNote}
             </p>
           ) : null}
           {packed ? (

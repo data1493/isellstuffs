@@ -136,6 +136,14 @@ export function stallFoldWritePath() {
   return "/stalls/fold";
 }
 
+export function stallBreakPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/break`;
+}
+
+export function stallBreakWritePath() {
+  return "/stalls/break";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

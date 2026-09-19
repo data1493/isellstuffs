@@ -20,6 +20,11 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BREAK_BILLS_COOKIE_NAME,
+  BREAK_BILLS_MIRROR_SCRIPT,
+  parseBreakBills,
+} from "@/lib/break-bills";
+import {
   EARLY_FOLD_COOKIE_NAME,
   EARLY_FOLD_MIRROR_SCRIPT,
   parseEarlyFold,
@@ -45,6 +50,7 @@ export default async function LotPage() {
   const spotMap = parseMovedSpot(jar.get(MOVED_SPOT_COOKIE_NAME)?.value);
   const coverMap = parseBoothCover(jar.get(BOOTH_COVER_COOKIE_NAME)?.value);
   const foldMap = parseEarlyFold(jar.get(EARLY_FOLD_COOKIE_NAME)?.value);
+  const breakMap = parseBreakBills(jar.get(BREAK_BILLS_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -56,6 +62,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: MOVED_SPOT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_COVER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: EARLY_FOLD_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BREAK_BILLS_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -68,6 +75,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: MOVED_SPOT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_COVER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: EARLY_FOLD_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BREAK_BILLS_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -131,6 +139,7 @@ export default async function LotPage() {
                     spotNote={spotMap[row.stall.id]?.note}
                     sitterName={coverSitterFor(row.stall.id, coverMap)?.boothName}
                     foldNote={foldMap[row.stall.id]?.note}
+                    breakNote={breakMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -159,6 +168,7 @@ export default async function LotPage() {
                     spotNote={spotMap[row.stall.id]?.note}
                     sitterName={coverSitterFor(row.stall.id, coverMap)?.boothName}
                     foldNote={foldMap[row.stall.id]?.note}
+                    breakNote={breakMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

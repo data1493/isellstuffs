@@ -45,6 +45,12 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BREAK_BILLS_COOKIE_NAME,
+  BREAK_BILLS_PAPER_LINE,
+  breakBillsFor,
+  parseBreakBills,
+} from "@/lib/break-bills";
+import {
   EARLY_FOLD_COOKIE_NAME,
   EARLY_FOLD_PAPER_LINE,
   earlyFoldFor,
@@ -60,6 +66,7 @@ import { isStallPacked } from "@/lib/packed-stall";
 import {
   lotPath,
   stallBackPath,
+  stallBreakPath,
   stallCoverPath,
   stallFoldPath,
   stallPath,
@@ -128,6 +135,10 @@ export default async function StallPage({
   const lastCall = earlyFoldFor(
     stall.id,
     parseEarlyFold(jar.get(EARLY_FOLD_COOKIE_NAME)?.value),
+  );
+  const changeJar = breakBillsFor(
+    stall.id,
+    parseBreakBills(jar.get(BREAK_BILLS_COOKIE_NAME)?.value),
   );
 
   return (
@@ -233,6 +244,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {changeJar ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I can break a twenty"
+              title="Change in the jar."
+              body={
+                <p data-break-bills-note={stall.id}>
+                  {changeJar.note} {BREAK_BILLS_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -265,6 +291,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Folding up at noon
+          </Link>
+
+          <Link
+            href={stallBreakPath(stall.slug)}
+            data-break-bills-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I can break a twenty
           </Link>
 
           <Link
