@@ -1018,6 +1018,14 @@ export function listingStitchWritePath() {
   return "/listings/stitch";
 }
 
+export function listingFerritePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ferrite`;
+}
+
+export function listingFerriteWritePath() {
+  return "/listings/ferrite";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

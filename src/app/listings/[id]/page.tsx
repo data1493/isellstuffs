@@ -117,6 +117,7 @@ import { ListingWindNotice } from "@/components/listing-wind-notice";
 import { ListingSocketNotice } from "@/components/listing-socket-notice";
 import { ListingSpeakerNotice } from "@/components/listing-speaker-notice";
 import { ListingCoilNotice } from "@/components/listing-coil-notice";
+import { ListingFerriteNotice } from "@/components/listing-ferrite-notice";
 import { ListingSandNotice } from "@/components/listing-sand-notice";
 import { ListingContentsNotice } from "@/components/listing-contents-notice";
 import { ListingDubNotice } from "@/components/listing-dub-notice";
@@ -273,6 +274,7 @@ import {
   listingSocketPath,
   listingSpeakerPath,
   listingCoilPath,
+  listingFerritePath,
   listingSandPath,
   listingContentsPath,
   listingDubPath,
@@ -599,6 +601,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSocketNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpeakerNotice listingId={listing.id} /> : null}
               {physical ? <ListingCoilNotice listingId={listing.id} /> : null}
+              {physical ? <ListingFerriteNotice listingId={listing.id} /> : null}
               {physical ? <ListingSandNotice listingId={listing.id} /> : null}
               {physical ? <ListingContentsNotice listingId={listing.id} /> : null}
               {physical ? <ListingDubNotice listingId={listing.id} /> : null}
@@ -1175,6 +1178,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not coil them
+                  </Link>
+                  <Link
+                    href={listingFerritePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not ferrite them
                   </Link>
                   <Link
                     href={listingSandPath(listing.id)}

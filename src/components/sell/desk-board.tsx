@@ -405,6 +405,12 @@ import {
   subscribeCoil,
 } from "@/lib/listing-coil";
 import {
+  canTapeFerrite,
+  isListingFerriteOverlay,
+  readFerriteListingIds,
+  subscribeFerrite,
+} from "@/lib/listing-ferrite";
+import {
   canTapeSand,
   isListingSandOverlay,
   readSandListingIds,
@@ -535,6 +541,7 @@ import {
   listingSocketWritePath,
   listingSpeakerWritePath,
   listingCoilWritePath,
+  listingFerriteWritePath,
   listingSandWritePath,
   listingContentsWritePath,
   listingDubWritePath,
@@ -697,6 +704,7 @@ export function DeskBoard({
   const [socketIds, setSocketIds] = useState<string[]>([]);
   const [speakerIds, setSpeakerIds] = useState<string[]>([]);
   const [coilIds, setCoilIds] = useState<string[]>([]);
+  const [ferriteIds, setFerriteIds] = useState<string[]>([]);
   const [sandIds, setSandIds] = useState<string[]>([]);
   const [contentsIds, setContentsIds] = useState<string[]>([]);
   const [dubIds, setDubIds] = useState<string[]>([]);
@@ -793,6 +801,7 @@ export function DeskBoard({
       setSocketIds(readSocketListingIds());
       setSpeakerIds(readSpeakerListingIds());
       setCoilIds(readCoilListingIds());
+      setFerriteIds(readFerriteListingIds());
       setSandIds(readSandListingIds());
       setContentsIds(readContentsListingIds());
       setDubIds(readDubListingIds());
@@ -878,6 +887,7 @@ export function DeskBoard({
     const unsubSocket = subscribeSocket(apply);
     const unsubSpeaker = subscribeSpeaker(apply);
     const unsubCoil = subscribeCoil(apply);
+    const unsubFerrite = subscribeFerrite(apply);
     const unsubSand = subscribeSand(apply);
     const unsubContents = subscribeContents(apply);
     const unsubDub = subscribeDub(apply);
@@ -973,6 +983,7 @@ export function DeskBoard({
       unsubSocket();
       unsubSpeaker();
       unsubCoil();
+      unsubFerrite();
       unsubSand();
       unsubContents();
       unsubDub();
@@ -2134,6 +2145,37 @@ export function DeskBoard({
                             {isListingCoilOverlay(listing.id, coilIds)
                               ? "Leave the tangle"
                               : "I will not coil them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFerrite(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFerriteWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFerriteOverlay(listing.id, ferriteIds)
+                                ? "open"
+                                : "ferrite"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFerriteOverlay(listing.id, ferriteIds)
+                              ? "Leave the noise"
+                              : "I will not ferrite them"}
                           </button>
                         </form>
                       ) : null}
