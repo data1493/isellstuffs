@@ -1274,6 +1274,14 @@ export function listingReflowWritePath() {
   return "/listings/reflow";
 }
 
+export function listingBushPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bush`;
+}
+
+export function listingBushWritePath() {
+  return "/listings/bush";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

@@ -543,6 +543,12 @@ import {
   subscribeRivet,
 } from "@/lib/listing-rivet";
 import {
+  canTapeBush,
+  isListingBushOverlay,
+  readBushListingIds,
+  subscribeBush,
+} from "@/lib/listing-bush";
+import {
   canTapeBraid,
   isListingBraidOverlay,
   readBraidListingIds,
@@ -760,6 +766,7 @@ import {
   listingDegaussWritePath,
   listingKnurlWritePath,
   listingRivetWritePath,
+  listingBushWritePath,
   listingBraidWritePath,
   listingSergeWritePath,
   listingPeenWritePath,
@@ -958,6 +965,7 @@ export function DeskBoard({
   const [degaussIds, setDegaussIds] = useState<string[]>([]);
   const [knurlIds, setKnurlIds] = useState<string[]>([]);
   const [rivetIds, setRivetIds] = useState<string[]>([]);
+  const [bushIds, setBushIds] = useState<string[]>([]);
   const [braidIds, setBraidIds] = useState<string[]>([]);
   const [sergeIds, setSergeIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
@@ -1088,6 +1096,7 @@ export function DeskBoard({
       setDegaussIds(readDegaussListingIds());
       setKnurlIds(readKnurlListingIds());
       setRivetIds(readRivetListingIds());
+      setBushIds(readBushListingIds());
       setBraidIds(readBraidListingIds());
       setSergeIds(readSergeListingIds());
       setPeenIds(readPeenListingIds());
@@ -1207,6 +1216,7 @@ export function DeskBoard({
     const unsubDegauss = subscribeDegauss(apply);
     const unsubKnurl = subscribeKnurl(apply);
     const unsubRivet = subscribeRivet(apply);
+    const unsubBush = subscribeBush(apply);
     const unsubBraid = subscribeBraid(apply);
     const unsubSerge = subscribeSerge(apply);
     const unsubPeen = subscribePeen(apply);
@@ -1336,6 +1346,7 @@ export function DeskBoard({
       unsubDegauss();
       unsubKnurl();
       unsubRivet();
+      unsubBush();
       unsubBraid();
       unsubSerge();
       unsubPeen();
@@ -2880,6 +2891,37 @@ export function DeskBoard({
                             {isListingRivetOverlay(listing.id, rivetIds)
                               ? "Leave the shade"
                               : "I will not rivet it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBush(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBushWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBushOverlay(listing.id, bushIds)
+                                ? "open"
+                                : "bush"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBushOverlay(listing.id, bushIds)
+                              ? "Leave the wobble"
+                              : "I will not bush it"}
                           </button>
                         </form>
                       ) : null}
