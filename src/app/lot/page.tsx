@@ -170,6 +170,11 @@ import {
   parseBoothPins,
 } from "@/lib/booth-pins";
 import {
+  BOOTH_FOIL_COOKIE_NAME,
+  BOOTH_FOIL_MIRROR_SCRIPT,
+  parseBoothFoil,
+} from "@/lib/booth-foil";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -250,6 +255,7 @@ export default async function LotPage() {
   const reloadMap = parseBoothReload(jar.get(BOOTH_RELOAD_COOKIE_NAME)?.value);
   const innersMap = parseBoothInners(jar.get(BOOTH_INNERS_COOKIE_NAME)?.value);
   const pinsMap = parseBoothPins(jar.get(BOOTH_PINS_COOKIE_NAME)?.value);
+  const foilMap = parseBoothFoil(jar.get(BOOTH_FOIL_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -295,6 +301,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_RELOAD_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_INNERS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PINS_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_FOIL_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -341,6 +348,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_RELOAD_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_INNERS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PINS_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_FOIL_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -438,6 +446,7 @@ export default async function LotPage() {
                     reloadNote={reloadMap[row.stall.id]?.note}
                     innersNote={innersMap[row.stall.id]?.note}
                     pinsNote={pinsMap[row.stall.id]?.note}
+                    foilNote={foilMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -500,6 +509,7 @@ export default async function LotPage() {
                     reloadNote={reloadMap[row.stall.id]?.note}
                     innersNote={innersMap[row.stall.id]?.note}
                     pinsNote={pinsMap[row.stall.id]?.note}
+                    foilNote={foilMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

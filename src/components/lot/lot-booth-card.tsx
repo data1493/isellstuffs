@@ -58,6 +58,7 @@ export function LotBoothCard({
   reloadNote,
   innersNote,
   pinsNote,
+  foilNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -98,6 +99,7 @@ export function LotBoothCard({
   reloadNote?: string;
   innersNote?: string;
   pinsNote?: string;
+  foilNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -490,6 +492,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-pins-empty={stall.id} hidden />
+          )}
+          {foilNote ? (
+            <p
+              data-booth-foil-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have foil. {foilNote}
+            </p>
+          ) : (
+            <p data-booth-foil-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
