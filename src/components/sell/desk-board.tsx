@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { MallNotice } from "@/components/mall-notice";
+import { FileGoneButton } from "@/components/sell/file-gone-button";
 import { SoldButton } from "@/components/sell/sold-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,11 @@ import {
   readSellerListings,
 } from "@/lib/seller-overlay";
 import {
+  FILE_GONE_CHANGED_EVENT,
+  canStampFileGone,
+  stampFileGoneListings,
+} from "@/lib/file-gone-overlay";
+import {
   SOLD_CHANGED_EVENT,
   canStampSold,
   stampSoldListings,
@@ -68,8 +74,10 @@ export function DeskBoard({
   useEffect(() => {
     function apply() {
       setRows(
-        stampSoldListings(
-          mergeDeskListingsForStall(stall.id, listings, readSellerListings()),
+        stampFileGoneListings(
+          stampSoldListings(
+            mergeDeskListingsForStall(stall.id, listings, readSellerListings()),
+          ),
         ),
       );
       const patch = stallCardById(stall.id);
@@ -82,11 +90,13 @@ export function DeskBoard({
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
+    window.addEventListener(FILE_GONE_CHANGED_EVENT, apply);
     window.addEventListener("storage", apply);
     return () => {
       window.removeEventListener(SELLER_LISTINGS_CHANGED, apply);
       window.removeEventListener(SELLER_STALLS_CHANGED, apply);
       window.removeEventListener(SOLD_CHANGED_EVENT, apply);
+      window.removeEventListener(FILE_GONE_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
     };
   }, [listings, stall.id]);
@@ -132,13 +142,15 @@ export function DeskBoard({
       ) : (
         <div>
         <p className="mb-3 text-sm leading-6 text-muted-foreground">
-          Sold sticker is on the table. Putting back is restock, not a refund.
+          Sold sticker is on the table. File pulled from the folder. Putting
+          back is restock, not a refund.
         </p>
         <ul className="grid gap-3">
           {rows.map((listing) => {
             const overlay = isOverlayListing(listing);
             const gone = listing.status !== "available";
             const stamp = canStampSold(listing);
+            const pull = canStampFileGone(listing);
 
             return (
               <li key={listing.id}>
@@ -188,6 +200,13 @@ export function DeskBoard({
                         <SoldButton
                           listingId={listing.id}
                           intent={listing.status === "available" ? "sold" : "open"}
+                          returnTo={sellDeskStallPath(stall.slug)}
+                        />
+                      ) : null}
+                      {pull ? (
+                        <FileGoneButton
+                          listingId={listing.id}
+                          intent={listing.status === "available" ? "gone" : "open"}
                           returnTo={sellDeskStallPath(stall.slug)}
                         />
                       ) : null}

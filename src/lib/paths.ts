@@ -83,6 +83,10 @@ export function sellDeskSoldPath() {
   return "/sell/desk/sold";
 }
 
+export function sellDeskGonePath() {
+  return "/sell/desk/gone";
+}
+
 export function sellListingEditPath(id: string) {
   return `/sell/listings/${encodeURIComponent(id)}/edit`;
 }

@@ -1,3 +1,4 @@
+import { stampFileGoneListings } from "../file-gone-overlay";
 import { readSellerListings } from "../seller-overlay";
 import { stampSoldListings } from "../sold-overlay";
 import { applyStallCard } from "../stall-overlay";
@@ -325,7 +326,7 @@ export function allListings(): Listing[] {
   const seen = new Set(listings.map((listing) => listing.id));
   const extra = overlay.filter((listing) => !seen.has(listing.id));
   const merged = extra.length === 0 ? listings : [...listings, ...extra];
-  return stampSoldListings(merged);
+  return stampFileGoneListings(stampSoldListings(merged));
 }
 
 export const adSlots = [
