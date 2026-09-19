@@ -1,4 +1,5 @@
 import { stampFileGoneListings } from "../file-gone-overlay";
+import { stampHandsListings } from "../in-hands";
 import { stampLookListings } from "../look-overlay";
 import { stampPackedListings } from "../packed-stall";
 import { readSellerListings } from "../seller-overlay";
@@ -328,8 +329,10 @@ export function allListings(): Listing[] {
   const seen = new Set(listings.map((listing) => listing.id));
   const extra = overlay.filter((listing) => !seen.has(listing.id));
   const merged = extra.length === 0 ? listings : [...listings, ...extra];
-  return stampLookListings(
-    stampPackedListings(stampFileGoneListings(stampSoldListings(merged))),
+  return stampHandsListings(
+    stampLookListings(
+      stampPackedListings(stampFileGoneListings(stampSoldListings(merged))),
+    ),
   );
 }
 

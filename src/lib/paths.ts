@@ -42,6 +42,14 @@ export function listingFirmTapePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/firm/tape`;
 }
 
+export function listingHandsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hands`;
+}
+
+export function listingHandsWritePath() {
+  return "/listings/hands";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

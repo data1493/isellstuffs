@@ -7,6 +7,7 @@ import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { ListingFirmNotice } from "@/components/listing-firm-notice";
+import { ListingHandsNotice } from "@/components/listing-hands-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
 import { PickupNote } from "@/components/pickup-note";
@@ -31,6 +32,7 @@ import {
 } from "@/lib/listing-display";
 import {
   listingFirmPath,
+  listingHandsPath,
   listingLookPath,
   listingOfferPath,
   listingPath,
@@ -195,6 +197,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
               {physical ? <ListingVanNotice listingId={listing.id} /> : null}
               {physical ? <ListingFirmNotice listingId={listing.id} /> : null}
+              {physical ? <ListingHandsNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -227,6 +230,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     That&apos;s the price
+                  </Link>
+                  <Link
+                    href={listingHandsPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    In someone&apos;s hands
                   </Link>
                 </p>
               ) : null}
