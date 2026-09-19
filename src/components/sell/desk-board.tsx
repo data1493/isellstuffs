@@ -189,6 +189,12 @@ import {
   subscribeSpray,
 } from "@/lib/listing-spray";
 import {
+  canTapeDongle,
+  isListingDongleOverlay,
+  readDongleListingIds,
+  subscribeDongle,
+} from "@/lib/listing-dongle";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -200,6 +206,7 @@ import {
   listingCapWritePath,
   listingLedWritePath,
   listingSprayWritePath,
+  listingDongleWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -300,6 +307,7 @@ export function DeskBoard({
   const [capIds, setCapIds] = useState<string[]>([]);
   const [ledIds, setLedIds] = useState<string[]>([]);
   const [sprayIds, setSprayIds] = useState<string[]>([]);
+  const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -344,6 +352,7 @@ export function DeskBoard({
       setCapIds(readCapListingIds());
       setLedIds(readLedListingIds());
       setSprayIds(readSprayListingIds());
+      setDongleIds(readDongleListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -377,6 +386,7 @@ export function DeskBoard({
     const unsubCap = subscribeCap(apply);
     const unsubLed = subscribeLed(apply);
     const unsubSpray = subscribeSpray(apply);
+    const unsubDongle = subscribeDongle(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -420,6 +430,7 @@ export function DeskBoard({
       unsubCap();
       unsubLed();
       unsubSpray();
+      unsubDongle();
     };
   }, [listings, stall.id]);
 
@@ -818,6 +829,37 @@ export function DeskBoard({
                             {isListingSprayOverlay(listing.id, sprayIds)
                               ? "Leave the jacket"
                               : "I will not spray it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDongle(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDongleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDongleOverlay(listing.id, dongleIds)
+                                ? "open"
+                                : "dongle"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDongleOverlay(listing.id, dongleIds)
+                              ? "Leave the pile"
+                              : "I don't have a dongle"}
                           </button>
                         </form>
                       ) : null}
