@@ -698,6 +698,14 @@ export function listingVersoWritePath() {
   return "/listings/verso";
 }
 
+export function listingLinkPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/link`;
+}
+
+export function listingLinkWritePath() {
+  return "/listings/link";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
