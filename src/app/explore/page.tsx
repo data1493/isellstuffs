@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { ListingGrid } from "@/components/browse/cards";
 import { FeaturedBooth } from "@/components/browse/paid";
 import { BrowseEmpty } from "@/components/browse/states";
 import { MallEyebrow, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import { featuredStallSlots, mallHubs } from "@/lib/commerce";
+import { AD_BOOKINGS_COOKIE } from "@/lib/ad-booking";
+import { mallHubs } from "@/lib/commerce";
 import {
   browseListings,
   exploreCountLine,
@@ -17,7 +19,13 @@ import {
   parseExploreFilters,
   type ExploreFilters,
 } from "@/lib/browse";
+import {
+  featuredBookingsFromCookie,
+  resolveFeaturedStall,
+} from "@/lib/featured-ads";
 import { exploreMetadata } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
 
 type ExplorePageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -63,9 +71,11 @@ export default async function ExplorePage({
   const activeHub = hubId
     ? mallHubs.find((hub) => hub.id === hubId)
     : undefined;
-  const featuredStallSlot = featuredStallSlots()[0];
-  const showFeatured =
-    exploreShowsFeatured(query) && Boolean(featuredStallSlot);
+  const jar = await cookies();
+  const featured = resolveFeaturedStall(
+    featuredBookingsFromCookie(jar.get(AD_BOOKINGS_COOKIE)?.value),
+  );
+  const showFeatured = exploreShowsFeatured(query) && Boolean(featured);
   const empty = exploreEmptyCopy(query, activeHub?.name);
 
   return (
@@ -150,9 +160,10 @@ export default async function ExplorePage({
         </p>
       </MallWidth>
 
-      {showFeatured && featuredStallSlot ? (
+      {showFeatured && featured ? (
         <FeaturedBooth
-          slot={featuredStallSlot}
+          slot={featured.slot}
+          stallName={featured.stallName}
           eyebrow="Paid booth on the concourse"
         />
       ) : null}
@@ -171,9 +182,9 @@ export default async function ExplorePage({
         ) : (
           <ListingGrid
             listings={
-              showFeatured && featuredStallSlot
+              showFeatured && featured?.slot.stallId
                 ? filtered.filter(
-                    (listing) => listing.stallId !== featuredStallSlot.stallId,
+                    (listing) => listing.stallId !== featured.slot.stallId,
                   )
                 : filtered
             }

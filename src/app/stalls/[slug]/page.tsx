@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { StallMissing } from "@/components/mall-missing";
@@ -7,14 +8,18 @@ import { StallCardCopy } from "@/components/stalls/stall-card-copy";
 import { StallListingCard } from "@/components/stall-listing-card";
 import { StallMixBar } from "@/components/stall-mix-bar";
 import { Badge } from "@/components/ui/badge";
+import { AD_BOOKINGS_COOKIE } from "@/lib/ad-booking";
 import {
-  featuredStallSlots,
   isDigitalListing,
   isPhysicalListing,
   listingsByStall,
   stallBySlug,
   stalls,
 } from "@/lib/commerce";
+import {
+  featuredBookingsFromCookie,
+  resolveFeaturedForStall,
+} from "@/lib/featured-ads";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +57,11 @@ export default async function StallPage({ params }: StallPageProps) {
   const inventory = listingsByStall(stall.id);
   const physical = inventory.filter(isPhysicalListing);
   const digital = inventory.filter(isDigitalListing);
-  const promo = featuredStallSlots().find((slot) => slot.stallId === stall.id);
+  const jar = await cookies();
+  const promo = resolveFeaturedForStall(
+    featuredBookingsFromCookie(jar.get(AD_BOOKINGS_COOKIE)?.value),
+    stall,
+  );
 
   return (
     <div>
@@ -67,7 +76,7 @@ export default async function StallPage({ params }: StallPageProps) {
             <Badge variant="secondary" className="rounded-full">
               Independent stall
             </Badge>
-            {stall.featured ? (
+            {promo ? (
               <Badge className="rounded-full">Paid the good corner</Badge>
             ) : null}
           </div>
@@ -88,13 +97,13 @@ export default async function StallPage({ params }: StallPageProps) {
           {promo ? (
             <aside className="max-w-2xl rounded-xl bg-secondary/60 p-4 ring-1 ring-primary/20">
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                Labeled ad · {promo.packageName} · {promo.window}
+                Labeled ad · {promo.slot.packageName} · {promo.slot.window}
               </p>
               <p className="mt-2 font-heading text-xl tracking-tight">
-                {promo.headline}
+                {promo.slot.headline}
               </p>
               <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                {promo.blurb} Not organic. The booth paid for this corner.
+                {promo.slot.blurb} Not organic. The booth paid for this corner.
               </p>
             </aside>
           ) : null}
