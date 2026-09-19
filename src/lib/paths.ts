@@ -426,6 +426,14 @@ export function listingDustWritePath() {
   return "/listings/dust";
 }
 
+export function listingCrackPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/crack`;
+}
+
+export function listingCrackWritePath() {
+  return "/listings/crack";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
