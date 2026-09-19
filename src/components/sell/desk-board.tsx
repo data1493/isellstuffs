@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { ListingTypeBadge } from "@/components/listing-type-badge";
 import { MallNotice } from "@/components/mall-notice";
+import { SoldButton } from "@/components/sell/sold-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,11 @@ import {
   SELLER_LISTINGS_CHANGED,
   readSellerListings,
 } from "@/lib/seller-overlay";
+import {
+  SOLD_CHANGED_EVENT,
+  canStampSold,
+  stampSoldListings,
+} from "@/lib/sold-overlay";
 import { feePercent, splitOnTag } from "@/lib/seller-payouts";
 import {
   SELLER_STALLS_CHANGED,
@@ -56,7 +62,9 @@ export function DeskBoard({
 
   useEffect(() => {
     function apply() {
-      setRows(mergeDeskListings(listings, readSellerListings()));
+      setRows(
+        stampSoldListings(mergeDeskListings(listings, readSellerListings())),
+      );
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -66,10 +74,12 @@ export function DeskBoard({
     apply();
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
+    window.addEventListener(SOLD_CHANGED_EVENT, apply);
     window.addEventListener("storage", apply);
     return () => {
       window.removeEventListener(SELLER_LISTINGS_CHANGED, apply);
       window.removeEventListener(SELLER_STALLS_CHANGED, apply);
+      window.removeEventListener(SOLD_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
     };
   }, [listings, stall.id]);
@@ -113,10 +123,14 @@ export function DeskBoard({
           }
         />
       ) : (
+        <p className="mb-3 text-sm leading-6 text-muted-foreground">
+          Sold sticker is on the table. Putting back is restock, not a refund.
+        </p>
         <ul className="grid gap-3">
           {rows.map((listing) => {
             const overlay = isOverlayListing(listing);
             const gone = listing.status !== "available";
+            const stamp = canStampSold(listing);
 
             return (
               <li key={listing.id}>
@@ -151,6 +165,12 @@ export function DeskBoard({
                         <span className="mx-2 text-foreground/30">·</span>
                         {listingHubName(listing)}
                       </p>
+                      {stamp ? (
+                        <SoldButton
+                          listingId={listing.id}
+                          intent={listing.status === "available" ? "sold" : "open"}
+                        />
+                      ) : null}
                     </div>
                     <p
                       className={

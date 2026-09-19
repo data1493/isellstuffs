@@ -1,4 +1,5 @@
 import { readSellerListings } from "../seller-overlay";
+import { stampSoldListings } from "../sold-overlay";
 import { applyStallCard } from "../stall-overlay";
 import { money } from "./money";
 import type { AdSlot, DigitalListing, Listing, PhysicalListing, Stall } from "./types";
@@ -321,13 +322,10 @@ export const listings: Listing[] = [...physicalListings, ...digitalListings];
 /** Fixture rows plus the local seller overlay. Shop lookups use this. */
 export function allListings(): Listing[] {
   const overlay = readSellerListings();
-  if (overlay.length === 0) {
-    return listings;
-  }
-
   const seen = new Set(listings.map((listing) => listing.id));
   const extra = overlay.filter((listing) => !seen.has(listing.id));
-  return extra.length === 0 ? listings : [...listings, ...extra];
+  const merged = extra.length === 0 ? listings : [...listings, ...extra];
+  return stampSoldListings(merged);
 }
 
 export const adSlots = [

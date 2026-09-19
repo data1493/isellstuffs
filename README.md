@@ -48,7 +48,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | Route | What it is |
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
-| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`) |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals. No Connect, no bank |
 | `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |
@@ -68,6 +68,8 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |
 | Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
+
+Paying a physical find writes its id to `iss:sold-listing-ids` / cookie `iss-sold-listing-ids`. Shop lookups in `allListings()` stamp those rows `sold` without editing fixture objects. Digital files and the gift card are not auto-sold. The desk can sticker a physical SKU or put it back (`POST /sell/desk/sold`) — restock, not a refund.
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
 Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field.
@@ -82,7 +84,7 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | --- | --- |
 | `/cart` | Tote. Same listing ids listing/stall pages wrote |
 | `/checkout/mock` | Local test pay wall when no Stripe secret is set |
-| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” |
+| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” and join the sold overlay — the lamp leaves `avail=open`, the PDF stays for sale |
 | `/checkout/cancel` | Walked away. Tote stays |
 | `/folder` | Current slip’s digital lines, or “No folder on this slip.” |
 | `/folder/[slip]` | One paid slip’s booth folder. Stand-in downloads, not a CDN |

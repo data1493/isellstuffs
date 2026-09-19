@@ -53,6 +53,10 @@ export function sellDeskPath() {
   return "/sell/desk";
 }
 
+export function sellDeskSoldPath() {
+  return "/sell/desk/sold";
+}
+
 export function feesPath() {
   return "/fees";
 }

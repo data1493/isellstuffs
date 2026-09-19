@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { ClearCart } from "@/app/checkout/success/clear-cart";
 import { RememberOrder } from "@/components/orders/remember-order";
+import { RememberSold } from "@/components/sell/remember-sold";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +51,7 @@ export default async function CheckoutSuccessPage({
     <div>
       <ClearCart active={Boolean(sessionId || stored)} />
       <RememberOrder session={session} />
+      <RememberSold listingIds={session?.listingIds ?? []} />
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
         <MallWidth className="flex flex-col gap-6 py-12 sm:py-16">
           <MallCrumb label="Receipt">
