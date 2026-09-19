@@ -27,6 +27,8 @@ import { listingPath, stallPath } from "@/lib/paths";
 import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 type ListingPageProps = {
   params: Promise<{ id: string }>;
 };

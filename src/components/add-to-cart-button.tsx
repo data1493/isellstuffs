@@ -1,91 +1,92 @@
-"use client";
+import { cookies } from "next/headers";
 
-import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { CART_COOKIE_NAME, CART_STORAGE_KEY, parseCartListingIds } from "@/lib/cart";
 import { isCartEligible, listingById } from "@/lib/commerce";
 import {
   addToCartLabel,
-  addedCopy,
   alreadyInCartCopy,
   inCartLabel,
   unavailableCartLabel,
 } from "@/lib/listing-display";
-import { useCart } from "@/hooks/use-cart";
+import { listingPath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 
-export function AddToCartButton({
+const syncScript = `try{var m=document.cookie.match(/(?:^|; )${CART_COOKIE_NAME}=([^;]*)/);if(m){localStorage.setItem(${JSON.stringify(CART_STORAGE_KEY)},decodeURIComponent(m[1]));}}catch(e){}`;
+
+export async function AddToCartButton({
   listingId,
+  returnTo,
   size = "lg",
   compact = false,
   className,
 }: {
   listingId: string;
+  returnTo?: string;
   size?: "lg" | "default" | "sm";
   compact?: boolean;
   className?: string;
 }) {
   const listing = listingById(listingId);
-  const cart = useCart();
-  const [justAdded, setJustAdded] = useState(false);
 
   if (!listing) {
     return null;
   }
 
+  const jar = await cookies();
+  const listingIds = parseCartListingIds(jar.get(CART_COOKIE_NAME)?.value);
+  const inCart = listingIds.includes(listingId);
   const eligible = isCartEligible(listing);
-  const inCart = cart.has(listingId);
   const buttonClass = cn(
-    "rounded-full px-5",
-    compact ? "w-full sm:w-auto" : "w-full sm:w-auto",
+    buttonVariants({
+      variant: eligible ? "default" : "secondary",
+      size,
+    }),
+    "w-full rounded-full px-5 sm:w-auto",
     className,
   );
 
   if (!eligible) {
     return (
-      <Button
-        type="button"
-        size={size}
-        variant="secondary"
-        disabled
-        className={buttonClass}
-      >
+      <button type="button" disabled className={buttonClass}>
         {unavailableCartLabel(listing)}
-      </Button>
+      </button>
     );
   }
 
-  const note = justAdded
-    ? addedCopy(listing, cart.count)
-    : inCart
-      ? alreadyInCartCopy(listing)
-      : null;
-
   return (
-    <div className={cn("space-y-2", compact && "min-w-0 flex-1")}>
-      <Button
-        type="button"
-        size={size}
-        className={buttonClass}
+    <form
+      action="/listings/bag"
+      method="post"
+      className={cn("space-y-2", compact && "min-w-0 flex-1")}
+    >
+      <script dangerouslySetInnerHTML={{ __html: syncScript }} />
+      <input type="hidden" name="listingId" value={listing.id} />
+      <input
+        type="hidden"
+        name="returnTo"
+        value={returnTo ?? listingPath(listing.id)}
+      />
+      <button
+        type="submit"
         disabled={inCart}
-        onClick={() => {
-          const result = cart.add(listingId);
-          if (result.ok && !result.already) {
-            setJustAdded(true);
-          }
-        }}
+        data-in-cart={inCart ? "true" : "false"}
+        aria-label={inCart ? inCartLabel(listing) : addToCartLabel(listing)}
+        className={buttonClass}
       >
         {inCart ? inCartLabel(listing) : addToCartLabel(listing)}
-      </Button>
-      <p
-        aria-live="polite"
-        className={cn(
-          "text-muted-foreground",
-          compact ? "text-xs leading-5" : "text-sm leading-6",
-        )}
-      >
-        {note}
-      </p>
-    </div>
+      </button>
+      {inCart ? (
+        <p
+          aria-live="polite"
+          className={cn(
+            "text-muted-foreground",
+            compact ? "text-xs leading-5" : "text-sm leading-6",
+          )}
+        >
+          {alreadyInCartCopy(listing)}
+        </p>
+      ) : null}
+    </form>
   );
 }

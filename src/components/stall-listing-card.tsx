@@ -12,14 +12,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatMoney, isPhysicalListing, type Listing } from "@/lib/commerce";
+import {
+  formatMoney,
+  isPhysicalListing,
+  stallById,
+  type Listing,
+} from "@/lib/commerce";
 import {
   listingFact,
   listingFactLabel,
   listingHubName,
   listingStatusLabel,
 } from "@/lib/listing-display";
-import { listingPath } from "@/lib/paths";
+import { listingPath, stallPath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 
 export function StallListingCard({ listing }: { listing: Listing }) {
@@ -75,7 +80,12 @@ export function StallListingCard({ listing }: { listing: Listing }) {
         </p>
       </CardContent>
       <CardFooter className="flex flex-col items-stretch gap-3 pb-4 sm:flex-row sm:items-start sm:justify-between">
-        <AddToCartButton listingId={listing.id} size="default" compact />
+        <AddToCartButton
+          listingId={listing.id}
+          returnTo={stallPath(stallById(listing.stallId)?.slug ?? listing.stallId)}
+          size="default"
+          compact
+        />
         <Link
           href={listingPath(listing.id)}
           className="pt-1 text-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline sm:shrink-0"

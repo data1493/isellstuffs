@@ -41,7 +41,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
-Add to cart writes `Listing.id` values to `localStorage` key `iss:cart-listing-ids` via `@/lib/cart` and `use-cart`. Cart and checkout import that module — there is not a second bag.
+Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag.
 
 ## Cart and checkout
 

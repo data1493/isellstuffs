@@ -1,5 +1,6 @@
 import { AddToCartButton } from "@/components/add-to-cart-button";
-import { isPhysicalListing, formatMoney, type Listing } from "@/lib/commerce";
+import { formatMoney, isPhysicalListing, type Listing } from "@/lib/commerce";
+import { listingPath } from "@/lib/paths";
 import {
   fulfillmentCopy,
   listingFact,
@@ -30,7 +31,10 @@ export function ListingBuyBox({ listing }: { listing: Listing }) {
         {listingFact(listing)}
       </p>
       <div className="mt-5">
-        <AddToCartButton listingId={listing.id} />
+        <AddToCartButton
+          listingId={listing.id}
+          returnTo={listingPath(listing.id)}
+        />
       </div>
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {fulfillmentCopy(listing)}

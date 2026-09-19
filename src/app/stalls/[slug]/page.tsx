@@ -16,6 +16,8 @@ import {
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 type StallPageProps = {
   params: Promise<{ slug: string }>;
 };
