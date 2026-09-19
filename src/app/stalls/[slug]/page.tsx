@@ -126,6 +126,13 @@ import {
   stallBurnPath,
 } from "@/lib/booth-burn";
 import {
+  BOOTH_DECK_COOKIE_NAME,
+  BOOTH_DECK_PAPER_LINE,
+  boothDeckFor,
+  parseBoothDeck,
+  stallDeckPath,
+} from "@/lib/booth-deck";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -305,6 +312,10 @@ export default async function StallPage({
   const burn = boothBurnFor(
     stall.id,
     parseBoothBurn(jar.get(BOOTH_BURN_COOKIE_NAME)?.value),
+  );
+  const deck = boothDeckFor(
+    stall.id,
+    parseBoothDeck(jar.get(BOOTH_DECK_COOKIE_NAME)?.value),
   );
 
   return (
@@ -666,6 +677,23 @@ export default async function StallPage({
             <p data-booth-burn-empty={stall.id} hidden />
           )}
 
+          {deck ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a deck"
+              title="Spin it at home."
+              body={
+                <p data-booth-deck-note={stall.id}>
+                  {deck.note} {BOOTH_DECK_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-deck-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -826,6 +854,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t burn a disc
+          </Link>
+
+          <Link
+            href={stallDeckPath(stall.slug)}
+            data-booth-deck-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a deck
           </Link>
 
           <Link

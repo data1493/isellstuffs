@@ -40,6 +40,7 @@ export function LotBoothCard({
   seatNote,
   fixNote,
   burnNote,
+  deckNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -62,6 +63,7 @@ export function LotBoothCard({
   seatNote?: string;
   fixNote?: string;
   burnNote?: string;
+  deckNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -274,6 +276,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-burn-empty={stall.id} hidden />
+          )}
+          {deckNote ? (
+            <p
+              data-booth-deck-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a deck. {deckNote}
+            </p>
+          ) : (
+            <p data-booth-deck-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
