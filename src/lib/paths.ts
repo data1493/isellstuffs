@@ -594,6 +594,14 @@ export function listingGlassWritePath() {
   return "/listings/glass";
 }
 
+export function listingWarmPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/warm`;
+}
+
+export function listingWarmWritePath() {
+  return "/listings/warm";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

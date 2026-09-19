@@ -63,6 +63,12 @@ import {
   subscribeShot,
 } from "@/lib/listing-shot";
 import {
+  canTapeWarm,
+  isListingWarmOverlay,
+  readWarmListingIds,
+  subscribeWarm,
+} from "@/lib/listing-warm";
+import {
   canTapeZip,
   isListingZipOverlay,
   readZipListingIds,
@@ -148,6 +154,7 @@ import {
   listingVgWritePath,
   listingBakeWritePath,
   listingShotWritePath,
+  listingWarmWritePath,
   listingTypesetWritePath,
   listingTwistWritePath,
   listingZipWritePath,
@@ -217,6 +224,7 @@ export function DeskBoard({
   const [cardsIds, setCardsIds] = useState<string[]>([]);
   const [zipIds, setZipIds] = useState<string[]>([]);
   const [shotIds, setShotIds] = useState<string[]>([]);
+  const [warmIds, setWarmIds] = useState<string[]>([]);
   const [whoseIds, setWhoseIds] = useState<string[]>([]);
   const [typesetIds, setTypesetIds] = useState<string[]>([]);
   const [loopIds, setLoopIds] = useState<string[]>([]);
@@ -252,6 +260,7 @@ export function DeskBoard({
       setCardsIds(readCardsListingIds());
       setZipIds(readZipListingIds());
       setShotIds(readShotListingIds());
+      setWarmIds(readWarmListingIds());
       setWhoseIds(readWhoseListingIds());
       setTypesetIds(readTypesetListingIds());
       setLoopIds(readLoopListingIds());
@@ -276,6 +285,7 @@ export function DeskBoard({
     const unsubCards = subscribeCards(apply);
     const unsubZip = subscribeZip(apply);
     const unsubShot = subscribeShot(apply);
+    const unsubWarm = subscribeWarm(apply);
     const unsubWhose = subscribeWhose(apply);
     const unsubTypeset = subscribeTypeset(apply);
     const unsubLoop = subscribeLoop(apply);
@@ -310,6 +320,7 @@ export function DeskBoard({
       unsubCards();
       unsubZip();
       unsubShot();
+      unsubWarm();
       unsubWhose();
       unsubTypeset();
       unsubLoop();
@@ -719,6 +730,37 @@ export function DeskBoard({
                             {isListingShotOverlay(listing.id, shotIds)
                               ? "Leave the looks"
                               : "I don't shoot"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWarm(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWarmWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWarmOverlay(listing.id, warmIds)
+                                ? "open"
+                                : "warm"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingWarmOverlay(listing.id, warmIds)
+                              ? "Leave the three looks"
+                              : "Warm stays warm"}
                           </button>
                         </form>
                       ) : null}
