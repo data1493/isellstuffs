@@ -149,6 +149,7 @@ import { ListingDolbyNotice } from "@/components/listing-dolby-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
+import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSubsetNotice } from "@/components/listing-subset-notice";
@@ -695,6 +696,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDartNotice listingId={listing.id} /> : null}
               {physical ? <ListingSergeNotice listingId={listing.id} /> : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
+              {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
               {physical ? <ListingHandleNotice listingId={listing.id} /> : null}

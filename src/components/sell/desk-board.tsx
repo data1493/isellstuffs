@@ -501,6 +501,12 @@ import {
   subscribeContrast,
 } from "@/lib/listing-contrast";
 import {
+  canTapeReflow,
+  isListingReflowOverlay,
+  readReflowListingIds,
+  subscribeReflow,
+} from "@/lib/listing-reflow";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -768,6 +774,7 @@ import {
   listingQuantizeWritePath,
   listingSubsetWritePath,
   listingProofWritePath,
+  listingReflowWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -944,6 +951,7 @@ export function DeskBoard({
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
+  const [reflowIds, setReflowIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1073,6 +1081,7 @@ export function DeskBoard({
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
+      setReflowIds(readReflowListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -1191,6 +1200,7 @@ export function DeskBoard({
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
+    const unsubReflow = subscribeReflow(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -1319,6 +1329,7 @@ export function DeskBoard({
       unsubGrommet();
       unsubDart();
       unsubContrast();
+      unsubReflow();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -3396,6 +3407,37 @@ export function DeskBoard({
                             {isListingContrastOverlay(listing.id, contrastIds)
                               ? "Leave the dim"
                               : "I will not contrast it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeReflow(listing) ? (
+                        <form
+                          method="post"
+                          action={listingReflowWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingReflowOverlay(listing.id, reflowIds)
+                                ? "open"
+                                : "reflow"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingReflowOverlay(listing.id, reflowIds)
+                              ? "Leave the joints"
+                              : "I will not reflow it"}
                           </button>
                         </form>
                       ) : null}

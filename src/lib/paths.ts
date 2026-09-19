@@ -1266,6 +1266,14 @@ export function listingWeltWritePath() {
   return "/listings/welt";
 }
 
+export function listingReflowPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/reflow`;
+}
+
+export function listingReflowWritePath() {
+  return "/listings/reflow";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
