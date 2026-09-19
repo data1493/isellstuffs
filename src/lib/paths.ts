@@ -192,6 +192,14 @@ export function stallStayWritePath() {
   return "/stalls/stay";
 }
 
+export function stallBuyPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/buy`;
+}
+
+export function stallBuyWritePath() {
+  return "/stalls/buy";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
