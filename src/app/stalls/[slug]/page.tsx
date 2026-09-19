@@ -11,6 +11,7 @@ import {
   BagThisTableButton,
   parseStallBagNotice,
 } from "@/components/stalls/bag-table-button";
+import { BoothLostLink } from "@/components/stalls/booth-lost-link";
 import { FreeBoxLink } from "@/components/stalls/free-box-link";
 import { StashTableLink } from "@/components/stalls/stash-table-link";
 import { TapeTableLink } from "@/components/stalls/tape-table-link";
@@ -248,6 +249,8 @@ export default async function StallPage({
           <StashTableLink slug={stall.slug} />
 
           <FreeBoxLink slug={stall.slug} />
+
+          <BoothLostLink slug={stall.slug} />
 
           <StallMixBar physical={physical.length} digital={digital.length} />
 

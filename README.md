@@ -94,6 +94,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
 | Paid stash | http://127.0.0.1:44721/stalls/folding-table-tuesday/stash |
 | Closet free box | http://127.0.0.1:44721/stalls/the-hall-closet/free |
+| Closet lost pile | http://127.0.0.1:44721/stalls/the-hall-closet/lost |
 | Watched tables | http://127.0.0.1:44721/watched |
 | Hunt board | http://127.0.0.1:44721/wanted |
 | Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
@@ -137,6 +138,8 @@ A stall can print a driveway hours sign at `/stalls/[slug]/sign` — stall name 
 A stall can print a paid stash at `/stalls/[slug]/stash` — paid physicals that have not walked, with the slip id. Tape is still-here titles. Stash is don’t-bag paper. The PDF stays in the folder. Taken pairs drop off. Reads `iss:orders` + the checkout cookie + `iss-taken-handoffs`. Does not write sold, taken, or here.
 
 A stall can tape cardboard free titles at `/stalls/[slug]/free`. “extra plastic hangers” stays after reload. Cookie `iss-free-box` + `iss:free-box`. Native `POST /stalls/free` (form: `slug`, `intent=tape|peel`, `title`, `titleId`). Cap 140 characters, 20 titles per booth. Not a $0 listing. Not tote math. Not `/stalls/[slug]/tape`.
+
+A stall can tape left-behind titles at `/stalls/[slug]/lost`. “green sunglasses” stays after reload. Cookie `iss-booth-lost` + `iss:booth-lost`. Native `POST /stalls/lost` (form: `slug`, `intent=tape|peel`, `title`, `titleId`). Cap 140 characters, 20 titles per booth. Someone left sunglasses on the windbreaker pile. Not free. Not cork. Not tote math.
 
 Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile. **Bag the pile** POSTs to `/saved/bag` and copies still-here ids onto the existing tote writer (`@/lib/cart`). Sold, file-gone, and missing SKUs stay parked. The pile cookie stays.
 
@@ -220,7 +223,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

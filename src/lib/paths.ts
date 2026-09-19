@@ -80,6 +80,14 @@ export function stallFreeWritePath() {
   return "/stalls/free";
 }
 
+export function stallLostPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/lost`;
+}
+
+export function stallLostWritePath() {
+  return "/stalls/lost";
+}
+
 export function stallBackPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/back`;
 }
