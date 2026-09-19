@@ -130,6 +130,14 @@ export function listingSizeWritePath() {
   return "/listings/size";
 }
 
+export function listingFitsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fits`;
+}
+
+export function listingFitsWritePath() {
+  return "/listings/fits";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
