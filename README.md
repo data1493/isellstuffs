@@ -18,6 +18,17 @@ Walk the stand-in catalog without leaving the mall map.
 
 Empty filters, an empty tote, canceled or failed pay, and missing listing / stall / hub pages use the same designed empty and error panels. Those states are built for a phone-width viewport.
 
+## Advertise
+
+Paid corners are a product. `/advertise` is the rate card. One campaign also has a bought landing page.
+
+| Route | What it is |
+| --- | --- |
+| `/advertise` | Featured stall, homepage takeover, hub takeover — prices, rules, links to live stamps |
+| `/campaigns/homepage-beats` | Beats Under the Table Fri–Mon lander. Receipt, not a blog post |
+
+Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them.
+
 ## Listing and stall pages
 
 Open a listing or a stall directly. Home, explore, and hub browse are owned elsewhere — these routes do not replace them.

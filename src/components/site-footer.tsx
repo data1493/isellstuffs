@@ -34,6 +34,12 @@ export function SiteFooter() {
             Hubs
           </Link>
           <Link
+            href="/advertise"
+            className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Advertise
+          </Link>
+          <Link
             href="/cart"
             className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >

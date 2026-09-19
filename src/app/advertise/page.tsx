@@ -1,0 +1,253 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { AdvertiseEmpty } from "@/components/ads/advertise-empty";
+import { LivePlacement } from "@/components/ads/live-placement";
+import { PackageCard } from "@/components/ads/package-card";
+import { PaidStamp } from "@/components/ads/paid-stamp";
+import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  adSlots,
+  adSlotsByKind,
+  formatMoney,
+} from "@/lib/commerce";
+import { campaignLanderPath } from "@/lib/ads-display";
+
+export const metadata: Metadata = {
+  title: "Advertise",
+  description:
+    "Buy a labeled corner: featured stall, homepage takeover, or hub takeover. The mall does not hide paid light.",
+};
+
+const rules = [
+  {
+    title: "Always labeled",
+    body: "Every paid corner wears a stamp. No stealth sponsored rows. If you cannot say you bought it, you cannot sit there.",
+  },
+  {
+    title: "A product, not a whisper",
+    body: "Featured stalls and takeovers have a package name, a window, and a price. They look bought because they were.",
+  },
+  {
+    title: "Hub rules stay",
+    body: "Money buys light, not a rewrite. Yard Sale will not become artisan home because a booth paid $18.",
+  },
+  {
+    title: "Sold stays sold",
+    body: "You cannot buy “available.” A folding chair that already left the driveway keeps the sticker.",
+  },
+];
+
+export default function AdvertisePage() {
+  const featured = adSlotsByKind("featured-stall");
+  const homepage = adSlotsByKind("homepage-takeover");
+  const hubs = adSlotsByKind("hub-takeover");
+  const packages = [...homepage, ...featured, ...hubs];
+  const empty = packages.length === 0;
+
+  return (
+    <div>
+      <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16">
+          <MallCrumb label="Advertise">
+            <CrumbSep />
+            <span className="text-foreground">Advertise</span>
+          </MallCrumb>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary" className="rounded-full">
+              Mall media, not a shop
+            </Badge>
+            <Badge variant="outline" className="rounded-full">
+              Labeled on purpose
+            </Badge>
+          </div>
+
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            <div className="max-w-2xl space-y-4">
+              <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-6xl">
+                Buy a corner. We will label it.
+              </h1>
+              <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+                Stalls pay to sit in the good light. Featured booths, homepage
+                takeovers, hub takeovers — each one is a product with a
+                window and a price. The concourse does not pretend a bought
+                hero is a lucky find.
+              </p>
+            </div>
+            <PaidStamp className="text-primary" />
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Button
+              size="lg"
+              className="rounded-full px-5"
+              render={<Link href="#rate-card" />}
+            >
+              Read the rate card
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-full px-5"
+              render={<Link href={campaignLanderPath} />}
+            >
+              See a bought campaign
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="rate-card"
+        className="scroll-mt-6 border-b border-border"
+      >
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Rate card
+          </p>
+          <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
+            Three things you can buy.
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted-foreground text-pretty">
+            Prices are package copy from the stand-in catalog — not a billing
+            integration, not a Stripe ad checkout. These three windows are
+            already sold.
+          </p>
+
+          {empty ? (
+            <div className="mt-10">
+              <AdvertiseEmpty />
+            </div>
+          ) : (
+            <ul className="mt-10 grid gap-4 lg:grid-cols-3">
+              {packages.map((slot) => (
+                <li key={slot.id}>
+                  <PackageCard slot={slot} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <section id="live" className="scroll-mt-6">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Live this window
+          </p>
+          <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
+            Walk the floor. The money already landed.
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted-foreground text-pretty">
+            Home, explore, and the Yard Sale aisle already wear these
+            placements. This page does not restyle them — it points at the
+            corners that were bought.
+          </p>
+
+          {empty ? (
+            <div className="mt-10">
+              <AdvertiseEmpty />
+            </div>
+          ) : (
+            <ul className="mt-10 grid gap-4 lg:grid-cols-3">
+              {adSlots.map((slot) => (
+                <li key={slot.id}>
+                  <LivePlacement slot={slot} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-card/60">
+        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 md:grid-cols-2">
+          {rules.map((rule, index) => (
+            <article key={rule.title}>
+              <p className="font-heading text-4xl text-primary">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <h2 className="mt-2 font-heading text-2xl tracking-tight">
+                {rule.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {rule.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              Booking
+            </p>
+            <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
+              No ad checkout. These windows are sold.
+            </h2>
+            <p className="mt-3 max-w-xl text-muted-foreground text-pretty">
+              Half-Working Electronics paid the good corner. Beats Under the
+              Table bought the homepage and a campaign URL. Folding Table
+              Tuesday owns Yard Sale this weekend. There is no form, no
+              account, and no live charge for a fourth booth.
+            </p>
+          </div>
+          <div className="rounded-2xl bg-secondary/50 p-5 ring-1 ring-primary/15">
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+              What the money bought
+            </p>
+            {packages.length === 0 ? (
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                No packages on the card this window.
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-2 text-sm leading-6">
+                {packages.map((slot) => (
+                  <li key={slot.id} className="flex justify-between gap-3">
+                    <span>{slot.packageName}</span>
+                    <span className="font-heading">
+                      {formatMoney(slot.price)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 sm:py-16">
+          <h2 className="font-heading text-3xl tracking-tight sm:text-4xl">
+            See the bought page.
+          </h2>
+          <p className="max-w-xl text-muted-foreground">
+            The homepage takeover includes a lander that exists only because
+            Beats Under the Table paid for Fri–Mon. It reads like a receipt,
+            not a blog post.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              className="rounded-full px-5"
+              render={<Link href={campaignLanderPath} />}
+            >
+              Open the campaign lander
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-full px-5"
+              render={<Link href="/" />}
+            >
+              Home concourse
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
