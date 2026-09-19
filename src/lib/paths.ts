@@ -1122,6 +1122,14 @@ export function listingGateWritePath() {
   return "/listings/gate";
 }
 
+export function listingFoamPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/foam`;
+}
+
+export function listingFoamWritePath() {
+  return "/listings/foam";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }
