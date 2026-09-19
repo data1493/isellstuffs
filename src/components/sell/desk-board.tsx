@@ -219,6 +219,12 @@ import {
   subscribeSplice,
 } from "@/lib/listing-splice";
 import {
+  canTapeVent,
+  isListingVentOverlay,
+  readVentListingIds,
+  subscribeVent,
+} from "@/lib/listing-vent";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -253,6 +259,7 @@ import {
   listingLinkWritePath,
   listingCenterWritePath,
   listingSpliceWritePath,
+  listingVentWritePath,
   listingLoopWritePath,
   listingTuneWritePath,
   listingVersoWritePath,
@@ -361,6 +368,7 @@ export function DeskBoard({
   const [linkIds, setLinkIds] = useState<string[]>([]);
   const [centerIds, setCenterIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
+  const [ventIds, setVentIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [iconsIds, setIconsIds] = useState<string[]>([]);
@@ -413,6 +421,7 @@ export function DeskBoard({
       setLinkIds(readLinkListingIds());
       setCenterIds(readCenterListingIds());
       setSpliceIds(readSpliceListingIds());
+      setVentIds(readVentListingIds());
       setTuneIds(readTuneListingIds());
       setVersoIds(readVersoListingIds());
       setIconsIds(readIconsListingIds());
@@ -454,6 +463,7 @@ export function DeskBoard({
     const unsubLink = subscribeLink(apply);
     const unsubCenter = subscribeCenter(apply);
     const unsubSplice = subscribeSplice(apply);
+    const unsubVent = subscribeVent(apply);
     const unsubTune = subscribeTune(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubIcons = subscribeIcons(apply);
@@ -505,6 +515,7 @@ export function DeskBoard({
       unsubLink();
       unsubCenter();
       unsubSplice();
+      unsubVent();
       unsubTune();
       unsubVerso();
       unsubIcons();
@@ -1061,6 +1072,37 @@ export function DeskBoard({
                             {isListingSpliceOverlay(listing.id, spliceIds)
                               ? "Leave the talkover"
                               : "I will not splice"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVent(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVentWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVentOverlay(listing.id, ventIds)
+                                ? "open"
+                                : "vent"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVentOverlay(listing.id, ventIds)
+                              ? "Leave the lid solid"
+                              : "I will not vent"}
                           </button>
                         </form>
                       ) : null}

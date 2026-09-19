@@ -730,6 +730,14 @@ export function listingSpliceWritePath() {
   return "/listings/splice";
 }
 
+export function listingVentPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/vent`;
+}
+
+export function listingVentWritePath() {
+  return "/listings/vent";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
