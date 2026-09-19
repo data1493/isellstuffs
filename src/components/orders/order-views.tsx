@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { OrderMissing, OrdersEmpty } from "@/components/orders/order-empty";
 import { OrderSlipCard } from "@/components/orders/order-slip";
@@ -27,18 +27,6 @@ import { orderPath } from "@/lib/paths";
 
 const emptyOrders: OrderSlip[] = [];
 
-function clientTrue() {
-  return true;
-}
-
-function serverFalse() {
-  return false;
-}
-
-function subscribeNothing() {
-  return () => {};
-}
-
 function mergeSeed(orders: OrderSlip[], seed: OrderSlip | null) {
   if (!seed) {
     return orders;
@@ -56,16 +44,16 @@ export function OrderSlipView({
   orderId: string;
   seed: OrderSlip | null;
 }) {
-  const mounted = useSyncExternalStore(
-    subscribeNothing,
-    clientTrue,
-    serverFalse,
-  );
+  const [mounted, setMounted] = useState(false);
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
     readOrderSlips,
     () => emptyOrders,
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (seed) {
@@ -94,16 +82,16 @@ export function OrderSlipView({
 }
 
 export function OrderIndexView({ seed }: { seed: OrderSlip | null }) {
-  const mounted = useSyncExternalStore(
-    subscribeNothing,
-    clientTrue,
-    serverFalse,
-  );
+  const [mounted, setMounted] = useState(false);
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
     readOrderSlips,
     () => emptyOrders,
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (seed) {
