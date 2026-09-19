@@ -167,6 +167,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | I will not spray it | http://127.0.0.1:44721/listings/clo-windbreaker/spray |
 | I don't have a dongle | http://127.0.0.1:44721/listings/gtk-cable-drawer/dongle |
 | I will not even the wear | http://127.0.0.1:44721/listings/clo-split-soles/even |
+| I will not cement | http://127.0.0.1:44721/listings/clo-split-soles/cement |
 | I will not tune it | http://127.0.0.1:44721/listings/dl-sample-pack/tune |
 | I will not write Side B | http://127.0.0.1:44721/listings/dl-crate-side-a/verso |
 | I don't have a link | http://127.0.0.1:44721/listings/gtk-game-boy/link |
@@ -385,6 +386,8 @@ Physical listings can tape a spray note at `/listings/[id]/spray`. Native `POST 
 Physical listings can tape a dongle note at `/listings/[id]/dongle`. Native `POST /listings/dongle` (form: `listingId`, `intent=dongle|open`) writes `iss:dongle-listing-ids` / cookie `iss-dongle-listing-ids`. I don't have a dongle. Sold as a pile. Walkers still want Half-Working to throw a dongle in the drawer, or give me USB-C for the laptop. Still tote. Not a cable counter. Still for sale. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The Game Boy and lamp stay empty if you taped the drawer.
 
 Physical listings can tape an even note at `/listings/[id]/even`. Native `POST /listings/even` (form: `listingId`, `intent=even|open`) writes `iss:even-listing-ids` / cookie `iss-even-listing-ids`. I will not even the wear. Right toe is considering it. Walkers still want Closet to even the sneakers, or make the right look like the left. Still tote. Still a pair. Still for sale. Not a cobbler. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The windbreaker, lamp, and Game Boy stay empty if you taped the sneakers.
+
+Physical listings can tape a cement note at `/listings/[id]/cement`. Native `POST /listings/cement` (form: `listingId`, `intent=cement|open`) writes `iss:cement-listing-ids` / cookie `iss-cement-listing-ids`. I will not cement. Peel stays. Still walks. Walkers still want Closet to cement the left toe, or make it one piece. Still tote. Not toe. Not a cobbler. Not glue. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The windbreaker, Game Boy, and whisk stay empty if you taped the sneakers.
 
 Physical listings can tape a center note at `/listings/[id]/center`. Native `POST /listings/center` (form: `listingId`, `intent=center|open`) writes `iss:center-listing-ids` / cookie `iss-center-listing-ids`. I will not center it. Off-center. Still plays. Walkers still want Sunday Crate to center the unnamed LP, or make the hole sit true. Still tote. Still for sale. Not skip. Not a press. Not vg. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The mixtape, jewels, lid, and CD-R stay empty if you taped the LP.
 

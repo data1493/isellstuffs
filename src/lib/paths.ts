@@ -714,6 +714,14 @@ export function listingEvenWritePath() {
   return "/listings/even";
 }
 
+export function listingCementPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cement`;
+}
+
+export function listingCementWritePath() {
+  return "/listings/cement";
+}
+
 export function listingTunePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tune`;
 }

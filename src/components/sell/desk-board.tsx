@@ -249,6 +249,12 @@ import {
   subscribeEven,
 } from "@/lib/listing-even";
 import {
+  canTapeCement,
+  isListingCementOverlay,
+  readCementListingIds,
+  subscribeCement,
+} from "@/lib/listing-cement";
+import {
   canTapeLink,
   isListingLinkOverlay,
   readLinkListingIds,
@@ -316,6 +322,7 @@ import {
   listingSprayWritePath,
   listingDongleWritePath,
   listingEvenWritePath,
+  listingCementWritePath,
   listingLinkWritePath,
   listingCenterWritePath,
   listingSpliceWritePath,
@@ -437,6 +444,7 @@ export function DeskBoard({
   const [sprayIds, setSprayIds] = useState<string[]>([]);
   const [dongleIds, setDongleIds] = useState<string[]>([]);
   const [evenIds, setEvenIds] = useState<string[]>([]);
+  const [cementIds, setCementIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
   const [centerIds, setCenterIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
@@ -499,6 +507,7 @@ export function DeskBoard({
       setSprayIds(readSprayListingIds());
       setDongleIds(readDongleListingIds());
       setEvenIds(readEvenListingIds());
+      setCementIds(readCementListingIds());
       setLinkIds(readLinkListingIds());
       setCenterIds(readCenterListingIds());
       setSpliceIds(readSpliceListingIds());
@@ -550,6 +559,7 @@ export function DeskBoard({
     const unsubSpray = subscribeSpray(apply);
     const unsubDongle = subscribeDongle(apply);
     const unsubEven = subscribeEven(apply);
+    const unsubCement = subscribeCement(apply);
     const unsubLink = subscribeLink(apply);
     const unsubCenter = subscribeCenter(apply);
     const unsubSplice = subscribeSplice(apply);
@@ -611,6 +621,7 @@ export function DeskBoard({
       unsubSpray();
       unsubDongle();
       unsubEven();
+      unsubCement();
       unsubLink();
       unsubCenter();
       unsubSplice();
@@ -1171,6 +1182,37 @@ export function DeskBoard({
                             {isListingEvenOverlay(listing.id, evenIds)
                               ? "Leave the pair"
                               : "I will not even the wear"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCement(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCementWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCementOverlay(listing.id, cementIds)
+                                ? "open"
+                                : "cement"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCementOverlay(listing.id, cementIds)
+                              ? "Leave the peel"
+                              : "I will not cement"}
                           </button>
                         </form>
                       ) : null}
