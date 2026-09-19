@@ -154,6 +154,14 @@ export function listingPlaysWritePath() {
   return "/listings/plays";
 }
 
+export function listingCasesPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cases`;
+}
+
+export function listingCasesWritePath() {
+  return "/listings/cases";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
