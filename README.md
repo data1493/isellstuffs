@@ -91,6 +91,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Smells like smoke | http://127.0.0.1:44721/listings/clo-windbreaker/smoke |
 | Tag says L | http://127.0.0.1:44721/listings/clo-windbreaker/size |
 | Fits a 3-quart | http://127.0.0.1:44721/listings/kdr-lid-no-pot/fits |
+| I played it once | http://127.0.0.1:44721/listings/mdb-scratched-lp/plays |
 | I kept the good laces | http://127.0.0.1:44721/listings/clo-split-soles/laces |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
@@ -162,6 +163,8 @@ Physical listings can tape smoke honesty at `/listings/[id]/smoke`. Native `POST
 Physical listings can tape a lying size tag at `/listings/[id]/size`. Native `POST /listings/size` (form: `listingId`, `intent=size|open`) writes `iss:size-listing-ids` / cookie `iss-size-listing-ids`. Tag says L. Press is which pressing. The Closet tag says L and it is not. Still tote. Not a Listing size field. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the windbreaker. Pockets stay on the jacket check.
 
 Physical listings can tape a 3-quart fit at `/listings/[id]/fits`. Native `POST /listings/fits` (form: `listingId`, `intent=fits|open`) writes `iss:fits-listing-ids` / cookie `iss-fits-listing-ids`. Fits a 3-quart. The pot walked. The lid is still on the table. With needs two titles. This is one pot that fits a 3-quart. Still tote. Not a with pair. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you taped the lid. With stays on two titles.
+
+Physical listings can tape a play count at `/listings/[id]/plays`. Native `POST /listings/plays` (form: `listingId`, `intent=plays|open`) writes `iss:plays-listing-ids` / cookie `iss-plays-listing-ids`. I played it once. Press is which pressing. This is how many times it spun. Still tote. Not tested-kinda. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you played the scratched LP. Press stays on the sleeve.
 
 Physical listings can tape pair honesty at `/listings/[id]/laces`. Native `POST /listings/laces` (form: `listingId`, `note`, `intent=tape|clear`) writes `iss:listing-laces` / cookie `iss-listing-laces`. I kept the good laces. The sneakers are on the table. The nice pair stayed home. Still tote. Not van restock. Not with. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you laced the Closet sneakers. Size stays the jacket tag.
 
@@ -295,7 +298,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/listings/[id]/heavy`, `/listings/[id]/pockets`, `/listings/[id]/press`, `/listings/[id]/parts`, `/listings/[id]/cells`, `/listings/[id]/smoke`, `/listings/[id]/size`, `/listings/[id]/fits`, `/listings/[id]/laces`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/buy`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/stalls/[slug]/stay`, `/stalls/[slug]/shade`, `/stalls/[slug]/film`, `/stalls/[slug]/kids`, `/stalls/[slug]/poly`, `/stalls/[slug]/wrap`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/listings/[id]/heavy`, `/listings/[id]/pockets`, `/listings/[id]/press`, `/listings/[id]/parts`, `/listings/[id]/cells`, `/listings/[id]/smoke`, `/listings/[id]/size`, `/listings/[id]/fits`, `/listings/[id]/plays`, `/listings/[id]/laces`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/buy`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/stalls/[slug]/stay`, `/stalls/[slug]/shade`, `/stalls/[slug]/film`, `/stalls/[slug]/kids`, `/stalls/[slug]/poly`, `/stalls/[slug]/wrap`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

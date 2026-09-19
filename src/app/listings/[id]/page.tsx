@@ -16,6 +16,7 @@ import { ListingPocketsNotice } from "@/components/listing-pockets-notice";
 import { ListingPressNotice } from "@/components/listing-press-notice";
 import { ListingSmokeNotice } from "@/components/listing-smoke-notice";
 import { ListingFitsNotice } from "@/components/listing-fits-notice";
+import { ListingPlaysNotice } from "@/components/listing-plays-notice";
 import { ListingSizeNotice } from "@/components/listing-size-notice";
 import { ListingLacesNotice } from "@/components/listing-laces-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
@@ -53,6 +54,7 @@ import {
   listingOfferPath,
   listingPath,
   listingPartsPath,
+  listingPlaysPath,
   listingPocketsPath,
   listingPressPath,
   listingScanPath,
@@ -233,6 +235,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSmokeNotice listingId={listing.id} /> : null}
               {physical ? <ListingSizeNotice listingId={listing.id} /> : null}
               {physical ? <ListingFitsNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPlaysNotice listingId={listing.id} /> : null}
               {physical ? <ListingLacesNotice listingId={listing.id} /> : null}
 
               {physical ? (
@@ -338,6 +341,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Fits a 3-quart
+                  </Link>
+                  <Link
+                    href={listingPlaysPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I played it once
                   </Link>
                   <Link
                     href={listingLacesPath(listing.id)}
