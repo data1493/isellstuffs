@@ -103,6 +103,14 @@ export function sellFoldersPath() {
   return "/sell/folders";
 }
 
+export function sellTakenPath() {
+  return "/sell/taken";
+}
+
+export function sellTakenWritePath() {
+  return "/sell/taken/write";
+}
+
 export function sellListingEditPath(id: string) {
   return `/sell/listings/${encodeURIComponent(id)}/edit`;
 }
