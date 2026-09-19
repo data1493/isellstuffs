@@ -13,6 +13,11 @@ import {
   BACK_SOON_MIRROR_SCRIPT,
   parseBackSoon,
 } from "@/lib/back-soon";
+import {
+  MOVED_SPOT_COOKIE_NAME,
+  MOVED_SPOT_MIRROR_SCRIPT,
+  parseMovedSpot,
+} from "@/lib/moved-spot";
 import { PACKED_COOKIE_NAME, PACKED_MIRROR_SCRIPT } from "@/lib/packed-stall";
 import { lotBoard, lotOff, lotOn } from "@/lib/lot-board";
 import { lotPath, thisWeekPath } from "@/lib/paths";
@@ -26,6 +31,7 @@ export default async function LotPage() {
   const jar = await cookies();
   const rows = lotBoard(jar.get(PACKED_COOKIE_NAME)?.value);
   const lunchMap = parseBackSoon(jar.get(BACK_SOON_COOKIE_NAME)?.value);
+  const spotMap = parseMovedSpot(jar.get(MOVED_SPOT_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -34,6 +40,7 @@ export default async function LotPage() {
       <>
         <script dangerouslySetInnerHTML={{ __html: PACKED_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BACK_SOON_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: MOVED_SPOT_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -43,6 +50,7 @@ export default async function LotPage() {
     <>
       <script dangerouslySetInnerHTML={{ __html: PACKED_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BACK_SOON_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: MOVED_SPOT_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -103,6 +111,7 @@ export default async function LotPage() {
                   <LotBoothCard
                     row={row}
                     lunchNote={lunchMap[row.stall.id]?.note}
+                    spotNote={spotMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -128,6 +137,7 @@ export default async function LotPage() {
                   <LotBoothCard
                     row={row}
                     lunchNote={lunchMap[row.stall.id]?.note}
+                    spotNote={spotMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

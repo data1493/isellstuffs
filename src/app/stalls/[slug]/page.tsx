@@ -37,8 +37,20 @@ import {
   backSoonFor,
   parseBackSoon,
 } from "@/lib/back-soon";
+import {
+  MOVED_SPOT_COOKIE_NAME,
+  MOVED_SPOT_PAPER_LINE,
+  movedSpotFor,
+  parseMovedSpot,
+} from "@/lib/moved-spot";
 import { isStallPacked } from "@/lib/packed-stall";
-import { lotPath, stallBackPath, stallPath, stallScrapPath } from "@/lib/paths";
+import {
+  lotPath,
+  stallBackPath,
+  stallPath,
+  stallScrapPath,
+  stallSpotPath,
+} from "@/lib/paths";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -89,6 +101,10 @@ export default async function StallPage({
   const lunch = backSoonFor(
     stall.id,
     parseBackSoon(jar.get(BACK_SOON_COOKIE_NAME)?.value),
+  );
+  const gravel = movedSpotFor(
+    stall.id,
+    parseMovedSpot(jar.get(MOVED_SPOT_COOKIE_NAME)?.value),
   );
 
   return (
@@ -149,6 +165,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {gravel ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Moved two spots"
+              title="New gravel."
+              body={
+                <p data-moved-spot-note={stall.id}>
+                  {gravel.note} {MOVED_SPOT_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -157,6 +188,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Back after lunch
+          </Link>
+
+          <Link
+            href={stallSpotPath(stall.slug)}
+            data-moved-spot-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Moved two spots
           </Link>
 
           <Link

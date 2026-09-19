@@ -72,6 +72,14 @@ export function stallBackWritePath() {
   return "/stalls/back";
 }
 
+export function stallSpotPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/spot`;
+}
+
+export function stallSpotWritePath() {
+  return "/stalls/spot";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

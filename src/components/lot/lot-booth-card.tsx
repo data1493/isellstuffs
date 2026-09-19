@@ -21,9 +21,11 @@ function stillHereLabel(count: number) {
 export function LotBoothCard({
   row,
   lunchNote,
+  spotNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
+  spotNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -67,6 +69,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Back after lunch. {lunchNote}
+            </p>
+          ) : null}
+          {spotNote ? (
+            <p
+              data-moved-spot-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Moved two spots. {spotNote}
             </p>
           ) : null}
           {packed ? (
