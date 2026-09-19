@@ -66,6 +66,7 @@ export function LotBoothCard({
   spiderNote,
   mirrorNote,
   clampNote,
+  spongeNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -114,6 +115,7 @@ export function LotBoothCard({
   spiderNote?: string;
   mirrorNote?: string;
   clampNote?: string;
+  spongeNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -586,6 +588,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-clamp-empty={stall.id} hidden />
+          )}
+          {spongeNote ? (
+            <p
+              data-booth-sponge-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a sponge. {spongeNote}
+            </p>
+          ) : (
+            <p data-booth-sponge-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

@@ -1448,6 +1448,14 @@ export function stallClampWritePath() {
   return "/stalls/clamp";
 }
 
+export function stallSpongePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/sponge`;
+}
+
+export function stallSpongeWritePath() {
+  return "/stalls/sponge";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

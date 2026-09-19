@@ -308,6 +308,13 @@ import {
   stallClampPath,
 } from "@/lib/booth-clamp";
 import {
+  BOOTH_SPONGE_COOKIE_NAME,
+  BOOTH_SPONGE_PAPER_LINE,
+  boothSpongeFor,
+  parseBoothSponge,
+  stallSpongePath,
+} from "@/lib/booth-sponge";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -591,6 +598,10 @@ export default async function StallPage({
   const clamp = boothClampFor(
     stall.id,
     parseBoothClamp(jar.get(BOOTH_CLAMP_COOKIE_NAME)?.value),
+  );
+  const sponge = boothSpongeFor(
+    stall.id,
+    parseBoothSponge(jar.get(BOOTH_SPONGE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1394,6 +1405,23 @@ export default async function StallPage({
             <p data-booth-clamp-empty={stall.id} hidden />
           )}
 
+          {sponge ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a sponge"
+              title="Still dishes. Still a hose."
+              body={
+                <p data-booth-sponge-note={stall.id}>
+                  {sponge.note} {BOOTH_SPONGE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-sponge-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1762,6 +1790,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a clamp
+          </Link>
+
+          <Link
+            href={stallSpongePath(stall.slug)}
+            data-booth-sponge-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a sponge
           </Link>
 
           <Link
