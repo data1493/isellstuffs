@@ -100,3 +100,7 @@ export function ordersPath() {
 export function orderPath(id: string) {
   return `/orders/${encodeURIComponent(id)}`;
 }
+
+export function orderEmailPath(id: string) {
+  return `/orders/${encodeURIComponent(id)}/email`;
+}

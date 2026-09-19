@@ -22,7 +22,13 @@ import {
   type OrderLine,
   type OrderSlip,
 } from "@/lib/order-history";
-import { folderPath, listingPath, ordersPath, stallPath } from "@/lib/paths";
+import {
+  folderPath,
+  listingPath,
+  orderEmailPath,
+  ordersPath,
+  stallPath,
+} from "@/lib/paths";
 
 function lineNote(line: OrderLine) {
   if (!line.listing) {
@@ -196,6 +202,13 @@ export function OrderSlipCard({ order }: { order: OrderSlip }) {
           ) : null}
           <Button
             variant={showFolder ? "outline" : undefined}
+            className="w-full rounded-full sm:w-auto"
+            render={<Link href={orderEmailPath(order.id)} />}
+          >
+            Open the mock email
+          </Button>
+          <Button
+            variant="outline"
             className="w-full rounded-full sm:w-auto"
             render={<Link href={ordersPath()} />}
           >

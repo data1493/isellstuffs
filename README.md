@@ -88,6 +88,7 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | `/folder/[slip]` | One paid slip’s booth folder. Stand-in downloads, not a CDN |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |
 | `/orders/[id]` | Reconstruct the tote from checkout listing ids |
+| `/orders/[id]/email` | Printed receipt email of that slip. Same lines. Nothing is sent |
 
 Open **http://127.0.0.1:44721/cart**. Deep-link with `?add=<listingId>` uses the same cart writer.
 
