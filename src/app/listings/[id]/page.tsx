@@ -26,7 +26,7 @@ import {
   listingSiblingKicker,
   listingStatusLabel,
 } from "@/lib/listing-display";
-import { listingPath, stallPath } from "@/lib/paths";
+import { listingPath, listingTagPath, stallPath } from "@/lib/paths";
 import { listingMetadata, listingProductJsonLd, missingListingMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -180,6 +180,17 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </div>
 
               <ListingBuyBox listing={listing} />
+
+              {physical ? (
+                <p>
+                  <Link
+                    href={listingTagPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Print a driveway tag
+                  </Link>
+                </p>
+              ) : null}
 
               {physical && stall ? <PickupNote stall={stall} /> : null}
 

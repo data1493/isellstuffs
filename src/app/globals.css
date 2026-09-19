@@ -149,4 +149,12 @@
     background: #fff;
     background-image: none;
   }
+  body:has(.driveway-tag-print) header,
+  body:has(.driveway-tag-print) footer {
+    display: none;
+  }
+  body:has(.driveway-tag-print) {
+    background: #fff;
+    background-image: none;
+  }
 }

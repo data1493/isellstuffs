@@ -2,6 +2,10 @@ export function listingPath(id: string) {
   return `/listings/${id}`;
 }
 
+export function listingTagPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tag`;
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

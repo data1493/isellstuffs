@@ -66,6 +66,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Page | Example |
 | --- | --- |
 | Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
+| Driveway price tag | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/tag |
 | Mall gift card | http://127.0.0.1:44721/listings/dl-mall-gift-card |
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
 | Gift credit desk | http://127.0.0.1:44721/gift |
@@ -78,6 +79,8 @@ Paying a physical find writes its id to `iss:sold-listing-ids` / cookie `iss-sol
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
 Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field.
+
+Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — price, condition, booth, aisle. PDFs and the gift card have no tag. Files open in the folder after pay. Gift codes go to the desk. The tag does not show pickup hours.
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag.
 
