@@ -280,6 +280,13 @@ import {
   stallDriverPath,
 } from "@/lib/booth-driver";
 import {
+  BOOTH_PLAYER_COOKIE_NAME,
+  BOOTH_PLAYER_PAPER_LINE,
+  boothPlayerFor,
+  parseBoothPlayer,
+  stallPlayerPath,
+} from "@/lib/booth-player";
+import {
   BOOTH_SPIDER_COOKIE_NAME,
   BOOTH_SPIDER_PAPER_LINE,
   boothSpiderFor,
@@ -554,6 +561,10 @@ export default async function StallPage({
   const driver = boothDriverFor(
     stall.id,
     parseBoothDriver(jar.get(BOOTH_DRIVER_COOKIE_NAME)?.value),
+  );
+  const player = boothPlayerFor(
+    stall.id,
+    parseBoothPlayer(jar.get(BOOTH_PLAYER_COOKIE_NAME)?.value),
   );
   const spider = boothSpiderFor(
     stall.id,
@@ -1293,6 +1304,23 @@ export default async function StallPage({
             <p data-booth-driver-empty={stall.id} hidden />
           )}
 
+          {player ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a player"
+              title="Still Sharpie. Still a table."
+              body={
+                <p data-booth-player-note={stall.id}>
+                  {player.note} {BOOTH_PLAYER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-player-empty={stall.id} hidden />
+          )}
+
           {spider ? (
             <MallNotice
               tone="empty"
@@ -1646,6 +1674,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a driver
+          </Link>
+
+          <Link
+            href={stallPlayerPath(stall.slug)}
+            data-booth-player-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a player
           </Link>
 
           <Link

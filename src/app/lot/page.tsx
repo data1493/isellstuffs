@@ -190,6 +190,11 @@ import {
   parseBoothDriver,
 } from "@/lib/booth-driver";
 import {
+  BOOTH_PLAYER_COOKIE_NAME,
+  BOOTH_PLAYER_MIRROR_SCRIPT,
+  parseBoothPlayer,
+} from "@/lib/booth-player";
+import {
   BOOTH_SPIDER_COOKIE_NAME,
   BOOTH_SPIDER_MIRROR_SCRIPT,
   parseBoothSpider,
@@ -279,6 +284,7 @@ export default async function LotPage() {
   const wifiMap = parseBoothWifi(jar.get(BOOTH_WIFI_COOKIE_NAME)?.value);
   const kitMap = parseBoothKit(jar.get(BOOTH_KIT_COOKIE_NAME)?.value);
   const driverMap = parseBoothDriver(jar.get(BOOTH_DRIVER_COOKIE_NAME)?.value);
+  const playerMap = parseBoothPlayer(jar.get(BOOTH_PLAYER_COOKIE_NAME)?.value);
   const spiderMap = parseBoothSpider(jar.get(BOOTH_SPIDER_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
@@ -329,6 +335,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WIFI_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_KIT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIVER_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_PLAYER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SPIDER_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
@@ -380,6 +387,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WIFI_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_KIT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIVER_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_PLAYER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SPIDER_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
@@ -482,6 +490,7 @@ export default async function LotPage() {
                     wifiNote={wifiMap[row.stall.id]?.note}
                     kitNote={kitMap[row.stall.id]?.note}
                     driverNote={driverMap[row.stall.id]?.note}
+                    playerNote={playerMap[row.stall.id]?.note}
                     spiderNote={spiderMap[row.stall.id]?.note}
                   />
                 </li>
@@ -549,6 +558,7 @@ export default async function LotPage() {
                     wifiNote={wifiMap[row.stall.id]?.note}
                     kitNote={kitMap[row.stall.id]?.note}
                     driverNote={driverMap[row.stall.id]?.note}
+                    playerNote={playerMap[row.stall.id]?.note}
                     spiderNote={spiderMap[row.stall.id]?.note}
                   />
                 </li>

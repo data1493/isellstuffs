@@ -1320,6 +1320,14 @@ export function stallDriverWritePath() {
   return "/stalls/driver";
 }
 
+export function stallPlayerPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/player`;
+}
+
+export function stallPlayerWritePath() {
+  return "/stalls/player";
+}
+
 export function stallSpiderPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/spider`;
 }
