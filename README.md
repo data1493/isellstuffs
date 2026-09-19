@@ -46,6 +46,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | Route | What it is |
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals. No Connect, no bank |
 | `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |

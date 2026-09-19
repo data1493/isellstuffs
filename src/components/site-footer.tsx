@@ -7,6 +7,7 @@ import {
   collectionsPath,
   feesPath,
   savedPath,
+  sellDeskPath,
   thisWeekPath,
 } from "@/lib/paths";
 import { site } from "@/lib/site";
@@ -18,6 +19,7 @@ const browse = [
   { href: thisWeekPath(), label: "This week" },
   { href: collectionsPath(), label: "Collections" },
   { href: "/sell", label: "Sell" },
+  { href: sellDeskPath(), label: "Seller desk" },
   { href: feesPath(), label: "Fees" },
   { href: "/advertise", label: "Advertise" },
   { href: yardSaleTuesdayLanderPath, label: "Yard Sale campaign" },
