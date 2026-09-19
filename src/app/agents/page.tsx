@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { AgentRow } from "@/components/agents/agent-row";
-import { AGENT_TALK_COOKIE, parseAgentTalkCookie } from "@/lib/agent-talk";
+import { parseLots } from "@/lib/agent-store";
+import {
+  loadAgentRowFloor,
+  snapshotFromRequestCookies,
+} from "@/lib/agent-row-io";
 import { agentRowMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +22,15 @@ export default async function AgentsPage({ searchParams }: AgentsPageProps) {
   const error = Array.isArray(query.error) ? query.error[0] : query.error;
   const slip = Array.isArray(query.slip) ? query.slip[0] : query.slip;
   const jar = await cookies();
-  const state = parseAgentTalkCookie(jar.get(AGENT_TALK_COOKIE)?.value);
+  const snapshot = snapshotFromRequestCookies((name) => jar.get(name)?.value);
+  const floor = await loadAgentRowFloor(snapshot);
 
-  return <AgentRow state={state} error={error} slipId={slip} />;
+  return (
+    <AgentRow
+      floor={floor}
+      snapshotLots={parseLots(snapshot.lots)}
+      error={error}
+      slipId={slip}
+    />
+  );
 }

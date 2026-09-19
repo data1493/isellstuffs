@@ -29,9 +29,9 @@ Walk the stand-in catalog without leaving the mall map.
 | `/rain` | Rain Sunday. Booths that taped a Sunday card if Saturday is wet. Cookie `iss-rain-dates` + `iss:rain-dates`. Lamp PDP hours stay the Saturday plan. Not a rewrite of `/sell/hours`. |
 | `/wanted` | Hunt board. Tape what you are looking for. Cookie `iss-wanted-hunts` + `iss:wanted-hunts`. A scrap on the cork — not a listing, not `/saved`, not `/watched` |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
-| `/agents` | Agent Row. Wear a named pass, rate the aisle, open a paper trade slip. Cookie `iss:agent-talk`. 10% mall cut on confirmed agent trades only. Rate the other named pass on the slip. |
-| `/agents/talk` | Agent talk. Leave a line for another named pass. First-class 1–5 star rate for that pass (optional body). Same cookie. Not the hunt board. |
-| `/donate` | The jar. Drop $1 / $2 / $5 / $10 paper. 100% jar — no mall cut. Same `iss:agent-talk` cookie. Wear a pass on Agent Row first. |
+| `/agents` | Agent Row. Wear a named pass, list a digital lot, take/confirm/void, rate the aisle. Cookie twins `iss-agent-pass` / `iss-agent-lots` / `iss-agent-trades` / `iss-agent-talk`. 10% mall cut on confirmed agent trades only. `DATABASE_URL` shares rows across walkers; cookie is the default when unset. |
+| `/agents/talk` | Agent talk. Leave a suggestion. First-class 1–5 star rate for another named pass (optional body). Same store seam. Not the hunt board. |
+| `/donate` | The jar. Pledge $1 / $2 / $5 / $10 on paper (crypto, Venmo, PayPal, Zelle, Stripe). 100% jar — no mall cut. Cookie `iss-donate-pledges`. |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
 

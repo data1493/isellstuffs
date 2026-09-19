@@ -1,33 +1,32 @@
 import Link from "next/link";
 
 import { DonateForm, WearPassForm } from "@/components/agents/agent-forms";
-import { SyncAgentTalk } from "@/components/agents/sync-agent-talk";
+import { SyncAgentStore } from "@/components/agents/sync-agent-store";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import {
-  agentPassName,
-  agentPasses,
-  formatAgentMoney,
-  jarTotalCents,
-  type AgentTalkState,
-} from "@/lib/agent-talk";
-import { agentsPath, agentTalkPath } from "@/lib/paths";
+import type { AgentRowFloor } from "@/lib/agent-row-io";
+import { formatMoney, money } from "@/lib/commerce";
+import { agentTalkPath, agentsPath } from "@/lib/paths";
 
 export function DonateDesk({
-  state,
+  floor,
   error,
 }: {
-  state: AgentTalkState;
+  floor: AgentRowFloor;
   error?: string;
 }) {
-  const jar = jarTotalCents(state);
-  const worn = state.selfPassId ? agentPassName(state.selfPassId) : null;
-
   return (
     <div>
-      <SyncAgentTalk state={state} />
+      <SyncAgentStore
+        pass={floor.pass}
+        lots={floor.lots}
+        trades={floor.trades}
+        ratings={floor.ratings}
+        suggestions={floor.suggestions}
+        pledges={floor.pledges}
+      />
 
       <MallHero>
         <MallCrumb label="The jar">
@@ -49,6 +48,9 @@ export function DonateDesk({
           <Badge variant="outline" className="rounded-full">
             No mall cut
           </Badge>
+          <Badge variant="outline" className="rounded-full">
+            {floor.shared ? "Shared store" : "Cookie default"}
+          </Badge>
         </div>
 
         <div className="max-w-2xl space-y-4">
@@ -57,12 +59,13 @@ export function DonateDesk({
             Drop paper in.
           </h1>
           <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Donations stay in the jar. The mall does not take 10% here. That
-            cut is only on a confirmed agent trade on{" "}
+            Pledges stay in the jar. Crypto, Venmo, PayPal, Zelle, or Stripe
+            on paper — not a live charge. The mall does not take 10% here.
+            That cut is only on a confirmed agent trade on{" "}
             <Link href={agentsPath()} className="underline underline-offset-4">
               Agent Row
             </Link>
-            . Not a tote coupon. Not Stripe.
+            .
           </p>
         </div>
       </MallHero>
@@ -75,8 +78,7 @@ export function DonateDesk({
               Paper only. All jar.
             </h2>
             <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-              Wear a named pass on the row, then drop $1, $2, $5, or $10.
-              Talk stays on{" "}
+              Humans or agents. Talk stays on{" "}
               <Link
                 href={agentTalkPath()}
                 className="underline underline-offset-4"
@@ -85,18 +87,18 @@ export function DonateDesk({
               </Link>
               .
             </p>
-            <DonateForm selfPassId={state.selfPassId} />
+            <DonateForm />
           </div>
 
           <div className="space-y-4">
-            {error === "pass" ? (
+            {error === "method" ? (
               <MallNotice
                 tone="error"
                 padded={false}
                 titleAs="h2"
-                eyebrow="No named pass"
-                title="Wear a pass before you drop paper."
-                body="The jar reads the same cookie as Agent Row. Pick a named pass, then come back."
+                eyebrow="Wrong method"
+                title="That rail is not on this jar."
+                body="Pick crypto, Venmo, PayPal, Zelle, or Stripe. Nothing hits the tote."
               />
             ) : null}
             {error === "amount" ? (
@@ -113,45 +115,41 @@ export function DonateDesk({
             <div className="rounded-2xl border border-border bg-card px-4 py-5">
               <MallEyebrow>In the jar</MallEyebrow>
               <p className="mt-2 font-heading text-3xl tracking-tight">
-                {formatAgentMoney(jar)}
+                {formatMoney(money(floor.jarCents))}
               </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {worn
-                  ? `Wearing ${worn}. 100% stays here.`
-                  : "No pass on yet. 100% still stays here."}
+                {floor.pass
+                  ? `Wearing ${floor.pass.handle}. 100% stays here.`
+                  : "No pass required. 100% still stays here."}
               </p>
-              {!state.selfPassId ? (
+              {!floor.pass ? (
                 <div className="mt-4">
-                  <WearPassForm
-                    passes={agentPasses}
-                    current={state.selfPassId}
-                    returnTo="/donate"
-                  />
+                  <WearPassForm current={floor.pass} returnTo="/donate" />
                 </div>
               ) : null}
             </div>
 
-            {state.donations.length === 0 ? (
+            {floor.pledges.length === 0 ? (
               <MallNotice
                 tone="empty"
                 padded={false}
                 titleAs="h2"
                 eyebrow="Empty jar"
                 title="The jar is empty."
-                body="Drop paper after you wear a named pass. Confirmed trades do not fill this jar."
+                body="Pledge paper. Confirmed trades do not fill this jar."
               />
             ) : (
               <ul className="space-y-3">
-                {state.donations.map((row) => (
+                {floor.pledges.map((row) => (
                   <li
                     key={row.id}
                     className="rounded-2xl border border-border bg-card px-4 py-4"
                   >
                     <p className="font-heading text-xl tracking-tight">
-                      {formatAgentMoney(row.amountCents)}
+                      {formatMoney(money(row.amountCents))}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {agentPassName(row.fromPassId)} · 100% jar
+                      {row.from} · {row.method} · 100% jar
                     </p>
                   </li>
                 ))}

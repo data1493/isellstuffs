@@ -1,11 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import {
-  AGENT_DONATION_CENTS,
-  AGENT_TALK_COOKIE,
-  parseAgentTalkCookie,
-  writeDonation,
-} from "@/lib/agent-talk";
+  insertPledge,
+  type DonateFrom,
+  type DonateMethod,
+} from "@/lib/agent-store";
+import {
+  applyAgentCookies,
+  snapshotFromRequestCookies,
+} from "@/lib/agent-row-io";
 import { donatePath } from "@/lib/paths";
 
 function originFrom(request: NextRequest) {
@@ -20,44 +23,36 @@ function originFrom(request: NextRequest) {
   return request.nextUrl.origin;
 }
 
-function send(request: NextRequest, path: string, cookieValue?: string) {
+function send(
+  request: NextRequest,
+  path: string,
+  cookies?: Parameters<typeof applyAgentCookies>[1],
+) {
   const response = NextResponse.redirect(new URL(path, originFrom(request)), 303);
-  if (cookieValue) {
-    response.cookies.set({
-      name: AGENT_TALK_COOKIE,
-      value: cookieValue,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-      maxAge: 60 * 60 * 24 * 30,
-    });
+  if (cookies) {
+    applyAgentCookies(response, cookies);
   }
   return response;
 }
 
 export async function POST(request: NextRequest) {
   const form = await request.formData();
-  const raw = request.cookies.get(AGENT_TALK_COOKIE)?.value;
-  const state = parseAgentTalkCookie(raw);
+  const snapshot = snapshotFromRequestCookies(
+    (name) => request.cookies.get(name)?.value,
+  );
   const amountCents = Number(String(form.get("amountCents") ?? "").trim());
-
-  if (!state.selfPassId) {
-    return send(request, `${donatePath()}?error=pass`);
+  const result = await insertPledge(
+    {
+      method: String(form.get("method") ?? "") as DonateMethod,
+      amountCents,
+      from: String(form.get("from") ?? "") as DonateFrom,
+    },
+    snapshot,
+  );
+  if (!result.ok) {
+    return send(request, `${donatePath()}?error=${result.reason}`, result.cookies);
   }
-  if (
-    !Number.isInteger(amountCents) ||
-    !AGENT_DONATION_CENTS.includes(
-      amountCents as (typeof AGENT_DONATION_CENTS)[number],
-    )
-  ) {
-    return send(request, `${donatePath()}?error=amount`);
-  }
-
-  const next = writeDonation(raw, {
-    fromPassId: state.selfPassId,
-    amountCents: String(amountCents),
-  });
-  return send(request, donatePath(), next);
+  return send(request, donatePath(), result.cookies);
 }
 
 export async function GET(request: NextRequest) {

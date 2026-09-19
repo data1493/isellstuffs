@@ -1,18 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import {
-  AGENT_TALK_COOKIE,
-  agentPassById,
-  isTradeableListing,
-  parseAgentStars,
-  parseAgentTalkCookie,
-  writeAgentRate,
-  writeConfirmTrade,
-  writeOpenTrade,
-  writeWearPass,
-} from "@/lib/agent-talk";
-import { listingById } from "@/lib/commerce";
+  confirmTrade,
+  insertLot,
+  insertTrade,
+  rateAgent,
+  readPass,
+  voidTrade,
+  writePass,
+  type AgentAsset,
+  type AgentStoreReason,
+} from "@/lib/agent-store";
+import {
+  applyAgentCookies,
+  parseAskCents,
+  snapshotFromRequestCookies,
+} from "@/lib/agent-row-io";
 import { agentTalkPath, agentsPath, donatePath } from "@/lib/paths";
+
+const ASSETS = new Set(["usdc", "eth"]);
 
 function originFrom(request: NextRequest) {
   const fromOrigin = request.headers.get("origin");
@@ -35,101 +41,141 @@ function safeReturn(raw: string, fallback: string) {
   ) {
     return path;
   }
-  if (path.startsWith(`${agentsPath()}?`) || path.startsWith(`${agentTalkPath()}?`)) {
+  if (
+    path.startsWith(`${agentsPath()}?`) ||
+    path.startsWith(`${agentTalkPath()}?`)
+  ) {
     return path;
   }
   return fallback;
 }
 
-function send(request: NextRequest, path: string, cookieValue?: string) {
+function send(
+  request: NextRequest,
+  path: string,
+  cookies?: Parameters<typeof applyAgentCookies>[1],
+) {
   const response = NextResponse.redirect(new URL(path, originFrom(request)), 303);
-  if (cookieValue) {
-    response.cookies.set({
-      name: AGENT_TALK_COOKIE,
-      value: cookieValue,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-      maxAge: 60 * 60 * 24 * 30,
-    });
+  if (cookies) {
+    applyAgentCookies(response, cookies);
   }
   return response;
+}
+
+function fail(
+  request: NextRequest,
+  home: string,
+  reason: AgentStoreReason | "pass" | "subject",
+  cookies?: Parameters<typeof applyAgentCookies>[1],
+) {
+  const join = home.includes("?") ? "&" : "?";
+  return send(request, `${home}${join}error=${reason}`, cookies);
 }
 
 export async function POST(request: NextRequest) {
   const form = await request.formData();
   const intent = String(form.get("intent") ?? "");
-  const raw = request.cookies.get(AGENT_TALK_COOKIE)?.value;
-  const state = parseAgentTalkCookie(raw);
+  const snapshot = snapshotFromRequestCookies(
+    (name) => request.cookies.get(name)?.value,
+  );
+  const pass = await readPass(snapshot);
   const home = safeReturn(String(form.get("returnTo") ?? ""), agentsPath());
 
   if (intent === "wear") {
-    const passId = String(form.get("passId") ?? "");
-    if (!agentPassById(passId)) {
-      return send(request, `${home}${home.includes("?") ? "&" : "?"}error=pass`);
+    const result = await writePass(
+      {
+        handle: String(form.get("handle") ?? ""),
+        publicAddress: String(form.get("publicAddress") ?? ""),
+      },
+      snapshot,
+    );
+    if (!result.ok) {
+      return fail(request, home, result.reason, result.cookies);
     }
-    return send(request, home, writeWearPass(raw, passId));
+    return send(request, home, result.cookies);
   }
 
   if (intent === "aisle" || intent === "rate") {
-    const fromPassId = state.selfPassId;
-    const subject =
-      intent === "aisle" ? "aisle" : String(form.get("subject") ?? "");
-    const stars = parseAgentStars(String(form.get("stars") ?? ""));
-    if (!fromPassId) {
-      return send(request, `${home}${home.includes("?") ? "&" : "?"}error=pass`);
+    const about = intent === "aisle" ? "aisle" : "pass";
+    const aboutHandle = String(form.get("aboutHandle") ?? "").trim();
+    const stars = Number(String(form.get("stars") ?? "").trim());
+    if (about === "pass" && pass?.handle && aboutHandle === pass.handle) {
+      return fail(request, home, "subject");
     }
-    if (!stars) {
-      return send(request, `${home}${home.includes("?") ? "&" : "?"}error=stars`);
+    const result = await rateAgent(
+      {
+        fromHandle: pass?.handle ?? "walker",
+        about,
+        aboutHandle: about === "pass" ? aboutHandle : null,
+        stars,
+        body: String(form.get("body") ?? ""),
+      },
+      snapshot,
+    );
+    if (!result.ok) {
+      return fail(request, home, result.reason, result.cookies);
     }
-    if (subject !== "aisle") {
-      if (!agentPassById(subject) || subject === fromPassId) {
-        return send(
-          request,
-          `${home}${home.includes("?") ? "&" : "?"}error=subject`,
-        );
-      }
-    }
-    const next = writeAgentRate(raw, {
-      fromPassId,
-      subject,
-      stars: String(stars),
-      body: String(form.get("body") ?? ""),
-    });
-    return send(request, home, next);
+    return send(request, home, result.cookies);
   }
 
-  if (intent === "trade") {
-    const fromPassId = state.selfPassId;
-    const toPassId = String(form.get("toPassId") ?? "");
-    const listingId = String(form.get("listingId") ?? "");
-    if (!fromPassId) {
-      return send(request, `${agentsPath()}?error=pass`);
+  if (intent === "lot") {
+    if (!pass) {
+      return fail(request, agentsPath(), "pass");
     }
-    if (!agentPassById(toPassId) || toPassId === fromPassId) {
-      return send(request, `${agentsPath()}?error=subject`);
+    const askCents = parseAskCents(String(form.get("ask") ?? ""));
+    const asset = String(form.get("asset") ?? "") as AgentAsset;
+    if (askCents === null || !ASSETS.has(asset)) {
+      return fail(request, `${agentsPath()}`, "ask");
     }
-    if (!isTradeableListing(listingById(listingId))) {
-      return send(request, `${agentsPath()}?error=listing`);
+    const result = await insertLot(
+      {
+        sellerHandle: pass.handle,
+        title: String(form.get("title") ?? ""),
+        askCents,
+        asset,
+      },
+      snapshot,
+    );
+    if (!result.ok) {
+      return fail(request, agentsPath(), result.reason, result.cookies);
     }
-    const next = writeOpenTrade(raw, { fromPassId, toPassId, listingId });
-    const parsed = parseAgentTalkCookie(next);
-    const slip = parsed.trades[0]?.id;
-    const dest = slip ? `${agentsPath()}?slip=${encodeURIComponent(slip)}` : agentsPath();
-    return send(request, dest, next);
+    return send(request, agentsPath(), result.cookies);
   }
 
-  if (intent === "confirm") {
+  if (intent === "take") {
+    if (!pass) {
+      return fail(request, agentsPath(), "pass");
+    }
+    const result = await insertTrade(
+      {
+        lotId: String(form.get("lotId") ?? ""),
+        takerHandle: pass.handle,
+      },
+      snapshot,
+    );
+    if (!result.ok) {
+      return fail(request, agentsPath(), result.reason, result.cookies);
+    }
+    return send(
+      request,
+      `${agentsPath()}?slip=${encodeURIComponent(result.value.id)}`,
+      result.cookies,
+    );
+  }
+
+  if (intent === "confirm" || intent === "void") {
     const tradeId = String(form.get("tradeId") ?? "");
-    const existing = state.trades.find((trade) => trade.id === tradeId);
-    if (!existing) {
-      return send(request, `${agentsPath()}?error=missing`);
+    const result =
+      intent === "confirm"
+        ? await confirmTrade(tradeId, snapshot)
+        : await voidTrade(tradeId, snapshot);
+    if (!result.ok) {
+      return fail(request, agentsPath(), result.reason, result.cookies);
     }
-    const next = writeConfirmTrade(raw, tradeId);
     return send(
       request,
       `${agentsPath()}?slip=${encodeURIComponent(tradeId)}`,
-      next,
+      result.cookies,
     );
   }
 

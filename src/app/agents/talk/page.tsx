@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { AgentTalkBoard } from "@/components/agents/agent-talk-board";
-import { AGENT_TALK_COOKIE, parseAgentTalkCookie } from "@/lib/agent-talk";
+import {
+  loadAgentRowFloor,
+  snapshotFromRequestCookies,
+} from "@/lib/agent-row-io";
 import { agentTalkMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +20,8 @@ export default async function AgentTalkPage({ searchParams }: TalkPageProps) {
   const query = searchParams ? await searchParams : {};
   const error = Array.isArray(query.error) ? query.error[0] : query.error;
   const jar = await cookies();
-  const state = parseAgentTalkCookie(jar.get(AGENT_TALK_COOKIE)?.value);
+  const snapshot = snapshotFromRequestCookies((name) => jar.get(name)?.value);
+  const floor = await loadAgentRowFloor(snapshot);
 
-  return <AgentTalkBoard state={state} error={error} />;
+  return <AgentTalkBoard floor={floor} error={error} />;
 }

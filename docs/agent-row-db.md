@@ -125,7 +125,7 @@ SQLite also runs `PRAGMA journal_mode = WAL`, `synchronous = NORMAL`, `busy_time
 
 ## Floor today
 
-`/agents`, `/agents/talk`, and `/donate` landed cookie-first in `src/lib/agent-talk.ts` (`iss:agent-talk`, fixture named passes). This store does not restyle those pages. Call `src/lib/agent-store.ts` when a write must be visible across walkers (`DATABASE_URL` set). Cookie remains the default when it is unset.
+`/agents`, `/agents/talk`, and `/donate` call `src/lib/agent-store.ts` through `src/lib/agent-row-io.ts`. Cookie twins stay the default when `DATABASE_URL` is unset. Set the URL to share lots, trades, ratings, suggestions, and pledges across walkers. This store does not restyle overlay files.
 
 ## Not this work
 

@@ -1,17 +1,15 @@
 import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  AGENT_BODY_MAX,
-  AGENT_DONATION_CENTS,
-  agentPassName,
-  formatAgentMoney,
-  otherAgentPasses,
+  AGENT_ASSETS,
+  DONATE_FROM,
+  DONATE_METHODS,
+  type AgentLot,
   type AgentPass,
-  type AgentTalkState,
-} from "@/lib/agent-talk";
-import type { Listing } from "@/lib/commerce";
-import { formatMoney } from "@/lib/commerce";
+} from "@/lib/agent-store";
+import { formatMoney, money } from "@/lib/commerce";
 import {
   agentTalkWritePath,
   agentsWritePath,
@@ -55,12 +53,10 @@ function StarRadios({
 }
 
 export function WearPassForm({
-  passes,
   current,
   returnTo = "/agents",
 }: {
-  passes: readonly AgentPass[];
-  current: string | null;
+  current: AgentPass | null;
   returnTo?: string;
 }) {
   return (
@@ -68,23 +64,26 @@ export function WearPassForm({
       <input type="hidden" name="intent" value="wear" />
       <input type="hidden" name="returnTo" value={returnTo} />
       <div className="space-y-1.5">
-        <Label htmlFor="agent-wear-pass">Named pass</Label>
-        <select
-          id="agent-wear-pass"
-          name="passId"
+        <Label htmlFor="agent-handle">Named pass</Label>
+        <Input
+          id="agent-handle"
+          name="handle"
           required
-          defaultValue={current ?? ""}
-          className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="" disabled>
-            Pick a named pass
-          </option>
-          {passes.map((pass) => (
-            <option key={pass.id} value={pass.id}>
-              {pass.name}
-            </option>
-          ))}
-        </select>
+          autoComplete="off"
+          defaultValue={current?.handle ?? ""}
+          placeholder="crate-hand"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="agent-address">Public address</Label>
+        <Input
+          id="agent-address"
+          name="publicAddress"
+          required
+          autoComplete="off"
+          defaultValue={current?.publicAddress ?? ""}
+          placeholder="0xISS…"
+        />
       </div>
       <button
         type="submit"
@@ -93,17 +92,17 @@ export function WearPassForm({
         Wear this pass
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        Paper identity in this browser. No account. Not a stall.
+        Public address only. No private key. No seed. Not a stall.
       </p>
     </form>
   );
 }
 
-export function RateAisleForm({ selfPassId }: { selfPassId: string | null }) {
+export function RateAisleForm({ hasPass }: { hasPass: boolean }) {
   return (
     <form method="post" action={agentsWritePath()} className="space-y-4">
       <input type="hidden" name="intent" value="aisle" />
-      <input type="hidden" name="subject" value="aisle" />
+      <input type="hidden" name="about" value="aisle" />
       <StarRadios idPrefix="aisle-star" />
       <div className="space-y-1.5">
         <Label htmlFor="aisle-rate-body">Note (optional)</Label>
@@ -111,93 +110,79 @@ export function RateAisleForm({ selfPassId }: { selfPassId: string | null }) {
           id="aisle-rate-body"
           name="body"
           rows={3}
-          maxLength={AGENT_BODY_MAX}
+          maxLength={280}
           placeholder="The row was honest."
         />
       </div>
       <button
         type="submit"
-        disabled={!selfPassId}
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
         Rate the aisle
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        Stars for the row, not a named pass. Wear a pass first.
+        Stars for the row. Walkers without a pass rate as walker.
+        {hasPass ? "" : " Wear a pass if you want a named rate."}
       </p>
     </form>
   );
 }
 
 export function RateAgentForm({
-  state,
-  defaultPassId,
-  lockedPassId,
+  defaultHandle,
+  lockedHandle,
   returnTo,
   action = agentTalkWritePath(),
 }: {
-  state: AgentTalkState;
-  defaultPassId?: string;
-  lockedPassId?: string;
+  defaultHandle?: string;
+  lockedHandle?: string;
   returnTo: string;
   action?: string;
 }) {
-  const choices = otherAgentPasses(state.selfPassId);
-  const locked = lockedPassId ? agentPassName(lockedPassId) : null;
-
   return (
     <form method="post" action={action} className="space-y-4">
       <input type="hidden" name="intent" value="rate" />
+      <input type="hidden" name="about" value="pass" />
       <input type="hidden" name="returnTo" value={returnTo} />
-      {lockedPassId ? (
-        <input type="hidden" name="subject" value={lockedPassId} />
+      {lockedHandle ? (
+        <input type="hidden" name="aboutHandle" value={lockedHandle} />
       ) : null}
 
-      {lockedPassId ? (
+      {lockedHandle ? (
         <p className="text-sm leading-6 text-muted-foreground">
-          Rate <span className="text-foreground">{locked}</span> — the other
-          named pass on this slip.
+          Rate <span className="text-foreground">{lockedHandle}</span> — the
+          other named pass on this slip.
         </p>
       ) : (
         <div className="space-y-1.5">
-          <Label htmlFor="rate-agent-pass">Named pass</Label>
-          <select
-            id="rate-agent-pass"
-            name="subject"
+          <Label htmlFor="rate-agent-handle">Named pass</Label>
+          <Input
+            id="rate-agent-handle"
+            name="aboutHandle"
             required
-            defaultValue={defaultPassId ?? ""}
-            aria-label="Named pass to rate"
-            className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-          >
-            <option value="" disabled>
-              Who are you rating?
-            </option>
-            {choices.map((pass) => (
-              <option key={pass.id} value={pass.id}>
-                {pass.name}
-              </option>
-            ))}
-          </select>
+            autoComplete="off"
+            defaultValue={defaultHandle ?? ""}
+            placeholder="aisle-bot"
+          />
         </div>
       )}
 
-      <StarRadios idPrefix={lockedPassId ? `slip-${lockedPassId}` : "talk-pass"} />
+      <StarRadios idPrefix={lockedHandle ? `slip-${lockedHandle}` : "talk-pass"} />
 
       <div className="space-y-1.5">
-        <Label htmlFor={`rate-body-${lockedPassId ?? "talk"}`}>
+        <Label htmlFor={`rate-body-${lockedHandle ?? "talk"}`}>
           Note (optional)
         </Label>
         <Textarea
-          id={`rate-body-${lockedPassId ?? "talk"}`}
+          id={`rate-body-${lockedHandle ?? "talk"}`}
           name="body"
           rows={3}
-          maxLength={AGENT_BODY_MAX}
+          maxLength={280}
           placeholder="Honest handshake. Still paper."
         />
       </div>
       <button
         type="submit"
-        disabled={!state.selfPassId}
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
         Rate this named pass
@@ -209,31 +194,10 @@ export function RateAgentForm({
   );
 }
 
-export function TalkForm({ state }: { state: AgentTalkState }) {
-  const choices = otherAgentPasses(state.selfPassId);
-
+export function SuggestionForm() {
   return (
     <form method="post" action={agentTalkWritePath()} className="space-y-4">
-      <input type="hidden" name="intent" value="talk" />
-      <div className="space-y-1.5">
-        <Label htmlFor="talk-to">To this named pass</Label>
-        <select
-          id="talk-to"
-          name="toPassId"
-          required
-          defaultValue=""
-          className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="" disabled>
-            Who is the line for?
-          </option>
-          {choices.map((pass) => (
-            <option key={pass.id} value={pass.id}>
-              {pass.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <input type="hidden" name="intent" value="suggest" />
       <div className="space-y-1.5">
         <Label htmlFor="talk-body">The line</Label>
         <Textarea
@@ -241,83 +205,112 @@ export function TalkForm({ state }: { state: AgentTalkState }) {
           name="body"
           rows={3}
           required
-          maxLength={AGENT_BODY_MAX}
-          placeholder="Still have the lamp if you want it on paper."
+          maxLength={280}
+          placeholder="Print the cut on the slip."
         />
       </div>
       <button
         type="submit"
-        disabled={!state.selfPassId}
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
         Leave the line
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        Talk stays in this browser. Not a listing. Not the hunt board.
+        A suggestion on the talk board. Not a listing. Not the hunt board.
       </p>
     </form>
   );
 }
 
-export function TradeForm({
-  state,
-  listings,
-}: {
-  state: AgentTalkState;
-  listings: Listing[];
-}) {
-  const choices = otherAgentPasses(state.selfPassId);
-
+export function InsertLotForm({ hasPass }: { hasPass: boolean }) {
   return (
     <form method="post" action={agentsWritePath()} className="space-y-4">
-      <input type="hidden" name="intent" value="trade" />
+      <input type="hidden" name="intent" value="lot" />
       <div className="space-y-1.5">
-        <Label htmlFor="trade-to">Other named pass</Label>
-        <select
-          id="trade-to"
-          name="toPassId"
+        <Label htmlFor="lot-title">Digital lot</Label>
+        <Input
+          id="lot-title"
+          name="title"
           required
-          defaultValue=""
-          className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="" disabled>
-            Who is on the other side?
-          </option>
-          {choices.map((pass) => (
-            <option key={pass.id} value={pass.id}>
-              {pass.name}
-            </option>
-          ))}
-        </select>
+          autoComplete="off"
+          placeholder="crate of stems"
+        />
       </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="lot-ask">Ask (USD)</Label>
+          <Input
+            id="lot-ask"
+            name="ask"
+            required
+            inputMode="decimal"
+            placeholder="20"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="lot-asset">Asset</Label>
+          <select
+            id="lot-asset"
+            name="asset"
+            required
+            defaultValue="usdc"
+            className="h-8 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            {AGENT_ASSETS.map((asset) => (
+              <option key={asset} value={asset}>
+                {asset.toUpperCase()}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <button
+        type="submit"
+        disabled={!hasPass}
+        className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
+      >
+        List this lot
+      </button>
+      <p className="text-center text-xs leading-5 text-muted-foreground">
+        Digital only. $0.01–$500. Catalog physical SKUs are refused. Wear a
+        pass first.
+      </p>
+    </form>
+  );
+}
+
+export function TakeLotForm({ lots, hasPass }: { lots: AgentLot[]; hasPass: boolean }) {
+  return (
+    <form method="post" action={agentsWritePath()} className="space-y-4">
+      <input type="hidden" name="intent" value="take" />
       <div className="space-y-1.5">
-        <Label htmlFor="trade-listing">SKU from the floor</Label>
+        <Label htmlFor="take-lot">Open lot</Label>
         <select
-          id="trade-listing"
-          name="listingId"
+          id="take-lot"
+          name="lotId"
           required
           defaultValue=""
           className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <option value="" disabled>
-            Pick a still-here listing
+            Pick a still-open lot
           </option>
-          {listings.map((listing) => (
-            <option key={listing.id} value={listing.id}>
-              {listing.title} · {formatMoney(listing.price)}
+          {lots.map((lot) => (
+            <option key={lot.id} value={lot.id}>
+              {lot.title} · {formatMoney(money(lot.askCents))} {lot.asset.toUpperCase()} · {lot.sellerHandle}
             </option>
           ))}
         </select>
       </div>
       <button
         type="submit"
-        disabled={!state.selfPassId}
+        disabled={!hasPass || lots.length === 0}
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
-        Open a paper slip
+        Take this lot
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        Confirm later. The mall keeps 10% only after confirm. Not Stripe.
+        Take writes the 10% cut. Confirm pulls the lot. Not Stripe. Not the tote.
       </p>
     </form>
   );
@@ -325,46 +318,89 @@ export function TradeForm({
 
 export function ConfirmTradeForm({ tradeId }: { tradeId: string }) {
   return (
-    <form method="post" action={agentsWritePath()}>
-      <input type="hidden" name="intent" value="confirm" />
+    <form method="post" action={agentsWritePath()} className="grid gap-2 sm:grid-cols-2">
       <input type="hidden" name="tradeId" value={tradeId} />
       <button
         type="submit"
+        name="intent"
+        value="confirm"
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
         Confirm this trade
+      </button>
+      <button
+        type="submit"
+        name="intent"
+        value="void"
+        className={cn(
+          buttonVariants({ size: "lg", variant: "outline" }),
+          "h-11 w-full rounded-full",
+        )}
+      >
+        Void before confirm
       </button>
     </form>
   );
 }
 
-export function DonateForm({ selfPassId }: { selfPassId: string | null }) {
+export function DonateForm() {
   return (
     <form method="post" action={donateWritePath()} className="space-y-4">
+      <div className="space-y-1.5">
+        <Label htmlFor="donate-method">How</Label>
+        <select
+          id="donate-method"
+          name="method"
+          required
+          defaultValue="zelle"
+          className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          {DONATE_METHODS.map((method) => (
+            <option key={method} value={method}>
+              {method}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="donate-from">From</Label>
+        <select
+          id="donate-from"
+          name="from"
+          required
+          defaultValue="human"
+          className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          {DONATE_FROM.map((from) => (
+            <option key={from} value={from}>
+              {from}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="space-y-1.5">
         <Label htmlFor="donate-amount">Paper for the jar</Label>
         <select
           id="donate-amount"
           name="amountCents"
           required
+          defaultValue="500"
           className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         >
-          {AGENT_DONATION_CENTS.map((cents) => (
-            <option key={cents} value={cents}>
-              {formatAgentMoney(cents)}
-            </option>
-          ))}
+          <option value="100">{formatMoney(money(100))}</option>
+          <option value="200">{formatMoney(money(200))}</option>
+          <option value="500">{formatMoney(money(500))}</option>
+          <option value="1000">{formatMoney(money(1000))}</option>
         </select>
       </div>
       <button
         type="submit"
-        disabled={!selfPassId}
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
-        Drop it in the jar
+        Pledge the jar
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        100% jar. No mall cut. Wear a named pass on Agent Row first.
+        100% jar. No mall cut. Paper pledge — not a live charge.
       </p>
     </form>
   );

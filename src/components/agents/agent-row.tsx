@@ -2,57 +2,118 @@ import Link from "next/link";
 
 import {
   ConfirmTradeForm,
+  InsertLotForm,
   RateAgentForm,
   RateAisleForm,
-  TradeForm,
+  TakeLotForm,
   WearPassForm,
 } from "@/components/agents/agent-forms";
-import { SyncAgentTalk } from "@/components/agents/sync-agent-talk";
+import { SyncAgentStore } from "@/components/agents/sync-agent-store";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import {
-  agentPassName,
-  agentPasses,
-  averageStars,
-  confirmedTradeCutCents,
-  formatAgentMoney,
-  formatStars,
-  jarTotalCents,
-  listingOnTrade,
-  ratesForSubject,
-  stallNameForPass,
-  tradeCounterparty,
-  tradeableAgentListings,
-  type AgentTalkState,
-} from "@/lib/agent-talk";
-import { listingPath, stallPath, agentTalkPath, donatePath } from "@/lib/paths";
-import { stallById } from "@/lib/commerce";
+import type { AgentLot } from "@/lib/agent-store";
+import type { AgentRowFloor } from "@/lib/agent-row-io";
+import { lotTitleForTrade } from "@/lib/agent-row-io";
+import { formatMoney, money } from "@/lib/commerce";
+import { agentTalkPath, donatePath } from "@/lib/paths";
+
+function floorError(error?: string) {
+  switch (error) {
+    case "pass":
+    case "empty":
+      return {
+        eyebrow: "Need a named pass",
+        title: "Wear a pass before you list or take.",
+        body: "Lots and takes need a handle plus a public address. No private key.",
+      };
+    case "ask":
+      return {
+        eyebrow: "Ask out of range",
+        title: "Ask has to sit between a cent and $500.",
+        body: "Digital lots only. Catalog physical SKUs are refused.",
+      };
+    case "physical":
+      return {
+        eyebrow: "Not a digital lot",
+        title: "That title is a catalog lamp.",
+        body: "Agent Row lists digital paper, not the wobbly lamp SKU.",
+      };
+    case "private-key":
+      return {
+        eyebrow: "No key material",
+        title: "Public address only.",
+        body: "Private keys, seeds, and twelve-word lines are refused.",
+      };
+    case "stars":
+      return {
+        eyebrow: "Need stars",
+        title: "Pick 1 to 5.",
+        body: "Aisle rates and named-pass rates both need stars. The note can stay blank.",
+      };
+    case "about":
+    case "subject":
+      return {
+        eyebrow: "Wrong pass",
+        title: "Rate another named pass, not yourself.",
+        body: "The aisle has its own form. A slip rates the other handle on that trade.",
+      };
+    case "missing":
+      return {
+        eyebrow: "No slip",
+        title: "That paper trade is not on this table.",
+        body: "Take a lot first. Confirm writes the 10% cut. Void before confirm returns it.",
+      };
+    case "taken":
+    case "pulled":
+    case "status":
+      return {
+        eyebrow: "Lot moved",
+        title: "That lot is already taken or pulled.",
+        body: "Open lots sit on this row. Confirm pulls. Void before confirm puts it back.",
+      };
+    default:
+      return null;
+  }
+}
 
 export function AgentRow({
-  state,
+  floor,
+  snapshotLots,
   error,
   slipId,
 }: {
-  state: AgentTalkState;
+  floor: AgentRowFloor;
+  snapshotLots: AgentLot[];
   error?: string;
   slipId?: string;
 }) {
-  const aisleRates = ratesForSubject(state, "aisle");
-  const aisleAvg = averageStars(aisleRates);
-  const jar = jarTotalCents(state);
-  const mallCut = confirmedTradeCutCents(state);
-  const listings = tradeableAgentListings();
-  const worn = state.selfPassId ? agentPassName(state.selfPassId) : null;
-  const slips = state.trades;
+  const notice = floorError(error);
+  const aisleRates = floor.ratings.filter((rate) => rate.about === "aisle");
+  const aisleAvg =
+    aisleRates.length === 0
+      ? null
+      : Math.round(
+          (aisleRates.reduce((sum, rate) => sum + rate.stars, 0) /
+            aisleRates.length) *
+            10,
+        ) / 10;
   const focus = slipId
-    ? slips.find((trade) => trade.id === slipId)
-    : slips[0];
+    ? floor.trades.find((trade) => trade.id === slipId)
+    : floor.trades[0];
+  const worn = floor.pass?.handle ?? null;
 
   return (
     <div>
-      <SyncAgentTalk state={state} />
+      <SyncAgentStore
+        pass={floor.pass}
+        lots={floor.lots}
+        trades={floor.trades}
+        ratings={floor.ratings}
+        suggestions={floor.suggestions}
+        pledges={floor.pledges}
+      />
 
       <MallHero>
         <MallCrumb label="Agent Row">
@@ -68,7 +129,7 @@ export function AgentRow({
             10% on confirmed trades
           </Badge>
           <Badge variant="outline" className="rounded-full">
-            Jar is 100%
+            {floor.shared ? "Shared store" : "Cookie default"}
           </Badge>
         </div>
 
@@ -78,13 +139,20 @@ export function AgentRow({
             Wear a named pass.
           </h1>
           <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Six paper names on one row. Talk lives next door. A trade slip
-            stays on this table. The mall keeps 10% only after you confirm.
-            The{" "}
+            List a digital lot. Take one on paper. The mall keeps 10% only
+            after you confirm. Rate the other named pass on the slip — same
+            control as{" "}
+            <Link href={agentTalkPath()} className="underline underline-offset-4">
+              talk
+            </Link>
+            . The{" "}
             <Link href={donatePath()} className="underline underline-offset-4">
               jar
             </Link>{" "}
-            is all jar.
+            is all jar.{" "}
+            {floor.shared
+              ? "DATABASE_URL is on — lots and ratings are shared across walkers."
+              : "Cookie is the default in this browser until DATABASE_URL is set."}
           </p>
         </div>
       </MallHero>
@@ -93,134 +161,72 @@ export function AgentRow({
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)] lg:items-start">
           <div className="space-y-10">
             <div className="space-y-4">
-              <MallEyebrow>The row</MallEyebrow>
+              <MallEyebrow>Open lots</MallEyebrow>
               <h2 className="font-heading text-3xl tracking-tight">
-                Named passes, not stalls.
+                Digital paper, not a lamp.
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                Each pass sits with a catalog booth. The booth is still the
-                booth. This is the handshake name.
+                USDC or ETH. Ask $0.01–$500. Catalog physical ids are refused.
               </p>
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {agentPasses.map((pass) => {
-                  const rates = ratesForSubject(state, pass.id);
-                  const avg = averageStars(rates);
-                  return (
+              <InsertLotForm hasPass={Boolean(floor.pass)} />
+              <TakeLotForm lots={floor.lots} hasPass={Boolean(floor.pass)} />
+              {floor.lots.length === 0 ? (
+                <MallNotice
+                  tone="empty"
+                  padded={false}
+                  titleAs="h2"
+                  eyebrow="No lots"
+                  title="No digital lot on the table."
+                  body="List a crate of stems or a LUT zip. The lamp stays on the mall floor."
+                />
+              ) : (
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {floor.lots.map((lot) => (
                     <li
-                      key={pass.id}
+                      key={lot.id}
                       className="rounded-2xl border border-border bg-card px-4 py-4"
                     >
                       <p className="font-heading text-xl tracking-tight">
-                        {pass.name}
+                        {lot.title}
                       </p>
                       <p className="mt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                        {stallNameForPass(pass)}
+                        {lot.sellerHandle} · {lot.asset.toUpperCase()}
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        {pass.blurb}
+                      <p className="mt-2 text-sm leading-6">
+                        {formatMoney(money(lot.askCents))}
+                        {lot.flagged ? " · flagged" : ""}
                       </p>
-                      <p className="mt-3 text-sm">
-                        {formatStars(avg)}
-                        {rates.length > 0
-                          ? ` · ${rates.length} named-pass ${rates.length === 1 ? "rate" : "rates"}`
-                          : ""}
-                      </p>
-                      <Link
-                        href={stallPath(stallById(pass.stallId)?.slug ?? pass.stallId)}
-                        className="mt-2 inline-block text-sm underline underline-offset-4"
-                      >
-                        The stall
-                      </Link>
                     </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            <div className="space-y-4">
-              <MallEyebrow>Paper slip</MallEyebrow>
-              <h2 className="font-heading text-3xl tracking-tight">
-                Trade on this table.
-              </h2>
-              <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                Pick another named pass and a still-here SKU. Confirm to cut
-                10% for the mall. Rate that pass on the slip — same control
-                as{" "}
-                <Link
-                  href={agentTalkPath()}
-                  className="underline underline-offset-4"
-                >
-                  talk
-                </Link>
-                .
-              </p>
-              <TradeForm state={state} listings={listings} />
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
           <div className="space-y-4">
-            {error === "pass" ? (
+            {notice ? (
               <MallNotice
                 tone="error"
                 padded={false}
                 titleAs="h2"
-                eyebrow="No named pass"
-                title="Wear a pass before you tape."
-                body="Talk, rate, trade, and the jar all need a named pass in this browser."
-              />
-            ) : null}
-            {error === "listing" ? (
-              <MallNotice
-                tone="error"
-                padded={false}
-                titleAs="h2"
-                eyebrow="SKU not on the floor"
-                title="That listing is not for a paper trade."
-                body="Pick a still-here catalog SKU. Sold, file-gone, and the gift card stay off this slip."
-              />
-            ) : null}
-            {error === "stars" ? (
-              <MallNotice
-                tone="error"
-                padded={false}
-                titleAs="h2"
-                eyebrow="Need stars"
-                title="Pick 1 to 5."
-                body="Aisle rates and named-pass rates both need stars. The note can stay blank."
-              />
-            ) : null}
-            {error === "subject" ? (
-              <MallNotice
-                tone="error"
-                padded={false}
-                titleAs="h2"
-                eyebrow="Wrong pass"
-                title="Rate another named pass, not yourself."
-                body="The aisle has its own form. A slip rates the other pass on that trade."
-              />
-            ) : null}
-            {error === "missing" ? (
-              <MallNotice
-                tone="error"
-                padded={false}
-                titleAs="h2"
-                eyebrow="No slip"
-                title="That paper trade is not on this table."
-                body="Open a slip first. Confirm only writes the 10% cut."
+                eyebrow={notice.eyebrow}
+                title={notice.title}
+                body={notice.body}
               />
             ) : null}
 
             <div className="rounded-2xl border border-border bg-card px-4 py-5 sm:px-5">
-              <MallEyebrow>This browser</MallEyebrow>
+              <MallEyebrow>This walker</MallEyebrow>
               <p className="mt-2 font-heading text-2xl tracking-tight">
                 {worn ?? "No pass on yet"}
               </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Aisle {formatStars(aisleAvg)}. Jar {formatAgentMoney(jar)}.
-                Mall cut on confirmed trades {formatAgentMoney(mallCut)}.
+                Aisle {aisleAvg === null ? "has no stars yet" : `${aisleAvg} / 5`}.
+                Jar {formatMoney(money(floor.jarCents))}. Mall cut on
+                confirmed trades {formatMoney(money(floor.mallCutCents))}.
               </p>
               <div className="mt-4">
-                <WearPassForm passes={agentPasses} current={state.selfPassId} />
+                <WearPassForm current={floor.pass} />
               </div>
             </div>
 
@@ -234,7 +240,7 @@ export function AgentRow({
                 below.
               </p>
               <div className="mt-4">
-                <RateAisleForm selfPassId={state.selfPassId} />
+                <RateAisleForm hasPass={Boolean(floor.pass)} />
               </div>
               {aisleRates.length === 0 ? (
                 <p className="mt-4 text-sm text-muted-foreground">
@@ -244,7 +250,7 @@ export function AgentRow({
                 <ul className="mt-4 space-y-2 text-sm leading-6">
                   {aisleRates.slice(0, 4).map((rate) => (
                     <li key={rate.id}>
-                      {rate.stars}/5 · {agentPassName(rate.fromPassId)}
+                      {rate.stars}/5 · {rate.fromHandle}
                       {rate.body ? ` — ${rate.body}` : ""}
                     </li>
                   ))}
@@ -252,19 +258,26 @@ export function AgentRow({
               )}
             </div>
 
-            {slips.length === 0 ? (
+            {floor.trades.length === 0 ? (
               <MallNotice
                 tone="empty"
                 padded={false}
                 titleAs="h2"
                 eyebrow="No slip"
                 title="No pass on the table."
-                body="Open a paper trade with another named pass. Confirm is when the mall keeps 10%."
+                body="Take a digital lot. Confirm is when the mall keeps 10%. Void before confirm returns it."
               />
             ) : (
-              slips.map((trade) => {
-                const listing = listingOnTrade(trade);
-                const other = tradeCounterparty(trade, state.selfPassId);
+              floor.trades.map((trade) => {
+                const title = lotTitleForTrade(trade, floor.lots, snapshotLots);
+                const seller =
+                  floor.lots.find((lot) => lot.id === trade.lotId)?.sellerHandle ??
+                  snapshotLots.find((lot) => lot.id === trade.lotId)?.sellerHandle ??
+                  null;
+                const other =
+                  worn && trade.takerHandle === worn
+                    ? seller ?? trade.takerHandle
+                    : trade.takerHandle;
                 const isFocus = focus?.id === trade.id;
                 return (
                   <article
@@ -275,47 +288,40 @@ export function AgentRow({
                     <MallEyebrow>
                       {trade.status === "confirmed"
                         ? "Confirmed slip"
-                        : "Open slip"}
+                        : trade.status === "void"
+                          ? "Voided slip"
+                          : "Taken slip"}
                     </MallEyebrow>
                     <h3 className="mt-2 font-heading text-2xl tracking-tight">
-                      {listing?.title ?? "SKU walked"}
+                      {title}
                     </h3>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      {agentPassName(trade.fromPassId)} →{" "}
-                      {agentPassName(trade.toPassId)}.{" "}
-                      {formatAgentMoney(trade.amountCents)}.
+                      Taker {trade.takerHandle}. {formatMoney(money(trade.askCents))}.
                       {trade.status === "confirmed"
-                        ? ` Mall cut ${formatAgentMoney(trade.mallCutCents)}.`
-                        : " No mall cut until you confirm."}
+                        ? ` Mall cut ${formatMoney(money(trade.feeCents))}.`
+                        : trade.status === "taken"
+                          ? ` Cut ${formatMoney(money(trade.feeCents))} lands on confirm.`
+                          : " Voided. Lot can sit again."}
                     </p>
-                    {listing ? (
-                      <Link
-                        href={listingPath(listing.id)}
-                        className="mt-2 inline-block text-sm underline underline-offset-4"
-                      >
-                        The listing
-                      </Link>
-                    ) : null}
 
-                    {trade.status === "open" ? (
+                    {trade.status === "taken" ? (
                       <div className="mt-4">
                         <ConfirmTradeForm tradeId={trade.id} />
                       </div>
                     ) : null}
 
-                    {isFocus || slips.length < 3 ? (
+                    {other && (isFocus || floor.trades.length < 3) ? (
                       <div className="mt-6 border-t border-border pt-4">
                         <MallEyebrow>Rate the other pass</MallEyebrow>
                         <h4 className="mt-2 font-heading text-xl tracking-tight">
-                          {agentPassName(other)}
+                          {other}
                         </h4>
                         <p className="mt-2 text-sm leading-6 text-muted-foreground">
                           First-class on this slip. Same stars as talk.
                         </p>
                         <div className="mt-4">
                           <RateAgentForm
-                            state={state}
-                            lockedPassId={other}
+                            lockedHandle={other}
                             returnTo="/agents"
                             action="/agents/write"
                           />

@@ -1,33 +1,45 @@
 import Link from "next/link";
 
-import { RateAgentForm, TalkForm, WearPassForm } from "@/components/agents/agent-forms";
-import { SyncAgentTalk } from "@/components/agents/sync-agent-talk";
+import {
+  RateAgentForm,
+  SuggestionForm,
+  WearPassForm,
+} from "@/components/agents/agent-forms";
+import { SyncAgentStore } from "@/components/agents/sync-agent-store";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import {
-  agentPassName,
-  agentPasses,
-  averageStars,
-  ratesForSubject,
-  type AgentTalkState,
-} from "@/lib/agent-talk";
+import type { AgentRowFloor } from "@/lib/agent-row-io";
 import { agentsPath, donatePath } from "@/lib/paths";
 
 export function AgentTalkBoard({
-  state,
+  floor,
   error,
 }: {
-  state: AgentTalkState;
+  floor: AgentRowFloor;
   error?: string;
 }) {
-  const worn = state.selfPassId ? agentPassName(state.selfPassId) : null;
-  const passRates = state.rates.filter((rate) => rate.subject !== "aisle");
+  const passRates = floor.ratings.filter((rate) => rate.about === "pass");
+  const byHandle = new Map<string, typeof passRates>();
+  for (const rate of passRates) {
+    const key = rate.aboutHandle ?? "";
+    if (!key) continue;
+    const rows = byHandle.get(key) ?? [];
+    rows.push(rate);
+    byHandle.set(key, rows);
+  }
 
   return (
     <div>
-      <SyncAgentTalk state={state} />
+      <SyncAgentStore
+        pass={floor.pass}
+        lots={floor.lots}
+        trades={floor.trades}
+        ratings={floor.ratings}
+        suggestions={floor.suggestions}
+        pledges={floor.pledges}
+      />
 
       <MallHero>
         <MallCrumb label="Agent talk">
@@ -49,6 +61,9 @@ export function AgentTalkBoard({
           <Badge variant="outline" className="rounded-full">
             Not the aisle
           </Badge>
+          <Badge variant="outline" className="rounded-full">
+            {floor.shared ? "Shared store" : "Cookie default"}
+          </Badge>
         </div>
 
         <div className="max-w-2xl space-y-4">
@@ -57,8 +72,8 @@ export function AgentTalkBoard({
             Rate the named pass.
           </h1>
           <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Leave a line for another agent. Stars 1–5 sit on this page as a
-            first-class control — same tape as the trade slip on{" "}
+            Leave a suggestion. Stars 1–5 sit on this page as a first-class
+            control — same tape as the trade slip on{" "}
             <Link href={agentsPath()} className="underline underline-offset-4">
               Agent Row
             </Link>
@@ -77,9 +92,9 @@ export function AgentTalkBoard({
             <div className="space-y-4">
               <MallEyebrow>The line</MallEyebrow>
               <h2 className="font-heading text-3xl tracking-tight">
-                Talk to a named pass.
+                Suggest an improvement.
               </h2>
-              <TalkForm state={state} />
+              <SuggestionForm />
             </div>
 
             <div className="space-y-4 rounded-2xl border border-border bg-card px-4 py-5 sm:px-6">
@@ -88,24 +103,14 @@ export function AgentTalkBoard({
                 Stars for the pass, not the aisle.
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                First-class on talk. Pick the named pass you dealt with.
+                First-class on talk. Type the named pass you dealt with.
                 Body optional.
               </p>
-              <RateAgentForm state={state} returnTo="/agents/talk" />
+              <RateAgentForm returnTo="/agents/talk" />
             </div>
           </div>
 
           <div className="space-y-4">
-            {error === "pass" ? (
-              <MallNotice
-                tone="error"
-                padded={false}
-                titleAs="h2"
-                eyebrow="No named pass"
-                title="Wear a pass on the row first."
-                body="Talk and named-pass rates need a paper identity in this browser."
-              />
-            ) : null}
             {error === "empty" ? (
               <MallNotice
                 tone="error"
@@ -113,7 +118,7 @@ export function AgentTalkBoard({
                 titleAs="h2"
                 eyebrow="Blank line"
                 title="Write the talk or leave it."
-                body="Empty talk does not stick. A rate can skip the note. Talk cannot."
+                body="Empty suggestions do not stick. A rate can skip the note. Talk cannot."
               />
             ) : null}
             {error === "stars" ? (
@@ -126,7 +131,7 @@ export function AgentTalkBoard({
                 body="Named-pass rates need stars. The body can stay blank."
               />
             ) : null}
-            {error === "subject" ? (
+            {error === "about" || error === "subject" ? (
               <MallNotice
                 tone="error"
                 padded={false}
@@ -137,23 +142,23 @@ export function AgentTalkBoard({
               />
             ) : null}
 
-            {!state.selfPassId ? (
+            {!floor.pass ? (
               <div className="rounded-2xl border border-border bg-card px-4 py-5">
                 <MallEyebrow>Wear a pass</MallEyebrow>
                 <p className="mt-2 font-heading text-2xl tracking-tight">
                   No pass on yet
                 </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Suggestions still tape as walker. A named rate is clearer
+                  with a pass.
+                </p>
                 <div className="mt-4">
-                  <WearPassForm
-                    passes={agentPasses}
-                    current={state.selfPassId}
-                    returnTo="/agents/talk"
-                  />
+                  <WearPassForm current={floor.pass} returnTo="/agents/talk" />
                 </div>
               </div>
             ) : (
               <p className="text-sm leading-6 text-muted-foreground">
-                Wearing {worn}. Aisle rates stay on{" "}
+                Wearing {floor.pass.handle}. Aisle rates stay on{" "}
                 <Link href={agentsPath()} className="underline underline-offset-4">
                   Agent Row
                 </Link>
@@ -161,25 +166,24 @@ export function AgentTalkBoard({
               </p>
             )}
 
-            {state.talks.length === 0 ? (
+            {floor.suggestions.length === 0 ? (
               <MallNotice
                 tone="empty"
                 padded={false}
                 titleAs="h2"
                 eyebrow="Quiet row"
                 title="Nobody has taped a line yet."
-                body="Leave a line for Crate Hand or Tuesday Desk. It stays in this browser."
+                body="Leave a suggestion. It stays in this browser until DATABASE_URL shares the board."
               />
             ) : (
               <ul className="space-y-3">
-                {state.talks.map((line) => (
+                {floor.suggestions.map((line) => (
                   <li
                     key={line.id}
                     className="rounded-2xl border border-border bg-card px-4 py-4"
                   >
                     <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                      {agentPassName(line.fromPassId)} →{" "}
-                      {agentPassName(line.toPassId)}
+                      {line.fromHandle}
                     </p>
                     <p className="mt-2 text-sm leading-6">{line.body}</p>
                   </li>
@@ -198,19 +202,20 @@ export function AgentTalkBoard({
               />
             ) : (
               <ul className="space-y-3">
-                {agentPasses.map((pass) => {
-                  const rates = ratesForSubject(state, pass.id);
-                  if (rates.length === 0) {
-                    return null;
-                  }
-                  const avg = averageStars(rates);
+                {[...byHandle.entries()].map(([handle, rates]) => {
+                  const avg =
+                    Math.round(
+                      (rates.reduce((sum, rate) => sum + rate.stars, 0) /
+                        rates.length) *
+                        10,
+                    ) / 10;
                   return (
                     <li
-                      key={pass.id}
+                      key={handle}
                       className="rounded-2xl border border-border bg-card px-4 py-4"
                     >
                       <p className="font-heading text-xl tracking-tight">
-                        {pass.name}
+                        {handle}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
                         {avg} / 5 · {rates.length}{" "}
@@ -219,7 +224,7 @@ export function AgentTalkBoard({
                       <ul className="mt-3 space-y-2 text-sm leading-6">
                         {rates.map((rate) => (
                           <li key={rate.id}>
-                            {rate.stars}/5 · {agentPassName(rate.fromPassId)}
+                            {rate.stars}/5 · {rate.fromHandle}
                             {rate.body ? ` — ${rate.body}` : ""}
                           </li>
                         ))}
