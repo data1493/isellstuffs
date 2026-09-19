@@ -603,6 +603,12 @@ import {
   subscribePancake,
 } from "@/lib/listing-pancake";
 import {
+  canTapeFlux,
+  isListingFluxOverlay,
+  readFluxListingIds,
+  subscribeFlux,
+} from "@/lib/listing-flux";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -807,6 +813,7 @@ import {
   listingBevelWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
+  listingFluxWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingScaleWritePath,
@@ -1011,6 +1018,7 @@ export function DeskBoard({
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
+  const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1147,6 +1155,7 @@ export function DeskBoard({
       setBevelIds(readBevelListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
+      setFluxIds(readFluxListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1272,6 +1281,7 @@ export function DeskBoard({
     const unsubBevel = subscribeBevel(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
+    const unsubFlux = subscribeFlux(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1407,6 +1417,7 @@ export function DeskBoard({
       unsubBevel();
       unsubDolby();
       unsubPancake();
+      unsubFlux();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2946,6 +2957,37 @@ export function DeskBoard({
                             {isListingPancakeOverlay(listing.id, pancakeIds)
                               ? "Leave the flop"
                               : "I will not pancake it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFlux(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFluxWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFluxOverlay(listing.id, fluxIds)
+                                ? "open"
+                                : "flux"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFluxOverlay(listing.id, fluxIds)
+                              ? "Leave the copper"
+                              : "I will not flux them"}
                           </button>
                         </form>
                       ) : null}

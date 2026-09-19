@@ -1322,6 +1322,14 @@ export function listingPancakeWritePath() {
   return "/listings/pancake";
 }
 
+export function listingFluxPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/flux`;
+}
+
+export function listingFluxWritePath() {
+  return "/listings/flux";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
