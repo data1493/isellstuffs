@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { stallEditPath } from "@/lib/paths";
+import { sellDeskStallPath, stallEditPath } from "@/lib/paths";
 import {
   SELLER_STALLS_CHANGED,
   stallCardById,
@@ -49,12 +49,18 @@ export function StallCardCopy({
       <p className="text-base leading-7 text-muted-foreground sm:text-lg">
         {card.blurb}
       </p>
-      <p>
+      <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
         <Link
           href={stallEditPath(slug)}
           className="text-sm font-medium text-foreground underline-offset-4 hover:underline"
         >
           Rewrite the booth card
+        </Link>
+        <Link
+          href={sellDeskStallPath(slug)}
+          className="text-sm font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          Open this booth&apos;s desk
         </Link>
       </p>
     </div>

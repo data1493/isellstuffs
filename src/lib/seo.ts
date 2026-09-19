@@ -33,6 +33,7 @@ import {
   savedPath,
   searchPath,
   sellDeskPath,
+  sellDeskStallPath,
   stallPath,
   thisWeekPath,
 } from "@/lib/paths";
@@ -431,6 +432,24 @@ export function sellDeskMetadata(): Metadata {
     description:
       "The stallholder home for Folding Table Tuesday. List something, check paper payouts, read the cut, or rewrite the booth card. No account.",
     path: sellDeskPath(),
+  });
+}
+
+export function sellDeskStallMetadata(stall: Stall): Metadata {
+  return shareMetadata({
+    title: `Your table tonight · ${stall.boothName}`,
+    description: `The stallholder desk for ${stall.boothName}. Same tools as Tuesday — list, paper payouts, the cut, rewrite the booth card. No account.`,
+    path: sellDeskStallPath(stall.slug),
+  });
+}
+
+export function missingSellDeskStallMetadata(): Metadata {
+  return shareMetadata({
+    title: "That stall packed up",
+    description:
+      "No desk for that slug. Pick a booth the mall already has, or walk back to the Tuesday door.",
+    path: sellDeskPath(),
+    robots: noIndexFollow,
   });
 }
 

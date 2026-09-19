@@ -51,13 +51,14 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
-| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Overlay rows can retape. |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Overlay rows can retape. Other booths you listed on get a line here. |
+| `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
 | `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals. No Connect, no bank |
 | `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |
 
-New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads. Fix a typo on an overlay row at `/sell/listings/[id]/edit` — fixtures stay taped down. Rewrite a booth name and pitch at `/stalls/[slug]/edit` (`iss:seller-stalls`). The slug stays put.
+New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads. Fix a typo on an overlay row at `/sell/listings/[id]/edit` — fixtures stay taped down. Rewrite a booth name and pitch at `/stalls/[slug]/edit` (`iss:seller-stalls`). The slug stays put. `/sell/desk` stays Folding Table Tuesday. A Kitchen Drawer list on The Sink Drawer opens `/sell/desk/the-sink-drawer` — that overlay does not appear on Tuesday.
 
 ## Listing and stall pages
 
@@ -71,6 +72,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
 | Gift credit desk | http://127.0.0.1:44721/gift |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
+| Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
 | Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |
 | Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
@@ -156,6 +158,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/this-week` | Weekend stall drop. Objects and files, not a paid stamp |
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
+| `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
 | `/cart`, `/checkout/*`, `/saved`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |

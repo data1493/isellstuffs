@@ -71,6 +71,14 @@ export function sellDeskPath() {
   return "/sell/desk";
 }
 
+export function sellDeskStallPath(slug: string) {
+  const trimmed = slug.trim();
+  if (!trimmed || trimmed === "folding-table-tuesday") {
+    return sellDeskPath();
+  }
+  return `/sell/desk/${encodeURIComponent(trimmed)}`;
+}
+
 export function sellDeskSoldPath() {
   return "/sell/desk/sold";
 }

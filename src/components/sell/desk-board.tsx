@@ -27,10 +27,15 @@ import {
   listingHubName,
   listingStatusLabel,
 } from "@/lib/listing-display";
-import { listingPath, sellListingEditPath, sellNewPath } from "@/lib/paths";
+import {
+  listingPath,
+  sellDeskStallPath,
+  sellListingEditPath,
+  sellNewPath,
+} from "@/lib/paths";
 import {
   isOverlayListing,
-  mergeDeskListings,
+  mergeDeskListingsForStall,
 } from "@/lib/seller-desk";
 import {
   SELLER_LISTINGS_CHANGED,
@@ -63,7 +68,9 @@ export function DeskBoard({
   useEffect(() => {
     function apply() {
       setRows(
-        stampSoldListings(mergeDeskListings(listings, readSellerListings())),
+        stampSoldListings(
+          mergeDeskListingsForStall(stall.id, listings, readSellerListings()),
+        ),
       );
       const patch = stallCardById(stall.id);
       if (patch) {
@@ -112,7 +119,7 @@ export function DeskBoard({
           titleAs="h2"
           eyebrow="Empty table"
           title="Nothing on this table tonight."
-          body="The fixtures are gone and you have not listed anything on this booth. Put a thing or a file on Folding Table Tuesday and it shows up here."
+          body={`The fixtures are gone and you have not listed anything on this booth. Put a thing or a file on ${stall.boothName} and it shows up here.`}
           actions={
             <Button
               className="rounded-full px-5"
@@ -181,6 +188,7 @@ export function DeskBoard({
                         <SoldButton
                           listingId={listing.id}
                           intent={listing.status === "available" ? "sold" : "open"}
+                          returnTo={sellDeskStallPath(stall.slug)}
                         />
                       ) : null}
                     </div>
