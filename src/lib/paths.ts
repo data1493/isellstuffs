@@ -138,6 +138,14 @@ export function listingFitsWritePath() {
   return "/listings/fits";
 }
 
+export function listingPlaysPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/plays`;
+}
+
+export function listingPlaysWritePath() {
+  return "/listings/plays";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
