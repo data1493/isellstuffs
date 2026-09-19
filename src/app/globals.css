@@ -173,4 +173,12 @@
     background: #fff;
     background-image: none;
   }
+  body:has(.paid-stash-print) header,
+  body:has(.paid-stash-print) footer {
+    display: none;
+  }
+  body:has(.paid-stash-print) {
+    background: #fff;
+    background-image: none;
+  }
 }

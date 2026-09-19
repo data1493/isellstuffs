@@ -85,6 +85,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Booth scrap | http://127.0.0.1:44721/stalls/folding-table-tuesday/scrap |
 | Still-here price sheet | http://127.0.0.1:44721/stalls/folding-table-tuesday/tape |
 | Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
+| Paid stash | http://127.0.0.1:44721/stalls/folding-table-tuesday/stash |
 | Watched tables | http://127.0.0.1:44721/watched |
 | Hunt board | http://127.0.0.1:44721/wanted |
 | Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
@@ -114,6 +115,8 @@ Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `i
 A stall can print a still-here price sheet at `/stalls/[slug]/tape` — lamp and PDF prices on the paper, sold chair off the sheet. Not a driveway 3×5. Not a tote scoop. Not a booth scrap.
 
 A stall can print a driveway hours sign at `/stalls/[slug]/sign` — stall name and fixture hours at the curb. Packed booths have no sign. Not the price tape. Not a paid flyer. Not a 3×5 on a lamp.
+
+A stall can print a paid stash at `/stalls/[slug]/stash` — paid physicals that have not walked, with the slip id. Tape is still-here titles. Stash is don’t-bag paper. The PDF stays in the folder. Taken pairs drop off. Reads `iss:orders` + the checkout cookie + `iss-taken-handoffs`. Does not write sold, taken, or here.
 
 Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile. **Bag the pile** POSTs to `/saved/bag` and copies still-here ids onto the existing tote writer (`@/lib/cart`). Sold, file-gone, and missing SKUs stay parked. The pile cookie stays.
 
@@ -189,6 +192,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/stalls/[slug]` | Booth name, mix of objects and files |
 | `/stalls/[slug]/tape` | Still-here price sheet. Available objects and files. Sold and file-gone stay off. `noindex` |
 | `/stalls/[slug]/sign` | Driveway hours sign. Stall name + fixture or taped weekend hours. Packed booths have no sign. `noindex` |
+| `/stalls/[slug]/stash` | Paid-not-taken sheet. Physicals from paid slips. Taken pairs drop off. Files stay in the folder. `noindex` |
 | `/about` | The mall story — flea-market mall, 10% cut, labeled ads, not a warehouse |
 | `/help` | How this mall works — browse, tote, mock pay, folder slip, list a stall |
 | `/lot` | Who set up. Booths on the lot vs in the car. Not this week's picks |

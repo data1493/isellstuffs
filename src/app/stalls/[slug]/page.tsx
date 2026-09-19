@@ -11,6 +11,7 @@ import {
   BagThisTableButton,
   parseStallBagNotice,
 } from "@/components/stalls/bag-table-button";
+import { StashTableLink } from "@/components/stalls/stash-table-link";
 import { TapeTableLink } from "@/components/stalls/tape-table-link";
 import { YardSignLink } from "@/components/stalls/yard-sign-link";
 import { WatchStallButton } from "@/components/watch-stall-button";
@@ -136,6 +137,8 @@ export default async function StallPage({
           <TapeTableLink slug={stall.slug} />
 
           <YardSignLink slug={stall.slug} />
+
+          <StashTableLink slug={stall.slug} />
 
           <StallMixBar physical={physical.length} digital={digital.length} />
 

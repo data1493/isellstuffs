@@ -40,6 +40,10 @@ export function stallSignPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/sign`;
 }
 
+export function stallStashPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/stash`;
+}
+
 export function stallScrapPath(slug: string) {
   return `/stalls/${slug}/scrap`;
 }
