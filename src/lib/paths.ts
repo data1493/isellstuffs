@@ -1290,6 +1290,14 @@ export function listingGrainWritePath() {
   return "/listings/grain";
 }
 
+export function listingHonePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hone`;
+}
+
+export function listingHoneWritePath() {
+  return "/listings/hone";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

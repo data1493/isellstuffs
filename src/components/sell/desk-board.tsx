@@ -579,6 +579,12 @@ import {
   subscribePuck,
 } from "@/lib/listing-puck";
 import {
+  canTapeHone,
+  isListingHoneOverlay,
+  readHoneListingIds,
+  subscribeHone,
+} from "@/lib/listing-hone";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -778,6 +784,7 @@ import {
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPuckWritePath,
+  listingHoneWritePath,
   listingBevelWritePath,
   listingDolbyWritePath,
   listingPaginateWritePath,
@@ -978,6 +985,7 @@ export function DeskBoard({
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
+  const [honeIds, setHoneIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
@@ -1110,6 +1118,7 @@ export function DeskBoard({
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPuckIds(readPuckListingIds());
+      setHoneIds(readHoneListingIds());
       setBevelIds(readBevelListingIds());
       setDolbyIds(readDolbyListingIds());
       setSpliceIds(readSpliceListingIds());
@@ -1231,6 +1240,7 @@ export function DeskBoard({
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPuck = subscribePuck(apply);
+    const unsubHone = subscribeHone(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubSplice = subscribeSplice(apply);
@@ -1362,6 +1372,7 @@ export function DeskBoard({
       unsubPeen();
       unsubGlaze();
       unsubPuck();
+      unsubHone();
       unsubBevel();
       unsubDolby();
       unsubSplice();
@@ -2747,6 +2758,37 @@ export function DeskBoard({
                             {isListingPuckOverlay(listing.id, puckIds)
                               ? "Leave the skip"
                               : "I will not puck it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHone(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHoneWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHoneOverlay(listing.id, honeIds)
+                                ? "open"
+                                : "hone"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingHoneOverlay(listing.id, honeIds)
+                              ? "Leave the nick"
+                              : "I will not hone it"}
                           </button>
                         </form>
                       ) : null}
