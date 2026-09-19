@@ -8,6 +8,11 @@ import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  BACK_SOON_COOKIE_NAME,
+  BACK_SOON_MIRROR_SCRIPT,
+  parseBackSoon,
+} from "@/lib/back-soon";
 import { PACKED_COOKIE_NAME, PACKED_MIRROR_SCRIPT } from "@/lib/packed-stall";
 import { lotBoard, lotOff, lotOn } from "@/lib/lot-board";
 import { lotPath, thisWeekPath } from "@/lib/paths";
@@ -20,6 +25,7 @@ export const metadata: Metadata = lotMetadata();
 export default async function LotPage() {
   const jar = await cookies();
   const rows = lotBoard(jar.get(PACKED_COOKIE_NAME)?.value);
+  const lunchMap = parseBackSoon(jar.get(BACK_SOON_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -27,6 +33,7 @@ export default async function LotPage() {
     return (
       <>
         <script dangerouslySetInnerHTML={{ __html: PACKED_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BACK_SOON_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -35,6 +42,7 @@ export default async function LotPage() {
   return (
     <>
       <script dangerouslySetInnerHTML={{ __html: PACKED_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BACK_SOON_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -92,7 +100,10 @@ export default async function LotPage() {
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {on.map((row) => (
                 <li key={row.stall.id} className="min-w-0">
-                  <LotBoothCard row={row} />
+                  <LotBoothCard
+                    row={row}
+                    lunchNote={lunchMap[row.stall.id]?.note}
+                  />
                 </li>
               ))}
             </ul>
@@ -114,7 +125,10 @@ export default async function LotPage() {
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {off.map((row) => (
                 <li key={row.stall.id} className="min-w-0">
-                  <LotBoothCard row={row} />
+                  <LotBoothCard
+                    row={row}
+                    lunchNote={lunchMap[row.stall.id]?.note}
+                  />
                 </li>
               ))}
             </ul>

@@ -18,7 +18,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page. Hub-takeover bookings from `iss-ad-bookings` swap the aisle hero |
-| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags. Still-here is a count, not a SKU grid. |
+| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags and lunch notes. Still-here is a count, not a SKU grid. |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. Desk pins (`iss:weekend-pins`) append after that table. |
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
@@ -83,6 +83,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Gift credit desk | http://127.0.0.1:44721/gift |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
 | Booth scrap | http://127.0.0.1:44721/stalls/folding-table-tuesday/scrap |
+| Back after lunch | http://127.0.0.1:44721/stalls/folding-table-tuesday/back |
 | Still-here price sheet | http://127.0.0.1:44721/stalls/folding-table-tuesday/tape |
 | Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
 | Paid stash | http://127.0.0.1:44721/stalls/folding-table-tuesday/stash |
@@ -110,6 +111,8 @@ Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — pric
 Physical listings can tape a paper haggle at `/listings/[id]/offer`. Write dollars on the lamp — $8 on the $12 tag — and the stall desk can see that scrap. PDFs and the gift card have no offer. Taping a number does not change the tag or the tote.
 
 A stallholder can tape a sticky on the booth at `/stalls/[slug]/scrap`. “cash only after 2” stays after reload. Cookie `iss-stall-scraps` + `iss:stall-scraps`. Native `POST /stalls/[slug]/scrap/tape` (form: `note`) and peel. Not a hunt. Not an offer on a lamp. Not `/stalls/[slug]/tape`.
+
+A stallholder can tape a lunch run at `/stalls/[slug]/back`. “Taco truck, back at 1.” stays after reload. Cookie `iss-back-soon` + `iss:back-soon`. Native `POST /stalls/back` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. Not packed. Not new hours. The stall and `/lot` show the note. Closet stays empty if Tuesday taped.
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
@@ -203,7 +206,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/wanted`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/back`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

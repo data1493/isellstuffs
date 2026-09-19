@@ -31,8 +31,14 @@ import {
   featuredBookingsFromCookie,
   resolveFeaturedForStall,
 } from "@/lib/featured-ads";
+import {
+  BACK_SOON_COOKIE_NAME,
+  BACK_SOON_PAPER_LINE,
+  backSoonFor,
+  parseBackSoon,
+} from "@/lib/back-soon";
 import { isStallPacked } from "@/lib/packed-stall";
-import { lotPath, stallPath, stallScrapPath } from "@/lib/paths";
+import { lotPath, stallBackPath, stallPath, stallScrapPath } from "@/lib/paths";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -80,6 +86,10 @@ export default async function StallPage({
     featuredBookingsFromCookie(jar.get(AD_BOOKINGS_COOKIE)?.value),
     stall,
   );
+  const lunch = backSoonFor(
+    stall.id,
+    parseBackSoon(jar.get(BACK_SOON_COOKIE_NAME)?.value),
+  );
 
   return (
     <div>
@@ -124,7 +134,30 @@ export default async function StallPage({
             </MallNotice>
           ) : null}
 
+          {lunch ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Back after lunch"
+              title="Stepped away."
+              body={
+                <p data-back-soon-note={stall.id}>
+                  {lunch.note} {BACK_SOON_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
+
+          <Link
+            href={stallBackPath(stall.slug)}
+            data-back-soon-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Back after lunch
+          </Link>
 
           <Link
             href={stallScrapPath(stall.slug)}

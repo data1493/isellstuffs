@@ -64,6 +64,14 @@ export function stallFreeWritePath() {
   return "/stalls/free";
 }
 
+export function stallBackPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/back`;
+}
+
+export function stallBackWritePath() {
+  return "/stalls/back";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

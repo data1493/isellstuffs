@@ -18,7 +18,13 @@ function stillHereLabel(count: number) {
   return `${count} still here`;
 }
 
-export function LotBoothCard({ row }: { row: LotBooth }) {
+export function LotBoothCard({
+  row,
+  lunchNote,
+}: {
+  row: LotBooth;
+  lunchNote?: string;
+}) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
   return (
@@ -55,6 +61,14 @@ export function LotBoothCard({ row }: { row: LotBooth }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 pb-5">
+          {lunchNote ? (
+            <p
+              data-back-soon-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Back after lunch. {lunchNote}
+            </p>
+          ) : null}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
               {LOT_PACKED_COPY}
