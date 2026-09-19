@@ -80,6 +80,7 @@ import { ListingBakeNotice } from "@/components/listing-bake-notice";
 import { ListingGlassNotice } from "@/components/listing-glass-notice";
 import { ListingDoubleNotice } from "@/components/listing-double-notice";
 import { ListingMinsNotice } from "@/components/listing-mins-notice";
+import { ListingExpireNotice } from "@/components/listing-expire-notice";
 import { ListingPolishNotice } from "@/components/listing-polish-notice";
 import { ListingInsideNotice } from "@/components/listing-inside-notice";
 import { ListingTinesNotice } from "@/components/listing-tines-notice";
@@ -200,6 +201,7 @@ import {
   listingGlassPath,
   listingDoublePath,
   listingMinsPath,
+  listingExpirePath,
   listingPolishPath,
   listingInsidePath,
   listingTinesPath,
@@ -427,6 +429,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingDoubleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingMinsNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingExpireNotice listingId={listing.id} /> : null}
               {!physical ? <ListingWrongNotice listingId={listing.id} /> : null}
               {!physical ? (
                 <ListingFoundryNotice listingId={listing.id} />
@@ -945,7 +948,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     The stickers stay
                   </Link>
                 </p>
-              ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
+              ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (
+                <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
+                  <Link
+                    href={listingExpirePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not expire it
+                  </Link>
+                </p>
+              ) : (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
                   <Link
                     href={listingScanPath(listing.id)}

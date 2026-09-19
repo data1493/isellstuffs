@@ -786,6 +786,14 @@ export function listingGumWritePath() {
   return "/listings/gum";
 }
 
+export function listingExpirePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/expire`;
+}
+
+export function listingExpireWritePath() {
+  return "/listings/expire";
+}
+
 export function listingBalancePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/balance`;
 }

@@ -105,6 +105,12 @@ import {
   subscribeGrid,
 } from "@/lib/listing-grid";
 import {
+  canTapeExpire,
+  isListingExpireOverlay,
+  readExpireListingIds,
+  subscribeExpire,
+} from "@/lib/listing-expire";
+import {
   canTapeLoop,
   isListingLoopOverlay,
   readLoopListingIds,
@@ -324,6 +330,7 @@ import {
   listingTypesetWritePath,
   listingReviseWritePath,
   listingGridWritePath,
+  listingExpireWritePath,
   listingTwistWritePath,
   listingZipWritePath,
   listingWhoseWritePath,
@@ -409,6 +416,7 @@ export function DeskBoard({
   const [glassIds, setGlassIds] = useState<string[]>([]);
   const [doubleIds, setDoubleIds] = useState<string[]>([]);
   const [minsIds, setMinsIds] = useState<string[]>([]);
+  const [expireIds, setExpireIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
   const [trayIds, setTrayIds] = useState<string[]>([]);
   const [gumIds, setGumIds] = useState<string[]>([]);
@@ -469,6 +477,7 @@ export function DeskBoard({
       setGlassIds(readGlassListingIds());
       setDoubleIds(readDoubleListingIds());
       setMinsIds(readMinsListingIds());
+      setExpireIds(readExpireListingIds());
       setPolishIds(readPolishListingIds());
       setTrayIds(readTrayListingIds());
       setGumIds(readGumListingIds());
@@ -518,6 +527,7 @@ export function DeskBoard({
     const unsubGlass = subscribeGlass(apply);
     const unsubDouble = subscribeDouble(apply);
     const unsubMins = subscribeMins(apply);
+    const unsubExpire = subscribeExpire(apply);
     const unsubPolish = subscribePolish(apply);
     const unsubTray = subscribeTray(apply);
     const unsubGum = subscribeGum(apply);
@@ -577,6 +587,7 @@ export function DeskBoard({
       unsubGlass();
       unsubDouble();
       unsubMins();
+      unsubExpire();
       unsubPolish();
       unsubTray();
       unsubGum();
@@ -1397,6 +1408,37 @@ export function DeskBoard({
                             {isListingMinsOverlay(listing.id, minsIds)
                               ? "Leave the vibes"
                               : "I will not time it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeExpire(listing) ? (
+                        <form
+                          method="post"
+                          action={listingExpireWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingExpireOverlay(listing.id, expireIds)
+                                ? "open"
+                                : "expire"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingExpireOverlay(listing.id, expireIds)
+                              ? "Leave the leftover"
+                              : "I will not expire it"}
                           </button>
                         </form>
                       ) : null}
