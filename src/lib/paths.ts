@@ -1186,6 +1186,14 @@ export function listingGlazeWritePath() {
   return "/listings/glaze";
 }
 
+export function listingPuckPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/puck`;
+}
+
+export function listingPuckWritePath() {
+  return "/listings/puck";
+}
+
 export function listingCollatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/collate`;
 }

@@ -549,6 +549,12 @@ import {
   subscribeGlaze,
 } from "@/lib/listing-glaze";
 import {
+  canTapePuck,
+  isListingPuckOverlay,
+  readPuckListingIds,
+  subscribePuck,
+} from "@/lib/listing-puck";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -708,6 +714,7 @@ import {
   listingSergeWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
+  listingPuckWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingScaleWritePath,
@@ -896,6 +903,7 @@ export function DeskBoard({
   const [sergeIds, setSergeIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
+  const [puckIds, setPuckIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1017,6 +1025,7 @@ export function DeskBoard({
       setSergeIds(readSergeListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
+      setPuckIds(readPuckListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1127,6 +1136,7 @@ export function DeskBoard({
     const unsubSerge = subscribeSerge(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
+    const unsubPuck = subscribePuck(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1247,6 +1257,7 @@ export function DeskBoard({
       unsubSerge();
       unsubPeen();
       unsubGlaze();
+      unsubPuck();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2595,6 +2606,37 @@ export function DeskBoard({
                             {isListingGlazeOverlay(listing.id, glazeIds)
                               ? "Leave the chip"
                               : "I will not glaze it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePuck(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPuckWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPuckOverlay(listing.id, puckIds)
+                                ? "open"
+                                : "puck"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPuckOverlay(listing.id, puckIds)
+                              ? "Leave the skip"
+                              : "I will not puck it"}
                           </button>
                         </form>
                       ) : null}
