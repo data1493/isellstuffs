@@ -177,6 +177,12 @@ import {
   subscribeCap,
 } from "@/lib/listing-cap";
 import {
+  canTapeLed,
+  isListingLedOverlay,
+  readLedListingIds,
+  subscribeLed,
+} from "@/lib/listing-led";
+import {
   listingCardsWritePath,
   listingDoubleWritePath,
   listingDumpWritePath,
@@ -186,6 +192,7 @@ import {
   listingInsideWritePath,
   listingTinesWritePath,
   listingCapWritePath,
+  listingLedWritePath,
   listingLoopWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
@@ -284,6 +291,7 @@ export function DeskBoard({
   const [insideIds, setInsideIds] = useState<string[]>([]);
   const [tinesIds, setTinesIds] = useState<string[]>([]);
   const [capIds, setCapIds] = useState<string[]>([]);
+  const [ledIds, setLedIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -326,6 +334,7 @@ export function DeskBoard({
       setInsideIds(readInsideListingIds());
       setTinesIds(readTinesListingIds());
       setCapIds(readCapListingIds());
+      setLedIds(readLedListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -357,6 +366,7 @@ export function DeskBoard({
     const unsubInside = subscribeInside(apply);
     const unsubTines = subscribeTines(apply);
     const unsubCap = subscribeCap(apply);
+    const unsubLed = subscribeLed(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -398,6 +408,7 @@ export function DeskBoard({
       unsubInside();
       unsubTines();
       unsubCap();
+      unsubLed();
     };
   }, [listings, stall.id]);
 
@@ -734,6 +745,37 @@ export function DeskBoard({
                             {isListingCapOverlay(listing.id, capIds)
                               ? "Leave it open"
                               : "I don't have a cap"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLed(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLedWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLedOverlay(listing.id, ledIds)
+                                ? "open"
+                                : "led"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLedOverlay(listing.id, ledIds)
+                              ? "Leave the twist"
+                              : "I will not LED it"}
                           </button>
                         </form>
                       ) : null}

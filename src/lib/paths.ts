@@ -650,6 +650,14 @@ export function listingCapWritePath() {
   return "/listings/cap";
 }
 
+export function listingLedPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/led`;
+}
+
+export function listingLedWritePath() {
+  return "/listings/led";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
