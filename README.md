@@ -23,6 +23,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
 | `/collections/[slug]` | One rack: under a ten, files tonight, or tested kinda. Same `@/lib/commerce` SKUs |
 | `/saved` | Later pile. Park a listing without putting it in the tote. Cookie `iss-saved-listing-ids` + `iss:saved-listing-ids`. Scoop with **Bag the pile** (`POST /saved/bag`) into the existing tote. Not a second cart |
+| `/watched` | Watched tables. Mark a booth, not a SKU. Cookie `iss-watched-stall-ids` + `iss:watched-stall-ids`. Same folding tables next weekend. Not the later pile |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
@@ -74,6 +75,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Gift desk | http://127.0.0.1:44721/stalls/gift-desk |
 | Gift credit desk | http://127.0.0.1:44721/gift |
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
+| Watched tables | http://127.0.0.1:44721/watched |
 | Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
 | Rewrite a booth card | http://127.0.0.1:44721/stalls/folding-table-tuesday/edit |
 | Featured stall | http://127.0.0.1:44721/stalls/half-working |

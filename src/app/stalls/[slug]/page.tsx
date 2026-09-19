@@ -6,6 +6,7 @@ import { StallMissing } from "@/components/mall-missing";
 import { MallNotice } from "@/components/mall-notice";
 import { PickupNote } from "@/components/pickup-note";
 import { StallCardCopy } from "@/components/stalls/stall-card-copy";
+import { WatchStallButton } from "@/components/watch-stall-button";
 import { StallListingCard } from "@/components/stall-listing-card";
 import { StallMixBar } from "@/components/stall-mix-bar";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ import {
   resolveFeaturedForStall,
 } from "@/lib/featured-ads";
 import { isStallPacked } from "@/lib/packed-stall";
+import { stallPath } from "@/lib/paths";
 import { missingStallMetadata, stallMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -100,6 +102,8 @@ export default async function StallPage({ params }: StallPageProps) {
               body="Files in the folder still exist. Come next weekend. The table went in the car. Not a refund. Not a sold sticker."
             />
           ) : null}
+
+          <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <StallMixBar physical={physical.length} digital={digital.length} />
 

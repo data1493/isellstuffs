@@ -155,6 +155,14 @@ export function savedBagPath() {
   return "/saved/bag";
 }
 
+export function watchedPath() {
+  return "/watched";
+}
+
+export function stallsWatchPath() {
+  return "/stalls/watch";
+}
+
 export function ordersPath() {
   return "/orders";
 }

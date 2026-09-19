@@ -11,6 +11,7 @@ import {
   pickupPath,
   savedPath,
   sellDeskPath,
+  watchedPath,
   sellDeskQueuePath,
   sellStartPath,
   thisWeekPath,
@@ -35,6 +36,7 @@ const browse = [
   { href: sellDeskQueuePath(), label: "Driveway queue" },
   { href: giftPath(), label: "Gift desk" },
   { href: savedPath(), label: "Later pile" },
+  { href: watchedPath(), label: "Watched tables" },
 ];
 
 export function SiteFooter() {

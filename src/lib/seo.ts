@@ -32,6 +32,7 @@ import {
   ordersPath,
   savedPath,
   searchPath,
+  watchedPath,
   sellDeskPath,
   sellDeskStallPath,
   stallPath,
@@ -384,6 +385,16 @@ export function savedMetadata(): Metadata {
     description:
       "Listings parked on this browser. Not the tote. Parked, not paid. No account.",
     path: savedPath(),
+    robots: noIndex,
+  });
+}
+
+export function watchedMetadata(): Metadata {
+  return shareMetadata({
+    title: "Watched tables",
+    description:
+      "Booths marked on this browser. Same folding tables next weekend. Not the later pile. No account.",
+    path: watchedPath(),
     robots: noIndex,
   });
 }
