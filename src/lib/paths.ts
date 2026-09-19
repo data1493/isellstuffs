@@ -338,6 +338,14 @@ export function listingWrongWritePath() {
   return "/listings/wrong";
 }
 
+export function listingFoundryPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/foundry`;
+}
+
+export function listingFoundryWritePath() {
+  return "/listings/foundry";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
