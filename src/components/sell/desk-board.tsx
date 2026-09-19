@@ -279,6 +279,12 @@ import {
   subscribeCenter,
 } from "@/lib/listing-center";
 import {
+  canTapeWarp,
+  isListingWarpOverlay,
+  readWarpListingIds,
+  subscribeWarp,
+} from "@/lib/listing-warp";
+import {
   canTapeSplice,
   isListingSpliceOverlay,
   readSpliceListingIds,
@@ -339,6 +345,7 @@ import {
   listingCementWritePath,
   listingLinkWritePath,
   listingCenterWritePath,
+  listingWarpWritePath,
   listingSpliceWritePath,
   listingVentWritePath,
   listingLoopWritePath,
@@ -463,6 +470,7 @@ export function DeskBoard({
   const [cementIds, setCementIds] = useState<string[]>([]);
   const [linkIds, setLinkIds] = useState<string[]>([]);
   const [centerIds, setCenterIds] = useState<string[]>([]);
+  const [warpIds, setWarpIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
@@ -528,6 +536,7 @@ export function DeskBoard({
       setCementIds(readCementListingIds());
       setLinkIds(readLinkListingIds());
       setCenterIds(readCenterListingIds());
+      setWarpIds(readWarpListingIds());
       setSpliceIds(readSpliceListingIds());
       setVentIds(readVentListingIds());
       setTuneIds(readTuneListingIds());
@@ -582,6 +591,7 @@ export function DeskBoard({
     const unsubCement = subscribeCement(apply);
     const unsubLink = subscribeLink(apply);
     const unsubCenter = subscribeCenter(apply);
+    const unsubWarp = subscribeWarp(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubVent = subscribeVent(apply);
     const unsubTune = subscribeTune(apply);
@@ -646,6 +656,7 @@ export function DeskBoard({
       unsubCement();
       unsubLink();
       unsubCenter();
+      unsubWarp();
       unsubSplice();
       unsubVent();
       unsubTune();
@@ -1359,6 +1370,37 @@ export function DeskBoard({
                             {isListingCenterOverlay(listing.id, centerIds)
                               ? "Leave the hole"
                               : "I will not center it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWarp(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWarpWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWarpOverlay(listing.id, warpIds)
+                                ? "open"
+                                : "warp"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingWarpOverlay(listing.id, warpIds)
+                              ? "Leave the warp"
+                              : "I will not flatten"}
                           </button>
                         </form>
                       ) : null}

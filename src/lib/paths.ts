@@ -778,6 +778,14 @@ export function listingCenterWritePath() {
   return "/listings/center";
 }
 
+export function listingWarpPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/warp`;
+}
+
+export function listingWarpWritePath() {
+  return "/listings/warp";
+}
+
 export function listingSplicePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/splice`;
 }
