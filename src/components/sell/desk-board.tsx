@@ -117,6 +117,12 @@ import {
   subscribeGrid,
 } from "@/lib/listing-grid";
 import {
+  canTapeConsult,
+  isListingConsultOverlay,
+  readConsultListingIds,
+  subscribeConsult,
+} from "@/lib/listing-consult";
+import {
   canTapeExpire,
   isListingExpireOverlay,
   readExpireListingIds,
@@ -428,6 +434,7 @@ import {
   listingTypesetWritePath,
   listingReviseWritePath,
   listingGridWritePath,
+  listingConsultWritePath,
   listingExpireWritePath,
   listingTwistWritePath,
   listingZipWritePath,
@@ -505,6 +512,7 @@ export function DeskBoard({
   const [typesetIds, setTypesetIds] = useState<string[]>([]);
   const [reviseIds, setReviseIds] = useState<string[]>([]);
   const [gridIds, setGridIds] = useState<string[]>([]);
+  const [consultIds, setConsultIds] = useState<string[]>([]);
   const [loopIds, setLoopIds] = useState<string[]>([]);
   const [twistIds, setTwistIds] = useState<string[]>([]);
   const [stretchIds, setStretchIds] = useState<string[]>([]);
@@ -580,6 +588,7 @@ export function DeskBoard({
       setTypesetIds(readTypesetListingIds());
       setReviseIds(readReviseListingIds());
       setGridIds(readGridListingIds());
+      setConsultIds(readConsultListingIds());
       setLoopIds(readLoopListingIds());
       setTwistIds(readTwistListingIds());
       setStretchIds(readStretchListingIds());
@@ -644,6 +653,7 @@ export function DeskBoard({
     const unsubTypeset = subscribeTypeset(apply);
     const unsubRevise = subscribeRevise(apply);
     const unsubGrid = subscribeGrid(apply);
+    const unsubConsult = subscribeConsult(apply);
     const unsubLoop = subscribeLoop(apply);
     const unsubTwist = subscribeTwist(apply);
     const unsubStretch = subscribeStretch(apply);
@@ -718,6 +728,7 @@ export function DeskBoard({
       unsubTypeset();
       unsubRevise();
       unsubGrid();
+      unsubConsult();
       unsubLoop();
       unsubTwist();
       unsubStretch();
@@ -2213,6 +2224,37 @@ export function DeskBoard({
                             {isListingGridOverlay(listing.id, gridIds)
                               ? "Leave the one page"
                               : "I will not spreadsheet"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeConsult(listing) ? (
+                        <form
+                          method="post"
+                          action={listingConsultWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingConsultOverlay(listing.id, consultIds)
+                                ? "open"
+                                : "consult"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingConsultOverlay(listing.id, consultIds)
+                              ? "Leave the rule of thumb"
+                              : "I don't consult"}
                           </button>
                         </form>
                       ) : null}

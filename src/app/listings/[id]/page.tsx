@@ -71,6 +71,7 @@ import { ListingWhoseNotice } from "@/components/listing-whose-notice";
 import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
 import { ListingReviseNotice } from "@/components/listing-revise-notice";
 import { ListingGridNotice } from "@/components/listing-grid-notice";
+import { ListingConsultNotice } from "@/components/listing-consult-notice";
 import { ListingLoopNotice } from "@/components/listing-loop-notice";
 import { ListingTwistNotice } from "@/components/listing-twist-notice";
 import { ListingStretchNotice } from "@/components/listing-stretch-notice";
@@ -206,6 +207,7 @@ import {
   listingTypesetPath,
   listingRevisePath,
   listingGridPath,
+  listingConsultPath,
   listingLoopPath,
   listingTwistPath,
   listingStretchPath,
@@ -446,6 +448,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingGridNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingConsultNotice listingId={listing.id} />
               ) : null}
               {!physical ? (
                 <ListingRememberNotice listingId={listing.id} />
@@ -1090,6 +1095,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not spreadsheet
+                  </Link>
+                  <Link
+                    href={listingConsultPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I don't consult
                   </Link>
                   <Link
                     href={listingRememberPath(listing.id)}

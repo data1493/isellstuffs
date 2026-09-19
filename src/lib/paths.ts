@@ -658,6 +658,14 @@ export function listingGridWritePath() {
   return "/listings/grid";
 }
 
+export function listingConsultPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/consult`;
+}
+
+export function listingConsultWritePath() {
+  return "/listings/consult";
+}
+
 export function listingTinesPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tines`;
 }
