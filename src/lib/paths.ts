@@ -32,6 +32,10 @@ export function stallEditPath(slug: string) {
   return `/stalls/${slug}/edit`;
 }
 
+export function stallTapePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/tape`;
+}
+
 export function stallScrapPath(slug: string) {
   return `/stalls/${slug}/scrap`;
 }

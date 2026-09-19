@@ -157,4 +157,12 @@
     background: #fff;
     background-image: none;
   }
+  body:has(.table-tape-print) header,
+  body:has(.table-tape-print) footer {
+    display: none;
+  }
+  body:has(.table-tape-print) {
+    background: #fff;
+    background-image: none;
+  }
 }
