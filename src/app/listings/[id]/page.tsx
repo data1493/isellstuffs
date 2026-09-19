@@ -40,6 +40,7 @@ import { ListingKeyNotice } from "@/components/listing-key-notice";
 import { ListingHingeNotice } from "@/components/listing-hinge-notice";
 import { ListingChipNotice } from "@/components/listing-chip-notice";
 import { ListingKnobNotice } from "@/components/listing-knob-notice";
+import { ListingBoxNotice } from "@/components/listing-box-notice";
 import { ListingVibeNotice } from "@/components/listing-vibe-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
 import { ListingFoundryNotice } from "@/components/listing-foundry-notice";
@@ -105,6 +106,7 @@ import {
   listingHingePath,
   listingChipPath,
   listingKnobPath,
+  listingBoxPath,
   listingVibePath,
   listingWrongPath,
   listingFoundryPath,
@@ -316,6 +318,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingChipNotice listingId={listing.id} /> : null}
               {physical ? <ListingKnobNotice listingId={listing.id} /> : null}
               {physical ? <ListingManualNotice listingId={listing.id} /> : null}
+              {physical ? <ListingBoxNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -546,6 +549,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     There is no manual
+                  </Link>
+                  <Link
+                    href={listingBoxPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The shade stays in the box
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
