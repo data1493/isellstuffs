@@ -471,6 +471,12 @@ import {
   subscribeGrommet,
 } from "@/lib/listing-grommet";
 import {
+  canTapeDart,
+  isListingDartOverlay,
+  readDartListingIds,
+  subscribeDart,
+} from "@/lib/listing-dart";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -594,6 +600,7 @@ import {
   listingNestWritePath,
   listingAnnealWritePath,
   listingGrommetWritePath,
+  listingDartWritePath,
   listingPaginateWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -764,6 +771,7 @@ export function DeskBoard({
   const [nestIds, setNestIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
+  const [dartIds, setDartIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -868,6 +876,7 @@ export function DeskBoard({
       setNestIds(readNestListingIds());
       setAnnealIds(readAnnealListingIds());
       setGrommetIds(readGrommetListingIds());
+      setDartIds(readDartListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -961,6 +970,7 @@ export function DeskBoard({
     const unsubNest = subscribeNest(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubGrommet = subscribeGrommet(apply);
+    const unsubDart = subscribeDart(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1064,6 +1074,7 @@ export function DeskBoard({
       unsubNest();
       unsubAnneal();
       unsubGrommet();
+      unsubDart();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2563,6 +2574,37 @@ export function DeskBoard({
                             {isListingGrommetOverlay(listing.id, grommetIds)
                               ? "Leave the shade"
                               : "I will not grommet it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDart(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDartWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDartOverlay(listing.id, dartIds)
+                                ? "open"
+                                : "dart"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDartOverlay(listing.id, dartIds)
+                              ? "Leave the hang"
+                              : "I will not dart it"}
                           </button>
                         </form>
                       ) : null}

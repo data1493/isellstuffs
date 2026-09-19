@@ -1082,6 +1082,14 @@ export function listingPaginateWritePath() {
   return "/listings/paginate";
 }
 
+export function listingDartPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dart`;
+}
+
+export function listingDartWritePath() {
+  return "/listings/dart";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

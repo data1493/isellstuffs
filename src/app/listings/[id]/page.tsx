@@ -128,6 +128,7 @@ import { ListingAzimuthNotice } from "@/components/listing-azimuth-notice";
 import { ListingNestNotice } from "@/components/listing-nest-notice";
 import { ListingAnnealNotice } from "@/components/listing-anneal-notice";
 import { ListingGrommetNotice } from "@/components/listing-grommet-notice";
+import { ListingDartNotice } from "@/components/listing-dart-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
@@ -292,6 +293,7 @@ import {
   listingNestPath,
   listingAnnealPath,
   listingGrommetPath,
+  listingDartPath,
   listingPaginatePath,
   listingTrayPath,
   listingMasterPath,
@@ -629,6 +631,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingNestNotice listingId={listing.id} /> : null}
               {physical ? <ListingAnnealNotice listingId={listing.id} /> : null}
               {physical ? <ListingGrommetNotice listingId={listing.id} /> : null}
+              {physical ? <ListingDartNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1267,6 +1270,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not grommet it
+                  </Link>
+                  <Link
+                    href={listingDartPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not dart it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (
