@@ -51,12 +51,13 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
-| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`) |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Overlay rows can retape. |
+| `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals. No Connect, no bank |
 | `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |
 
-New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads. Rewrite a booth name and pitch at `/stalls/[slug]/edit` (`iss:seller-stalls`). The slug stays put.
+New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads. Fix a typo on an overlay row at `/sell/listings/[id]/edit` — fixtures stay taped down. Rewrite a booth name and pitch at `/stalls/[slug]/edit` (`iss:seller-stalls`). The slug stays put.
 
 ## Listing and stall pages
 

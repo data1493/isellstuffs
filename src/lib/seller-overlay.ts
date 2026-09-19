@@ -145,6 +145,19 @@ export function addSellerListing(listing: Listing) {
   return listing;
 }
 
+/** Replace one overlay row by id. Fixtures are not in this store. */
+export function replaceSellerListing(listing: Listing): Listing | undefined {
+  const current = readSellerListings();
+  const index = current.findIndex((item) => item.id === listing.id);
+  if (index === -1) {
+    return undefined;
+  }
+  const next = current.slice();
+  next[index] = listing;
+  replaceSellerListings(next);
+  return listing;
+}
+
 export function sellerListingById(id: string): Listing | undefined {
   return readSellerListings().find((listing) => listing.id === id);
 }

@@ -27,7 +27,7 @@ import {
   listingHubName,
   listingStatusLabel,
 } from "@/lib/listing-display";
-import { listingPath, sellNewPath } from "@/lib/paths";
+import { listingPath, sellListingEditPath, sellNewPath } from "@/lib/paths";
 import {
   isOverlayListing,
   mergeDeskListings,
@@ -166,6 +166,17 @@ export function DeskBoard({
                         <span className="mx-2 text-foreground/30">·</span>
                         {listingHubName(listing)}
                       </p>
+                      {overlay ? (
+                        <Button
+                          variant="outline"
+                          className="h-11 w-full rounded-full px-5 sm:w-auto"
+                          render={
+                            <Link href={sellListingEditPath(listing.id)} />
+                          }
+                        >
+                          Retape
+                        </Button>
+                      ) : null}
                       {stamp ? (
                         <SoldButton
                           listingId={listing.id}

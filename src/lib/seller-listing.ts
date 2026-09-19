@@ -1,5 +1,6 @@
 import {
   allListings,
+  listings,
   listingTypes,
   mallHubs,
   money,
@@ -9,6 +10,8 @@ import {
   type Listing,
   type ListingType,
 } from "@/lib/commerce";
+import { sellerListingById } from "@/lib/seller-overlay";
+import { isGiftFileFormat } from "@/lib/sell-start";
 
 export const physicalHubIds = physicalHubs().map((hub) => hub.id);
 
@@ -23,6 +26,31 @@ export type SellerListingOk = {
 };
 
 export type SellerListingResult = SellerListingOk | SellerListingError;
+
+export type ParseSellerListingOptions = {
+  /** Overlay id to keep. Create path omits this and mints a new SKU. */
+  existingId?: string;
+};
+
+export function isFixtureListingId(id: string) {
+  return listings.some((row) => row.id === id);
+}
+
+export function retapeRefuseCopy(kind: "fixture" | "missing") {
+  if (kind === "fixture") {
+    return {
+      eyebrow: "Taped down",
+      title: "Catalog fixtures stay put.",
+      body: "You cannot retape the lamp, the chair, or the gift card. Those rows live in the catalog. Retape is for something you listed tonight.",
+    };
+  }
+
+  return {
+    eyebrow: "Packed up",
+    title: "That listing is not on this table.",
+    body: "Retape is for overlay rows you put on a stall. List it first, then fix the typo.",
+  };
+}
 
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -59,11 +87,33 @@ export function isPhysicalHubId(value: string): value is HubId {
   return physicalHubIds.some((id) => id === value);
 }
 
-export function parseSellerListing(formData: FormData): SellerListingResult {
+export function parseSellerListing(
+  formData: FormData,
+  options: ParseSellerListingOptions = {},
+): SellerListingResult {
+  const existingId = options.existingId?.trim() ?? "";
+  const existing = existingId ? sellerListingById(existingId) : undefined;
+
+  if (existingId) {
+    if (isFixtureListingId(existingId)) {
+      return {
+        ok: false,
+        error:
+          "Catalog fixtures stay taped down. You cannot retape a row that already lives in the catalog.",
+      };
+    }
+    if (!existing) {
+      return {
+        ok: false,
+        error: "That listing is not on the overlay. List it first, then retape.",
+      };
+    }
+  }
+
   const title = readString(formData, "title");
   const summary = readString(formData, "summary");
-  const stallId = readString(formData, "stallId");
-  const typeRaw = readString(formData, "type");
+  const stallId = existing ? existing.stallId : readString(formData, "stallId");
+  const typeRaw = existing ? existing.type : readString(formData, "type");
   const hubRaw = readString(formData, "hubId");
   const priceRaw = readString(formData, "price");
   const condition = readString(formData, "condition");
@@ -120,11 +170,18 @@ export function parseSellerListing(formData: FormData): SellerListingResult {
         error: "Say the file format. PDF, WAV, OTF — not “digital asset.”",
       };
     }
+    if (existing && isGiftFileFormat(fileFormat)) {
+      return {
+        ok: false,
+        error:
+          "The mall already sells one gift card. Retape a file — PDF, WAV, OTF.",
+      };
+    }
 
     return {
       ok: true,
       listing: {
-        id: uniqueSellerListingId(type, title),
+        id: existing?.id ?? uniqueSellerListingId(type, title),
         stallId: stall.id,
         type: "digital",
         title,
@@ -132,8 +189,8 @@ export function parseSellerListing(formData: FormData): SellerListingResult {
         hubId: "download-stall",
         price: money(amountCents),
         fileFormat,
-        cartEligible: true,
-        status: "available",
+        cartEligible: existing?.cartEligible ?? true,
+        status: existing?.status ?? "available",
       },
     };
   }
@@ -172,7 +229,7 @@ export function parseSellerListing(formData: FormData): SellerListingResult {
   return {
     ok: true,
     listing: {
-      id: uniqueSellerListingId(type, title),
+      id: existing?.id ?? uniqueSellerListingId(type, title),
       stallId: stall.id,
       type: "physical",
       title,
@@ -180,8 +237,8 @@ export function parseSellerListing(formData: FormData): SellerListingResult {
       hubId: hub.id,
       price: money(amountCents),
       condition,
-      cartEligible: true,
-      status: "available",
+      cartEligible: existing?.cartEligible ?? true,
+      status: existing?.status ?? "available",
     },
   };
 }

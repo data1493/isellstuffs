@@ -71,6 +71,14 @@ export function sellDeskSoldPath() {
   return "/sell/desk/sold";
 }
 
+export function sellListingEditPath(id: string) {
+  return `/sell/listings/${encodeURIComponent(id)}/edit`;
+}
+
+export function sellListingRetapePath(id: string) {
+  return `/sell/listings/${encodeURIComponent(id)}/retape`;
+}
+
 export function feesPath() {
   return "/fees";
 }
