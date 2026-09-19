@@ -99,21 +99,30 @@ export function createStandInGiftCredit(at = new Date().toISOString()): GiftCred
   };
 }
 
+export function existingStandInCredit(credits: GiftCredit[]) {
+  return (
+    creditForCode(credits, STAND_IN_GIFT_CODE) ??
+    credits.find((credit) => credit.id === STAND_IN_GIFT_CREDIT_ID)
+  );
+}
+
 export function redeemGiftCode(
   existing: GiftCredit[],
   raw: string,
 ): GiftRedeemResult {
   const trimmed = raw.trim();
+  const found = existingStandInCredit(existing);
+
+  // Empty submit with a stamp already on this desk is the same slip, not a miss.
   if (!trimmed) {
+    if (found) {
+      return { ok: true, minted: false, credit: found, credits: existing };
+    }
     return { ok: false, reason: "empty", credits: existing };
   }
   if (!isStandInGiftCode(trimmed)) {
     return { ok: false, reason: "unknown", credits: existing };
   }
-
-  const found =
-    creditForCode(existing, STAND_IN_GIFT_CODE) ??
-    existing.find((credit) => credit.id === STAND_IN_GIFT_CREDIT_ID);
 
   if (found) {
     return { ok: true, minted: false, credit: found, credits: existing };

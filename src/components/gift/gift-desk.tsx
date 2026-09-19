@@ -8,7 +8,7 @@ import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import { type GiftCredit } from "@/lib/gift-desk";
+import { existingStandInCredit, type GiftCredit } from "@/lib/gift-desk";
 import { listingPath } from "@/lib/paths";
 
 export function GiftDesk({
@@ -70,7 +70,7 @@ export function GiftDesk({
                 not a second $25.
               </p>
             </div>
-            <GiftForm />
+            <GiftForm defaultCode={existingStandInCredit(credits)?.code ?? ""} />
           </div>
 
           <div className="space-y-4">

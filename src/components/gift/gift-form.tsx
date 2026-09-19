@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { giftRedeemPath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 
-export function GiftForm() {
+export function GiftForm({ defaultCode = "" }: { defaultCode?: string }) {
   return (
     <form method="post" action={giftRedeemPath()} className="space-y-4">
       <div className="space-y-1.5">
@@ -13,7 +13,8 @@ export function GiftForm() {
           name="code"
           autoComplete="off"
           spellCheck={false}
-          placeholder="MALL-GIFT-25-DESK"
+          defaultValue={defaultCode}
+          placeholder="paste the folder code"
           className="h-11 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 font-mono text-base uppercase outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
       </div>
