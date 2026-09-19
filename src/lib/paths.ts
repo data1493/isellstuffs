@@ -274,6 +274,14 @@ export function listingToeWritePath() {
   return "/listings/toe";
 }
 
+export function listingStemsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/stems`;
+}
+
+export function listingStemsWritePath() {
+  return "/listings/stems";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
