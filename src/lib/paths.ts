@@ -1250,6 +1250,14 @@ export function listingFlockWritePath() {
   return "/listings/flock";
 }
 
+export function listingProofPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/proof`;
+}
+
+export function listingProofWritePath() {
+  return "/listings/proof";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

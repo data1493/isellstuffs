@@ -609,6 +609,12 @@ import {
   subscribeSubset,
 } from "@/lib/listing-subset";
 import {
+  canTapeProof,
+  isListingProofOverlay,
+  readProofListingIds,
+  subscribeProof,
+} from "@/lib/listing-proof";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -754,6 +760,7 @@ import {
   listingGateWritePath,
   listingQuantizeWritePath,
   listingSubsetWritePath,
+  listingProofWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -964,6 +971,7 @@ export function DeskBoard({
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
   const [subsetIds, setSubsetIds] = useState<string[]>([]);
+  const [proofIds, setProofIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1091,6 +1099,7 @@ export function DeskBoard({
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
       setSubsetIds(readSubsetListingIds());
+      setProofIds(readProofListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1207,6 +1216,7 @@ export function DeskBoard({
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
     const unsubSubset = subscribeSubset(apply);
+    const unsubProof = subscribeProof(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1333,6 +1343,7 @@ export function DeskBoard({
       unsubGate();
       unsubQuantize();
       unsubSubset();
+      unsubProof();
     };
   }, [listings, stall.id]);
 
@@ -3684,6 +3695,37 @@ export function DeskBoard({
                             {isListingScaleOverlay(listing.id, scaleIds)
                               ? "Leave the vibes"
                               : "I will not scale them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeProof(listing) ? (
+                        <form
+                          method="post"
+                          action={listingProofWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingProofOverlay(listing.id, proofIds)
+                                ? "open"
+                                : "proof"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingProofOverlay(listing.id, proofIds)
+                              ? "Leave the vibes"
+                              : "I will not proof them"}
                           </button>
                         </form>
                       ) : null}

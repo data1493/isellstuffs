@@ -151,6 +151,7 @@ import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSubsetNotice } from "@/components/listing-subset-notice";
+import { ListingProofNotice } from "@/components/listing-proof-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -569,6 +570,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
               {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingScaleNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingProofNotice listingId={listing.id} /> : null}
               {!physical ? <ListingGreaseNotice listingId={listing.id} /> : null}
               {!physical ? <ListingDoubleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingMinsNotice listingId={listing.id} /> : null}
