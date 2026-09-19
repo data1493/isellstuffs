@@ -27,6 +27,7 @@ import { ListingWashNotice } from "@/components/listing-wash-notice";
 import { ListingRemoteNotice } from "@/components/listing-remote-notice";
 import { ListingSkipNotice } from "@/components/listing-skip-notice";
 import { ListingGradeNotice } from "@/components/listing-grade-notice";
+import { ListingWorkbookNotice } from "@/components/listing-workbook-notice";
 import { ListingStemsNotice } from "@/components/listing-stems-notice";
 import { ListingPileNotice } from "@/components/listing-pile-notice";
 import { ListingStrapNotice } from "@/components/listing-strap-notice";
@@ -86,6 +87,7 @@ import {
   listingRemotePath,
   listingSkipPath,
   listingGradePath,
+  listingWorkbookPath,
   listingStemsPath,
   listingPilePath,
   listingStrapPath,
@@ -283,6 +285,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingRemoteNotice listingId={listing.id} /> : null}
               {physical ? <ListingSkipNotice listingId={listing.id} /> : null}
               {!physical ? <ListingGradeNotice listingId={listing.id} /> : null}
+              {!physical ? (
+                <ListingWorkbookNotice listingId={listing.id} />
+              ) : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -527,6 +532,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I don't grade your lot
+                  </Link>
+                  <Link
+                    href={listingWorkbookPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    There is no workbook
                   </Link>
                   <Link
                     href={listingStemsPath(listing.id)}

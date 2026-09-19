@@ -306,6 +306,14 @@ export function listingChipWritePath() {
   return "/listings/chip";
 }
 
+export function listingWorkbookPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/workbook`;
+}
+
+export function listingWorkbookWritePath() {
+  return "/listings/workbook";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
