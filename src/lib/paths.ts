@@ -131,6 +131,14 @@ export function sellTakenWritePath() {
   return "/sell/taken/write";
 }
 
+export function sellNoShowPath() {
+  return "/sell/no-show";
+}
+
+export function sellNoShowWritePath() {
+  return "/sell/no-show/write";
+}
+
 export function sellHoursPath(stall?: string) {
   const trimmed = stall?.trim() ?? "";
   if (!trimmed) {

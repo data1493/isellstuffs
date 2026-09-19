@@ -9,6 +9,7 @@ import {
   QueueDigitalOnly,
   QueueEmpty,
 } from "@/components/sell/queue-empty";
+import { NoShowButton } from "@/components/sell/no-show-button";
 import { TakenButton } from "@/components/sell/taken-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,11 +28,19 @@ import {
   type OrderSlip,
 } from "@/lib/order-history";
 import {
+  NO_SHOW_MIRROR_SCRIPT,
+  queueBoothsNotNoShow,
+  readNoShowHandoffs,
+  subscribeNoShow,
+  type NoShowHandoff,
+} from "@/lib/no-show-handoff";
+import {
   folderPath,
   listingPath,
   pickupSlipPath,
   sellDeskPath,
   sellDeskQueuePath,
+  sellNoShowPath,
   sellPath,
   sellTakenPath,
   stallPath,
@@ -50,6 +59,7 @@ import {
 
 const emptyOrders: OrderSlip[] = [];
 const emptyTaken: TakenHandoff[] = [];
+const emptyNoShow: NoShowHandoff[] = [];
 
 function mergeSeed(orders: OrderSlip[], seed: OrderSlip | null) {
   if (!seed) {
@@ -69,9 +79,11 @@ function whoIsComing(arrival: { buyerName?: string; slipId: string }) {
 export function QueueView({
   seed,
   takenSeed = emptyTaken,
+  noShowSeed = emptyNoShow,
 }: {
   seed: OrderSlip | null;
   takenSeed?: TakenHandoff[];
+  noShowSeed?: NoShowHandoff[];
 }) {
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
@@ -82,6 +94,11 @@ export function QueueView({
     subscribeTaken,
     readTakenHandoffs,
     () => takenSeed,
+  );
+  const missed = useSyncExternalStore(
+    subscribeNoShow,
+    readNoShowHandoffs,
+    () => noShowSeed,
   );
 
   useEffect(() => {
@@ -108,7 +125,10 @@ export function QueueView({
     );
   }
 
-  const booths = queueBoothsStillComing(queueBoothsFromSlips(orders), taken);
+  const booths = queueBoothsNotNoShow(
+    queueBoothsStillComing(queueBoothsFromSlips(orders), taken),
+    missed,
+  );
   const folderSlip = orders.find((order) =>
     folderHasDigitalLines(order.listingIds),
   );
@@ -128,6 +148,7 @@ export function QueueView({
   return (
     <div data-desk-queue="">
       <script dangerouslySetInnerHTML={{ __html: TAKEN_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: NO_SHOW_MIRROR_SCRIPT }} />
       <MallHero>
         <MallCrumb label="Driveway queue">
           <CrumbSep />
@@ -207,11 +228,17 @@ export function QueueView({
                           {arrival.slipId}
                         </Link>
                       </span>
-                      <div className="mt-2">
+                      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                         <TakenButton
                           slipId={arrival.slipId}
                           listingId={arrival.listing.id}
                           intent="taken"
+                          returnTo={sellDeskQueuePath()}
+                        />
+                        <NoShowButton
+                          slipId={arrival.slipId}
+                          listingId={arrival.listing.id}
+                          intent="noshow"
                           returnTo={sellDeskQueuePath()}
                         />
                       </div>
@@ -261,6 +288,13 @@ export function QueueView({
             render={<Link href={sellTakenPath()} />}
           >
             Who left with it
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full rounded-full sm:w-auto"
+            render={<Link href={sellNoShowPath()} />}
+          >
+            They never showed
           </Button>
           <Button
             variant="outline"
