@@ -70,18 +70,24 @@ export function isOrderSlip(value: unknown): value is OrderSlip {
   return true;
 }
 
+const emptySlips: OrderSlip[] = [];
+
+let cachedRaw: string | null | undefined;
+let cachedSlips: OrderSlip[] = emptySlips;
+
 export function parseOrderSlips(raw: string | null | undefined): OrderSlip[] {
   if (!raw) {
-    return [];
+    return emptySlips;
   }
   try {
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) {
-      return [];
+      return emptySlips;
     }
-    return parsed.filter(isOrderSlip);
+    const slips = parsed.filter(isOrderSlip);
+    return slips.length === 0 ? emptySlips : slips;
   } catch {
-    return [];
+    return emptySlips;
   }
 }
 
@@ -120,12 +126,18 @@ export function orderSlipFromCheckoutCookie(
 
 export function readOrderSlips(): OrderSlip[] {
   if (!canUseStorage()) {
-    return [];
+    return emptySlips;
   }
   try {
-    return parseOrderSlips(window.localStorage.getItem(ORDERS_STORAGE_KEY));
+    const raw = window.localStorage.getItem(ORDERS_STORAGE_KEY);
+    if (raw === cachedRaw) {
+      return cachedSlips;
+    }
+    cachedRaw = raw;
+    cachedSlips = parseOrderSlips(raw);
+    return cachedSlips;
   } catch {
-    return [];
+    return cachedSlips;
   }
 }
 
@@ -153,7 +165,10 @@ export function writeOrderSlip(order: OrderSlip) {
     ...existing.filter((item) => item.id !== order.id),
   ].slice(0, MAX_ORDERS);
   try {
-    window.localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(next));
+    const raw = JSON.stringify(next);
+    window.localStorage.setItem(ORDERS_STORAGE_KEY, raw);
+    cachedRaw = raw;
+    cachedSlips = next;
   } catch {
     // blocked storage
   }
@@ -166,6 +181,9 @@ export function subscribeOrderSlips(listener: () => void) {
   }
   const onStorage = (event: StorageEvent) => {
     if (event.key === ORDERS_STORAGE_KEY || event.key === null) {
+      if (event.key === null) {
+        cachedRaw = undefined;
+      }
       listener();
     }
   };

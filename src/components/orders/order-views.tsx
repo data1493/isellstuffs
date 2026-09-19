@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 import { OrderMissing, OrdersEmpty } from "@/components/orders/order-empty";
 import { OrderSlipCard } from "@/components/orders/order-slip";
@@ -44,16 +44,11 @@ export function OrderSlipView({
   orderId: string;
   seed: OrderSlip | null;
 }) {
-  const [mounted, setMounted] = useState(false);
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
     readOrderSlips,
     () => emptyOrders,
   );
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (seed) {
@@ -66,14 +61,6 @@ export function OrderSlipView({
     orders.find((item) => item.id === orderId) ??
     (seed?.id === orderId ? seed : null);
 
-  if (!mounted && !order) {
-    return (
-      <p className="px-4 py-16 text-sm text-muted-foreground sm:px-6">
-        Pulling your slip…
-      </p>
-    );
-  }
-
   if (!order) {
     return <OrderMissing />;
   }
@@ -82,16 +69,11 @@ export function OrderSlipView({
 }
 
 export function OrderIndexView({ seed }: { seed: OrderSlip | null }) {
-  const [mounted, setMounted] = useState(false);
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
     readOrderSlips,
     () => emptyOrders,
   );
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (seed) {
@@ -100,14 +82,6 @@ export function OrderIndexView({ seed }: { seed: OrderSlip | null }) {
   }, [seed]);
 
   const orders = mergeSeed(stored, seed);
-
-  if (!mounted && orders.length === 0) {
-    return (
-      <p className="px-4 py-16 text-sm text-muted-foreground sm:px-6">
-        Pulling your slips…
-      </p>
-    );
-  }
 
   if (orders.length === 0) {
     return <OrdersEmpty />;
