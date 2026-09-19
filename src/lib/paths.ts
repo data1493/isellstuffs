@@ -72,3 +72,11 @@ export function campaignPath(slug: string) {
 export function folderPath(slip: string) {
   return `/folder/${encodeURIComponent(slip)}`;
 }
+
+export function ordersPath() {
+  return "/orders";
+}
+
+export function orderPath(id: string) {
+  return `/orders/${encodeURIComponent(id)}`;
+}

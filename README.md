@@ -78,6 +78,8 @@ Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `i
 | `/checkout/cancel` | Walked away. Tote stays |
 | `/folder` | Current slip’s digital lines, or “No folder on this slip.” |
 | `/folder/[slip]` | One paid slip’s booth folder. Stand-in downloads, not a CDN |
+| `/orders` | Last paid totes in this browser. Stand-in slips, no account |
+| `/orders/[id]` | Reconstruct the tote from checkout listing ids |
 
 Open **http://127.0.0.1:44721/cart**. Deep-link with `?add=<listingId>` uses the same cart writer.
 

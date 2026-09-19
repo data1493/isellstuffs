@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 
 import { ClearCart } from "@/app/checkout/success/clear-cart";
+import { RememberOrder } from "@/components/orders/remember-order";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +20,7 @@ import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/ch
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { listingById } from "@/lib/commerce";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
-import { folderPath } from "@/lib/paths";
+import { folderPath, orderPath } from "@/lib/paths";
 import { checkoutSuccessMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = checkoutSuccessMetadata();
@@ -47,6 +48,7 @@ export default async function CheckoutSuccessPage({
   return (
     <div>
       <ClearCart active={Boolean(sessionId || stored)} />
+      <RememberOrder session={session} />
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
         <MallWidth className="flex flex-col gap-6 py-12 sm:py-16">
           <MallCrumb label="Receipt">
@@ -199,7 +201,19 @@ export default async function CheckoutSuccessPage({
           ) : null}
 
           <div className="flex flex-wrap gap-3">
-            <Button className="rounded-full" render={<Link href="/cart" />}>
+            {session ? (
+              <Button
+                className="rounded-full"
+                render={<Link href={orderPath(session.id)} />}
+              >
+                Open the order slip
+              </Button>
+            ) : null}
+            <Button
+              variant={session ? "outline" : undefined}
+              className="rounded-full"
+              render={<Link href="/cart" />}
+            >
               Shop another aisle
             </Button>
             <Button variant="outline" className="rounded-full" render={<Link href="/" />}>
