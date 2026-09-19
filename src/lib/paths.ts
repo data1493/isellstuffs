@@ -610,6 +610,14 @@ export function listingDoubleWritePath() {
   return "/listings/double";
 }
 
+export function listingMinsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/mins`;
+}
+
+export function listingMinsWritePath() {
+  return "/listings/mins";
+}
+
 export function listingPolishPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/polish`;
 }

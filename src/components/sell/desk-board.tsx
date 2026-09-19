@@ -159,6 +159,12 @@ import {
   subscribeDouble,
 } from "@/lib/listing-double";
 import {
+  canTapeMins,
+  isListingMinsOverlay,
+  readMinsListingIds,
+  subscribeMins,
+} from "@/lib/listing-mins";
+import {
   canTapePolish,
   isListingPolishOverlay,
   readPolishListingIds,
@@ -257,6 +263,7 @@ import {
 import {
   listingCardsWritePath,
   listingDoubleWritePath,
+  listingMinsWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
   listingGlassWritePath,
@@ -372,6 +379,7 @@ export function DeskBoard({
   const [bakeIds, setBakeIds] = useState<string[]>([]);
   const [glassIds, setGlassIds] = useState<string[]>([]);
   const [doubleIds, setDoubleIds] = useState<string[]>([]);
+  const [minsIds, setMinsIds] = useState<string[]>([]);
   const [polishIds, setPolishIds] = useState<string[]>([]);
   const [trayIds, setTrayIds] = useState<string[]>([]);
   const [insideIds, setInsideIds] = useState<string[]>([]);
@@ -427,6 +435,7 @@ export function DeskBoard({
       setBakeIds(readBakeListingIds());
       setGlassIds(readGlassListingIds());
       setDoubleIds(readDoubleListingIds());
+      setMinsIds(readMinsListingIds());
       setPolishIds(readPolishListingIds());
       setTrayIds(readTrayListingIds());
       setInsideIds(readInsideListingIds());
@@ -471,6 +480,7 @@ export function DeskBoard({
     const unsubBake = subscribeBake(apply);
     const unsubGlass = subscribeGlass(apply);
     const unsubDouble = subscribeDouble(apply);
+    const unsubMins = subscribeMins(apply);
     const unsubPolish = subscribePolish(apply);
     const unsubTray = subscribeTray(apply);
     const unsubInside = subscribeInside(apply);
@@ -525,6 +535,7 @@ export function DeskBoard({
       unsubBake();
       unsubGlass();
       unsubDouble();
+      unsubMins();
       unsubPolish();
       unsubTray();
       unsubInside();
@@ -1280,6 +1291,37 @@ export function DeskBoard({
                             {isListingDoubleOverlay(listing.id, doubleIds)
                               ? "Leave the three cards"
                               : "I will not double it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeMins(listing) ? (
+                        <form
+                          method="post"
+                          action={listingMinsWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingMinsOverlay(listing.id, minsIds)
+                                ? "open"
+                                : "mins"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingMinsOverlay(listing.id, minsIds)
+                              ? "Leave the vibes"
+                              : "I will not time it"}
                           </button>
                         </form>
                       ) : null}
