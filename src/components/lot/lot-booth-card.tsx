@@ -34,6 +34,7 @@ export function LotBoothCard({
   wrapNote,
   shellNote,
   stickNote,
+  digNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -50,6 +51,7 @@ export function LotBoothCard({
   wrapNote?: string;
   shellNote?: string;
   stickNote?: string;
+  digNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -202,6 +204,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-stick-empty={stall.id} hidden />
+          )}
+          {digNote ? (
+            <p
+              data-booth-dig-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Don&apos;t dig under. {digNote}
+            </p>
+          ) : (
+            <p data-booth-dig-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

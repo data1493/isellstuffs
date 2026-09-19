@@ -121,6 +121,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | I wrap breakables | http://127.0.0.1:44721/stalls/the-sink-drawer/wrap |
 | Don't open the shell | http://127.0.0.1:44721/stalls/half-working/shell |
 | I don't email the zip | http://127.0.0.1:44721/stalls/beats-under-the-table/stick |
+| Don't dig under | http://127.0.0.1:44721/stalls/sunday-crate/dig |
 | Still-here price sheet | http://127.0.0.1:44721/stalls/folding-table-tuesday/tape |
 | Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
 | Paid stash | http://127.0.0.1:44721/stalls/folding-table-tuesday/stash |
@@ -223,6 +224,8 @@ A stallholder can tape a factory-seal note at `/stalls/[slug]/shell`. “don't o
 
 A stallholder can tape a zip note at `/stalls/[slug]/stick`. “I don't email the zip. Pay and open the folder.” stays after reload. Cookie `iss-booth-stick` + `iss:booth-stick`. Native `POST /stalls/stick` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. Pay and open the folder, or bring a stick. Not SMTP. Plays is the disc. Folder already delivers. The stall and `/lot` show the note. Tuesday stick stays empty if Beats taped.
 
+A stallholder can tape a gravel note at `/stalls/[slug]/dig`. “Don't dig under. The zips are not in the gravel.” stays after reload. Cookie `iss-booth-dig` + `iss:booth-dig`. Native `POST /stalls/dig` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. Ask what's on the table. Van is more out back. Lost is sunglasses. Walkers still crawl under Sunday Crate. The stall and `/lot` show the note. Tuesday dig stays empty if Sunday Crate taped.
+
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
 A stall can print a still-here price sheet at `/stalls/[slug]/tape` — lamp and PDF prices on the paper, sold chair off the sheet. Not a driveway 3×5. Not a tote scoop. Not a booth scrap.
@@ -319,7 +322,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/listings/[id]/heavy`, `/listings/[id]/pockets`, `/listings/[id]/press`, `/listings/[id]/parts`, `/listings/[id]/cells`, `/listings/[id]/smoke`, `/listings/[id]/size`, `/listings/[id]/fits`, `/listings/[id]/plays`, `/listings/[id]/laces`, `/listings/[id]/cases`, `/listings/[id]/heat`, `/listings/[id]/bent`, `/listings/[id]/cord`, `/listings/[id]/wash`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/buy`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/stalls/[slug]/stay`, `/stalls/[slug]/shade`, `/stalls/[slug]/film`, `/stalls/[slug]/kids`, `/stalls/[slug]/poly`, `/stalls/[slug]/wrap`, `/stalls/[slug]/shell`, `/stalls/[slug]/stick`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/listings/[id]/heavy`, `/listings/[id]/pockets`, `/listings/[id]/press`, `/listings/[id]/parts`, `/listings/[id]/cells`, `/listings/[id]/smoke`, `/listings/[id]/size`, `/listings/[id]/fits`, `/listings/[id]/plays`, `/listings/[id]/laces`, `/listings/[id]/cases`, `/listings/[id]/heat`, `/listings/[id]/bent`, `/listings/[id]/cord`, `/listings/[id]/wash`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/buy`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/stalls/[slug]/stay`, `/stalls/[slug]/shade`, `/stalls/[slug]/film`, `/stalls/[slug]/kids`, `/stalls/[slug]/poly`, `/stalls/[slug]/wrap`, `/stalls/[slug]/shell`, `/stalls/[slug]/stick`, `/stalls/[slug]/dig`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

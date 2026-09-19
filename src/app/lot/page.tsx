@@ -50,6 +50,11 @@ import {
   parseBoothStick,
 } from "@/lib/booth-stick";
 import {
+  BOOTH_DIG_COOKIE_NAME,
+  BOOTH_DIG_MIRROR_SCRIPT,
+  parseBoothDig,
+} from "@/lib/booth-dig";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -106,6 +111,7 @@ export default async function LotPage() {
   const wrapMap = parseBoothWrap(jar.get(BOOTH_WRAP_COOKIE_NAME)?.value);
   const shellMap = parseBoothShell(jar.get(BOOTH_SHELL_COOKIE_NAME)?.value);
   const stickMap = parseBoothStick(jar.get(BOOTH_STICK_COOKIE_NAME)?.value);
+  const digMap = parseBoothDig(jar.get(BOOTH_DIG_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -127,6 +133,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WRAP_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SHELL_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STICK_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_DIG_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -149,6 +156,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WRAP_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SHELL_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STICK_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_DIG_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -222,6 +230,7 @@ export default async function LotPage() {
                     wrapNote={wrapMap[row.stall.id]?.note}
                     shellNote={shellMap[row.stall.id]?.note}
                     stickNote={stickMap[row.stall.id]?.note}
+                    digNote={digMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -260,6 +269,7 @@ export default async function LotPage() {
                     wrapNote={wrapMap[row.stall.id]?.note}
                     shellNote={shellMap[row.stall.id]?.note}
                     stickNote={stickMap[row.stall.id]?.note}
+                    digNote={digMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

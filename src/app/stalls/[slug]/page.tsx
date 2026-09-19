@@ -84,6 +84,13 @@ import {
   stallStickPath,
 } from "@/lib/booth-stick";
 import {
+  BOOTH_DIG_COOKIE_NAME,
+  BOOTH_DIG_PAPER_LINE,
+  boothDigFor,
+  parseBoothDig,
+  stallDigPath,
+} from "@/lib/booth-dig";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -239,6 +246,10 @@ export default async function StallPage({
   const stick = boothStickFor(
     stall.id,
     parseBoothStick(jar.get(BOOTH_STICK_COOKIE_NAME)?.value),
+  );
+  const dig = boothDigFor(
+    stall.id,
+    parseBoothDig(jar.get(BOOTH_DIG_COOKIE_NAME)?.value),
   );
 
   return (
@@ -498,6 +509,23 @@ export default async function StallPage({
             <p data-booth-stick-empty={stall.id} hidden />
           )}
 
+          {dig ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Don't dig under"
+              title="The zips are not in the gravel."
+              body={
+                <p data-booth-dig-note={stall.id}>
+                  {dig.note} {BOOTH_DIG_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-dig-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -610,6 +638,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t email the zip
+          </Link>
+
+          <Link
+            href={stallDigPath(stall.slug)}
+            data-booth-dig-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Don&apos;t dig under
           </Link>
 
           <Link
