@@ -1146,6 +1146,14 @@ export function listingScaleWritePath() {
   return "/listings/scale";
 }
 
+export function listingRivetPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rivet`;
+}
+
+export function listingRivetWritePath() {
+  return "/listings/rivet";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }

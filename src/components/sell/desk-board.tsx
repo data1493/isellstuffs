@@ -519,6 +519,12 @@ import {
   subscribeKnurl,
 } from "@/lib/listing-knurl";
 import {
+  canTapeRivet,
+  isListingRivetOverlay,
+  readRivetListingIds,
+  subscribeRivet,
+} from "@/lib/listing-rivet";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -667,6 +673,7 @@ import {
   listingHandleWritePath,
   listingDegaussWritePath,
   listingKnurlWritePath,
+  listingRivetWritePath,
   listingPaginateWritePath,
   listingScaleWritePath,
   listingGateWritePath,
@@ -849,6 +856,7 @@ export function DeskBoard({
   const [handleIds, setHandleIds] = useState<string[]>([]);
   const [degaussIds, setDegaussIds] = useState<string[]>([]);
   const [knurlIds, setKnurlIds] = useState<string[]>([]);
+  const [rivetIds, setRivetIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -964,6 +972,7 @@ export function DeskBoard({
       setHandleIds(readHandleListingIds());
       setDegaussIds(readDegaussListingIds());
       setKnurlIds(readKnurlListingIds());
+      setRivetIds(readRivetListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1068,6 +1077,7 @@ export function DeskBoard({
     const unsubHandle = subscribeHandle(apply);
     const unsubDegauss = subscribeDegauss(apply);
     const unsubKnurl = subscribeKnurl(apply);
+    const unsubRivet = subscribeRivet(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1182,6 +1192,7 @@ export function DeskBoard({
       unsubHandle();
       unsubDegauss();
       unsubKnurl();
+      unsubRivet();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2529,6 +2540,37 @@ export function DeskBoard({
                             {isListingKnurlOverlay(listing.id, knurlIds)
                               ? "Leave the lid"
                               : "I will not knurl it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRivet(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRivetWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRivetOverlay(listing.id, rivetIds)
+                                ? "open"
+                                : "rivet"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRivetOverlay(listing.id, rivetIds)
+                              ? "Leave the shade"
+                              : "I will not rivet it"}
                           </button>
                         </form>
                       ) : null}
