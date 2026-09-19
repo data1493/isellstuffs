@@ -43,6 +43,7 @@ import { ListingKnobNotice } from "@/components/listing-knob-notice";
 import { ListingBoxNotice } from "@/components/listing-box-notice";
 import { ListingHairNotice } from "@/components/listing-hair-notice";
 import { ListingVibeNotice } from "@/components/listing-vibe-notice";
+import { ListingClipNotice } from "@/components/listing-clip-notice";
 import { ListingWrongNotice } from "@/components/listing-wrong-notice";
 import { ListingFoundryNotice } from "@/components/listing-foundry-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
@@ -111,6 +112,7 @@ import {
   listingBoxPath,
   listingHairPath,
   listingVibePath,
+  listingClipPath,
   listingWrongPath,
   listingFoundryPath,
   listingManualPath,
@@ -306,6 +308,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
               {!physical ? <ListingWrongNotice listingId={listing.id} /> : null}
               {!physical ? (
                 <ListingFoundryNotice listingId={listing.id} />
@@ -606,6 +609,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Measurements are vibes
+                  </Link>
+                  <Link
+                    href={listingClipPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The clip walked
                   </Link>
                   <Link
                     href={listingWrongPath(listing.id)}

@@ -378,6 +378,14 @@ export function listingHairWritePath() {
   return "/listings/hair";
 }
 
+export function listingClipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/clip`;
+}
+
+export function listingClipWritePath() {
+  return "/listings/clip";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
