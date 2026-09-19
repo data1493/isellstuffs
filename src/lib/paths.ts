@@ -418,6 +418,14 @@ export function listingConvertWritePath() {
   return "/listings/convert";
 }
 
+export function listingDustPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dust`;
+}
+
+export function listingDustWritePath() {
+  return "/listings/dust";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

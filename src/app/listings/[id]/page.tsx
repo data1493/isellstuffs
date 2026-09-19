@@ -52,6 +52,7 @@ import { ListingConvertNotice } from "@/components/listing-convert-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
 import { ListingOilNotice } from "@/components/listing-oil-notice";
 import { ListingSleeveNotice } from "@/components/listing-sleeve-notice";
+import { ListingDustNotice } from "@/components/listing-dust-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -125,6 +126,7 @@ import {
   listingManualPath,
   listingOilPath,
   listingSleevePath,
+  listingDustPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -342,6 +344,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingLineNotice listingId={listing.id} /> : null}
               {physical ? <ListingSongsNotice listingId={listing.id} /> : null}
               {physical ? <ListingSleeveNotice listingId={listing.id} /> : null}
+              {physical ? <ListingDustNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -608,6 +611,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The grocery bag is the sleeve
+                  </Link>
+                  <Link
+                    href={listingDustPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The dust stays
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
