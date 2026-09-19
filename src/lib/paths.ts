@@ -746,6 +746,14 @@ export function listingTrayWritePath() {
   return "/listings/tray";
 }
 
+export function listingBalancePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/balance`;
+}
+
+export function listingBalanceWritePath() {
+  return "/listings/balance";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

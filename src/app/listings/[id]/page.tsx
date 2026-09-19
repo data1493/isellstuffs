@@ -51,6 +51,7 @@ import { ListingFoundryNotice } from "@/components/listing-foundry-notice";
 import { ListingConvertNotice } from "@/components/listing-convert-notice";
 import { ListingShotNotice } from "@/components/listing-shot-notice";
 import { ListingWarmNotice } from "@/components/listing-warm-notice";
+import { ListingBalanceNotice } from "@/components/listing-balance-notice";
 import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
 import { ListingOilNotice } from "@/components/listing-oil-notice";
@@ -165,6 +166,7 @@ import {
   listingConvertPath,
   listingShotPath,
   listingWarmPath,
+  listingBalancePath,
   listingBpmPath,
   listingManualPath,
   listingOilPath,
@@ -420,6 +422,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? <ListingShotNotice listingId={listing.id} /> : null}
               {!physical ? <ListingWarmNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingBalanceNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
               {!physical ? <ListingTuneNotice listingId={listing.id} /> : null}
@@ -1010,6 +1013,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     Warm stays warm
+                  </Link>
+                  <Link
+                    href={listingBalancePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not balance it
                   </Link>
                   <Link
                     href={listingBpmPath(listing.id)}

@@ -69,6 +69,12 @@ import {
   subscribeWarm,
 } from "@/lib/listing-warm";
 import {
+  canTapeBalance,
+  isListingBalanceOverlay,
+  readBalanceListingIds,
+  subscribeBalance,
+} from "@/lib/listing-balance";
+import {
   canTapeZip,
   isListingZipOverlay,
   readZipListingIds,
@@ -280,6 +286,7 @@ import {
   listingBakeWritePath,
   listingShotWritePath,
   listingWarmWritePath,
+  listingBalanceWritePath,
   listingTypesetWritePath,
   listingReviseWritePath,
   listingTwistWritePath,
@@ -351,6 +358,7 @@ export function DeskBoard({
   const [zipIds, setZipIds] = useState<string[]>([]);
   const [shotIds, setShotIds] = useState<string[]>([]);
   const [warmIds, setWarmIds] = useState<string[]>([]);
+  const [balanceIds, setBalanceIds] = useState<string[]>([]);
   const [whoseIds, setWhoseIds] = useState<string[]>([]);
   const [typesetIds, setTypesetIds] = useState<string[]>([]);
   const [reviseIds, setReviseIds] = useState<string[]>([]);
@@ -405,6 +413,7 @@ export function DeskBoard({
       setZipIds(readZipListingIds());
       setShotIds(readShotListingIds());
       setWarmIds(readWarmListingIds());
+      setBalanceIds(readBalanceListingIds());
       setWhoseIds(readWhoseListingIds());
       setTypesetIds(readTypesetListingIds());
       setReviseIds(readReviseListingIds());
@@ -448,6 +457,7 @@ export function DeskBoard({
     const unsubZip = subscribeZip(apply);
     const unsubShot = subscribeShot(apply);
     const unsubWarm = subscribeWarm(apply);
+    const unsubBalance = subscribeBalance(apply);
     const unsubWhose = subscribeWhose(apply);
     const unsubTypeset = subscribeTypeset(apply);
     const unsubRevise = subscribeRevise(apply);
@@ -501,6 +511,7 @@ export function DeskBoard({
       unsubZip();
       unsubShot();
       unsubWarm();
+      unsubBalance();
       unsubWhose();
       unsubTypeset();
       unsubRevise();
@@ -1362,6 +1373,37 @@ export function DeskBoard({
                             {isListingWarmOverlay(listing.id, warmIds)
                               ? "Leave the three looks"
                               : "Warm stays warm"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBalance(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBalanceWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBalanceOverlay(listing.id, balanceIds)
+                                ? "open"
+                                : "balance"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBalanceOverlay(listing.id, balanceIds)
+                              ? "Leave the three looks"
+                              : "I will not balance it"}
                           </button>
                         </form>
                       ) : null}
