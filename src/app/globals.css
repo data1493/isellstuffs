@@ -165,4 +165,12 @@
     background: #fff;
     background-image: none;
   }
+  body:has(.yard-sign-print) header,
+  body:has(.yard-sign-print) footer {
+    display: none;
+  }
+  body:has(.yard-sign-print) {
+    background: #fff;
+    background-image: none;
+  }
 }

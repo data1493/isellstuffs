@@ -84,6 +84,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
 | Booth scrap | http://127.0.0.1:44721/stalls/folding-table-tuesday/scrap |
 | Still-here price sheet | http://127.0.0.1:44721/stalls/folding-table-tuesday/tape |
+| Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
 | Watched tables | http://127.0.0.1:44721/watched |
 | Hunt board | http://127.0.0.1:44721/wanted |
 | Kitchen Drawer booth desk | http://127.0.0.1:44721/sell/desk/the-sink-drawer |
@@ -111,6 +112,8 @@ A stallholder can tape a sticky on the booth at `/stalls/[slug]/scrap`. “cash 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
 A stall can print a still-here price sheet at `/stalls/[slug]/tape` — lamp and PDF prices on the paper, sold chair off the sheet. Not a driveway 3×5. Not a tote scoop. Not a booth scrap.
+
+A stall can print a driveway hours sign at `/stalls/[slug]/sign` — stall name and fixture hours at the curb. Packed booths have no sign. Not the price tape. Not a paid flyer. Not a 3×5 on a lamp.
 
 Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape to cookie `iss-saved-listing-ids` plus `localStorage` key `iss:saved-listing-ids` via `@/lib/saved`. Saving does not add to the tote. Adding to the tote does not drop the pile. **Bag the pile** POSTs to `/saved/bag` and copies still-here ids onto the existing tote writer (`@/lib/cart`). Sold, file-gone, and missing SKUs stay parked. The pile cookie stays.
 
@@ -185,6 +188,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/listings/[id]` | `{title} · {price}` plus condition/format, stall, status. Product + Offer JSON-LD |
 | `/stalls/[slug]` | Booth name, mix of objects and files |
 | `/stalls/[slug]/tape` | Still-here price sheet. Available objects and files. Sold and file-gone stay off. `noindex` |
+| `/stalls/[slug]/sign` | Driveway hours sign. Stall name + fixture or taped weekend hours. Packed booths have no sign. `noindex` |
 | `/about` | The mall story — flea-market mall, 10% cut, labeled ads, not a warehouse |
 | `/help` | How this mall works — browse, tote, mock pay, folder slip, list a stall |
 | `/lot` | Who set up. Booths on the lot vs in the car. Not this week's picks |
