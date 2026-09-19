@@ -218,6 +218,14 @@ export function listingGradeWritePath() {
   return "/listings/grade";
 }
 
+export function listingPilePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pile`;
+}
+
+export function listingPileWritePath() {
+  return "/listings/pile";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
