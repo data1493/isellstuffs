@@ -33,6 +33,10 @@ export function sellNewPath() {
   return "/sell/new";
 }
 
+export function feesPath() {
+  return "/fees";
+}
+
 export function campaignPath(slug: string) {
   return `/campaigns/${slug}`;
 }

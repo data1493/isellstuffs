@@ -41,6 +41,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
+| `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |
 
 New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads.
 

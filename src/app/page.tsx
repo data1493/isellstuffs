@@ -22,6 +22,7 @@ import {
   listingsByType,
   mallHubs,
 } from "@/lib/commerce";
+import { feesPath } from "@/lib/paths";
 import { homeMetadata, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -165,6 +166,14 @@ export default function Home() {
             </p>
           </article>
         </div>
+        <p className="mt-8 text-sm leading-6">
+          <Link
+            href={feesPath()}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Read the cut
+          </Link>
+        </p>
       </MallSection>
 
       <MallSection id="same-stall">

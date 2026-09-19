@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { PLATFORM_FEE_BPS } from "@/lib/checkout";
 import { formatMoney, mallHubs, money, stalls } from "@/lib/commerce";
-import { advertisePath, sellNewPath, sellPath, stallPath } from "@/lib/paths";
+import { advertisePath, feesPath, sellNewPath, sellPath, stallPath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -166,7 +166,14 @@ export default function SellPage() {
         </div>
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted-foreground">
           Payouts are a stand-in. There is no live Connect onboarding. You are
-          putting something on a table, not opening a merchant account.
+          putting something on a table, not opening a merchant account.{" "}
+          <Link
+            href={feesPath()}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Read the cut
+          </Link>
+          .
         </p>
       </MallSection>
 
