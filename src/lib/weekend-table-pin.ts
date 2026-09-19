@@ -148,6 +148,19 @@ export function appendWeekendPins(
 
 export function readWeekendPinIds(): string[] {
   if (canUseStorage()) {
+    const fromCookie = readCookieRaw();
+    if (fromCookie != null && fromCookie !== "") {
+      const ids = snapshotFromRaw(fromCookie);
+      try {
+        window.localStorage.setItem(
+          WEEKEND_PINS_STORAGE_KEY,
+          weekendPinCookieValue(ids),
+        );
+      } catch {
+        // blocked storage
+      }
+      return ids;
+    }
     try {
       const fromStorage = window.localStorage.getItem(WEEKEND_PINS_STORAGE_KEY);
       if (fromStorage != null && fromStorage !== "") {
@@ -156,7 +169,7 @@ export function readWeekendPinIds(): string[] {
     } catch {
       // blocked storage
     }
-    return snapshotFromRaw(readCookieRaw());
+    return emptyIds;
   }
 
   return uniqueListingIds(serverStore());
