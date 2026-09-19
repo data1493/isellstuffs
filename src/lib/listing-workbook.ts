@@ -245,7 +245,7 @@ export function markListingWorkbook(
     return refused;
   }
   if (listingIds.includes(listing!.id)) {
-    return { ok: true; listingIds };
+    return { ok: true, listingIds };
   }
   return { ok: true, listingIds: [...listingIds, listing!.id] };
 }
