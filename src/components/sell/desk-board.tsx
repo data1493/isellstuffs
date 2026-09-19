@@ -501,6 +501,12 @@ import {
   subscribeLathe,
 } from "@/lib/listing-lathe";
 import {
+  canTapeHandle,
+  isListingHandleOverlay,
+  readHandleListingIds,
+  subscribeHandle,
+} from "@/lib/listing-handle";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -634,6 +640,7 @@ import {
   listingDartWritePath,
   listingTinWritePath,
   listingLatheWritePath,
+  listingHandleWritePath,
   listingPaginateWritePath,
   listingGateWritePath,
   listingContrastWritePath,
@@ -811,6 +818,7 @@ export function DeskBoard({
   const [contrastIds, setContrastIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
+  const [handleIds, setHandleIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -921,6 +929,7 @@ export function DeskBoard({
       setContrastIds(readContrastListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
+      setHandleIds(readHandleListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1020,6 +1029,7 @@ export function DeskBoard({
     const unsubContrast = subscribeContrast(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
+    const unsubHandle = subscribeHandle(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1129,6 +1139,7 @@ export function DeskBoard({
       unsubContrast();
       unsubTin();
       unsubLathe();
+      unsubHandle();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2381,6 +2392,37 @@ export function DeskBoard({
                             {isListingLatheOverlay(listing.id, latheIds)
                               ? "Leave the scratch"
                               : "I will not lathe it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHandle(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHandleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHandleOverlay(listing.id, handleIds)
+                                ? "open"
+                                : "handle"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingHandleOverlay(listing.id, handleIds)
+                              ? "Leave the mug"
+                              : "I will not handle it"}
                           </button>
                         </form>
                       ) : null}

@@ -1114,6 +1114,14 @@ export function listingLatheWritePath() {
   return "/listings/lathe";
 }
 
+export function listingHandlePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/handle`;
+}
+
+export function listingHandleWritePath() {
+  return "/listings/handle";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }
