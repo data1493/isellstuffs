@@ -234,6 +234,14 @@ export function listingStrapWritePath() {
   return "/listings/strap";
 }
 
+export function listingRingPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ring`;
+}
+
+export function listingRingWritePath() {
+  return "/listings/ring";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

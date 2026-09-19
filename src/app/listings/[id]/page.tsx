@@ -29,6 +29,7 @@ import { ListingSkipNotice } from "@/components/listing-skip-notice";
 import { ListingGradeNotice } from "@/components/listing-grade-notice";
 import { ListingPileNotice } from "@/components/listing-pile-notice";
 import { ListingStrapNotice } from "@/components/listing-strap-notice";
+import { ListingRingNotice } from "@/components/listing-ring-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -79,6 +80,7 @@ import {
   listingGradePath,
   listingPilePath,
   listingStrapPath,
+  listingRingPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -267,6 +269,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingGradeNotice listingId={listing.id} /> : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
+              {physical ? <ListingRingNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -437,6 +440,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The strap walked
+                  </Link>
+                  <Link
+                    href={listingRingPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The water ring stays
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
