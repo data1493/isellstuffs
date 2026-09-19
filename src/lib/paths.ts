@@ -58,6 +58,14 @@ export function listingWithWritePath() {
   return "/listings/with";
 }
 
+export function listingAskPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ask`;
+}
+
+export function listingAskWritePath() {
+  return "/listings/ask";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

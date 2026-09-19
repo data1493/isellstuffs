@@ -82,6 +82,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Offer slip | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/offer |
 | That's the price | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/firm |
 | Look, don't bag | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/look |
+| Ask before you flip it | http://127.0.0.1:44721/listings/mdb-scratched-lp/ask |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | More in the van | http://127.0.0.1:44721/listings/gtk-cable-drawer/van |
@@ -126,6 +127,8 @@ Physical listings can tape a paper haggle at `/listings/[id]/offer`. Write dolla
 Physical listings can tape firm paper at `/listings/[id]/firm`. That's the price. The seller will not move. Native `POST /listings/[id]/firm/tape` (form: `listingId`, `intent=firm|open`) writes `iss:firm-listing-ids` / cookie `iss-firm-listing-ids`. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The Closet windbreaker stays empty if you firmed the lamp. An offer is the other paper.
 
 Physical listings can sit as a display piece at `/listings/[id]/look`. Native `POST /listings/look` (form: `listingId`, `intent=look|open`) writes `iss:look-listing-ids` / cookie `iss-look-listing-ids`. Shop lookups stamp `cartEligible: false` and leave `status` alone. Look drops that id from the tote. Sell-again restores Add to cart. Gift cards and PDFs are refused. Tuesday stays on `/lot`. Not a sold sticker. Not a pack-up.
+
+Physical listings can tape an ask-first flag at `/listings/[id]/ask`. Native `POST /listings/ask` (form: `listingId`, `intent=ask|flip`) writes `iss:ask-listing-ids` / cookie `iss-ask-listing-ids`. Ask before you flip it. Still for sale. Not look. Not a hold. Still baggable — `status`, `cartEligible`, and `price` stay put. Gift cards and PDFs are refused. The lamp stays empty if you asked the LP. Look cookie is not written.
 
 Physical listings can tape a van note at `/listings/[id]/van`. Native `POST /listings/van` (form: `listingId`, `intent=van|table`) writes `iss:van-listing-ids` / cookie `iss-van-listing-ids`. More out back. Ask. Still baggable — `status` and `cartEligible` stay put. Gift cards and PDFs are refused. Garage is home. Look is not for sale. Not a sold sticker.
 
@@ -241,7 +244,7 @@ Route titles, Open Graph, Twitter cards, and listing Product JSON-LD live in `@/
 | `/collections`, `/collections/[slug]` | Racks, not aisles. Under a ten, files tonight, tested kinda |
 | `/sell/desk` | Your table tonight — Folding Table Tuesday stallholder home |
 | `/sell/desk/[stall]` | Same desk for that booth. Unknown slug packed up. |
-| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
+| `/cart`, `/cart/shake`, `/checkout/*`, `/saved`, `/watched`, `/walk`, `/rain`, `/wanted`, `/listings/[id]/look`, `/listings/[id]/ask`, `/listings/[id]/van`, `/listings/[id]/firm`, `/listings/[id]/hands`, `/listings/[id]/with`, `/stalls/[slug]/scrap`, `/stalls/[slug]/free`, `/stalls/[slug]/lost`, `/stalls/[slug]/back`, `/stalls/[slug]/spot`, `/stalls/[slug]/cover`, `/stalls/[slug]/fold`, `/stalls/[slug]/break`, `/stalls/[slug]/share`, `/orders`, `/gift` | Real titles. `noindex` — not catalog URLs |
 | Unknown listing / stall / campaign | Packed-up MallNotice. “Not on the map.” |
 | Unknown path | Root 404: “Not on the map” |
 

@@ -6,6 +6,7 @@ import { ListingMissing } from "@/components/mall-missing";
 import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
+import { ListingAskNotice } from "@/components/listing-ask-notice";
 import { ListingFirmNotice } from "@/components/listing-firm-notice";
 import { ListingHandsNotice } from "@/components/listing-hands-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
@@ -32,6 +33,7 @@ import {
   listingStatusLabel,
 } from "@/lib/listing-display";
 import {
+  listingAskPath,
   listingFirmPath,
   listingHandsPath,
   listingLookPath,
@@ -201,6 +203,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingFirmNotice listingId={listing.id} /> : null}
               {physical ? <ListingHandsNotice listingId={listing.id} /> : null}
               {physical ? <ListingWithNotice listingId={listing.id} /> : null}
+              {physical ? <ListingAskNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -245,6 +248,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     These two go together
+                  </Link>
+                  <Link
+                    href={listingAskPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Ask before you flip it
                   </Link>
                 </p>
               ) : null}
