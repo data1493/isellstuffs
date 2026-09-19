@@ -152,6 +152,7 @@ import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
 import { ListingPuckNotice } from "@/components/listing-puck-notice";
 import { ListingHoneNotice } from "@/components/listing-hone-notice";
+import { ListingRinseNotice } from "@/components/listing-rinse-notice";
 import { ListingBevelNotice } from "@/components/listing-bevel-notice";
 import { ListingDolbyNotice } from "@/components/listing-dolby-notice";
 import { ListingPancakeNotice } from "@/components/listing-pancake-notice";
@@ -356,6 +357,7 @@ import {
   listingPicklePath,
   listingPuckPath,
   listingHonePath,
+  listingRinsePath,
   listingBevelPath,
   listingDolbyPath,
   listingPancakePath,
@@ -705,6 +707,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingWarpNotice listingId={listing.id} /> : null}
               {physical ? <ListingPuckNotice listingId={listing.id} /> : null}
               {physical ? <ListingHoneNotice listingId={listing.id} /> : null}
+              {physical ? <ListingRinseNotice listingId={listing.id} /> : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingShimNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpliceNotice listingId={listing.id} /> : null}
@@ -1258,6 +1261,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not hone it
+                  </Link>
+                  <Link
+                    href={listingRinsePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not rinse it
                   </Link>
                   <Link
                     href={listingEtchPath(listing.id)}

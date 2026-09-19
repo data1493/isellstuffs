@@ -1346,6 +1346,14 @@ export function listingHoneWritePath() {
   return "/listings/hone";
 }
 
+export function listingRinsePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rinse`;
+}
+
+export function listingRinseWritePath() {
+  return "/listings/rinse";
+}
+
 export function listingPicklePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/pickle`;
 }

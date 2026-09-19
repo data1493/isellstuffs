@@ -615,6 +615,12 @@ import {
   subscribeHone,
 } from "@/lib/listing-hone";
 import {
+  canTapeRinse,
+  isListingRinseOverlay,
+  readRinseListingIds,
+  subscribeRinse,
+} from "@/lib/listing-rinse";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -867,6 +873,7 @@ import {
   listingPickleWritePath,
   listingPuckWritePath,
   listingHoneWritePath,
+  listingRinseWritePath,
   listingBevelWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
@@ -1082,6 +1089,7 @@ export function DeskBoard({
   const [pickleIds, setPickleIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
   const [honeIds, setHoneIds] = useState<string[]>([]);
+  const [rinseIds, setRinseIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
@@ -1228,6 +1236,7 @@ export function DeskBoard({
       setPickleIds(readPickleListingIds());
       setPuckIds(readPuckListingIds());
       setHoneIds(readHoneListingIds());
+      setRinseIds(readRinseListingIds());
       setBevelIds(readBevelListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
@@ -1363,6 +1372,7 @@ export function DeskBoard({
     const unsubPickle = subscribePickle(apply);
     const unsubPuck = subscribePuck(apply);
     const unsubHone = subscribeHone(apply);
+    const unsubRinse = subscribeRinse(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
@@ -1508,6 +1518,7 @@ export function DeskBoard({
       unsubPickle();
       unsubPuck();
       unsubHone();
+      unsubRinse();
       unsubBevel();
       unsubDolby();
       unsubPancake();
@@ -2963,6 +2974,37 @@ export function DeskBoard({
                             {isListingHoneOverlay(listing.id, honeIds)
                               ? "Leave the nick"
                               : "I will not hone it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRinse(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRinseWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRinseOverlay(listing.id, rinseIds)
+                                ? "open"
+                                : "rinse"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRinseOverlay(listing.id, rinseIds)
+                              ? "Leave the smear"
+                              : "I will not rinse it"}
                           </button>
                         </form>
                       ) : null}
