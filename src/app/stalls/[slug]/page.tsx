@@ -133,6 +133,13 @@ import {
   stallDeckPath,
 } from "@/lib/booth-deck";
 import {
+  BOOTH_SEW_COOKIE_NAME,
+  BOOTH_SEW_PAPER_LINE,
+  boothSewFor,
+  parseBoothSew,
+  stallSewPath,
+} from "@/lib/booth-sew";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -316,6 +323,10 @@ export default async function StallPage({
   const deck = boothDeckFor(
     stall.id,
     parseBoothDeck(jar.get(BOOTH_DECK_COOKIE_NAME)?.value),
+  );
+  const sew = boothSewFor(
+    stall.id,
+    parseBoothSew(jar.get(BOOTH_SEW_COOKIE_NAME)?.value),
   );
 
   return (
@@ -694,6 +705,23 @@ export default async function StallPage({
             <p data-booth-deck-empty={stall.id} hidden />
           )}
 
+          {sew ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't sew"
+              title="I don't hem it."
+              body={
+                <p data-booth-sew-note={stall.id}>
+                  {sew.note} {BOOTH_SEW_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-sew-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -862,6 +890,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a deck
+          </Link>
+
+          <Link
+            href={stallSewPath(stall.slug)}
+            data-booth-sew-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t sew
           </Link>
 
           <Link

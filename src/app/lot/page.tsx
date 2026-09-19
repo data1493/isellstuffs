@@ -85,6 +85,11 @@ import {
   parseBoothDeck,
 } from "@/lib/booth-deck";
 import {
+  BOOTH_SEW_COOKIE_NAME,
+  BOOTH_SEW_MIRROR_SCRIPT,
+  parseBoothSew,
+} from "@/lib/booth-sew";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -148,6 +153,7 @@ export default async function LotPage() {
   const fixMap = parseBoothFix(jar.get(BOOTH_FIX_COOKIE_NAME)?.value);
   const burnMap = parseBoothBurn(jar.get(BOOTH_BURN_COOKIE_NAME)?.value);
   const deckMap = parseBoothDeck(jar.get(BOOTH_DECK_COOKIE_NAME)?.value);
+  const sewMap = parseBoothSew(jar.get(BOOTH_SEW_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -176,6 +182,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FIX_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_BURN_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DECK_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_SEW_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -205,6 +212,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FIX_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_BURN_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DECK_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_SEW_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -285,6 +293,7 @@ export default async function LotPage() {
                     fixNote={fixMap[row.stall.id]?.note}
                     burnNote={burnMap[row.stall.id]?.note}
                     deckNote={deckMap[row.stall.id]?.note}
+                    sewNote={sewMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -330,6 +339,7 @@ export default async function LotPage() {
                     fixNote={fixMap[row.stall.id]?.note}
                     burnNote={burnMap[row.stall.id]?.note}
                     deckNote={deckMap[row.stall.id]?.note}
+                    sewNote={sewMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
