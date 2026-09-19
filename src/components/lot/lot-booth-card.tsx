@@ -43,6 +43,7 @@ export function LotBoothCard({
   deckNote,
   sewNote,
   printNote,
+  claimNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -68,6 +69,7 @@ export function LotBoothCard({
   deckNote?: string;
   sewNote?: string;
   printNote?: string;
+  claimNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -310,6 +312,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-print-empty={stall.id} hidden />
+          )}
+          {claimNote ? (
+            <p
+              data-booth-claim-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t warranty. {claimNote}
+            </p>
+          ) : (
+            <p data-booth-claim-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

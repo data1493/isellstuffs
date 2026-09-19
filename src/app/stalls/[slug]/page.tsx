@@ -147,6 +147,13 @@ import {
   stallPrintPath,
 } from "@/lib/booth-print";
 import {
+  BOOTH_CLAIM_COOKIE_NAME,
+  BOOTH_CLAIM_PAPER_LINE,
+  boothClaimFor,
+  parseBoothClaim,
+  stallClaimPath,
+} from "@/lib/booth-claim";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -338,6 +345,10 @@ export default async function StallPage({
   const printNote = boothPrintFor(
     stall.id,
     parseBoothPrint(jar.get(BOOTH_PRINT_COOKIE_NAME)?.value),
+  );
+  const claim = boothClaimFor(
+    stall.id,
+    parseBoothClaim(jar.get(BOOTH_CLAIM_COOKIE_NAME)?.value),
   );
 
   return (
@@ -750,6 +761,23 @@ export default async function StallPage({
             <p data-booth-print-empty={stall.id} hidden />
           )}
 
+          {claim ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't warranty"
+              title="That's the sale."
+              body={
+                <p data-booth-claim-note={stall.id}>
+                  {claim.note} {BOOTH_CLAIM_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-claim-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -934,6 +962,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t print
+          </Link>
+
+          <Link
+            href={stallClaimPath(stall.slug)}
+            data-booth-claim-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t warranty
           </Link>
 
           <Link
