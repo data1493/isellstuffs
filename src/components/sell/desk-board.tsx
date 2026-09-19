@@ -363,6 +363,12 @@ import {
   subscribePad,
 } from "@/lib/listing-pad";
 import {
+  canTapeShim,
+  isListingShimOverlay,
+  readShimListingIds,
+  subscribeShim,
+} from "@/lib/listing-shim";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -438,6 +444,7 @@ import {
   listingGlowWritePath,
   listingEtchWritePath,
   listingPadWritePath,
+  listingShimWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -585,6 +592,7 @@ export function DeskBoard({
   const [warpIds, setWarpIds] = useState<string[]>([]);
   const [etchIds, setEtchIds] = useState<string[]>([]);
   const [padIds, setPadIds] = useState<string[]>([]);
+  const [shimIds, setShimIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -666,6 +674,7 @@ export function DeskBoard({
       setWarpIds(readWarpListingIds());
       setEtchIds(readEtchListingIds());
       setPadIds(readPadListingIds());
+      setShimIds(readShimListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -736,6 +745,7 @@ export function DeskBoard({
     const unsubWarp = subscribeWarp(apply);
     const unsubEtch = subscribeEtch(apply);
     const unsubPad = subscribePad(apply);
+    const unsubShim = subscribeShim(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -816,6 +826,7 @@ export function DeskBoard({
       unsubWarp();
       unsubEtch();
       unsubPad();
+      unsubShim();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -1752,6 +1763,37 @@ export function DeskBoard({
                             {isListingPadOverlay(listing.id, padIds)
                               ? "Leave the peel"
                               : "I will not pad them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeShim(listing) ? (
+                        <form
+                          method="post"
+                          action={listingShimWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingShimOverlay(listing.id, shimIds)
+                                ? "open"
+                                : "shim"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingShimOverlay(listing.id, shimIds)
+                              ? "Leave the wobble"
+                              : "I will not shim it"}
                           </button>
                         </form>
                       ) : null}

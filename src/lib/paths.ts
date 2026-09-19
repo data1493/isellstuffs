@@ -906,6 +906,14 @@ export function listingPadWritePath() {
   return "/listings/pad";
 }
 
+export function listingShimPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/shim`;
+}
+
+export function listingShimWritePath() {
+  return "/listings/shim";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }
