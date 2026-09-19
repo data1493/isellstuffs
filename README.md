@@ -2,7 +2,7 @@
 
 A flea-market mall for independent stalls — not a single-seller shop. Sellers list physical finds and digital goods from the same stall. Category hubs are the map of the floor.
 
-This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall pages). Checkout, Connect, ads UI, auth, and a database are not in this wave.
+This repo is a flea-market mall (Wave 0 shell, Wave 1 commerce contracts, Wave 2 browse + listing/stall + tote checkout). No auth. No database.
 
 ## Browse
 
@@ -16,7 +16,32 @@ Walk the stand-in catalog without leaving the mall map.
 | `/hubs` | The four aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
 
-Empty filters and unknown hub slugs get intentional empty / not-found copy. Cart and checkout pages belong to other waves.
+Empty filters and unknown hub slugs get intentional empty / not-found copy.
+
+## Listing and stall pages
+
+Open a listing or a stall directly. Home, explore, and hub browse are owned elsewhere — these routes do not replace them.
+
+| Page | Example |
+| --- | --- |
+| Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
+| Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
+| Featured stall | http://127.0.0.1:44721/stalls/half-working |
+| Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
+| File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
+
+Add to cart writes `Listing.id` values to `localStorage` key `iss:cart-listing-ids` via `@/lib/cart` and `use-cart`. Cart and checkout import that module — there is not a second bag.
+
+## Cart and checkout
+
+| Route | What it is |
+| --- | --- |
+| `/cart` | Tote. Same listing ids listing/stall pages wrote |
+| `/checkout/mock` | Local test pay wall when no Stripe secret is set |
+| `/checkout/success` | Paid. Tote clears. Connect split on the slip |
+| `/checkout/cancel` | Walked away. Tote stays |
+
+Open **http://127.0.0.1:44721/cart**. Deep-link with `?add=<listingId>` uses the same cart writer.
 
 ## Run locally
 
@@ -36,6 +61,23 @@ npm start
 
 `npm start` uses the same port.
 
+## Payments (test only)
+
+Checkout is a **platform** charge with a **separate-charges-and-transfers** plan for multi-stall totes. The mall keeps 10%. Each stall is owed the remainder. No live Connect onboarding. Live Stripe keys are rejected.
+
+| Situation | What happens |
+| --- | --- |
+| No `STRIPE_SECRET_KEY` | Local pay wall. Stripe.js loads if a test publishable key is present. |
+| `STRIPE_SECRET_KEY` is `sk_test_` or `rk_test_` | Creates a Stripe Checkout Session; the client redirects to hosted Checkout. |
+| Live secret or publishable key | Refused. The app will not talk to production Stripe. |
+
+Optional local env (gitignored — do not commit keys):
+
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — test publishable key for Stripe.js
+- `STRIPE_SECRET_KEY` — test secret; omit it and checkout stays mocked
+
+Do not put production keys in this app.
+
 ## Commerce contracts (import these)
 
 Other agents should import from `@/lib/commerce`. Do not invent listing, stall, or ad-slot shapes.
@@ -52,23 +94,9 @@ Locked listing fields: `price`, `type` (`physical` \| `digital`), `condition` **
 
 Hubs that earn aisle pages: Yard Sale, Closet Overflow, Garage Tech, Download Stall. Homepage + `/browse` stay the general concourse.
 
-## Listing and stall pages
-
-Open a listing or a stall directly. Home, explore, and hub browse are owned elsewhere — these routes do not replace them.
-
-| Page | Example |
-| --- | --- |
-| Listing PDP | http://127.0.0.1:44721/listings/ysk-wobbly-lamp |
-| Mixed stall (physical + digital) | http://127.0.0.1:44721/stalls/folding-table-tuesday |
-| Featured stall | http://127.0.0.1:44721/stalls/half-working |
-| Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
-| File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
-
-Add to cart writes `Listing.id` values to `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout routes should import that module instead of inventing a second bag.
-
 ## Stack
 
-Next.js, TypeScript, Tailwind CSS, and shadcn/ui at the repo root.
+Next.js, TypeScript, Tailwind CSS, and shadcn/ui at the repo root. Stripe Node SDK + Stripe.js for test checkout.
 
 ## Assets
 
