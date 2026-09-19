@@ -60,6 +60,7 @@ import { ListingSoleNotice } from "@/components/listing-sole-notice";
 import { ListingDumpNotice } from "@/components/listing-dump-notice";
 import { ListingPhoneNotice } from "@/components/listing-phone-notice";
 import { ListingRipNotice } from "@/components/listing-rip-notice";
+import { ListingCardsNotice } from "@/components/listing-cards-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -141,6 +142,7 @@ import {
   listingDumpPath,
   listingPhonePath,
   listingRipPath,
+  listingCardsPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -333,6 +335,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingClipNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingWrongNotice listingId={listing.id} /> : null}
               {!physical ? (
                 <ListingFoundryNotice listingId={listing.id} />
@@ -713,6 +716,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The clip walked
+                  </Link>
+                  <Link
+                    href={listingCardsPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not type the cards
                   </Link>
                   <Link
                     href={listingWrongPath(listing.id)}

@@ -134,6 +134,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | I don't dump | http://127.0.0.1:44721/listings/gtk-game-boy/dump |
 | I don't know the phone | http://127.0.0.1:44721/listings/gtk-cable-drawer/phone |
 | I don't rip | http://127.0.0.1:44721/listings/mdb-mixtape-93/rip |
+| I will not type the cards | http://127.0.0.1:44721/listings/dl-drawer-recipes/cards |
 | In someone's hands | http://127.0.0.1:44721/listings/ysk-wobbly-lamp/hands |
 | These two go together | http://127.0.0.1:44721/listings/clo-windbreaker/with |
 | Scan the liner | http://127.0.0.1:44721/listings/mdb-mixtape-93/scan |

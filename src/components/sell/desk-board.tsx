@@ -33,6 +33,12 @@ import {
   listingStatusLabel,
 } from "@/lib/listing-display";
 import {
+  canTapeCards,
+  isListingCardsOverlay,
+  readCardsListingIds,
+  subscribeCards,
+} from "@/lib/listing-cards";
+import {
   canTapeDump,
   isListingDumpOverlay,
   readDumpListingIds,
@@ -51,6 +57,7 @@ import {
   subscribeRip,
 } from "@/lib/listing-rip";
 import {
+  listingCardsWritePath,
   listingDumpWritePath,
   listingPhoneWritePath,
   listingRipWritePath,
@@ -116,6 +123,7 @@ export function DeskBoard({
   const [dumpIds, setDumpIds] = useState<string[]>([]);
   const [phoneIds, setPhoneIds] = useState<string[]>([]);
   const [ripIds, setRipIds] = useState<string[]>([]);
+  const [cardsIds, setCardsIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -137,6 +145,7 @@ export function DeskBoard({
       setDumpIds(readDumpListingIds());
       setPhoneIds(readPhoneListingIds());
       setRipIds(readRipListingIds());
+      setCardsIds(readCardsListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -147,6 +156,7 @@ export function DeskBoard({
     const unsubDump = subscribeDump(apply);
     const unsubPhone = subscribePhone(apply);
     const unsubRip = subscribeRip(apply);
+    const unsubCards = subscribeCards(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -167,6 +177,7 @@ export function DeskBoard({
       unsubDump();
       unsubPhone();
       unsubRip();
+      unsubCards();
     };
   }, [listings, stall.id]);
 
@@ -410,6 +421,37 @@ export function DeskBoard({
                             {isListingRipOverlay(listing.id, ripIds)
                               ? "Leave the tape"
                               : "I don't rip"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCards(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCardsWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCardsOverlay(listing.id, cardsIds)
+                                ? "open"
+                                : "cards"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCardsOverlay(listing.id, cardsIds)
+                              ? "Leave the scans"
+                              : "I will not type them"}
                           </button>
                         </form>
                       ) : null}
