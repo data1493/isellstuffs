@@ -21,14 +21,21 @@ import {
   pickupSlipPath,
   stallPath,
 } from "@/lib/paths";
+import {
+  CASH_LABEL,
+  CASH_SLIP_COPY,
+  isCashOnTable,
+} from "@/lib/driveway-tender";
 import { pickupBoothsOnSlip } from "@/lib/pickup-slip";
 
 export function PickupCard({
   slip,
   listingIds,
+  tender,
 }: {
   slip: string;
   listingIds: string[];
+  tender?: "cash" | "card";
 }) {
   const booths = pickupBoothsOnSlip(listingIds);
   const showFolder = folderHasDigitalLines(listingIds);
@@ -55,6 +62,23 @@ export function PickupCard({
           <Badge variant="outline" className="rounded-full">
             No shipping
           </Badge>
+          {isCashOnTable({ tender }) ? (
+            <Badge
+              variant="outline"
+              data-pickup-tender="cash"
+              className="rounded-full"
+            >
+              {CASH_LABEL}
+            </Badge>
+          ) : (
+            <Badge
+              variant="outline"
+              data-pickup-tender="card"
+              className="rounded-full"
+            >
+              Card
+            </Badge>
+          )}
         </div>
 
         <div className="max-w-2xl space-y-3">
@@ -68,6 +92,14 @@ export function PickupCard({
             Hours and the place hang on the booth. Walk up and take the thing.
             The mall does not ship. Files stay in the folder.
           </p>
+          {isCashOnTable({ tender }) ? (
+            <p
+              data-pickup-tender-copy=""
+              className="text-base leading-7 text-foreground"
+            >
+              {CASH_SLIP_COPY}
+            </p>
+          ) : null}
         </div>
       </MallHero>
 

@@ -14,6 +14,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { AS_IS_STAMP, asIsOnSlip } from "@/lib/as-is";
 import { formatPlanMoney } from "@/lib/checkout";
+import { CASH_LABEL, CASH_SLIP_COPY, isCashOnTable } from "@/lib/driveway-tender";
 import { isGiftListing, isPhysicalListing } from "@/lib/commerce";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
 import { listingFact, listingTypeLabel } from "@/lib/listing-display";
@@ -74,6 +75,15 @@ export function OrderSlipCard({ order }: { order: OrderSlip }) {
           <Badge variant="outline" className="rounded-full">
             {formatPaidAt(order.paidAt)}
           </Badge>
+          {isCashOnTable(order) ? (
+            <Badge
+              variant="outline"
+              data-order-tender="cash"
+              className="rounded-full"
+            >
+              {CASH_LABEL}
+            </Badge>
+          ) : null}
         </div>
 
         <div className="max-w-2xl space-y-3">
@@ -90,6 +100,14 @@ export function OrderSlipCard({ order }: { order: OrderSlip }) {
           </p>
           {asIsOnSlip(order) ? (
             <p className="text-base leading-7 text-muted-foreground">{AS_IS_STAMP}</p>
+          ) : null}
+          {isCashOnTable(order) ? (
+            <p
+              data-order-tender-copy=""
+              className="text-base leading-7 text-foreground"
+            >
+              {CASH_SLIP_COPY}
+            </p>
           ) : null}
         </div>
       </MallHero>

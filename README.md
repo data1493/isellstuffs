@@ -109,13 +109,13 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | Route | What it is |
 | --- | --- |
 | `/cart` | Tote. Same listing ids listing/stall pages wrote |
-| `/checkout/mock` | Local test pay wall when no Stripe secret is set. Physical booths on the slip aside show driveway hours from `@/lib/pickup-display` before you pay. Files and the gift card do not. |
-| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” and join the sold overlay — the lamp leaves `avail=open`, the PDF stays for sale |
+| `/checkout/mock` | Local test pay wall when no Stripe secret is set. Physical booths on the slip aside show driveway hours from `@/lib/pickup-display` before you pay. Files and the gift card do not. Physical totes can pay **cash on the table** or the same test card. Digital / gift stay on the card. |
+| `/checkout/success` | Paid. Tote clears. Connect split on the slip. Digital lines get “Open your folder”. Physical lines get “Open the pickup slip” and join the sold overlay — the lamp leaves `avail=open`, the PDF stays for sale. A cash tote stamps “Cash on the table” on the receipt and pickup slip. |
 | `/checkout/cancel` | Walked away. Tote stays |
 | `/folder` | Current slip’s digital lines, or last week’s files still in `iss:orders`. Cold tab: “No folder on this slip.” |
 | `/folder/[slip]` | One paid slip’s booth folder. Reads the checkout cookie, then `iss:orders` after that cookie dies. Stand-in downloads, not a CDN |
 | `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” |
-| `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder |
+| `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder. Cash totes say cash on the table, not card. |
 | `/sell/desk/queue` | Stallholder twin of pickup. Mixed tote lists the lamp and Tuesday driveway hours, not the PDF. Taken lines drop off. |
 | `/sell/taken` | Mark the lamp taken after they walk. Coming vs left-with-it. Queue hides that arrival. |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |

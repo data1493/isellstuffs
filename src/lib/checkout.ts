@@ -58,6 +58,8 @@ export type CheckoutSessionSummary = {
   buyerName?: string;
   /** Physical slips only. Set when the buyer eats the condition at the register. */
   asIs?: boolean;
+  /** Physical slips only. Cash on the table vs card theater. Digital stays card. */
+  tender?: "cash" | "card";
   transfers: Array<{
     stallId: string;
     boothName: string;
@@ -214,6 +216,11 @@ export function parseCheckoutSession(
       parsed.asIs = true;
     } else {
       delete parsed.asIs;
+    }
+    if (parsed.tender === "cash" || parsed.tender === "card") {
+      parsed.tender = parsed.tender;
+    } else {
+      delete parsed.tender;
     }
     return parsed as CheckoutSessionSummary;
   } catch {

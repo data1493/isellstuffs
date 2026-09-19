@@ -19,6 +19,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { AS_IS_STAMP, asIsOnSlip } from "@/lib/as-is";
 import { CHECKOUT_COOKIE, formatPlanMoney, parseCheckoutSession } from "@/lib/checkout";
+import { CASH_SLIP_COPY, isCashOnTable } from "@/lib/driveway-tender";
 import { cartMix, groupListingsByStall, listingDetail } from "@/lib/checkout-display";
 import { isPhysicalListing, listingById } from "@/lib/commerce";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
@@ -81,6 +82,14 @@ export default async function CheckoutSuccessPage({
             </p>
             {asIsOnSlip(session) ? (
               <p className="text-base leading-7 text-muted-foreground">{AS_IS_STAMP}</p>
+            ) : null}
+            {isCashOnTable(session) ? (
+              <p
+                data-pay-tender="cash"
+                className="text-base leading-7 text-foreground"
+              >
+                {CASH_SLIP_COPY}
+              </p>
             ) : null}
           </div>
         </MallWidth>

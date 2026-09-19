@@ -13,6 +13,11 @@ import {
   parseCheckoutSession,
   serializeCheckoutSession,
 } from "@/lib/checkout";
+import {
+  assertDrivewayTender,
+  readTender,
+  stampTender,
+} from "@/lib/driveway-tender";
 
 function isEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -37,6 +42,7 @@ async function readBody(request: NextRequest): Promise<{
   email?: unknown;
   name?: unknown;
   asIs?: unknown;
+  tender?: unknown;
   asForm: boolean;
 }> {
   const contentType = request.headers.get("content-type") ?? "";
@@ -51,6 +57,7 @@ async function readBody(request: NextRequest): Promise<{
       email: form.get("email"),
       name: form.get("name"),
       asIs: form.get("asIs"),
+      tender: form.get("tender"),
       asForm: true,
     };
   }
@@ -61,6 +68,7 @@ async function readBody(request: NextRequest): Promise<{
     email?: unknown;
     name?: unknown;
     asIs?: unknown;
+    tender?: unknown;
   };
   return { ...body, asForm: false };
 }
@@ -128,17 +136,23 @@ export async function POST(request: NextRequest) {
     const asIs = readAsIsFlag(body.asIs);
     assertPhysicalAsIs(session.listingIds, asIs);
 
-    const next = asIs
-      ? stampAsIs({
-          ...session,
-          buyerEmail: email,
-          buyerName: name || undefined,
-        })
-      : {
-          ...session,
-          buyerEmail: email,
-          buyerName: name || undefined,
-        };
+    const tender = readTender(body.tender);
+    assertDrivewayTender(session.listingIds, tender);
+
+    const next = stampTender(
+      asIs
+        ? stampAsIs({
+            ...session,
+            buyerEmail: email,
+            buyerName: name || undefined,
+          })
+        : {
+            ...session,
+            buyerEmail: email,
+            buyerName: name || undefined,
+          },
+      tender,
+    );
 
     jar.set(CHECKOUT_COOKIE, serializeCheckoutSession(next), {
       httpOnly: true,

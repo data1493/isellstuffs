@@ -21,7 +21,7 @@ function pickupSource(
   slip: string,
   seed: CheckoutSessionSummary | null,
   orders: OrderSlip[],
-): { id: string; listingIds: string[] } | null {
+): { id: string; listingIds: string[]; tender?: "cash" | "card" } | null {
   if (seed && seed.id === slip) {
     return seed;
   }
@@ -52,5 +52,11 @@ export function PickupSlipView({
     return <PickupDigitalOnly slip={source.id} listingIds={source.listingIds} />;
   }
 
-  return <PickupCard slip={source.id} listingIds={source.listingIds} />;
+  return (
+    <PickupCard
+      slip={source.id}
+      listingIds={source.listingIds}
+      tender={source.tender}
+    />
+  );
 }

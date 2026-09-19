@@ -36,5 +36,11 @@ export default async function PickupIndexPage() {
     );
   }
 
-  return <PickupCard slip={session.id} listingIds={session.listingIds} />;
+  return (
+    <PickupCard
+      slip={session.id}
+      listingIds={session.listingIds}
+      tender={session.tender}
+    />
+  );
 }

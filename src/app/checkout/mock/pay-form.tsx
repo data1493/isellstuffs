@@ -13,6 +13,14 @@ import {
   slipHasPhysicalLines,
 } from "@/lib/as-is";
 import { formatPlanMoney, type CheckoutSessionSummary } from "@/lib/checkout";
+import {
+  CARD_HELP,
+  CARD_LABEL,
+  CASH_HELP,
+  CASH_LABEL,
+  slipAllowsCash,
+  type DrivewayTender,
+} from "@/lib/driveway-tender";
 import { getStripe, isStripeJsConfigured } from "@/lib/stripe-browser";
 import { cn } from "@/lib/utils";
 
@@ -82,8 +90,13 @@ export function PayForm({
   const [error, setError] = useState<string | null>(confirmError ?? null);
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [asIs, setAsIs] = useState(false);
+  const [tender, setTender] = useState<DrivewayTender>("card");
   const needsAsIs = useMemo(
     () => slipHasPhysicalLines(session.listingIds),
+    [session.listingIds],
+  );
+  const canPayCash = useMemo(
+    () => slipAllowsCash(session.listingIds),
     [session.listingIds],
   );
 
@@ -122,31 +135,33 @@ export function PayForm({
         setFieldError("Enter an email for the stall slips.");
         return;
       }
-      const pan = digitsOnly(card);
-      if (pan.length < 16) {
-        setFieldError("Enter the full test card number.");
-        return;
-      }
-      if (!isFutureExpiry(expiry)) {
-        setFieldError("Use a future expiration.");
-        return;
-      }
-      if (digitsOnly(cvc).length < 3) {
-        setFieldError("Enter the CVC.");
-        return;
-      }
-      if (digitsOnly(postal).length < 5) {
-        setFieldError("Enter a 5-digit ZIP.");
-        return;
-      }
-      const declined = TEST_DECLINE[pan];
-      if (declined) {
-        setError(declined);
-        return;
-      }
-      if (pan !== TEST_SUCCESS) {
-        setError("Use Stripe’s test card 4242 4242 4242 4242, or a documented decline card.");
-        return;
+      if (tender === "card") {
+        const pan = digitsOnly(card);
+        if (pan.length < 16) {
+          setFieldError("Enter the full test card number.");
+          return;
+        }
+        if (!isFutureExpiry(expiry)) {
+          setFieldError("Use a future expiration.");
+          return;
+        }
+        if (digitsOnly(cvc).length < 3) {
+          setFieldError("Enter the CVC.");
+          return;
+        }
+        if (digitsOnly(postal).length < 5) {
+          setFieldError("Enter a 5-digit ZIP.");
+          return;
+        }
+        const declined = TEST_DECLINE[pan];
+        if (declined) {
+          setError(declined);
+          return;
+        }
+        if (pan !== TEST_SUCCESS) {
+          setError("Use Stripe’s test card 4242 4242 4242 4242, or a documented decline card.");
+          return;
+        }
       }
       if (needsAsIs && !asIs) {
         setError(AS_IS_REJECT);
@@ -165,6 +180,7 @@ export function PayForm({
           email,
           name,
           asIs: asIs ? "1" : undefined,
+          tender: canPayCash ? tender : "card",
         }),
       });
       const data = (await response.json()) as { url?: string; error?: string };
@@ -227,6 +243,48 @@ export function PayForm({
         </div>
       </fieldset>
 
+      {canPayCash ? (
+        <fieldset className="space-y-3" data-driveway-tender="">
+          <legend className="font-heading text-xl tracking-tight">
+            How you’ll pay
+          </legend>
+          <p className="text-sm leading-6 text-muted-foreground">
+            Driveway money can be cash on the table. Card is still test theater.
+          </p>
+          <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
+            <input
+              type="radio"
+              name="tender"
+              value="cash"
+              checked={tender === "cash"}
+              onChange={() => setTender("cash")}
+              className="mt-1 size-4 shrink-0 accent-foreground"
+            />
+            <span>
+              <span className="block font-medium text-foreground">{CASH_LABEL}</span>
+              <span className="block text-muted-foreground">{CASH_HELP}</span>
+            </span>
+          </label>
+          <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
+            <input
+              type="radio"
+              name="tender"
+              value="card"
+              checked={tender === "card"}
+              onChange={() => setTender("card")}
+              className="mt-1 size-4 shrink-0 accent-foreground"
+            />
+            <span>
+              <span className="block font-medium text-foreground">{CARD_LABEL}</span>
+              <span className="block text-muted-foreground">{CARD_HELP}</span>
+            </span>
+          </label>
+        </fieldset>
+      ) : (
+        <input type="hidden" name="tender" value="card" />
+      )}
+
+      {tender === "card" || !canPayCash ? (
       <fieldset className="space-y-3">
         <legend className="font-heading text-xl tracking-tight">Test card</legend>
         <p className="text-sm leading-6 text-muted-foreground">
@@ -288,6 +346,7 @@ export function PayForm({
           </div>
         </div>
       </fieldset>
+      ) : null}
 
       {needsAsIs ? (
         <label className="flex w-full cursor-pointer items-start gap-3 text-sm leading-6">
