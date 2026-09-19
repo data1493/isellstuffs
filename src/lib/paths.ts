@@ -1338,6 +1338,14 @@ export function listingTemperWritePath() {
   return "/listings/temper";
 }
 
+export function listingScribePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/scribe`;
+}
+
+export function listingScribeWritePath() {
+  return "/listings/scribe";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
