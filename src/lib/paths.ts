@@ -240,6 +240,14 @@ export function stallFilmWritePath() {
   return "/stalls/film";
 }
 
+export function stallKidsPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/kids`;
+}
+
+export function stallKidsWritePath() {
+  return "/stalls/kids";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

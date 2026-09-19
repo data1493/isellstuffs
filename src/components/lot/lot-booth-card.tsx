@@ -29,6 +29,7 @@ export function LotBoothCard({
   stayNote,
   shadeNote,
   filmNote,
+  kidsNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -40,6 +41,7 @@ export function LotBoothCard({
   stayNote?: string;
   shadeNote?: string;
   filmNote?: string;
+  kidsNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -147,6 +149,14 @@ export function LotBoothCard({
               className="text-sm leading-6 text-foreground"
             >
               Don&apos;t photograph. {filmNote}
+            </p>
+          ) : null}
+          {kidsNote ? (
+            <p
+              data-booth-kids-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              Kids touch it, you buy it. {kidsNote}
             </p>
           ) : null}
           {packed ? (

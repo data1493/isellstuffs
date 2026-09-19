@@ -52,6 +52,12 @@ import {
   parseBoothFilm,
 } from "@/lib/booth-film";
 import {
+  BOOTH_KIDS_COOKIE_NAME,
+  BOOTH_KIDS_PAPER_LINE,
+  boothKidsFor,
+  parseBoothKids,
+} from "@/lib/booth-kids";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -91,6 +97,7 @@ import {
   stallPath,
   stallScrapPath,
   stallFilmPath,
+  stallKidsPath,
   stallShadePath,
   stallSharePath,
   stallSpotPath,
@@ -184,6 +191,10 @@ export default async function StallPage({
   const film = boothFilmFor(
     stall.id,
     parseBoothFilm(jar.get(BOOTH_FILM_COOKIE_NAME)?.value),
+  );
+  const kids = boothKidsFor(
+    stall.id,
+    parseBoothKids(jar.get(BOOTH_KIDS_COOKIE_NAME)?.value),
   );
 
   return (
@@ -364,6 +375,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {kids ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Kids touch it, you buy it"
+              title="If they pick it up, it walks."
+              body={
+                <p data-booth-kids-note={stall.id}>
+                  {kids.note} {BOOTH_KIDS_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -436,6 +462,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Don&apos;t photograph the tags
+          </Link>
+
+          <Link
+            href={stallKidsPath(stall.slug)}
+            data-booth-kids-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Kids touch it, you buy it
           </Link>
 
           <Link

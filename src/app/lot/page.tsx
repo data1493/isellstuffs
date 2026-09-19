@@ -25,6 +25,11 @@ import {
   parseBoothFilm,
 } from "@/lib/booth-film";
 import {
+  BOOTH_KIDS_COOKIE_NAME,
+  BOOTH_KIDS_MIRROR_SCRIPT,
+  parseBoothKids,
+} from "@/lib/booth-kids";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -76,6 +81,7 @@ export default async function LotPage() {
   const stayMap = parseBoothStay(jar.get(BOOTH_STAY_COOKIE_NAME)?.value);
   const shadeMap = parseBoothShade(jar.get(BOOTH_SHADE_COOKIE_NAME)?.value);
   const filmMap = parseBoothFilm(jar.get(BOOTH_FILM_COOKIE_NAME)?.value);
+  const kidsMap = parseBoothKids(jar.get(BOOTH_KIDS_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -92,6 +98,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STAY_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SHADE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FILM_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_KIDS_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -109,6 +116,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STAY_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SHADE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FILM_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_KIDS_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -177,6 +185,7 @@ export default async function LotPage() {
                     stayNote={stayMap[row.stall.id]?.note}
                     shadeNote={shadeMap[row.stall.id]?.note}
                     filmNote={filmMap[row.stall.id]?.note}
+                    kidsNote={kidsMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -210,6 +219,7 @@ export default async function LotPage() {
                     stayNote={stayMap[row.stall.id]?.note}
                     shadeNote={shadeMap[row.stall.id]?.note}
                     filmNote={filmMap[row.stall.id]?.note}
+                    kidsNote={kidsMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
