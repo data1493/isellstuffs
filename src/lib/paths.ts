@@ -658,6 +658,14 @@ export function listingLedWritePath() {
   return "/listings/led";
 }
 
+export function listingSprayPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/spray`;
+}
+
+export function listingSprayWritePath() {
+  return "/listings/spray";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

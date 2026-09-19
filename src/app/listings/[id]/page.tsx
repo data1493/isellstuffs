@@ -82,6 +82,7 @@ import { ListingInsideNotice } from "@/components/listing-inside-notice";
 import { ListingTinesNotice } from "@/components/listing-tines-notice";
 import { ListingCapNotice } from "@/components/listing-cap-notice";
 import { ListingLedNotice } from "@/components/listing-led-notice";
+import { ListingSprayNotice } from "@/components/listing-spray-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -185,6 +186,7 @@ import {
   listingTinesPath,
   listingCapPath,
   listingLedPath,
+  listingSprayPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -438,6 +440,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingTinesNotice listingId={listing.id} /> : null}
               {physical ? <ListingCapNotice listingId={listing.id} /> : null}
               {physical ? <ListingLedNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSprayNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -824,6 +827,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not LED it
+                  </Link>
+                  <Link
+                    href={listingSprayPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not spray it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
