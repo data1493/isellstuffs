@@ -474,6 +474,14 @@ export function listingPhoneWritePath() {
   return "/listings/phone";
 }
 
+export function listingRipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rip`;
+}
+
+export function listingRipWritePath() {
+  return "/listings/rip";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

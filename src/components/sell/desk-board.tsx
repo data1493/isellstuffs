@@ -45,8 +45,15 @@ import {
   subscribePhone,
 } from "@/lib/listing-phone";
 import {
+  canTapeRip,
+  isListingRipOverlay,
+  readRipListingIds,
+  subscribeRip,
+} from "@/lib/listing-rip";
+import {
   listingDumpWritePath,
   listingPhoneWritePath,
+  listingRipWritePath,
   listingPath,
   sellDeskStallPath,
   sellHoursPath,
@@ -108,6 +115,7 @@ export function DeskBoard({
   const [weekendPins, setWeekendPins] = useState(weekendPinSeed);
   const [dumpIds, setDumpIds] = useState<string[]>([]);
   const [phoneIds, setPhoneIds] = useState<string[]>([]);
+  const [ripIds, setRipIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -128,6 +136,7 @@ export function DeskBoard({
       setWeekendPins(readWeekendPinIds());
       setDumpIds(readDumpListingIds());
       setPhoneIds(readPhoneListingIds());
+      setRipIds(readRipListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -137,6 +146,7 @@ export function DeskBoard({
     apply();
     const unsubDump = subscribeDump(apply);
     const unsubPhone = subscribePhone(apply);
+    const unsubRip = subscribeRip(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -156,6 +166,7 @@ export function DeskBoard({
       window.removeEventListener("storage", apply);
       unsubDump();
       unsubPhone();
+      unsubRip();
     };
   }, [listings, stall.id]);
 
@@ -368,6 +379,37 @@ export function DeskBoard({
                             {isListingPhoneOverlay(listing.id, phoneIds)
                               ? "Leave the tangle"
                               : "I don't know the phone"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRip(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRipWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRipOverlay(listing.id, ripIds)
+                                ? "open"
+                                : "rip"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRipOverlay(listing.id, ripIds)
+                              ? "Leave the tape"
+                              : "I don't rip"}
                           </button>
                         </form>
                       ) : null}
