@@ -46,6 +46,12 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BOOTH_SHADE_COOKIE_NAME,
+  BOOTH_SHADE_PAPER_LINE,
+  boothShadeFor,
+  parseBoothShade,
+} from "@/lib/booth-shade";
+import {
   BOOTH_STAY_COOKIE_NAME,
   BOOTH_STAY_PAPER_LINE,
   boothStayFor,
@@ -78,6 +84,7 @@ import {
   stallFoldPath,
   stallPath,
   stallScrapPath,
+  stallShadePath,
   stallSharePath,
   stallSpotPath,
   stallStayPath,
@@ -162,6 +169,10 @@ export default async function StallPage({
   const hangers = boothStayFor(
     stall.id,
     parseBoothStay(jar.get(BOOTH_STAY_COOKIE_NAME)?.value),
+  );
+  const shade = boothShadeFor(
+    stall.id,
+    parseBoothShade(jar.get(BOOTH_SHADE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -312,6 +323,21 @@ export default async function StallPage({
             />
           ) : null}
 
+          {shade ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="Keep it in the shade"
+              title="The crate sits in the sun."
+              body={
+                <p data-booth-shade-note={stall.id}>
+                  {shade.note} {BOOTH_SHADE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : null}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -368,6 +394,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Hangers stay
+          </Link>
+
+          <Link
+            href={stallShadePath(stall.slug)}
+            data-booth-shade-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Keep it in the shade
           </Link>
 
           <Link

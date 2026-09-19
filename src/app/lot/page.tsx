@@ -20,6 +20,11 @@ import {
   parseBoothCover,
 } from "@/lib/booth-cover";
 import {
+  BOOTH_SHADE_COOKIE_NAME,
+  BOOTH_SHADE_MIRROR_SCRIPT,
+  parseBoothShade,
+} from "@/lib/booth-shade";
+import {
   BOOTH_STAY_COOKIE_NAME,
   BOOTH_STAY_MIRROR_SCRIPT,
   parseBoothStay,
@@ -64,6 +69,7 @@ export default async function LotPage() {
   const breakMap = parseBreakBills(jar.get(BREAK_BILLS_COOKIE_NAME)?.value);
   const shareMap = parseTableShare(jar.get(TABLE_SHARE_COOKIE_NAME)?.value);
   const stayMap = parseBoothStay(jar.get(BOOTH_STAY_COOKIE_NAME)?.value);
+  const shadeMap = parseBoothShade(jar.get(BOOTH_SHADE_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -78,6 +84,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BREAK_BILLS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: TABLE_SHARE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STAY_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_SHADE_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -93,6 +100,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BREAK_BILLS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: TABLE_SHARE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STAY_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_SHADE_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -159,6 +167,7 @@ export default async function LotPage() {
                     breakNote={breakMap[row.stall.id]?.note}
                     sharerName={sharePartnerFor(row.stall.id, shareMap)?.boothName}
                     stayNote={stayMap[row.stall.id]?.note}
+                    shadeNote={shadeMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -190,6 +199,7 @@ export default async function LotPage() {
                     breakNote={breakMap[row.stall.id]?.note}
                     sharerName={sharePartnerFor(row.stall.id, shareMap)?.boothName}
                     stayNote={stayMap[row.stall.id]?.note}
+                    shadeNote={shadeMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

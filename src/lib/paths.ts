@@ -200,6 +200,14 @@ export function stallStayWritePath() {
   return "/stalls/stay";
 }
 
+export function stallShadePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/shade`;
+}
+
+export function stallShadeWritePath() {
+  return "/stalls/shade";
+}
+
 export function stallBuyPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/buy`;
 }
