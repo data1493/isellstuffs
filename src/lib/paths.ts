@@ -1623,6 +1623,14 @@ export function agentsWritePath() {
   return "/agents/write";
 }
 
+export function agentsTradePath() {
+  return "/agents/trade";
+}
+
+export function agentSlipPath(tradeId: string) {
+  return `/agents/${encodeURIComponent(tradeId)}`;
+}
+
 export function agentTalkPath() {
   return "/agents/talk";
 }

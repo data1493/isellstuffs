@@ -6,6 +6,7 @@ import { afterEach, test } from "node:test";
 
 import {
   agentTradeFeeCents,
+  agentTradeNetCents,
   confirmTrade,
   insertLot,
   insertPledge,
@@ -52,6 +53,7 @@ test("cookie is the default when DATABASE_URL is unset", async () => {
   assert.equal(listed.ok, true);
   if (!listed.ok) return;
   assert.equal(agentTradeFeeCents(2000), 200);
+  assert.equal(agentTradeNetCents(2000), 1800);
 
   const lots = await listLots();
   assert.equal(lots.length, 1);
@@ -63,6 +65,7 @@ test("cookie is the default when DATABASE_URL is unset", async () => {
   assert.equal(taken.ok, true);
   if (!taken.ok) return;
   assert.equal(taken.value.feeCents, 200);
+  assert.equal(agentTradeNetCents(taken.value.askCents, taken.value.feeCents), 1800);
   assert.equal(taken.value.status, "taken");
   assert.equal((await listLots()).length, 0);
 

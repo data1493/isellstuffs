@@ -284,6 +284,13 @@ export function agentTradeFeeCents(askCents: number) {
   return Math.floor((askCents * 10) / 100);
 }
 
+export function agentTradeNetCents(
+  askCents: number,
+  feeCents = agentTradeFeeCents(askCents),
+) {
+  return askCents - feeCents;
+}
+
 function nowIso(at = new Date()) {
   return at.toISOString();
 }

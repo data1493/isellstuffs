@@ -1,13 +1,12 @@
 import Link from "next/link";
 
 import {
-  ConfirmTradeForm,
   InsertLotForm,
-  RateAgentForm,
   RateAisleForm,
   TakeLotForm,
   WearPassForm,
 } from "@/components/agents/agent-forms";
+import { AgentSlipCard, CookieDefaultNotice } from "@/components/agents/agent-slip";
 import { SyncAgentStore } from "@/components/agents/sync-agent-store";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
@@ -15,9 +14,8 @@ import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import type { AgentLot } from "@/lib/agent-store";
 import type { AgentRowFloor } from "@/lib/agent-row-io";
-import { lotTitleForTrade } from "@/lib/agent-row-io";
 import { formatMoney, money } from "@/lib/commerce";
-import { agentTalkPath, donatePath } from "@/lib/paths";
+import { agentSlipPath, agentTalkPath, donatePath } from "@/lib/paths";
 
 function floorError(error?: string) {
   switch (error) {
@@ -204,6 +202,8 @@ export function AgentRow({
           </div>
 
           <div className="space-y-4">
+            {floor.shared ? null : <CookieDefaultNotice />}
+
             {notice ? (
               <MallNotice
                 tone="error"
@@ -268,69 +268,17 @@ export function AgentRow({
                 body="Take a digital lot. Confirm is when the mall keeps 10%. Void before confirm returns it."
               />
             ) : (
-              floor.trades.map((trade) => {
-                const title = lotTitleForTrade(trade, floor.lots, snapshotLots);
-                const seller =
-                  floor.lots.find((lot) => lot.id === trade.lotId)?.sellerHandle ??
-                  snapshotLots.find((lot) => lot.id === trade.lotId)?.sellerHandle ??
-                  null;
-                const other =
-                  worn && trade.takerHandle === worn
-                    ? seller ?? trade.takerHandle
-                    : trade.takerHandle;
-                const isFocus = focus?.id === trade.id;
-                return (
-                  <article
-                    key={trade.id}
-                    id={`slip-${trade.id}`}
-                    className="rounded-2xl border border-border bg-card px-4 py-5 sm:px-5"
-                  >
-                    <MallEyebrow>
-                      {trade.status === "confirmed"
-                        ? "Confirmed slip"
-                        : trade.status === "void"
-                          ? "Voided slip"
-                          : "Taken slip"}
-                    </MallEyebrow>
-                    <h3 className="mt-2 font-heading text-2xl tracking-tight">
-                      {title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      Taker {trade.takerHandle}. {formatMoney(money(trade.askCents))}.
-                      {trade.status === "confirmed"
-                        ? ` Mall cut ${formatMoney(money(trade.feeCents))}.`
-                        : trade.status === "taken"
-                          ? ` Cut ${formatMoney(money(trade.feeCents))} lands on confirm.`
-                          : " Voided. Lot can sit again."}
-                    </p>
-
-                    {trade.status === "taken" ? (
-                      <div className="mt-4">
-                        <ConfirmTradeForm tradeId={trade.id} />
-                      </div>
-                    ) : null}
-
-                    {other && (isFocus || floor.trades.length < 3) ? (
-                      <div className="mt-6 border-t border-border pt-4">
-                        <MallEyebrow>Rate the other pass</MallEyebrow>
-                        <h4 className="mt-2 font-heading text-xl tracking-tight">
-                          {other}
-                        </h4>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                          First-class on this slip. Same stars as talk.
-                        </p>
-                        <div className="mt-4">
-                          <RateAgentForm
-                            lockedHandle={other}
-                            returnTo="/agents"
-                            action="/agents/write"
-                          />
-                        </div>
-                      </div>
-                    ) : null}
-                  </article>
-                );
-              })
+              floor.trades.map((trade) => (
+                <AgentSlipCard
+                  key={trade.id}
+                  trade={trade}
+                  lots={floor.lots}
+                  snapshotLots={snapshotLots}
+                  worn={worn}
+                  showRate={focus?.id === trade.id || floor.trades.length < 3}
+                  rateReturnTo={agentSlipPath(trade.id)}
+                />
+              ))
             )}
           </div>
         </div>

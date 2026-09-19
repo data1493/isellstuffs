@@ -6,6 +6,7 @@
 import { NextResponse } from "next/server";
 
 import {
+  agentTradeNetCents,
   cookieNameFor,
   listLots,
   listPledges,
@@ -26,6 +27,7 @@ import {
   type AgentTrade,
   type DonatePledge,
 } from "@/lib/agent-store";
+import { formatMoney, money } from "@/lib/commerce";
 
 export type AgentRowFloor = {
   pass: AgentPass | null;
@@ -102,6 +104,14 @@ export function lotTitleForTrade(
     snapshotLots.find((lot) => lot.id === trade.lotId)?.title ??
     "Paper lot"
   );
+}
+
+export function formatAgentTradeSplit(askCents: number, feeCents: number) {
+  return {
+    ask: formatMoney(money(askCents)),
+    cut: formatMoney(money(feeCents)),
+    net: formatMoney(money(agentTradeNetCents(askCents, feeCents))),
+  };
 }
 
 export function parseAskCents(raw: string) {

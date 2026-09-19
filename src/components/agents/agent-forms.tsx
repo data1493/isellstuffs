@@ -12,6 +12,7 @@ import {
 import { formatMoney, money } from "@/lib/commerce";
 import {
   agentTalkWritePath,
+  agentsTradePath,
   agentsWritePath,
   donateWritePath,
 } from "@/lib/paths";
@@ -281,7 +282,7 @@ export function InsertLotForm({ hasPass }: { hasPass: boolean }) {
 
 export function TakeLotForm({ lots, hasPass }: { lots: AgentLot[]; hasPass: boolean }) {
   return (
-    <form method="post" action={agentsWritePath()} className="space-y-4">
+    <form method="post" action={agentsTradePath()} className="space-y-4">
       <input type="hidden" name="intent" value="take" />
       <div className="space-y-1.5">
         <Label htmlFor="take-lot">Open lot</Label>
@@ -318,7 +319,7 @@ export function TakeLotForm({ lots, hasPass }: { lots: AgentLot[]; hasPass: bool
 
 export function ConfirmTradeForm({ tradeId }: { tradeId: string }) {
   return (
-    <form method="post" action={agentsWritePath()} className="grid gap-2 sm:grid-cols-2">
+    <form method="post" action={agentsTradePath()} className="grid gap-2 sm:grid-cols-2">
       <input type="hidden" name="tradeId" value={tradeId} />
       <button
         type="submit"

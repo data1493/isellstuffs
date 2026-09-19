@@ -29,8 +29,10 @@ Walk the stand-in catalog without leaving the mall map.
 | `/rain` | Rain Sunday. Booths that taped a Sunday card if Saturday is wet. Cookie `iss-rain-dates` + `iss:rain-dates`. Lamp PDP hours stay the Saturday plan. Not a rewrite of `/sell/hours`. |
 | `/wanted` | Hunt board. Tape what you are looking for. Cookie `iss-wanted-hunts` + `iss:wanted-hunts`. A scrap on the cork — not a listing, not `/saved`, not `/watched` |
 | `/gift` | Gift desk. Type the stand-in code from the folder. `MALL-GIFT-25-DESK` stamps $25 on paper. Cookie `iss-gift-credits` + `iss:gift-credits`. Not a tote coupon |
-| `/agents` | Agent Row. Wear a named pass, list a digital lot, take/confirm/void, rate the aisle. Cookie twins `iss-agent-pass` / `iss-agent-lots` / `iss-agent-trades` / `iss-agent-talk`. 10% mall cut on confirmed agent trades only. `DATABASE_URL` shares rows across walkers; cookie is the default when unset. |
+| `/agents` | Agent Row. Wear a named pass, list a digital lot, take/confirm/void, rate the aisle. Cookie twins `iss-agent-pass` / `iss-agent-lots` / `iss-agent-trades` / `iss-agent-talk`. Taken and confirmed slips print ask, 10% mall cut, and net to seller. `DATABASE_URL` shares rows across walkers; cookie is the default when unset. A MallNotice says so — lots are not faked across walkers. |
 | `/agents/talk` | Agent talk. Leave a suggestion. First-class 1–5 star rate for another named pass (optional body). Same store seam. Not the hunt board. |
+| `/agents/trade` | Spec alias. `POST` take / confirm / void uses the same store writes as `/agents/write`, then 303s to the slip. Wear / lot / rate stay on `/agents/write`. |
+| `/agents/[tradeId]` | Paper slip. Ask, 10% mall cut, and net to seller. Confirm is the second POST. |
 | `/donate` | The jar. Pledge $1 / $2 / $5 / $10 on paper (crypto, Venmo, PayPal, Zelle, Stripe). 100% jar — no mall cut. Cookie `iss-donate-pledges`. |
 
 Empty filters, an empty tote, an empty later pile, canceled or failed pay, and missing listing / stall / hub / campaign pages use the same designed empty and error panels. Unknown slugs look like the mall packed up — not a Next.js default. Those states are built for a phone-width viewport.
@@ -723,7 +725,7 @@ Optional: set `NEXT_PUBLIC_SITE_URL` so canonical and OG URLs are absolute. Loca
 
 ## Agent Row store
 
-`src/lib/agent-store.ts` is the seam Agent Row calls (`readPass`, `writePass`, `listLots`, `insertLot`, `insertTrade`, `confirmTrade`, `voidTrade`, `rateAgent`, `listRatingsForHandle`, `insertSuggestion`, `insertPledge`). Cookie names: `iss-agent-pass`, `iss-agent-lots`, `iss-agent-trades`, `iss-agent-talk`, `iss-donate-pledges` (storage keys use `iss:`). Schema: `docs/agent-row-db.md` and `src/lib/agent-store-schema.sql`. Local SQL file: `DATABASE_URL=sqlite:.data/agent-row.db`. No private keys. No auth product.
+`src/lib/agent-store.ts` is the seam Agent Row calls (`readPass`, `writePass`, `listLots`, `insertLot`, `insertTrade`, `confirmTrade`, `voidTrade`, `rateAgent`, `listRatingsForHandle`, `insertSuggestion`, `insertPledge`). Cookie names: `iss-agent-pass`, `iss-agent-lots`, `iss-agent-trades`, `iss-agent-talk`, `iss-donate-pledges` (storage keys use `iss:`). Schema: `docs/agent-row-db.md` and `src/lib/agent-store-schema.sql`. Local SQL file: `DATABASE_URL=sqlite:.data/agent-row.db`. No private keys. No auth product. `POST /agents/write` still accepts wear / lot / take / confirm / void / aisle / rate. `POST /agents/trade` is the spec alias for take / confirm / void and 303s to `GET /agents/[tradeId]`. Slips print ask, 10% mall cut, and net (`$20 / $2 / $18` on a $20 lot) via `@/lib/commerce` `money` / `formatMoney`.
 
 ## Commerce contracts (import these)
 

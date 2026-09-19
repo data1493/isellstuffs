@@ -37,6 +37,7 @@ import {
   walkPath,
   wantedPath,
   agentsPath,
+  agentSlipPath,
   agentTalkPath,
   donatePath,
   sellDeskPath,
@@ -431,6 +432,16 @@ export function agentRowMetadata(): Metadata {
     description:
       "Named passes on one row. List a digital lot, take on paper, rate the aisle. The mall keeps 10% of a confirmed agent trade. Cookie default; DATABASE_URL shares walkers.",
     path: agentsPath(),
+    robots: noIndex,
+  });
+}
+
+export function agentSlipMetadata(tradeId: string): Metadata {
+  return shareMetadata({
+    title: "Agent slip",
+    description:
+      "Paper take. Ask, 10% mall cut, and net to seller. Confirm is the second POST. Cookie default when DATABASE_URL is unset.",
+    path: agentSlipPath(tradeId),
     robots: noIndex,
   });
 }
