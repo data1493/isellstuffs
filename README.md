@@ -56,6 +56,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
 | `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
 | `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Files stay in the folder. |
+| `/sell/taken` | Close a driveway handoff when the buyer walked. `POST /sell/taken` (form: `slipId`, `listingId`, `intent=taken\|waiting`). Cookie `iss-taken-handoffs` + `iss:taken-handoffs`. Taken lines drop off the queue. Not a refund. Not a sold sticker. |
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |
 | `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
 | `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
@@ -111,7 +112,8 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | `/folder/[slip]` | One paid slip’s booth folder. Reads the checkout cookie, then `iss:orders` after that cookie dies. Stand-in downloads, not a CDN |
 | `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” |
 | `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder |
-| `/sell/desk/queue` | Stallholder twin of pickup. Mixed tote lists the lamp and Tuesday driveway hours, not the PDF |
+| `/sell/desk/queue` | Stallholder twin of pickup. Mixed tote lists the lamp and Tuesday driveway hours, not the PDF. Taken lines drop off. |
+| `/sell/taken` | Mark the lamp taken after they walk. Coming vs left-with-it. Queue hides that arrival. |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |
 | `/orders/[id]` | Reconstruct the tote from checkout listing ids |
 | `/orders/[id]/email` | Printed receipt email of that slip. Same lines. Nothing is sent |

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DeskFrame } from "@/components/sell/desk-frame";
 import { DeskPackedUp } from "@/components/sell/desk-packed-up";
 import { OtherBoothDesks } from "@/components/sell/other-booth-desks";
-import { sellDeskQueuePath, sellFoldersPath } from "@/lib/paths";
+import { sellDeskQueuePath, sellFoldersPath, sellTakenPath } from "@/lib/paths";
 import { overlayDeskStalls, deskListings, deskStall } from "@/lib/seller-desk";
 import { readSellerListings } from "@/lib/seller-overlay";
 import { sellDeskMetadata } from "@/lib/seo";
@@ -36,6 +36,13 @@ export default function SellDeskPage() {
             className="font-medium text-foreground underline-offset-4 hover:underline"
           >
             What walked into a folder
+          </Link>
+          .{" "}
+          <Link
+            href={sellTakenPath()}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Who left with it
           </Link>
           .
         </p>

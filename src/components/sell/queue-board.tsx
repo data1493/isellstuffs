@@ -9,6 +9,7 @@ import {
   QueueDigitalOnly,
   QueueEmpty,
 } from "@/components/sell/queue-empty";
+import { TakenButton } from "@/components/sell/taken-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,15 +31,25 @@ import {
   listingPath,
   pickupSlipPath,
   sellDeskPath,
+  sellDeskQueuePath,
   sellPath,
+  sellTakenPath,
   stallPath,
 } from "@/lib/paths";
 import {
   queueBoothsFromSlips,
   queueHasPhysicalLines,
 } from "@/lib/seller-queue";
+import {
+  queueBoothsStillComing,
+  readTakenHandoffs,
+  subscribeTaken,
+  TAKEN_MIRROR_SCRIPT,
+  type TakenHandoff,
+} from "@/lib/taken-handoff";
 
 const emptyOrders: OrderSlip[] = [];
+const emptyTaken: TakenHandoff[] = [];
 
 function mergeSeed(orders: OrderSlip[], seed: OrderSlip | null) {
   if (!seed) {
@@ -60,6 +71,11 @@ export function QueueView({ seed }: { seed: OrderSlip | null }) {
     subscribeOrderSlips,
     readOrderSlips,
     () => emptyOrders,
+  );
+  const taken = useSyncExternalStore(
+    subscribeTaken,
+    readTakenHandoffs,
+    () => emptyTaken,
   );
 
   useEffect(() => {
@@ -86,13 +102,26 @@ export function QueueView({ seed }: { seed: OrderSlip | null }) {
     );
   }
 
-  const booths = queueBoothsFromSlips(orders);
+  const booths = queueBoothsStillComing(queueBoothsFromSlips(orders), taken);
   const folderSlip = orders.find((order) =>
     folderHasDigitalLines(order.listingIds),
   );
 
+  if (booths.length === 0) {
+    if (folderSlip) {
+      return (
+        <QueueDigitalOnly
+          listingIds={folderSlip.listingIds}
+          slip={folderSlip.id}
+        />
+      );
+    }
+    return <QueueEmpty />;
+  }
+
   return (
     <div data-desk-queue="">
+      <script dangerouslySetInnerHTML={{ __html: TAKEN_MIRROR_SCRIPT }} />
       <MallHero>
         <MallCrumb label="Driveway queue">
           <CrumbSep />
@@ -172,6 +201,14 @@ export function QueueView({ seed }: { seed: OrderSlip | null }) {
                           {arrival.slipId}
                         </Link>
                       </span>
+                      <div className="mt-2">
+                        <TakenButton
+                          slipId={arrival.slipId}
+                          listingId={arrival.listing.id}
+                          intent="taken"
+                          returnTo={sellDeskQueuePath()}
+                        />
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -212,6 +249,13 @@ export function QueueView({ seed }: { seed: OrderSlip | null }) {
               Files stay in the folder
             </Button>
           ) : null}
+          <Button
+            variant="outline"
+            className="w-full rounded-full sm:w-auto"
+            render={<Link href={sellTakenPath()} />}
+          >
+            Who left with it
+          </Button>
           <Button
             variant="outline"
             className="w-full rounded-full sm:w-auto"
