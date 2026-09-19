@@ -123,6 +123,7 @@ export function DeskBoard({
           }
         />
       ) : (
+        <div>
         <p className="mb-3 text-sm leading-6 text-muted-foreground">
           Sold sticker is on the table. Putting back is restock, not a refund.
         </p>
@@ -187,6 +188,7 @@ export function DeskBoard({
             );
           })}
         </ul>
+        </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
