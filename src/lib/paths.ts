@@ -82,6 +82,14 @@ export function listingHeavyWritePath() {
   return "/listings/heavy";
 }
 
+export function listingPocketsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pockets`;
+}
+
+export function listingPocketsWritePath() {
+  return "/listings/pockets";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
