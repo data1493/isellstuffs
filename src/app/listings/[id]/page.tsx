@@ -20,6 +20,7 @@ import { ListingPlaysNotice } from "@/components/listing-plays-notice";
 import { ListingSizeNotice } from "@/components/listing-size-notice";
 import { ListingLacesNotice } from "@/components/listing-laces-notice";
 import { ListingCasesNotice } from "@/components/listing-cases-notice";
+import { ListingHeatNotice } from "@/components/listing-heat-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -61,6 +62,7 @@ import {
   listingScanPath,
   listingLacesPath,
   listingCasesPath,
+  listingHeatPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -240,6 +242,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPlaysNotice listingId={listing.id} /> : null}
               {physical ? <ListingLacesNotice listingId={listing.id} /> : null}
               {physical ? <ListingCasesNotice listingId={listing.id} /> : null}
+              {physical ? <ListingHeatNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -362,6 +365,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     The discs walked
+                  </Link>
+                  <Link
+                    href={listingHeatPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Not for the microwave
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

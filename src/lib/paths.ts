@@ -162,6 +162,14 @@ export function listingCasesWritePath() {
   return "/listings/cases";
 }
 
+export function listingHeatPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/heat`;
+}
+
+export function listingHeatWritePath() {
+  return "/listings/heat";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
