@@ -978,6 +978,14 @@ export function listingSpeakerWritePath() {
   return "/listings/speaker";
 }
 
+export function listingCoilPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/coil`;
+}
+
+export function listingCoilWritePath() {
+  return "/listings/coil";
+}
+
 export function listingSandPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/sand`;
 }

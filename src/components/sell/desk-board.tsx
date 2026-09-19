@@ -399,6 +399,12 @@ import {
   subscribeSpeaker,
 } from "@/lib/listing-speaker";
 import {
+  canTapeCoil,
+  isListingCoilOverlay,
+  readCoilListingIds,
+  subscribeCoil,
+} from "@/lib/listing-coil";
+import {
   canTapeSand,
   isListingSandOverlay,
   readSandListingIds,
@@ -510,6 +516,7 @@ import {
   listingWindWritePath,
   listingSocketWritePath,
   listingSpeakerWritePath,
+  listingCoilWritePath,
   listingSandWritePath,
   listingContentsWritePath,
   listingEvenWritePath,
@@ -668,6 +675,7 @@ export function DeskBoard({
   const [windIds, setWindIds] = useState<string[]>([]);
   const [socketIds, setSocketIds] = useState<string[]>([]);
   const [speakerIds, setSpeakerIds] = useState<string[]>([]);
+  const [coilIds, setCoilIds] = useState<string[]>([]);
   const [sandIds, setSandIds] = useState<string[]>([]);
   const [contentsIds, setContentsIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
@@ -760,6 +768,7 @@ export function DeskBoard({
       setWindIds(readWindListingIds());
       setSocketIds(readSocketListingIds());
       setSpeakerIds(readSpeakerListingIds());
+      setCoilIds(readCoilListingIds());
       setSandIds(readSandListingIds());
       setContentsIds(readContentsListingIds());
       setSpliceIds(readSpliceListingIds());
@@ -841,6 +850,7 @@ export function DeskBoard({
     const unsubWind = subscribeWind(apply);
     const unsubSocket = subscribeSocket(apply);
     const unsubSpeaker = subscribeSpeaker(apply);
+    const unsubCoil = subscribeCoil(apply);
     const unsubSand = subscribeSand(apply);
     const unsubContents = subscribeContents(apply);
     const unsubSplice = subscribeSplice(apply);
@@ -932,6 +942,7 @@ export function DeskBoard({
       unsubWind();
       unsubSocket();
       unsubSpeaker();
+      unsubCoil();
       unsubSand();
       unsubContents();
       unsubSplice();
@@ -2059,6 +2070,37 @@ export function DeskBoard({
                             {isListingSpeakerOverlay(listing.id, speakerIds)
                               ? "Leave the line"
                               : "I will not speaker it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCoil(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCoilWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCoilOverlay(listing.id, coilIds)
+                                ? "open"
+                                : "coil"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCoilOverlay(listing.id, coilIds)
+                              ? "Leave the tangle"
+                              : "I will not coil them"}
                           </button>
                         </form>
                       ) : null}
