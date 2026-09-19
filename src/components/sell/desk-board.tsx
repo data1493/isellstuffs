@@ -123,6 +123,12 @@ import {
   subscribeVg,
 } from "@/lib/listing-vg";
 import {
+  canTapeBake,
+  isListingBakeOverlay,
+  readBakeListingIds,
+  subscribeBake,
+} from "@/lib/listing-bake";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingGlueWritePath,
@@ -133,6 +139,7 @@ import {
   listingRememberWritePath,
   listingRipWritePath,
   listingVgWritePath,
+  listingBakeWritePath,
   listingShotWritePath,
   listingTypesetWritePath,
   listingTwistWritePath,
@@ -212,6 +219,7 @@ export function DeskBoard({
   const [glueIds, setGlueIds] = useState<string[]>([]);
   const [slantIds, setSlantIds] = useState<string[]>([]);
   const [vgIds, setVgIds] = useState<string[]>([]);
+  const [bakeIds, setBakeIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -245,6 +253,7 @@ export function DeskBoard({
       setGlueIds(readGlueListingIds());
       setSlantIds(readSlantListingIds());
       setVgIds(readVgListingIds());
+      setBakeIds(readBakeListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -267,6 +276,7 @@ export function DeskBoard({
     const unsubGlue = subscribeGlue(apply);
     const unsubSlant = subscribeSlant(apply);
     const unsubVg = subscribeVg(apply);
+    const unsubBake = subscribeBake(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -299,6 +309,7 @@ export function DeskBoard({
       unsubGlue();
       unsubSlant();
       unsubVg();
+      unsubBake();
     };
   }, [listings, stall.id]);
 
@@ -914,6 +925,37 @@ export function DeskBoard({
                             {isListingVgOverlay(listing.id, vgIds)
                               ? "Leave the record"
                               : "I will not VG it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBake(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBakeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBakeOverlay(listing.id, bakeIds)
+                                ? "open"
+                                : "bake"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBakeOverlay(listing.id, bakeIds)
+                              ? "Leave the tape"
+                              : "I will not bake"}
                           </button>
                         </form>
                       ) : null}

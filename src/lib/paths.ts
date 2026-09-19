@@ -578,6 +578,14 @@ export function listingVgWritePath() {
   return "/listings/vg";
 }
 
+export function listingBakePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bake`;
+}
+
+export function listingBakeWritePath() {
+  return "/listings/bake";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
