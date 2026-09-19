@@ -1090,6 +1090,14 @@ export function listingDartWritePath() {
   return "/listings/dart";
 }
 
+export function listingContrastPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/contrast`;
+}
+
+export function listingContrastWritePath() {
+  return "/listings/contrast";
+}
+
 export function listingVariablePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/variable`;
 }

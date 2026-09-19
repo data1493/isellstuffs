@@ -477,6 +477,12 @@ import {
   subscribeDart,
 } from "@/lib/listing-dart";
 import {
+  canTapeContrast,
+  isListingContrastOverlay,
+  readContrastListingIds,
+  subscribeContrast,
+} from "@/lib/listing-contrast";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -602,6 +608,7 @@ import {
   listingGrommetWritePath,
   listingDartWritePath,
   listingPaginateWritePath,
+  listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -772,6 +779,7 @@ export function DeskBoard({
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
+  const [contrastIds, setContrastIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -877,6 +885,7 @@ export function DeskBoard({
       setAnnealIds(readAnnealListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
+      setContrastIds(readContrastListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -971,6 +980,7 @@ export function DeskBoard({
     const unsubAnneal = subscribeAnneal(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
+    const unsubContrast = subscribeContrast(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1075,6 +1085,7 @@ export function DeskBoard({
       unsubAnneal();
       unsubGrommet();
       unsubDart();
+      unsubContrast();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2605,6 +2616,37 @@ export function DeskBoard({
                             {isListingDartOverlay(listing.id, dartIds)
                               ? "Leave the hang"
                               : "I will not dart it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeContrast(listing) ? (
+                        <form
+                          method="post"
+                          action={listingContrastWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingContrastOverlay(listing.id, contrastIds)
+                                ? "open"
+                                : "contrast"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingContrastOverlay(listing.id, contrastIds)
+                              ? "Leave the dim"
+                              : "I will not contrast it"}
                           </button>
                         </form>
                       ) : null}
