@@ -226,6 +226,14 @@ export function listingPileWritePath() {
   return "/listings/pile";
 }
 
+export function listingStrapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/strap`;
+}
+
+export function listingStrapWritePath() {
+  return "/listings/strap";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
