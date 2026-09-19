@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { BoothCardForm } from "@/components/stalls/booth-card-form";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
-import { MallNotice } from "@/components/mall-notice";
 import { MallHero, MallWidth } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { stallBySlug } from "@/lib/commerce";
 import { stallEditPath, stallPath } from "@/lib/paths";
 import { missingStallMetadata, shareMetadata } from "@/lib/seo";
@@ -41,31 +40,7 @@ export default async function StallEditPage({ params }: StallEditPageProps) {
   const stall = stallBySlug(slug);
 
   if (!stall) {
-    return (
-      <MallNotice
-        tone="missing"
-        eyebrow="Booth card"
-        title="That stall packed up"
-        body="No booth with that slug. You can only rewrite a card for a stall already on the floor."
-        actions={
-          <>
-            <Button
-              className="rounded-full px-5"
-              render={<Link href="/explore" />}
-            >
-              Walk the concourse
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-full px-5"
-              render={<Link href="/hubs" />}
-            >
-              See the hubs
-            </Button>
-          </>
-        }
-      />
-    );
+    notFound();
   }
 
   return (
