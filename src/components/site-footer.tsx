@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { mallHubs } from "@/lib/commerce";
+import { yardSaleTuesdayLanderPath } from "@/lib/ads-display";
 import { collectionsPath, feesPath, thisWeekPath } from "@/lib/paths";
 import { site } from "@/lib/site";
 
@@ -12,6 +13,7 @@ const browse = [
   { href: "/sell", label: "Sell" },
   { href: feesPath(), label: "Fees" },
   { href: "/advertise", label: "Advertise" },
+  { href: yardSaleTuesdayLanderPath, label: "Yard Sale campaign" },
   { href: "/cart", label: "Tote" },
 ];
 

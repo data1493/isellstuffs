@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   adKindCopy,
-  campaignLanderPath,
-  isHomepageBeatsCampaign,
+  landerForSlot,
   liveSurfaces,
 } from "@/lib/ads-display";
 import {
@@ -20,7 +19,7 @@ export function LivePlacement({ slot }: { slot: AdSlot }) {
   const stall = stallById(slot.stallId);
   const kind = adKindCopy[slot.kind];
   const surfaces = liveSurfaces(slot);
-  const hasLander = isHomepageBeatsCampaign(slot);
+  const lander = landerForSlot(slot);
 
   return (
     <article className="flex h-full flex-col rounded-2xl bg-card p-5 ring-1 ring-foreground/10 sm:p-6">
@@ -77,11 +76,11 @@ export function LivePlacement({ slot }: { slot: AdSlot }) {
             {stall.boothName}
           </Button>
         ) : null}
-        {hasLander ? (
+        {lander ? (
           <Button
             size="sm"
             className="rounded-full"
-            render={<Link href={campaignLanderPath} />}
+            render={<Link href={lander} />}
           >
             Open the campaign
           </Button>

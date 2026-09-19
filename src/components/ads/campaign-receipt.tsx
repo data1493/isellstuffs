@@ -2,13 +2,14 @@ import { PaidStamp } from "@/components/ads/paid-stamp";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { adKindCopy } from "@/lib/ads-display";
-import { formatMoney, stallById, type AdSlot } from "@/lib/commerce";
+import { formatMoney, hubById, stallById, type AdSlot } from "@/lib/commerce";
 
 const lines = [
   { key: "package", label: "Package" },
   { key: "window", label: "Window" },
   { key: "price", label: "Paid" },
   { key: "stall", label: "Booth" },
+  { key: "aisle", label: "Aisle" },
   { key: "label", label: "Stealth" },
 ] as const;
 
@@ -20,12 +21,14 @@ export function CampaignReceipt({
   tone?: "paper" | "ink";
 }) {
   const stall = stallById(slot.stallId);
+  const hub = slot.hubId ? hubById(slot.hubId) : undefined;
   const kind = adKindCopy[slot.kind];
   const values = {
     package: slot.packageName,
     window: slot.window,
     price: formatMoney(slot.price),
     stall: stall?.boothName ?? slot.stallId,
+    aisle: hub?.name ?? "Mall floor",
     label: "Refused. This is stamped.",
   } as const;
 
@@ -62,17 +65,19 @@ export function CampaignReceipt({
       <Separator className="my-5 border-dashed bg-transparent [background-image:repeating-linear-gradient(90deg,currentColor_0_6px,transparent_6px_12px)] opacity-25" />
 
       <dl className="space-y-2.5 text-sm">
-        {lines.map((line) => (
-          <div
-            key={line.key}
-            className="flex items-baseline justify-between gap-4"
-          >
-            <dt className="text-xs font-medium uppercase tracking-[0.16em] text-current/50">
-              {line.label}
-            </dt>
-            <dd className="text-right font-medium">{values[line.key]}</dd>
-          </div>
-        ))}
+        {lines.map((line) =>
+          line.key === "aisle" && slot.kind !== "hub-takeover" ? null : (
+            <div
+              key={line.key}
+              className="flex items-baseline justify-between gap-4"
+            >
+              <dt className="text-xs font-medium uppercase tracking-[0.16em] text-current/50">
+                {line.label}
+              </dt>
+              <dd className="text-right font-medium">{values[line.key]}</dd>
+            </div>
+          ),
+        )}
       </dl>
     </aside>
   );

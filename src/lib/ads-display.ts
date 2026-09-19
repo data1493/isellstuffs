@@ -6,13 +6,31 @@ import { campaignPath, stallPath } from "@/lib/paths";
  * slots still come from `@/lib/commerce`.
  */
 
-/** The one campaign URL sold as a page, not a row on the concourse. */
+/** Bought campaign URLs — souvenirs, not rows on the concourse. */
 export const homepageBeatsCampaign = {
   slotId: "slot-homepage-beats",
   slug: "homepage-beats",
 } as const;
 
+export const yardSaleTuesdayCampaign = {
+  slotId: "slot-hub-yard-sale",
+  slug: "yard-sale-tuesday",
+} as const;
+
+export const soldCampaigns = [
+  homepageBeatsCampaign,
+  yardSaleTuesdayCampaign,
+] as const;
+
 export const campaignLanderPath = campaignPath(homepageBeatsCampaign.slug);
+export const yardSaleTuesdayLanderPath = campaignPath(
+  yardSaleTuesdayCampaign.slug,
+);
+
+export function landerForSlot(slot: AdSlot): string | undefined {
+  const campaign = soldCampaigns.find((item) => item.slotId === slot.id);
+  return campaign ? campaignPath(campaign.slug) : undefined;
+}
 
 export const adKindCopy: Record<
   AdSlotKind,
@@ -32,7 +50,8 @@ export const adKindCopy: Record<
   },
   "hub-takeover": {
     product: "Hub takeover",
-    includes: "The aisle hero for one hub. The floor still has a rule.",
+    includes:
+      "The aisle hero for one hub, plus a campaign URL that exists only because you paid. The floor still has a rule.",
     cannotBuy: "You do not rewrite what the aisle refuses. Yard Sale stays a driveway.",
   },
 };
@@ -53,13 +72,6 @@ export function liveSurfaces(slot: AdSlot): LiveSurface[] {
       label: "Home concourse hero",
       note: "Dark paid band under the mall pitch",
     });
-    if (slot.id === homepageBeatsCampaign.slotId) {
-      surfaces.push({
-        href: campaignLanderPath,
-        label: "Campaign lander",
-        note: "The URL they bought with the takeover",
-      });
-    }
   }
 
   if (slot.kind === "featured-stall") {
@@ -91,9 +103,25 @@ export function liveSurfaces(slot: AdSlot): LiveSurface[] {
     });
   }
 
+  const lander = landerForSlot(slot);
+  if (lander) {
+    surfaces.push({
+      href: lander,
+      label: "Campaign lander",
+      note:
+        slot.kind === "hub-takeover"
+          ? "The URL they bought with the aisle"
+          : "The URL they bought with the takeover",
+    });
+  }
+
   return surfaces;
 }
 
 export function isHomepageBeatsCampaign(slot: AdSlot): boolean {
   return slot.id === homepageBeatsCampaign.slotId;
+}
+
+export function isSoldCampaign(slot: AdSlot): boolean {
+  return soldCampaigns.some((item) => item.slotId === slot.id);
 }

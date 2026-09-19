@@ -9,7 +9,10 @@ import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { campaignLanderPath } from "@/lib/ads-display";
+import {
+  campaignLanderPath,
+  yardSaleTuesdayLanderPath,
+} from "@/lib/ads-display";
 import {
   adSlots,
   adSlotsByKind,
@@ -107,6 +110,14 @@ export default function AdvertisePage() {
             >
               See a bought campaign
             </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-full px-5"
+              render={<Link href={yardSaleTuesdayLanderPath} />}
+            >
+              See the aisle campaign
+            </Button>
           </div>
       </MallHero>
 
@@ -190,8 +201,9 @@ export default function AdvertisePage() {
             <p className="mt-3 max-w-xl text-muted-foreground text-pretty">
               Half-Working Electronics paid the good corner. Beats Under the
               Table bought the homepage and a campaign URL. Folding Table
-              Tuesday owns Yard Sale this weekend. Book the next window from
-              the card — labeled, priced, no stealth.
+              Tuesday owns Yard Sale this weekend — and bought a campaign URL
+              for the aisle. Book the next window from the card — labeled,
+              priced, no stealth.
             </p>
             <div className="mt-5">
               <Button
@@ -228,19 +240,25 @@ export default function AdvertisePage() {
 
       <MallSection>
           <h2 className="font-heading text-3xl tracking-tight sm:text-4xl">
-            See the bought page.
+            See the bought pages.
           </h2>
           <p className="max-w-xl text-muted-foreground">
-            The homepage takeover includes a lander that exists only because
-            Beats Under the Table paid for Fri–Mon. It reads like a receipt,
-            not a blog post.
+            Beats Under the Table paid for a Fri–Mon lander. Folding Table
+            Tuesday paid for a Yard Sale URL. Both read like receipts, not
+            blog posts.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button
               className="rounded-full px-5"
               render={<Link href={campaignLanderPath} />}
             >
-              Open the campaign lander
+              Open the homepage campaign
+            </Button>
+            <Button
+              className="rounded-full px-5"
+              render={<Link href={yardSaleTuesdayLanderPath} />}
+            >
+              Open the aisle campaign
             </Button>
             <Button
               variant="outline"

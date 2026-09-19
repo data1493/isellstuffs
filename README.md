@@ -24,7 +24,7 @@ Empty filters, an empty tote, canceled or failed pay, and missing listing / stal
 
 ## Advertise
 
-Paid corners are a product. `/advertise` is the rate card. Next weekend can be booked on a local stand-in. One campaign also has a bought landing page.
+Paid corners are a product. `/advertise` is the rate card. Next weekend can be booked on a local stand-in. Two sold windows have bought landing pages.
 
 | Route | What it is |
 | --- | --- |
@@ -33,6 +33,7 @@ Paid corners are a product. `/advertise` is the rate card. Next weekend can be b
 | `/advertise/book/[kind]` | Name the stall, confirm the package, pay on paper |
 | `/advertise/receipt` | Bought slip. Stamp, package, window, price. Not on the floor yet |
 | `/campaigns/homepage-beats` | Beats Under the Table Fri–Mon lander. Receipt, not a blog post |
+| `/campaigns/yard-sale-tuesday` | Folding Table Tuesday Yard Sale hub takeover. Receipt, not a hub page |
 
 Home, explore, and hub pages already render the labeled placements. Advertise points at those corners. It does not restyle them. Next-weekend bookings write to `localStorage` key `iss:ad-bookings` via `@/lib/ad-booking` and stop at the receipt — they do not land on the floor yet.
 
