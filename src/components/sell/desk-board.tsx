@@ -507,6 +507,12 @@ import {
   subscribeHandle,
 } from "@/lib/listing-handle";
 import {
+  canTapeDegauss,
+  isListingDegaussOverlay,
+  readDegaussListingIds,
+  subscribeDegauss,
+} from "@/lib/listing-degauss";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -647,6 +653,7 @@ import {
   listingTinWritePath,
   listingLatheWritePath,
   listingHandleWritePath,
+  listingDegaussWritePath,
   listingPaginateWritePath,
   listingGateWritePath,
   listingContrastWritePath,
@@ -826,6 +833,7 @@ export function DeskBoard({
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
+  const [degaussIds, setDegaussIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -938,6 +946,7 @@ export function DeskBoard({
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
+      setDegaussIds(readDegaussListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1039,6 +1048,7 @@ export function DeskBoard({
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
+    const unsubDegauss = subscribeDegauss(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1150,6 +1160,7 @@ export function DeskBoard({
       unsubTin();
       unsubLathe();
       unsubHandle();
+      unsubDegauss();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2434,6 +2445,37 @@ export function DeskBoard({
                             {isListingHandleOverlay(listing.id, handleIds)
                               ? "Leave the mug"
                               : "I will not handle it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDegauss(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDegaussWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDegaussOverlay(listing.id, degaussIds)
+                                ? "open"
+                                : "degauss"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDegaussOverlay(listing.id, degaussIds)
+                              ? "Leave the tape"
+                              : "I will not degauss it"}
                           </button>
                         </form>
                       ) : null}

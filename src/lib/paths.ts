@@ -1122,6 +1122,14 @@ export function listingHandleWritePath() {
   return "/listings/handle";
 }
 
+export function listingDegaussPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/degauss`;
+}
+
+export function listingDegaussWritePath() {
+  return "/listings/degauss";
+}
+
 export function listingGatePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/gate`;
 }

@@ -133,6 +133,7 @@ import { ListingDartNotice } from "@/components/listing-dart-notice";
 import { ListingTinNotice } from "@/components/listing-tin-notice";
 import { ListingLatheNotice } from "@/components/listing-lathe-notice";
 import { ListingHandleNotice } from "@/components/listing-handle-notice";
+import { ListingDegaussNotice } from "@/components/listing-degauss-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
@@ -305,6 +306,7 @@ import {
   listingTinPath,
   listingLathePath,
   listingHandlePath,
+  listingDegaussPath,
   listingPaginatePath,
   listingContrastPath,
   listingGatePath,
@@ -655,6 +657,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
               {physical ? <ListingHandleNotice listingId={listing.id} /> : null}
+              {physical ? <ListingDegaussNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1329,6 +1332,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not handle it
+                  </Link>
+                  <Link
+                    href={listingDegaussPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not degauss it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (
