@@ -14,6 +14,13 @@ import {
   type Listing,
   type Stall,
 } from "@/lib/commerce";
+import {
+  exploreHref,
+  exploreStackBits,
+  type ExploreAvail,
+  type ExploreMax,
+  type ExploreSort,
+} from "@/lib/browse";
 import { listingFact, listingFactLabel, listingStatusLabel } from "@/lib/listing-display";
 import { listingPath, searchPath, stallPath } from "@/lib/paths";
 import { site } from "@/lib/site";
@@ -121,13 +128,16 @@ export function homeMetadata(): Metadata {
 export function exploreMetadata(filters: {
   hubId?: string;
   type?: string;
+  avail?: ExploreAvail;
+  max?: ExploreMax;
+  sort?: ExploreSort;
   unknown?: boolean;
 }): Metadata {
   if (filters.unknown) {
     return shareMetadata({
       title: "That filter is not on the map",
       description:
-        `Hubs are ${hubFloorList()}. Kind is physical or digital. Clear the query and walk the concourse.`,
+        `Hubs are ${hubFloorList()}. Kind is physical or digital. On the floor is all or still here. Price is under a ten or under $25.`,
       path: "/explore",
       robots: noIndexFollow,
     });
@@ -137,23 +147,34 @@ export function exploreMetadata(filters: {
   const type = filters.type === "physical" || filters.type === "digital"
     ? filters.type
     : undefined;
-  const path = explorePath(hub?.id, type);
+  const avail = filters.avail === "open" ? "open" : undefined;
+  const max = filters.max === "10" || filters.max === "25" ? filters.max : undefined;
+  const sort =
+    filters.sort === "price" || filters.sort === "price-desc"
+      ? filters.sort
+      : undefined;
+  const path = exploreHref({ hubId: hub?.id, type, avail, max, sort });
+  const extras = exploreStackBits({ type: undefined, avail, max, sort });
+  const extraTitle = extras.length > 0 ? ` · ${extras.join(" · ")}` : "";
+  const extraDescription =
+    extras.length > 0 ? ` Filtered to ${extras.join(", ")}.` : "";
 
   if (hub && type === "physical") {
     return shareMetadata({
-      title: `${hub.name} · physical`,
-      description: `${hub.blurb} Things you can hold in this aisle — condition first, no lookbook.`,
+      title: `${hub.name} · physical${extraTitle}`,
+      description: `${hub.blurb} Things you can hold in this aisle — condition first, no lookbook.${extraDescription}`,
       path,
     });
   }
 
   if (hub && type === "digital") {
     return shareMetadata({
-      title: `${hub.name} · digital`,
+      title: `${hub.name} · digital${extraTitle}`,
       description:
-        hub.id === "download-stall"
+        (hub.id === "download-stall"
           ? `${hub.blurb} Files from the same stalls as the junk. Format stands in for condition.`
-          : `${hub.name} does not keep a separate file shop. Digital listings live in Download Stall.`,
+          : `${hub.name} does not keep a separate file shop. Digital listings live in Download Stall.`) +
+        extraDescription,
       path,
     });
   }
@@ -161,26 +182,46 @@ export function exploreMetadata(filters: {
   if (hub) {
     const count = listingsByHub(hub.id).length;
     return shareMetadata({
-      title: `${hub.name} on the concourse`,
-      description: `${hub.blurb} ${count} ${count === 1 ? "listing" : "listings"} in ${hub.name}, including sold and file-gone. ${hub.rule}`,
+      title: `${hub.name} on the concourse${extraTitle}`,
+      description: `${hub.blurb} ${count} ${count === 1 ? "listing" : "listings"} in ${hub.name}, including sold and file-gone. ${hub.rule}${extraDescription}`,
       path,
     });
   }
 
   if (type === "physical") {
     return shareMetadata({
-      title: "Physical finds on the concourse",
+      title: `Physical finds on the concourse${extraTitle}`,
       description:
-        "Objects on the tables across every stall. Condition is the listing. Sold stays on the floor so you can see what walked.",
+        "Objects on the tables across every stall. Condition is the listing. Sold stays on the floor so you can see what walked." +
+        extraDescription,
       path,
     });
   }
 
   if (type === "digital") {
     return shareMetadata({
-      title: "Digital files on the concourse",
+      title: `Digital files on the concourse${extraTitle}`,
       description:
-        "PDFs, beats, presets, and packs from the same stalls as the junk. Not a second storefront.",
+        "PDFs, beats, presets, and packs from the same stalls as the junk. Not a second storefront." +
+        extraDescription,
+      path,
+    });
+  }
+
+  if (extras.length > 0) {
+    const headline =
+      extras[0] === "still here"
+        ? "Still here on the concourse"
+        : extras[0] === "under a ten"
+          ? "Under a ten on the concourse"
+          : extras[0] === "under $25"
+            ? "Under $25 on the concourse"
+            : "Explore the concourse";
+    return shareMetadata({
+      title: extras.length > 1 ? `${headline} · ${extras.slice(1).join(" · ")}` : headline,
+      description:
+        "The general mall floor. Filter the stand-in catalog by hub, physical or digital, still here, or a price band. Paid corners are labeled." +
+        extraDescription,
       path,
     });
   }
@@ -188,7 +229,7 @@ export function exploreMetadata(filters: {
   return shareMetadata({
     title: "Explore the concourse",
     description:
-      "The general mall floor. Filter the stand-in catalog by hub or physical/digital. Paid corners are labeled.",
+      "The general mall floor. Filter the stand-in catalog by hub, physical or digital, still here, or a price band. Paid corners are labeled.",
     path: "/explore",
   });
 }
@@ -464,10 +505,3 @@ function offerAvailability(listing: Listing) {
   return "https://schema.org/OutOfStock";
 }
 
-function explorePath(hubId?: string, type?: string) {
-  const params = new URLSearchParams();
-  if (hubId) params.set("hub", hubId);
-  if (type) params.set("type", type);
-  const query = params.toString();
-  return query ? `/explore?${query}` : "/explore";
-}
