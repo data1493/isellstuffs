@@ -87,6 +87,12 @@ import {
   subscribeLoop,
 } from "@/lib/listing-loop";
 import {
+  canTapeTwist,
+  isListingTwistOverlay,
+  readTwistListingIds,
+  subscribeTwist,
+} from "@/lib/listing-twist";
+import {
   listingCardsWritePath,
   listingDumpWritePath,
   listingLoopWritePath,
@@ -94,6 +100,7 @@ import {
   listingRipWritePath,
   listingShotWritePath,
   listingTypesetWritePath,
+  listingTwistWritePath,
   listingZipWritePath,
   listingWhoseWritePath,
   listingPath,
@@ -164,6 +171,7 @@ export function DeskBoard({
   const [whoseIds, setWhoseIds] = useState<string[]>([]);
   const [typesetIds, setTypesetIds] = useState<string[]>([]);
   const [loopIds, setLoopIds] = useState<string[]>([]);
+  const [twistIds, setTwistIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -191,6 +199,7 @@ export function DeskBoard({
       setWhoseIds(readWhoseListingIds());
       setTypesetIds(readTypesetListingIds());
       setLoopIds(readLoopListingIds());
+      setTwistIds(readTwistListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -207,6 +216,7 @@ export function DeskBoard({
     const unsubWhose = subscribeWhose(apply);
     const unsubTypeset = subscribeTypeset(apply);
     const unsubLoop = subscribeLoop(apply);
+    const unsubTwist = subscribeTwist(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -233,6 +243,7 @@ export function DeskBoard({
       unsubWhose();
       unsubTypeset();
       unsubLoop();
+      unsubTwist();
     };
   }, [listings, stall.id]);
 
@@ -600,6 +611,37 @@ export function DeskBoard({
                             {isListingWhoseOverlay(listing.id, whoseIds)
                               ? "Leave the mug"
                               : "I will not say whose"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTwist(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTwistWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTwistOverlay(listing.id, twistIds)
+                                ? "open"
+                                : "twist"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTwistOverlay(listing.id, twistIds)
+                              ? "Leave the switch"
+                              : "Twist the neck"}
                           </button>
                         </form>
                       ) : null}

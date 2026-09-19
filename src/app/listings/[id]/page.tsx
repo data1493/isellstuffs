@@ -66,6 +66,7 @@ import { ListingZipNotice } from "@/components/listing-zip-notice";
 import { ListingWhoseNotice } from "@/components/listing-whose-notice";
 import { ListingTypesetNotice } from "@/components/listing-typeset-notice";
 import { ListingLoopNotice } from "@/components/listing-loop-notice";
+import { ListingTwistNotice } from "@/components/listing-twist-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -153,6 +154,7 @@ import {
   listingWhosePath,
   listingTypesetPath,
   listingLoopPath,
+  listingTwistPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -386,6 +388,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingRipNotice listingId={listing.id} /> : null}
               {physical ? <ListingZipNotice listingId={listing.id} /> : null}
               {physical ? <ListingWhoseNotice listingId={listing.id} /> : null}
+              {physical ? <ListingTwistNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -706,6 +709,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not say whose
+                  </Link>
+                  <Link
+                    href={listingTwistPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Twist the neck
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (

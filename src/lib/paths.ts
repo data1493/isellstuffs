@@ -530,6 +530,14 @@ export function listingLoopWritePath() {
   return "/listings/loop";
 }
 
+export function listingTwistPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/twist`;
+}
+
+export function listingTwistWritePath() {
+  return "/listings/twist";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";
