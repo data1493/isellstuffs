@@ -37,6 +37,7 @@ Paid corners are a product. `/advertise` is the rate card. Next weekend can be b
 | `/advertise/book` | Next-weekend menu. Three kinds. Always labeled |
 | `/advertise/book/[kind]` | Name the stall, confirm the package, pay on paper |
 | `/advertise/receipt` | Bought slip. Stamp, package, window, price. Not on the floor yet |
+| `/advertise/flyer/[booking]` | Take-home souvenir for that paid booking. Stall, package, window, Paid stamp. Reads `iss-ad-bookings`. Does not paint home |
 | `/campaigns/homepage-beats` | Beats Under the Table Fri–Mon lander. Receipt, not a blog post |
 | `/campaigns/yard-sale-tuesday` | Folding Table Tuesday Yard Sale hub takeover. Receipt, not a hub page |
 

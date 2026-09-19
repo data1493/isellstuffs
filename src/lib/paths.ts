@@ -33,6 +33,10 @@ export function advertiseBookPayPath() {
   return "/advertise/book/pay";
 }
 
+export function advertiseFlyerPath(booking: string) {
+  return `/advertise/flyer/${encodeURIComponent(booking)}`;
+}
+
 export function sellPath() {
   return "/sell";
 }

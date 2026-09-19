@@ -11,7 +11,12 @@ import { MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AD_BOOKINGS_COOKIE, parseAdBookings } from "@/lib/ad-booking";
-import { advertiseBookPath, advertisePath, advertiseReceiptPath } from "@/lib/paths";
+import {
+  advertiseBookPath,
+  advertiseFlyerPath,
+  advertisePath,
+  advertiseReceiptPath,
+} from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -111,6 +116,13 @@ export default async function AdvertiseReceiptPage({
           )}
           <div className="flex flex-col gap-3">
             <Button
+              className="w-full rounded-full sm:w-auto"
+              render={<Link href={advertiseFlyerPath(bookingId)} />}
+            >
+              Open the flyer
+            </Button>
+            <Button
+              variant="outline"
               className="w-full rounded-full sm:w-auto"
               render={<Link href={advertiseBookPath()} />}
             >
