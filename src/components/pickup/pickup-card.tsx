@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
+import { HereButton } from "@/components/pickup/here-button";
 import { TakenButton } from "@/components/sell/taken-button";
 import {
   listingPath,
@@ -138,6 +139,11 @@ export function PickupCard({
                         intent="taken"
                         returnTo={pickupSlipPath(slip)}
                         look="text"
+                      />
+                      <HereButton
+                        slipId={slip}
+                        listingId={line.listing.id}
+                        returnTo={pickupSlipPath(slip)}
                       />
                     </li>
                   ))}

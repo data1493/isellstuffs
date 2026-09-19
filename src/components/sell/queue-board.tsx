@@ -22,6 +22,14 @@ import {
 } from "@/components/ui/card";
 import { folderHasDigitalLines } from "@/lib/digital-folder";
 import {
+  HERE_COPY,
+  HERE_MIRROR_SCRIPT,
+  isHandoffHere,
+  readHereHandoffs,
+  subscribeHere,
+  type HereHandoff,
+} from "@/lib/here-handoff";
+import {
   readOrderSlips,
   subscribeOrderSlips,
   writeOrderSlip,
@@ -60,6 +68,7 @@ import {
 const emptyOrders: OrderSlip[] = [];
 const emptyTaken: TakenHandoff[] = [];
 const emptyNoShow: NoShowHandoff[] = [];
+const emptyHere: HereHandoff[] = [];
 
 function mergeSeed(orders: OrderSlip[], seed: OrderSlip | null) {
   if (!seed) {
@@ -80,10 +89,12 @@ export function QueueView({
   seed,
   takenSeed = emptyTaken,
   noShowSeed = emptyNoShow,
+  hereSeed = emptyHere,
 }: {
   seed: OrderSlip | null;
   takenSeed?: TakenHandoff[];
   noShowSeed?: NoShowHandoff[];
+  hereSeed?: HereHandoff[];
 }) {
   const stored = useSyncExternalStore(
     subscribeOrderSlips,
@@ -99,6 +110,11 @@ export function QueueView({
     subscribeNoShow,
     readNoShowHandoffs,
     () => noShowSeed,
+  );
+  const here = useSyncExternalStore(
+    subscribeHere,
+    readHereHandoffs,
+    () => hereSeed,
   );
 
   useEffect(() => {
@@ -149,6 +165,7 @@ export function QueueView({
     <div data-desk-queue="">
       <script dangerouslySetInnerHTML={{ __html: TAKEN_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: NO_SHOW_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: HERE_MIRROR_SCRIPT }} />
       <MallHero>
         <MallCrumb label="Driveway queue">
           <CrumbSep />
@@ -228,6 +245,23 @@ export function QueueView({
                           {arrival.slipId}
                         </Link>
                       </span>
+                      {isHandoffHere(
+                        arrival.slipId,
+                        arrival.listing.id,
+                        here,
+                      ) ? (
+                        <span
+                          data-queue-here={arrival.listing.id}
+                          className="mt-1 block"
+                        >
+                          <Badge variant="secondary" className="rounded-full">
+                            In the drive
+                          </Badge>
+                          <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                            {HERE_COPY}
+                          </span>
+                        </span>
+                      ) : null}
                       <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                         <TakenButton
                           slipId={arrival.slipId}

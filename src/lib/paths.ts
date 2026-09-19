@@ -267,6 +267,14 @@ export function pickupSlipPath(slip: string) {
   return `/pickup/${encodeURIComponent(slip)}`;
 }
 
+export function pickupHerePath() {
+  return "/pickup/here";
+}
+
+export function pickupHereWritePath() {
+  return "/pickup/here/write";
+}
+
 export function giftPath() {
   return "/gift";
 }

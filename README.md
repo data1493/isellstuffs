@@ -56,7 +56,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
 | `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). Overlay rows can take a tested/kinda chip (`POST /sell/desk/tested`) — catalog fixtures are refused. Still-here rows can tape onto `/this-week` (`POST /sell/desk/weekend`) without rewriting the mall-keeper editor. The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
-| `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Files stay in the folder. |
+| `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Walking up wears “In the drive.” Files stay in the folder. |
 | `/sell/taken` | Close a driveway handoff when the buyer walked. `POST /sell/taken` (form: `slipId`, `listingId`, `intent=taken\|waiting`). Cookie `iss-taken-handoffs` + `iss:taken-handoffs`. Taken lines drop off the queue. Not a refund. Not a sold sticker. |
 | `/sell/no-show` | After the pickup window, put a paid physical back on the floor. `POST /sell/no-show/write` (form: `slipId`, `listingId`, `intent=noshow\|waiting`). Cookie `iss-no-show-handoffs` + `iss:no-show-handoffs`. Clears the sold overlay for that lamp. Not a refund. The slip stays. Do not rewrite `/sell/taken` or `/pickup`. |
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |
@@ -124,9 +124,10 @@ Save for later POSTs to `/listings/later` and writes the same `Listing.id` shape
 | `/checkout/cancel` | Walked away. Tote stays |
 | `/folder` | Current slip’s digital lines, or last week’s files still in `iss:orders`. Cold tab: “No folder on this slip.” |
 | `/folder/[slip]` | One paid slip’s booth folder. Reads the checkout cookie, then `iss:orders` after that cookie dies. Stand-in downloads, not a CDN |
-| `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” |
-| `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder. Cash totes say cash on the table, not card. |
-| `/sell/desk/queue` | Stallholder twin of pickup. Mixed tote lists the lamp and Tuesday driveway hours, not the PDF. Taken lines drop off. |
+| `/pickup` | Current slip’s physical lines + booth hours, or “No pickup on this slip.” Physical lines can mark **I’m walking up** (`POST /pickup/here`). |
+| `/pickup/[slip]` | One paid slip’s walk-up card. Hours from `@/lib/pickup-display`. Files stay in the folder. Cash totes say cash on the table, not card. Walking up stamps `iss:here-handoffs`. |
+| `/pickup/here` | Cold / refused here flag. “Nobody is in the drive.” Files, gift codes, missing pairs, and already-taken lines land here. |
+| `/sell/desk/queue` | Stallholder twin of pickup. Mixed tote lists the lamp and Tuesday driveway hours, not the PDF. Walking up wears “In the drive.” Taken lines drop off. |
 | `/sell/taken` | Mark the lamp taken after they walk. Coming vs left-with-it. Queue hides that arrival. |
 | `/sell/no-show` | Mark the lamp a no-show after the window. Sold sticker comes off. Queue hides that arrival. |
 | `/orders` | Last paid totes in this browser. Stand-in slips, no account |
