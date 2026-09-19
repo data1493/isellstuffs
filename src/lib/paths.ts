@@ -16,6 +16,15 @@ export function advertisePath() {
   return "/advertise";
 }
 
+export function advertiseBookPath(kind?: string) {
+  return kind ? `/advertise/book/${kind}` : "/advertise/book";
+}
+
+export function advertiseReceiptPath(booking?: string) {
+  if (!booking) return "/advertise/receipt";
+  return `/advertise/receipt?booking=${encodeURIComponent(booking)}`;
+}
+
 export function sellPath() {
   return "/sell";
 }

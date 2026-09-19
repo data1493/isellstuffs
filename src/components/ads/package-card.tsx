@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { adKindCopy, liveSurfaces } from "@/lib/ads-display";
 import { formatMoney, stallById, type AdSlot } from "@/lib/commerce";
+import { advertiseBookPath } from "@/lib/paths";
 
 export function PackageCard({ slot }: { slot: AdSlot }) {
   const kind = adKindCopy[slot.kind];
@@ -52,17 +53,23 @@ export function PackageCard({ slot }: { slot: AdSlot }) {
           Sold this window to {stall?.boothName ?? slot.stallId}.
         </p>
       </CardContent>
-      {primary ? (
-        <CardFooter className="mt-auto">
+      <CardFooter className="mt-auto flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap">
+        <Button
+          className="w-full rounded-full sm:w-auto"
+          render={<Link href={advertiseBookPath(slot.kind)} />}
+        >
+          Book the next window
+        </Button>
+        {primary ? (
           <Button
             variant="outline"
-            className="rounded-full"
+            className="w-full rounded-full sm:w-auto"
             render={<Link href={primary.href} />}
           >
             See it live
           </Button>
-        </CardFooter>
-      ) : null}
+        ) : null}
+      </CardFooter>
     </Card>
   );
 }

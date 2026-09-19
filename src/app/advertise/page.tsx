@@ -15,7 +15,7 @@ import {
   adSlotsByKind,
   formatMoney,
 } from "@/lib/commerce";
-import { advertisePath } from "@/lib/paths";
+import { advertiseBookPath, advertisePath } from "@/lib/paths";
 import { shareMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = shareMetadata({
@@ -86,6 +86,14 @@ export default function AdvertisePage() {
           <div className="flex flex-wrap gap-3">
             <Button
               size="lg"
+              className="rounded-full px-5"
+              render={<Link href={advertiseBookPath()} />}
+            >
+              Book next weekend
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
               className="rounded-full px-5"
               render={<Link href="#rate-card" />}
             >
@@ -177,14 +185,22 @@ export default function AdvertisePage() {
           <div>
             <MallEyebrow>Booking</MallEyebrow>
             <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
-              No ad checkout. These windows are sold.
+              This window is sold. Next weekend is on the card.
             </h2>
             <p className="mt-3 max-w-xl text-muted-foreground text-pretty">
               Half-Working Electronics paid the good corner. Beats Under the
               Table bought the homepage and a campaign URL. Folding Table
-              Tuesday owns Yard Sale this weekend. There is no form, no
-              account, and no live charge for a fourth booth.
+              Tuesday owns Yard Sale this weekend. Book the next window from
+              the card — labeled, priced, no stealth.
             </p>
+            <div className="mt-5">
+              <Button
+                className="rounded-full px-5"
+                render={<Link href={advertiseBookPath()} />}
+              >
+                Book next weekend
+              </Button>
+            </div>
           </div>
           <div className="rounded-2xl bg-secondary/50 p-5 ring-1 ring-primary/15">
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
