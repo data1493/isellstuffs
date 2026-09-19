@@ -53,6 +53,7 @@ export function LotBoothCard({
   shrinkNote,
   dishesNote,
   buttonsNote,
+  harpNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -88,6 +89,7 @@ export function LotBoothCard({
   shrinkNote?: string;
   dishesNote?: string;
   buttonsNote?: string;
+  harpNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -430,6 +432,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-buttons-empty={stall.id} hidden />
+          )}
+          {harpNote ? (
+            <p
+              data-booth-harp-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a harp. {harpNote}
+            </p>
+          ) : (
+            <p data-booth-harp-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

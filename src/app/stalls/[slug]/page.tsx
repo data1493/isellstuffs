@@ -217,6 +217,13 @@ import {
   stallButtonsPath,
 } from "@/lib/booth-buttons";
 import {
+  BOOTH_HARP_COOKIE_NAME,
+  BOOTH_HARP_PAPER_LINE,
+  boothHarpFor,
+  parseBoothHarp,
+  stallHarpPath,
+} from "@/lib/booth-harp";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -448,6 +455,10 @@ export default async function StallPage({
   const buttons = boothButtonsFor(
     stall.id,
     parseBoothButtons(jar.get(BOOTH_BUTTONS_COOKIE_NAME)?.value),
+  );
+  const harp = boothHarpFor(
+    stall.id,
+    parseBoothHarp(jar.get(BOOTH_HARP_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1030,6 +1041,23 @@ export default async function StallPage({
             <p data-booth-buttons-empty={stall.id} hidden />
           )}
 
+          {harp ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a harp"
+              title="Shade stays in the box."
+              body={
+                <p data-booth-harp-note={stall.id}>
+                  {harp.note} {BOOTH_HARP_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-harp-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1294,6 +1322,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have buttons
+          </Link>
+
+          <Link
+            href={stallHarpPath(stall.slug)}
+            data-booth-harp-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a harp
           </Link>
 
           <Link

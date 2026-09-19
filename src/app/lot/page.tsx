@@ -145,6 +145,11 @@ import {
   parseBoothButtons,
 } from "@/lib/booth-buttons";
 import {
+  BOOTH_HARP_COOKIE_NAME,
+  BOOTH_HARP_MIRROR_SCRIPT,
+  parseBoothHarp,
+} from "@/lib/booth-harp";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -220,6 +225,7 @@ export default async function LotPage() {
   const shrinkMap = parseBoothShrink(jar.get(BOOTH_SHRINK_COOKIE_NAME)?.value);
   const dishesMap = parseBoothDishes(jar.get(BOOTH_DISHES_COOKIE_NAME)?.value);
   const buttonsMap = parseBoothButtons(jar.get(BOOTH_BUTTONS_COOKIE_NAME)?.value);
+  const harpMap = parseBoothHarp(jar.get(BOOTH_HARP_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -260,6 +266,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SHRINK_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DISHES_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_BUTTONS_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_HARP_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -301,6 +308,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SHRINK_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DISHES_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_BUTTONS_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_HARP_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -393,6 +401,7 @@ export default async function LotPage() {
                     shrinkNote={shrinkMap[row.stall.id]?.note}
                     dishesNote={dishesMap[row.stall.id]?.note}
                     buttonsNote={buttonsMap[row.stall.id]?.note}
+                    harpNote={harpMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -450,6 +459,7 @@ export default async function LotPage() {
                     shrinkNote={shrinkMap[row.stall.id]?.note}
                     dishesNote={dishesMap[row.stall.id]?.note}
                     buttonsNote={buttonsMap[row.stall.id]?.note}
+                    harpNote={harpMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

@@ -976,6 +976,14 @@ export function stallButtonsWritePath() {
   return "/stalls/buttons";
 }
 
+export function stallHarpPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/harp`;
+}
+
+export function stallHarpWritePath() {
+  return "/stalls/harp";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
