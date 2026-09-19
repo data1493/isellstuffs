@@ -75,6 +75,11 @@ import {
   parseBoothFix,
 } from "@/lib/booth-fix";
 import {
+  BOOTH_BURN_COOKIE_NAME,
+  BOOTH_BURN_MIRROR_SCRIPT,
+  parseBoothBurn,
+} from "@/lib/booth-burn";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -136,6 +141,7 @@ export default async function LotPage() {
   const matchMap = parseBoothMatch(jar.get(BOOTH_MATCH_COOKIE_NAME)?.value);
   const seatMap = parseBoothSeat(jar.get(BOOTH_SEAT_COOKIE_NAME)?.value);
   const fixMap = parseBoothFix(jar.get(BOOTH_FIX_COOKIE_NAME)?.value);
+  const burnMap = parseBoothBurn(jar.get(BOOTH_BURN_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -162,6 +168,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_MATCH_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SEAT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FIX_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_BURN_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -189,6 +196,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_MATCH_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SEAT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FIX_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_BURN_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -267,6 +275,7 @@ export default async function LotPage() {
                     matchNote={matchMap[row.stall.id]?.note}
                     seatNote={seatMap[row.stall.id]?.note}
                     fixNote={fixMap[row.stall.id]?.note}
+                    burnNote={burnMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -310,6 +319,7 @@ export default async function LotPage() {
                     matchNote={matchMap[row.stall.id]?.note}
                     seatNote={seatMap[row.stall.id]?.note}
                     fixNote={fixMap[row.stall.id]?.note}
+                    burnNote={burnMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

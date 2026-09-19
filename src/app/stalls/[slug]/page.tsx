@@ -119,6 +119,13 @@ import {
   stallFixPath,
 } from "@/lib/booth-fix";
 import {
+  BOOTH_BURN_COOKIE_NAME,
+  BOOTH_BURN_PAPER_LINE,
+  boothBurnFor,
+  parseBoothBurn,
+  stallBurnPath,
+} from "@/lib/booth-burn";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -294,6 +301,10 @@ export default async function StallPage({
   const fix = boothFixFor(
     stall.id,
     parseBoothFix(jar.get(BOOTH_FIX_COOKIE_NAME)?.value),
+  );
+  const burn = boothBurnFor(
+    stall.id,
+    parseBoothBurn(jar.get(BOOTH_BURN_COOKIE_NAME)?.value),
   );
 
   return (
@@ -638,6 +649,23 @@ export default async function StallPage({
             <p data-booth-fix-empty={stall.id} hidden />
           )}
 
+          {burn ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't burn a disc"
+              title="Pay and open the folder."
+              body={
+                <p data-booth-burn-note={stall.id}>
+                  {burn.note} {BOOTH_BURN_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-burn-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -790,6 +818,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t fix
+          </Link>
+
+          <Link
+            href={stallBurnPath(stall.slug)}
+            data-booth-burn-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t burn a disc
           </Link>
 
           <Link

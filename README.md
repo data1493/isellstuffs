@@ -18,7 +18,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The aisle map |
 | `/hubs/[slug]` | Opinionated hub page. Hub-takeover bookings from `iss-ad-bookings` swap the aisle hero |
-| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags, lunch notes, gravel notes, who is sitting, last-call fold notes, change-jar notes, who is sharing the table, hangers-stay furniture notes, shade notes, don't-photograph notes, kids-touch-it notes, keep-the-poly-on notes, wrap-breakables notes, don't-open-the-shell notes, don't-email-the-zip notes, don't-unfold-the-pile notes, don't-sit-on-the-crate notes, and I-don't-fix notes. Still-here is a count, not a SKU grid. |
+| `/lot` | Who set up this weekend. Catalog booths on the lot vs in the car. Reads packed-up flags, lunch notes, gravel notes, who is sitting, last-call fold notes, change-jar notes, who is sharing the table, hangers-stay furniture notes, shade notes, don't-photograph notes, kids-touch-it notes, keep-the-poly-on notes, wrap-breakables notes, don't-open-the-shell notes, don't-email-the-zip notes, don't-unfold-the-pile notes, don't-sit-on-the-crate notes, I-don't-fix notes, and I-don't-burn-a-disc notes. Still-here is a count, not a SKU grid. |
 | `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone. Reads the local overlay when one is taped. Desk pins (`iss:weekend-pins`) append after that table. |
 | `/this-week/edit` | Tape this week's table. Pick stand-in SKUs for the drop. Cookie `iss-week-picks` + `iss:week-picks`. Fixture ids stay the default until you save. Sold and file-gone are rejected. |
 | `/collections` | Curated racks. Themes a stallholder taped — not a fifth hub |
@@ -138,6 +138,7 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Nothing matches | http://127.0.0.1:44721/stalls/the-sink-drawer/match |
 | Don't sit on the crate | http://127.0.0.1:44721/stalls/sunday-crate/seat |
 | I don't fix | http://127.0.0.1:44721/stalls/half-working/fix |
+| I don't burn a disc | http://127.0.0.1:44721/stalls/beats-under-the-table/burn |
 | Still-here price sheet | http://127.0.0.1:44721/stalls/folding-table-tuesday/tape |
 | Yard-sale hours sign | http://127.0.0.1:44721/stalls/folding-table-tuesday/sign |
 | Paid stash | http://127.0.0.1:44721/stalls/folding-table-tuesday/stash |
@@ -273,6 +274,8 @@ A stallholder can tape a match note at `/stalls/[slug]/match`. “Nothing matche
 A stallholder can tape a sit note at `/stalls/[slug]/seat`. “Don't sit on the crate.” stays after reload. Cookie `iss-booth-seat` + `iss:booth-seat`. Native `POST /stalls/seat` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. The crate is stock, not a chair. Stay is hangers. Kids is you-buy-it. Walkers still sit on Sunday Crate. The stall and `/lot` show the note. Tuesday seat stays empty if Sunday Crate taped.
 
 A stallholder can tape a no-repair note at `/stalls/[slug]/fix`. “I don't fix” stays after reload. Cookie `iss-booth-fix` + `iss:booth-fix`. Native `POST /stalls/fix` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. I sell it, I don't repair it. Walkers still ask Half-Working to fix the Game Boy. Parts is it doesn't run. Shell is don't crack the blister. Not parts. Not remote. The stall and `/lot` show the note. Tuesday fix stays empty if Half-Working taped.
+
+A stallholder can tape a burn note at `/stalls/[slug]/burn`. “I don't burn a disc. Pay and open the folder.” stays after reload. Cookie `iss-booth-burn` + `iss:booth-burn`. Native `POST /stalls/burn` (form: `stallId`, `note`, `intent=tape|clear`). Cap 140. Clear deletes that booth only. I don't burn a CD-R. Stick is no email. Plays is this Sharpie copy. Folder already delivers. Walkers still ask Beats to burn a fresh disc. The stall and `/lot` show the note. Tuesday burn stays empty if Beats taped.
 
 Add to cart POSTs to `/listings/bag` and writes `Listing.id` values to cookie `iss-cart-listing-ids` plus `localStorage` key `iss:cart-listing-ids` via `@/lib/cart`. Cart and checkout import that module — there is not a second bag. **Bag this table** on a stall POSTs to `/stalls/bag` and copies that booth’s still-here ids onto the same tote writer. Sold, packed, pulled, and gift-ineligible SKUs stay on the floor. The later pile is still a pile (`POST /saved/bag`).
 
