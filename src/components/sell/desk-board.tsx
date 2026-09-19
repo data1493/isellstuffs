@@ -417,6 +417,12 @@ import {
   subscribeNorm,
 } from "@/lib/listing-norm";
 import {
+  canTapeCrush,
+  isListingCrushOverlay,
+  readCrushListingIds,
+  subscribeCrush,
+} from "@/lib/listing-crush";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -511,6 +517,7 @@ import {
   listingLoopWritePath,
   listingTuneWritePath,
   listingNormWritePath,
+  listingCrushWritePath,
   listingRightsWritePath,
   listingVersoWritePath,
   listingYearWritePath,
@@ -661,6 +668,7 @@ export function DeskBoard({
   const [gasketIds, setGasketIds] = useState<string[]>([]);
   const [tuneIds, setTuneIds] = useState<string[]>([]);
   const [normIds, setNormIds] = useState<string[]>([]);
+  const [crushIds, setCrushIds] = useState<string[]>([]);
   const [rightsIds, setRightsIds] = useState<string[]>([]);
   const [versoIds, setVersoIds] = useState<string[]>([]);
   const [yearIds, setYearIds] = useState<string[]>([]);
@@ -751,6 +759,7 @@ export function DeskBoard({
       setGasketIds(readGasketListingIds());
       setTuneIds(readTuneListingIds());
       setNormIds(readNormListingIds());
+      setCrushIds(readCrushListingIds());
       setRightsIds(readRightsListingIds());
       setVersoIds(readVersoListingIds());
       setYearIds(readYearListingIds());
@@ -830,6 +839,7 @@ export function DeskBoard({
     const unsubGasket = subscribeGasket(apply);
     const unsubTune = subscribeTune(apply);
     const unsubNorm = subscribeNorm(apply);
+    const unsubCrush = subscribeCrush(apply);
     const unsubRights = subscribeRights(apply);
     const unsubVerso = subscribeVerso(apply);
     const unsubYear = subscribeYear(apply);
@@ -919,6 +929,7 @@ export function DeskBoard({
       unsubGasket();
       unsubTune();
       unsubNorm();
+      unsubCrush();
       unsubRights();
       unsubVerso();
       unsubYear();
@@ -2874,6 +2885,37 @@ export function DeskBoard({
                             {isListingNormOverlay(listing.id, normIds)
                               ? "Leave it as recorded"
                               : "I will not normalize"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCrush(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCrushWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCrushOverlay(listing.id, crushIds)
+                                ? "open"
+                                : "crush"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCrushOverlay(listing.id, crushIds)
+                              ? "Leave the twelve shots"
+                              : "I will not crush it"}
                           </button>
                         </form>
                       ) : null}

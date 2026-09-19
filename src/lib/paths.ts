@@ -786,6 +786,14 @@ export function listingNormWritePath() {
   return "/listings/norm";
 }
 
+export function listingCrushPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/crush`;
+}
+
+export function listingCrushWritePath() {
+  return "/listings/crush";
+}
+
 export function listingRightsPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/rights`;
 }

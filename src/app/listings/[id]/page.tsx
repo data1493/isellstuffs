@@ -122,6 +122,7 @@ import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
 import { ListingTuneNotice } from "@/components/listing-tune-notice";
 import { ListingNormNotice } from "@/components/listing-norm-notice";
+import { ListingCrushNotice } from "@/components/listing-crush-notice";
 import { ListingRightsNotice } from "@/components/listing-rights-notice";
 import { ListingVersoNotice } from "@/components/listing-verso-notice";
 import { ListingYearNotice } from "@/components/listing-year-notice";
@@ -272,6 +273,7 @@ import {
   listingGumPath,
   listingTunePath,
   listingNormPath,
+  listingCrushPath,
   listingRightsPath,
   listingVersoPath,
   listingYearPath,
@@ -509,6 +511,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingLoopNotice listingId={listing.id} /> : null}
               {!physical ? <ListingTuneNotice listingId={listing.id} /> : null}
               {!physical ? <ListingNormNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingCrushNotice listingId={listing.id} /> : null}
               {!physical ? <ListingRightsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
               {!physical ? <ListingIconsNotice listingId={listing.id} /> : null}
@@ -1341,6 +1344,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not normalize
+                  </Link>
+                  <Link
+                    href={listingCrushPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not crush it
                   </Link>
                   <Link
                     href={listingRightsPath(listing.id)}
