@@ -986,6 +986,14 @@ export function listingSandWritePath() {
   return "/listings/sand";
 }
 
+export function listingContentsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/contents`;
+}
+
+export function listingContentsWritePath() {
+  return "/listings/contents";
+}
+
 export function listingTrayPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tray`;
 }

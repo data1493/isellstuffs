@@ -117,6 +117,7 @@ import { ListingWindNotice } from "@/components/listing-wind-notice";
 import { ListingSocketNotice } from "@/components/listing-socket-notice";
 import { ListingSpeakerNotice } from "@/components/listing-speaker-notice";
 import { ListingSandNotice } from "@/components/listing-sand-notice";
+import { ListingContentsNotice } from "@/components/listing-contents-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -268,6 +269,7 @@ import {
   listingSocketPath,
   listingSpeakerPath,
   listingSandPath,
+  listingContentsPath,
   listingTrayPath,
   listingMasterPath,
   listingGumPath,
@@ -586,6 +588,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSocketNotice listingId={listing.id} /> : null}
               {physical ? <ListingSpeakerNotice listingId={listing.id} /> : null}
               {physical ? <ListingSandNotice listingId={listing.id} /> : null}
+              {physical ? <ListingContentsNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1158,6 +1161,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not sand it
+                  </Link>
+                  <Link
+                    href={listingContentsPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not list what’s on it
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? (

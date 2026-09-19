@@ -405,6 +405,12 @@ import {
   subscribeSand,
 } from "@/lib/listing-sand";
 import {
+  canTapeContents,
+  isListingContentsOverlay,
+  readContentsListingIds,
+  subscribeContents,
+} from "@/lib/listing-contents";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -505,6 +511,7 @@ import {
   listingSocketWritePath,
   listingSpeakerWritePath,
   listingSandWritePath,
+  listingContentsWritePath,
   listingEvenWritePath,
   listingCementWritePath,
   listingLinkWritePath,
@@ -662,6 +669,7 @@ export function DeskBoard({
   const [socketIds, setSocketIds] = useState<string[]>([]);
   const [speakerIds, setSpeakerIds] = useState<string[]>([]);
   const [sandIds, setSandIds] = useState<string[]>([]);
+  const [contentsIds, setContentsIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -753,6 +761,7 @@ export function DeskBoard({
       setSocketIds(readSocketListingIds());
       setSpeakerIds(readSpeakerListingIds());
       setSandIds(readSandListingIds());
+      setContentsIds(readContentsListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -833,6 +842,7 @@ export function DeskBoard({
     const unsubSocket = subscribeSocket(apply);
     const unsubSpeaker = subscribeSpeaker(apply);
     const unsubSand = subscribeSand(apply);
+    const unsubContents = subscribeContents(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -923,6 +933,7 @@ export function DeskBoard({
       unsubSocket();
       unsubSpeaker();
       unsubSand();
+      unsubContents();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -2079,6 +2090,37 @@ export function DeskBoard({
                             {isListingSandOverlay(listing.id, sandIds)
                               ? "Leave the chip"
                               : "I will not sand it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeContents(listing) ? (
+                        <form
+                          method="post"
+                          action={listingContentsWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingContentsOverlay(listing.id, contentsIds)
+                                ? "open"
+                                : "contents"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingContentsOverlay(listing.id, contentsIds)
+                              ? "Leave the Sharpie"
+                              : "I will not list what’s on it"}
                           </button>
                         </form>
                       ) : null}
