@@ -1576,6 +1576,14 @@ export function stallSlipmatWritePath() {
   return "/stalls/slipmat";
 }
 
+export function stallTrivetPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/trivet`;
+}
+
+export function stallTrivetWritePath() {
+  return "/stalls/trivet";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

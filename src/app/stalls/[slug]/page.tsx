@@ -329,6 +329,13 @@ import {
   stallSlipmatPath,
 } from "@/lib/booth-slipmat";
 import {
+  BOOTH_TRIVET_COOKIE_NAME,
+  BOOTH_TRIVET_PAPER_LINE,
+  boothTrivetFor,
+  parseBoothTrivet,
+  stallTrivetPath,
+} from "@/lib/booth-trivet";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -624,6 +631,10 @@ export default async function StallPage({
   const slipmat = boothSlipmatFor(
     stall.id,
     parseBoothSlipmat(jar.get(BOOTH_SLIPMAT_COOKIE_NAME)?.value),
+  );
+  const trivet = boothTrivetFor(
+    stall.id,
+    parseBoothTrivet(jar.get(BOOTH_TRIVET_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1478,6 +1489,23 @@ export default async function StallPage({
             <p data-booth-slipmat-empty={stall.id} hidden />
           )}
 
+          {trivet ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a trivet"
+              title="Still a drawer. Still a chip."
+              body={
+                <p data-booth-trivet-note={stall.id}>
+                  {trivet.note} {BOOTH_TRIVET_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-trivet-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1870,6 +1898,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a slipmat
+          </Link>
+
+          <Link
+            href={stallTrivetPath(stall.slug)}
+            data-booth-trivet-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a trivet
           </Link>
 
           <Link

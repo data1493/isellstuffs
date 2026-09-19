@@ -69,6 +69,7 @@ export function LotBoothCard({
   spongeNote,
   spindleNote,
   slipmatNote,
+  trivetNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -120,6 +121,7 @@ export function LotBoothCard({
   spongeNote?: string;
   spindleNote?: string;
   slipmatNote?: string;
+  trivetNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -622,6 +624,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-slipmat-empty={stall.id} hidden />
+          )}
+          {trivetNote ? (
+            <p
+              data-booth-trivet-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a trivet. {trivetNote}
+            </p>
+          ) : (
+            <p data-booth-trivet-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
