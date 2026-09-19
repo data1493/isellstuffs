@@ -6,7 +6,7 @@ import { DeskFrame } from "@/components/sell/desk-frame";
 import { DeskPackedUp } from "@/components/sell/desk-packed-up";
 import { FolderTapeDoor } from "@/components/sell/folder-tape-door";
 import { OtherBoothDesks } from "@/components/sell/other-booth-desks";
-import { sellDeskPath } from "@/lib/paths";
+import { sellDeskPath, sellHoursPath } from "@/lib/paths";
 import {
   DESK_STALL_ID,
   deskListingsForStall,
@@ -58,6 +58,13 @@ export default async function SellDeskStallPage({ params }: StallDeskProps) {
             className="font-medium text-foreground underline-offset-4 hover:underline"
           >
             Open the Tuesday desk
+          </Link>
+          .{" "}
+          <Link
+            href={sellHoursPath(stall.slug)}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Tape this weekend’s hours
           </Link>
           .
         </p>

@@ -59,6 +59,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell/taken` | Close a driveway handoff when the buyer walked. `POST /sell/taken` (form: `slipId`, `listingId`, `intent=taken\|waiting`). Cookie `iss-taken-handoffs` + `iss:taken-handoffs`. Taken lines drop off the queue. Not a refund. Not a sold sticker. |
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |
 | `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
+| `/sell/hours` | Tape this weekend’s hours for one catalog booth. Native `POST /sell/hours/save` writes `iss:weekend-hours`. Restore puts the fixture back. Not a mall `/hours` page. |
 | `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
 | `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals, plus what walked from paid slips in this browser. No Connect, no bank |
@@ -92,7 +93,7 @@ The desk can pull a digital file (`POST /sell/desk/gone`) and write its id to `i
 The desk can pack a booth (`POST /sell/desk/pack`) and write its id to `iss:packed-stall-ids` / cookie `iss-packed-stall-ids`. Shop lookups leave listing `status` alone and only drop tote eligibility on still-available physicals. Files and the gift card stay baggable. Setting the table back up is restock, not a refund and not an unsell.
 | File-gone listing (no cart) | http://127.0.0.1:44721/listings/dl-stain-zine |
 
-Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field.
+Physical PDPs (and stall pages that still have objects) show how you pick the thing up — hours and a place hung on the booth, not a warehouse. Digital listings stay file-focused. Copy lives in `@/lib/pickup-display` and reads existing stall ids. No new Listing / Stall field. A stallholder can tape this Saturday at `/sell/hours` (`iss:weekend-hours` / cookie `iss-weekend-hours`). `stallPickupNote` applies that overlay. The fixture table stays.
 
 Physical listings can print a 3×5 driveway tag at `/listings/[id]/tag` — price, condition, booth, aisle. PDFs and the gift card have no tag. Files open in the folder after pay. Gift codes go to the desk. The tag does not show pickup hours.
 

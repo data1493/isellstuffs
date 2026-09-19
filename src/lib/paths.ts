@@ -111,6 +111,18 @@ export function sellTakenWritePath() {
   return "/sell/taken/write";
 }
 
+export function sellHoursPath(stall?: string) {
+  const trimmed = stall?.trim() ?? "";
+  if (!trimmed) {
+    return "/sell/hours";
+  }
+  return `/sell/hours?stall=${encodeURIComponent(trimmed)}`;
+}
+
+export function sellHoursSavePath() {
+  return "/sell/hours/save";
+}
+
 export function sellListingEditPath(id: string) {
   return `/sell/listings/${encodeURIComponent(id)}/edit`;
 }

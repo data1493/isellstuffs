@@ -3,6 +3,7 @@ import {
   type Listing,
   type Stall,
 } from "@/lib/commerce";
+import { tapedHoursFor } from "@/lib/weekend-hours";
 
 /**
  * Pickup hours for a booth. Hung on stand-in stall ids — not a new
@@ -60,9 +61,10 @@ function fallbackPickup(stall: Stall): StallPickupNote {
   };
 }
 
-/** Hours and place for a stall the mall already has. */
+/** Hours and place for a stall the mall already has. Overlay wins. */
 export function stallPickupNote(stall: Stall): StallPickupNote {
-  return boothPickups[stall.id] ?? fallbackPickup(stall);
+  const fixture = boothPickups[stall.id] ?? fallbackPickup(stall);
+  return tapedHoursFor(stall.id) ?? fixture;
 }
 
 /**

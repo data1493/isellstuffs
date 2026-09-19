@@ -32,6 +32,7 @@ import {
 import {
   listingPath,
   sellDeskStallPath,
+  sellHoursPath,
   sellListingEditPath,
   sellNewPath,
 } from "@/lib/paths";
@@ -140,6 +141,12 @@ export function DeskBoard({
           intent={packed ? "open" : "pack"}
           returnTo={sellDeskStallPath(stall.slug)}
         />
+        <Link
+          href={sellHoursPath(stall.slug)}
+          className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+        >
+          Tape this weekend’s hours
+        </Link>
       </div>
 
       {rows.length === 0 ? (
