@@ -16,6 +16,7 @@ Walk the stand-in catalog without leaving the mall map.
 | `/search` | Look up a title, stall, hub, or physical/digital |
 | `/hubs` | The four aisle map |
 | `/hubs/[slug]` | Opinionated hub page |
+| `/this-week` | Weekend stall drop. Mall picks from the stand-in catalog — mix of physical and digital, never sold or file-gone |
 
 Empty filters, an empty tote, canceled or failed pay, and missing listing / stall / hub pages use the same designed empty and error panels. Those states are built for a phone-width viewport.
 

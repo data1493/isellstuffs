@@ -37,6 +37,10 @@ export function feesPath() {
   return "/fees";
 }
 
+export function thisWeekPath() {
+  return "/this-week";
+}
+
 export function campaignPath(slug: string) {
   return `/campaigns/${slug}`;
 }

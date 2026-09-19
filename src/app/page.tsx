@@ -22,7 +22,7 @@ import {
   listingsByType,
   mallHubs,
 } from "@/lib/commerce";
-import { feesPath } from "@/lib/paths";
+import { feesPath, thisWeekPath } from "@/lib/paths";
 import { homeMetadata, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -78,6 +78,14 @@ export default function Home() {
             render={<Link href="/hubs" />}
           >
             Pick a hub
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="rounded-full px-5"
+            render={<Link href={thisWeekPath()} />}
+          >
+            This week's table
           </Button>
         </div>
       </MallHero>
