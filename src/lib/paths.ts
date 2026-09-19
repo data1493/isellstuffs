@@ -194,6 +194,14 @@ export function listingWashWritePath() {
   return "/listings/wash";
 }
 
+export function listingRemotePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/remote`;
+}
+
+export function listingRemoteWritePath() {
+  return "/listings/remote";
+}
+
 export function searchPath(query?: string) {
   const q = query?.trim().replace(/\s+/g, " ") ?? "";
   if (!q) return "/search";

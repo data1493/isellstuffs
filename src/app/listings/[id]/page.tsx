@@ -24,6 +24,7 @@ import { ListingHeatNotice } from "@/components/listing-heat-notice";
 import { ListingBentNotice } from "@/components/listing-bent-notice";
 import { ListingCordNotice } from "@/components/listing-cord-notice";
 import { ListingWashNotice } from "@/components/listing-wash-notice";
+import { ListingRemoteNotice } from "@/components/listing-remote-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -69,6 +70,7 @@ import {
   listingBentPath,
   listingCordPath,
   listingWashPath,
+  listingRemotePath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -252,6 +254,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBentNotice listingId={listing.id} /> : null}
               {physical ? <ListingCordNotice listingId={listing.id} /> : null}
               {physical ? <ListingWashNotice listingId={listing.id} /> : null}
+              {physical ? <ListingRemoteNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -398,6 +401,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I washed it
+                  </Link>
+                  <Link
+                    href={listingRemotePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    The remote walked
                   </Link>
                 </p>
               ) : listing.fileFormat.toUpperCase().includes("GIFT") ? null : (
