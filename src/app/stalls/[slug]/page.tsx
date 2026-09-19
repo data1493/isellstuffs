@@ -210,6 +210,13 @@ import {
   stallDishesPath,
 } from "@/lib/booth-dishes";
 import {
+  BOOTH_BUTTONS_COOKIE_NAME,
+  BOOTH_BUTTONS_PAPER_LINE,
+  boothButtonsFor,
+  parseBoothButtons,
+  stallButtonsPath,
+} from "@/lib/booth-buttons";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -437,6 +444,10 @@ export default async function StallPage({
   const dishes = boothDishesFor(
     stall.id,
     parseBoothDishes(jar.get(BOOTH_DISHES_COOKIE_NAME)?.value),
+  );
+  const buttons = boothButtonsFor(
+    stall.id,
+    parseBoothButtons(jar.get(BOOTH_BUTTONS_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1002,6 +1013,23 @@ export default async function StallPage({
             <p data-booth-dishes-empty={stall.id} hidden />
           )}
 
+          {buttons ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have buttons"
+              title="Snaps stay."
+              body={
+                <p data-booth-buttons-note={stall.id}>
+                  {buttons.note} {BOOTH_BUTTONS_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-buttons-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1258,6 +1286,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t do dishes
+          </Link>
+
+          <Link
+            href={stallButtonsPath(stall.slug)}
+            data-booth-buttons-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have buttons
           </Link>
 
           <Link

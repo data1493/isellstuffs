@@ -960,6 +960,14 @@ export function stallDishesWritePath() {
   return "/stalls/dishes";
 }
 
+export function stallButtonsPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/buttons`;
+}
+
+export function stallButtonsWritePath() {
+  return "/stalls/buttons";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
