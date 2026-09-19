@@ -237,9 +237,9 @@ export function markListingCases(
     return refused;
   }
   if (listingIds.includes(listing!.id)) {
-    return { ok: true; listingIds };
+    return { ok: true, listingIds };
   }
-  return { ok: true; listingIds: [...listingIds, listing!.id] };
+  return { ok: true, listingIds: [...listingIds, listing!.id] };
 }
 
 export function clearListingCases(
@@ -251,7 +251,7 @@ export function clearListingCases(
     return refused;
   }
   if (!listingIds.includes(listing!.id)) {
-    return { ok: true; listingIds };
+    return { ok: true, listingIds };
   }
   return {
     ok: true,
