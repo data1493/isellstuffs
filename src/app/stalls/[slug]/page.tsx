@@ -301,6 +301,13 @@ import {
   stallMirrorPath,
 } from "@/lib/booth-mirror";
 import {
+  BOOTH_CLAMP_COOKIE_NAME,
+  BOOTH_CLAMP_PAPER_LINE,
+  boothClampFor,
+  parseBoothClamp,
+  stallClampPath,
+} from "@/lib/booth-clamp";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -580,6 +587,10 @@ export default async function StallPage({
   const mirror = boothMirrorFor(
     stall.id,
     parseBoothMirror(jar.get(BOOTH_MIRROR_COOKIE_NAME)?.value),
+  );
+  const clamp = boothClampFor(
+    stall.id,
+    parseBoothClamp(jar.get(BOOTH_CLAMP_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1366,6 +1377,23 @@ export default async function StallPage({
             <p data-booth-mirror-empty={stall.id} hidden />
           )}
 
+          {clamp ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a clamp"
+              title="Still a folding table."
+              body={
+                <p data-booth-clamp-note={stall.id}>
+                  {clamp.note} {BOOTH_CLAMP_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-clamp-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1726,6 +1754,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a mirror
+          </Link>
+
+          <Link
+            href={stallClampPath(stall.slug)}
+            data-booth-clamp-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a clamp
           </Link>
 
           <Link

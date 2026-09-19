@@ -65,6 +65,7 @@ export function LotBoothCard({
   playerNote,
   spiderNote,
   mirrorNote,
+  clampNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -112,6 +113,7 @@ export function LotBoothCard({
   playerNote?: string;
   spiderNote?: string;
   mirrorNote?: string;
+  clampNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -574,6 +576,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-mirror-empty={stall.id} hidden />
+          )}
+          {clampNote ? (
+            <p
+              data-booth-clamp-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a clamp. {clampNote}
+            </p>
+          ) : (
+            <p data-booth-clamp-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

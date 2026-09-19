@@ -205,6 +205,11 @@ import {
   parseBoothMirror,
 } from "@/lib/booth-mirror";
 import {
+  BOOTH_CLAMP_COOKIE_NAME,
+  BOOTH_CLAMP_MIRROR_SCRIPT,
+  parseBoothClamp,
+} from "@/lib/booth-clamp";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -292,6 +297,7 @@ export default async function LotPage() {
   const playerMap = parseBoothPlayer(jar.get(BOOTH_PLAYER_COOKIE_NAME)?.value);
   const spiderMap = parseBoothSpider(jar.get(BOOTH_SPIDER_COOKIE_NAME)?.value);
   const mirrorMap = parseBoothMirror(jar.get(BOOTH_MIRROR_COOKIE_NAME)?.value);
+  const clampMap = parseBoothClamp(jar.get(BOOTH_CLAMP_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -344,6 +350,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PLAYER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SPIDER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_MIRROR_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_CLAMP_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -397,6 +404,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PLAYER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SPIDER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_MIRROR_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_CLAMP_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -501,6 +509,7 @@ export default async function LotPage() {
                     playerNote={playerMap[row.stall.id]?.note}
                     spiderNote={spiderMap[row.stall.id]?.note}
                     mirrorNote={mirrorMap[row.stall.id]?.note}
+                    clampNote={clampMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -570,6 +579,7 @@ export default async function LotPage() {
                     playerNote={playerMap[row.stall.id]?.note}
                     spiderNote={spiderMap[row.stall.id]?.note}
                     mirrorNote={mirrorMap[row.stall.id]?.note}
+                    clampNote={clampMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

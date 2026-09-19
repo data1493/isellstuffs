@@ -1408,6 +1408,14 @@ export function stallMirrorWritePath() {
   return "/stalls/mirror";
 }
 
+export function stallClampPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/clamp`;
+}
+
+export function stallClampWritePath() {
+  return "/stalls/clamp";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
