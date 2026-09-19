@@ -8,6 +8,8 @@ import { MallNotice } from "@/components/mall-notice";
 import { FileGoneButton } from "@/components/sell/file-gone-button";
 import { PackButton } from "@/components/sell/pack-button";
 import { SoldButton } from "@/components/sell/sold-button";
+import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
+import { TestedPin } from "@/components/sell/tested-pin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,6 +61,11 @@ import {
   canStampSold,
   stampSoldListings,
 } from "@/lib/sold-overlay";
+import {
+  TESTED_KINDA_CHANGED_EVENT,
+  canPinTestedKinda,
+  isTestedKindaPinned,
+} from "@/lib/tested-kinda-pin";
 import { feePercent, splitOnTag } from "@/lib/seller-payouts";
 import {
   SELLER_STALLS_CHANGED,
@@ -103,6 +110,7 @@ export function DeskBoard({
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
     window.addEventListener(FILE_GONE_CHANGED_EVENT, apply);
     window.addEventListener(PACKED_CHANGED_EVENT, apply);
+    window.addEventListener(TESTED_KINDA_CHANGED_EVENT, apply);
     window.addEventListener("storage", apply);
     return () => {
       window.removeEventListener(SELLER_LISTINGS_CHANGED, apply);
@@ -110,6 +118,7 @@ export function DeskBoard({
       window.removeEventListener(SOLD_CHANGED_EVENT, apply);
       window.removeEventListener(FILE_GONE_CHANGED_EVENT, apply);
       window.removeEventListener(PACKED_CHANGED_EVENT, apply);
+      window.removeEventListener(TESTED_KINDA_CHANGED_EVENT, apply);
       window.removeEventListener("storage", apply);
     };
   }, [listings, stall.id]);
@@ -170,7 +179,8 @@ export function DeskBoard({
         <div>
         <p className="mb-3 text-sm leading-6 text-muted-foreground">
           Sold sticker is on the table. File pulled from the folder. Putting
-          back is restock, not a refund.
+          back is restock, not a refund. We turned it on. Not a mall pick. Not
+          paid.
         </p>
         <ul className="grid gap-3">
           {rows.map((listing) => {
@@ -178,6 +188,8 @@ export function DeskBoard({
             const gone = listing.status !== "available";
             const stamp = canStampSold(listing);
             const pull = canStampFileGone(listing);
+            const kinda = canPinTestedKinda(listing);
+            const pinned = isTestedKindaPinned(listing.id);
 
             return (
               <li key={listing.id}>
@@ -192,6 +204,7 @@ export function DeskBoard({
                         {overlay ? (
                           <Badge variant="outline">Listed tonight</Badge>
                         ) : null}
+                        {pinned ? <TestedKindaChip listingId={listing.id} /> : null}
                       </div>
                       <CardTitle className="font-heading text-xl tracking-tight">
                         <Link
@@ -234,6 +247,13 @@ export function DeskBoard({
                         <FileGoneButton
                           listingId={listing.id}
                           intent={listing.status === "available" ? "gone" : "open"}
+                          returnTo={sellDeskStallPath(stall.slug)}
+                        />
+                      ) : null}
+                      {kinda ? (
+                        <TestedPin
+                          listingId={listing.id}
+                          intent={pinned ? "drop" : "pin"}
                           returnTo={sellDeskStallPath(stall.slug)}
                         />
                       ) : null}

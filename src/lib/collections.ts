@@ -5,6 +5,7 @@ import {
 } from "@/lib/commerce";
 import { liveListings } from "@/lib/live-catalog";
 import { collectionPath } from "@/lib/paths";
+import { isTestedKindaPinned } from "@/lib/tested-kinda-pin";
 
 /** Pocket-money ceiling. $10.00 is not under a ten. Game Boy is $28. */
 export const UNDER_TEN_CENTS = 1000;
@@ -177,7 +178,10 @@ export function listingFitsCollection(
     return isDigitalListing(listing);
   }
 
-  return (testedKindaIds as readonly string[]).includes(listing.id);
+  return (
+    (testedKindaIds as readonly string[]).includes(listing.id) ||
+    isTestedKindaPinned(listing.id)
+  );
 }
 
 export function rackNote(listing: Listing, slug: CollectionSlug): string {

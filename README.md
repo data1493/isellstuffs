@@ -55,7 +55,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | --- | --- |
 | `/sell` | Why sell here, the 10% mall cut, physical vs digital |
 | `/sell/start` | First-timer walkthrough. Pick a booth, pick a kind, then the existing list POST. `/sell/new` stays the dump shortcut |
-| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
+| `/sell/desk` | Stallholder home for Folding Table Tuesday. List, payouts, fees, booth editor. Fixture listings plus seller overlay. Physical rows can take a sold sticker (`POST /sell/desk/sold`). Digital rows (not the gift card) can pull the file (`POST /sell/desk/gone`). Overlay rows can take a tested/kinda chip (`POST /sell/desk/tested`) — catalog fixtures are refused. The booth can pack up for the week (`POST /sell/desk/pack`) without deleting SKUs. Overlay rows can retape. Other booths you listed on get a line here. |
 | `/sell/desk/queue` | Who is coming up the drive. Paid physical lines from pickup slips in this browser, grouped by booth with hours. Files stay in the folder. |
 | `/sell/taken` | Close a driveway handoff when the buyer walked. `POST /sell/taken` (form: `slipId`, `listingId`, `intent=taken\|waiting`). Cookie `iss-taken-handoffs` + `iss:taken-handoffs`. Taken lines drop off the queue. Not a refund. Not a sold sticker. |
 | `/sell/folders` | Which files left the table. Paid digital lines from slips in this browser, grouped by booth, with a link to that buyer folder. Lamps stay on the driveway. Gift codes stay at the desk. |
@@ -88,6 +88,8 @@ Open a listing or a stall directly. Home, explore, and hub browse are owned else
 | Sold listing (no cart) | http://127.0.0.1:44721/listings/ysk-folding-chair |
 
 Paying a physical find writes its id to `iss:sold-listing-ids` / cookie `iss-sold-listing-ids`. Shop lookups in `allListings()` stamp those rows `sold` without editing fixture objects. Digital files and the gift card are not auto-sold. The desk can sticker a physical SKU or put it back (`POST /sell/desk/sold`) — restock, not a refund.
+
+Overlay rows can take a tested/kinda chip (`POST /sell/desk/tested`) written to `iss:tested-kinda-ids` / cookie `iss-tested-kinda-ids`. Catalog fixtures are refused. The Game Boy stays on the rack from the fixture list. The PDP shows the chip. `/collections/tested-kinda` picks up the extra id. Not a mall pick. Not paid.
 
 The desk can pull a digital file (`POST /sell/desk/gone`) and write its id to `iss:file-gone-listing-ids` / cookie `iss-file-gone-listing-ids`. Shop lookups stamp those rows `file-gone` so the PDP and folder refuse them. Gift card and the stain zine fixture stay put. Pay does not pull a PDF. Putting back is restock, not a refund.
 

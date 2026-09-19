@@ -6,6 +6,7 @@ import { ListingMissing } from "@/components/mall-missing";
 import { ListingBuyBox } from "@/components/listing-buy-box";
 import { ListingMediaPlaceholder } from "@/components/listing-media-placeholder";
 import { ListingTypeBadge } from "@/components/listing-type-badge";
+import { TestedKindaChip } from "@/components/sell/tested-kinda-chip";
 import { PickupNote } from "@/components/pickup-note";
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { Badge } from "@/components/ui/badge";
@@ -165,6 +166,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   {listingStatusLabel(listing)}
                 </Badge>
                 <Badge variant="outline">{hub.name}</Badge>
+                <TestedKindaChip listingId={listing.id} />
               </div>
 
               <div className="space-y-3">
