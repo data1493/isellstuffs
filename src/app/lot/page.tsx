@@ -155,6 +155,11 @@ import {
   parseBoothFlash,
 } from "@/lib/booth-flash";
 import {
+  BOOTH_RELOAD_COOKIE_NAME,
+  BOOTH_RELOAD_MIRROR_SCRIPT,
+  parseBoothReload,
+} from "@/lib/booth-reload";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -232,6 +237,7 @@ export default async function LotPage() {
   const buttonsMap = parseBoothButtons(jar.get(BOOTH_BUTTONS_COOKIE_NAME)?.value);
   const harpMap = parseBoothHarp(jar.get(BOOTH_HARP_COOKIE_NAME)?.value);
   const flashMap = parseBoothFlash(jar.get(BOOTH_FLASH_COOKIE_NAME)?.value);
+  const reloadMap = parseBoothReload(jar.get(BOOTH_RELOAD_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -274,6 +280,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_BUTTONS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_HARP_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FLASH_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_RELOAD_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -317,6 +324,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_BUTTONS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_HARP_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FLASH_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_RELOAD_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -411,6 +419,7 @@ export default async function LotPage() {
                     buttonsNote={buttonsMap[row.stall.id]?.note}
                     harpNote={harpMap[row.stall.id]?.note}
                     flashNote={flashMap[row.stall.id]?.note}
+                    reloadNote={reloadMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -470,6 +479,7 @@ export default async function LotPage() {
                     buttonsNote={buttonsMap[row.stall.id]?.note}
                     harpNote={harpMap[row.stall.id]?.note}
                     flashNote={flashMap[row.stall.id]?.note}
+                    reloadNote={reloadMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

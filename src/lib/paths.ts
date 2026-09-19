@@ -1016,6 +1016,14 @@ export function stallFlashWritePath() {
   return "/stalls/flash";
 }
 
+export function stallReloadPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/reload`;
+}
+
+export function stallReloadWritePath() {
+  return "/stalls/reload";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

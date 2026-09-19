@@ -231,6 +231,13 @@ import {
   stallFlashPath,
 } from "@/lib/booth-flash";
 import {
+  BOOTH_RELOAD_COOKIE_NAME,
+  BOOTH_RELOAD_PAPER_LINE,
+  boothReloadFor,
+  parseBoothReload,
+  stallReloadPath,
+} from "@/lib/booth-reload";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -470,6 +477,10 @@ export default async function StallPage({
   const flash = boothFlashFor(
     stall.id,
     parseBoothFlash(jar.get(BOOTH_FLASH_COOKIE_NAME)?.value),
+  );
+  const reload = boothReloadFor(
+    stall.id,
+    parseBoothReload(jar.get(BOOTH_RELOAD_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1086,6 +1097,23 @@ export default async function StallPage({
             <p data-booth-flash-empty={stall.id} hidden />
           )}
 
+          {reload ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't reload"
+              title="Face value."
+              body={
+                <p data-booth-reload-note={stall.id}>
+                  {reload.note} {BOOTH_RELOAD_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-reload-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -1366,6 +1394,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t flash
+          </Link>
+
+          <Link
+            href={stallReloadPath(stall.slug)}
+            data-booth-reload-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t reload
           </Link>
 
           <Link
