@@ -5,7 +5,7 @@
  */
 import {
   formatMoney,
-  isGiftListing,
+  isDigitalListing,
   isPhysicalListing,
   listingById,
   stallById,
@@ -76,9 +76,10 @@ export function priceTagForId(id: string): PriceTagSheet {
     };
   }
 
-  if (isGiftListing(listing)) {
+  if (isDigitalListing(listing)) {
+    const gift = listing.fileFormat.toUpperCase().includes("GIFT");
     return {
-      kind: "gift",
+      kind: gift ? "gift" : "digital",
       listingId: listing.id,
       title: listing.title,
       priceLabel: formatMoney(listing.price),
@@ -86,21 +87,21 @@ export function priceTagForId(id: string): PriceTagSheet {
       stallName,
       hubName,
       statusWord: worn,
-      refuse: GIFT_DESK_LINE,
+      refuse: gift ? GIFT_DESK_LINE : DIGITAL_FOLDER_LINE,
       listing,
     };
   }
 
   return {
-    kind: "digital",
-    listingId: listing.id,
-    title: listing.title,
-    priceLabel: formatMoney(listing.price),
-    fact: listing.fileFormat,
-    stallName,
-    hubName,
-    statusWord: worn,
-    refuse: DIGITAL_FOLDER_LINE,
-    listing,
+    kind: "missing",
+    listingId: id,
+    title: null,
+    priceLabel: null,
+    fact: null,
+    stallName: null,
+    hubName: null,
+    statusWord: null,
+    refuse: TAG_MISSING_COPY,
+    listing: null,
   };
 }
