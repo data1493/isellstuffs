@@ -1354,6 +1354,14 @@ export function listingScribeWritePath() {
   return "/listings/scribe";
 }
 
+export function listingFellPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fell`;
+}
+
+export function listingFellWritePath() {
+  return "/listings/fell";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }

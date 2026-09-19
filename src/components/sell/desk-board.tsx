@@ -561,6 +561,12 @@ import {
   subscribeSerge,
 } from "@/lib/listing-serge";
 import {
+  canTapeFell,
+  isListingFellOverlay,
+  readFellListingIds,
+  subscribeFell,
+} from "@/lib/listing-fell";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -823,6 +829,7 @@ import {
   listingBushWritePath,
   listingBraidWritePath,
   listingSergeWritePath,
+  listingFellWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1031,6 +1038,7 @@ export function DeskBoard({
   const [bushIds, setBushIds] = useState<string[]>([]);
   const [braidIds, setBraidIds] = useState<string[]>([]);
   const [sergeIds, setSergeIds] = useState<string[]>([]);
+  const [fellIds, setFellIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
@@ -1171,6 +1179,7 @@ export function DeskBoard({
       setBushIds(readBushListingIds());
       setBraidIds(readBraidListingIds());
       setSergeIds(readSergeListingIds());
+      setFellIds(readFellListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
@@ -1300,6 +1309,7 @@ export function DeskBoard({
     const unsubBush = subscribeBush(apply);
     const unsubBraid = subscribeBraid(apply);
     const unsubSerge = subscribeSerge(apply);
+    const unsubFell = subscribeFell(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
@@ -1439,6 +1449,7 @@ export function DeskBoard({
       unsubBush();
       unsubBraid();
       unsubSerge();
+      unsubFell();
       unsubPeen();
       unsubGlaze();
       unsubPickle();
@@ -3703,6 +3714,37 @@ export function DeskBoard({
                             {isListingSergeOverlay(listing.id, sergeIds)
                               ? "Leave the raw edge"
                               : "I will not serge it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFell(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFellWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFellOverlay(listing.id, fellIds)
+                                ? "open"
+                                : "fell"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFellOverlay(listing.id, fellIds)
+                              ? "Leave the pits"
+                              : "I will not fell it"}
                           </button>
                         </form>
                       ) : null}

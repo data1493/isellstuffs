@@ -144,6 +144,7 @@ import { ListingRivetNotice } from "@/components/listing-rivet-notice";
 import { ListingBushNotice } from "@/components/listing-bush-notice";
 import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingSergeNotice } from "@/components/listing-serge-notice";
+import { ListingFellNotice } from "@/components/listing-fell-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
@@ -342,6 +343,7 @@ import {
   listingBushPath,
   listingBraidPath,
   listingSergePath,
+  listingFellPath,
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
@@ -719,6 +721,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingGrommetNotice listingId={listing.id} /> : null}
               {physical ? <ListingDartNotice listingId={listing.id} /> : null}
               {physical ? <ListingSergeNotice listingId={listing.id} /> : null}
+              {physical ? <ListingFellNotice listingId={listing.id} /> : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
@@ -1418,6 +1421,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not serge it
+                  </Link>
+                  <Link
+                    href={listingFellPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not fell it
                   </Link>
                   <Link
                     href={listingContrastPath(listing.id)}
