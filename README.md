@@ -55,7 +55,7 @@ List on a stall the mall already has. No account. No database. No Connect onboar
 | `/sell/desk/[stall]` | Same desk for that catalog booth — The Sink Drawer, Hall Closet, etc. Unknown slug or artisan-home: packed-up notice. Tuesday slug redirects to `/sell/desk`. |
 | `/sell/listings/[id]/edit` | Retape an overlay listing after a typo or a price. Catalog fixtures are rejected. `POST /sell/listings/[id]/retape` keeps the same SKU. |
 | `/sell/new` | Create a listing on an existing stall. One booth can list both kinds |
-| `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals. No Connect, no bank |
+| `/sell/payouts` | Paper payouts: 10% mall cut, stand-in stall totals, plus what walked from paid slips in this browser. No Connect, no bank |
 | `/fees` | Seller contract: 10% from the stall, labeled ads, no warehouse, digital honesty |
 
 New rows write to a local overlay (`iss:seller-listings` in the browser, in-memory on the server). Shop lookups in `@/lib/commerce` already merge that overlay, so a new SKU shows on the stall and hub the catalog already reads. Fix a typo on an overlay row at `/sell/listings/[id]/edit` — fixtures stay taped down. Rewrite a booth name and pitch at `/stalls/[slug]/edit` (`iss:seller-stalls`). The slug stays put. `/sell/desk` stays Folding Table Tuesday. A Kitchen Drawer list on The Sink Drawer opens `/sell/desk/the-sink-drawer` — that overlay does not appear on Tuesday.

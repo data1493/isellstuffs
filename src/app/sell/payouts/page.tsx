@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
 import { MallNotice } from "@/components/mall-notice";
 import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
+import { PayoutWalkedTape } from "@/components/sell/payout-walked";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,9 +14,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PLATFORM_FEE_BPS } from "@/lib/checkout";
+import { CHECKOUT_COOKIE, PLATFORM_FEE_BPS } from "@/lib/checkout";
 import { formatMoney, isDigitalListing } from "@/lib/commerce";
-import { feesPath, listingPath, sellNewPath, sellPath, sellPayoutsPath, stallPath } from "@/lib/paths";
+import { orderSlipFromCheckoutCookie } from "@/lib/order-history";
+import {
+  feesPath,
+  listingPath,
+  sellNewPath,
+  sellPath,
+  sellPayoutsPath,
+  sellPayoutsWalkedPath,
+  stallPath,
+} from "@/lib/paths";
 import {
   contractExample,
   feePercent,
@@ -32,7 +43,9 @@ export const metadata: Metadata = shareMetadata({
   path: sellPayoutsPath(),
 });
 
-export default function SellPayoutsPage() {
+export default async function SellPayoutsPage() {
+  const jar = await cookies();
+  const seed = orderSlipFromCheckoutCookie(jar.get(CHECKOUT_COOKIE)?.value);
   const contract = contractExample();
   const examples = listingPayoutExamples();
   const rows = stallPayoutRows();
@@ -78,6 +91,14 @@ export default function SellPayoutsPage() {
             render={<Link href="#the-cut" />}
           >
             See the cut
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-11 w-full rounded-full px-5 sm:w-auto"
+            render={<Link href={sellPayoutsWalkedPath()} />}
+          >
+            What walked
           </Button>
           <Button
             size="lg"
@@ -145,6 +166,19 @@ export default function SellPayoutsPage() {
             </CardHeader>
           </Card>
         </div>
+      </MallSection>
+
+      <MallSection id="walked" className="border-b border-border">
+        <MallEyebrow>What walked</MallEyebrow>
+        <h2 className="mt-2 font-heading text-3xl tracking-tight sm:text-4xl">
+          The {feePercent}% on what actually paid.
+        </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground text-pretty">
+          Paper only. Checkout is still test pay. Nothing hits a bank. The
+          register is the paid tote — not a sold sticker and not the still-here
+          brochure below.
+        </p>
+        <PayoutWalkedTape seed={seed} />
       </MallSection>
 
       {examples.length > 0 ? (

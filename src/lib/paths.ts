@@ -67,6 +67,10 @@ export function sellPayoutsPath() {
   return "/sell/payouts";
 }
 
+export function sellPayoutsWalkedPath() {
+  return "/sell/payouts#walked";
+}
+
 export function sellDeskPath() {
   return "/sell/desk";
 }
