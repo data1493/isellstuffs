@@ -192,6 +192,7 @@ import { ListingScribeNotice } from "@/components/listing-scribe-notice";
 import { ListingStakeNotice } from "@/components/listing-stake-notice";
 import { ListingTapNotice } from "@/components/listing-tap-notice";
 import { ListingSnugNotice } from "@/components/listing-snug-notice";
+import { ListingTrepanNotice } from "@/components/listing-trepan-notice";
 import { ListingSpotfaceNotice } from "@/components/listing-spotface-notice";
 import { ListingCalenderNotice } from "@/components/listing-calender-notice";
 import { ListingTenterNotice } from "@/components/listing-tenter-notice";
@@ -501,6 +502,7 @@ import {
   listingScribePath,
   listingStakePath,
   listingSnugPath,
+  listingTrepanPath,
   listingSpotfacePath,
   listingPaginatePath,
   listingCollatePath,
@@ -995,6 +997,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingStakeNotice listingId={listing.id} /> : null}
               {physical ? <ListingTapNotice listingId={listing.id} /> : null}
               {physical ? <ListingSnugNotice listingId={listing.id} /> : null}
+              {listing.id === "kdr-lid-no-pot" ? (
+                <ListingTrepanNotice listingId={listing.id} />
+              ) : null}
               {listing.id === "kdr-lid-no-pot" ? (
                 <ListingSpotfaceNotice listingId={listing.id} />
               ) : null}
@@ -2188,6 +2193,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not snug it
                   </Link>
+                  {listing.id === "kdr-lid-no-pot" ? (
+                    <Link
+                      href={listingTrepanPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not trepan it
+                    </Link>
+                  ) : null}
                   {listing.id === "kdr-lid-no-pot" ? (
                     <Link
                       href={listingSpotfacePath(listing.id)}

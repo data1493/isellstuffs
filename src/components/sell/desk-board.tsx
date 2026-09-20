@@ -945,6 +945,12 @@ import {
   subscribeSnug,
 } from "@/lib/listing-snug";
 import {
+  canTapeTrepan,
+  isListingTrepanOverlay,
+  readTrepanListingIds,
+  subscribeTrepan,
+} from "@/lib/listing-trepan";
+import {
   canTapeSpotface,
   isListingSpotfaceOverlay,
   readSpotfaceListingIds,
@@ -1372,6 +1378,7 @@ import {
   listingStakeWritePath,
   listingTapWritePath,
   listingSnugWritePath,
+  listingTrepanWritePath,
   listingSpotfaceWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
@@ -1667,6 +1674,7 @@ export function DeskBoard({
   const [stakeIds, setStakeIds] = useState<string[]>([]);
   const [tapIds, setTapIds] = useState<string[]>([]);
   const [snugIds, setSnugIds] = useState<string[]>([]);
+  const [trepanIds, setTrepanIds] = useState<string[]>([]);
   const [spotfaceIds, setSpotfaceIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
@@ -1888,6 +1896,7 @@ export function DeskBoard({
       setStakeIds(readStakeListingIds());
       setTapIds(readTapListingIds());
       setSnugIds(readSnugListingIds());
+      setTrepanIds(readTrepanListingIds());
       setSpotfaceIds(readSpotfaceListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
@@ -2098,6 +2107,7 @@ export function DeskBoard({
     const unsubStake = subscribeStake(apply);
     const unsubTap = subscribeTap(apply);
     const unsubSnug = subscribeSnug(apply);
+    const unsubTrepan = subscribeTrepan(apply);
     const unsubSpotface = subscribeSpotface(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
@@ -2318,6 +2328,7 @@ export function DeskBoard({
       unsubStake();
       unsubTap();
       unsubSnug();
+      unsubTrepan();
       unsubSpotface();
       unsubCountersink();
       unsubSplice();
@@ -4997,6 +5008,37 @@ export function DeskBoard({
                             {isListingCountersinkOverlay(listing.id, countersinkIds)
                               ? "Leave the hole"
                               : "I will not countersink it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTrepan(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTrepanWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTrepanOverlay(listing.id, trepanIds)
+                                ? "open"
+                                : "trepan"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTrepanOverlay(listing.id, trepanIds)
+                              ? "Leave the hole"
+                              : "I will not trepan it"}
                           </button>
                         </form>
                       ) : null}

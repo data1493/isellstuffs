@@ -1714,6 +1714,14 @@ export function listingSnugWritePath() {
   return "/listings/snug";
 }
 
+export function listingTrepanPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/trepan`;
+}
+
+export function listingTrepanWritePath() {
+  return "/listings/trepan";
+}
+
 export function listingSpotfacePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/spotface`;
 }
