@@ -1167,6 +1167,12 @@ import {
   subscribeGamut,
 } from "@/lib/listing-gamut";
 import {
+  canTapeAces,
+  isListingAcesOverlay,
+  readAcesListingIds,
+  subscribeAces,
+} from "@/lib/listing-aces";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -1441,6 +1447,7 @@ import {
   listingPosterizeWritePath,
   listingLatticeWritePath,
   listingGamutWritePath,
+  listingAcesWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1756,6 +1763,7 @@ export function DeskBoard({
   const [posterizeIds, setPosterizeIds] = useState<string[]>([]);
   const [latticeIds, setLatticeIds] = useState<string[]>([]);
   const [gamutIds, setGamutIds] = useState<string[]>([]);
+  const [acesIds, setAcesIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1982,6 +1990,7 @@ export function DeskBoard({
       setPosterizeIds(readPosterizeListingIds());
       setLatticeIds(readLatticeListingIds());
       setGamutIds(readGamutListingIds());
+      setAcesIds(readAcesListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -2197,6 +2206,7 @@ export function DeskBoard({
     const unsubPosterize = subscribePosterize(apply);
     const unsubLattice = subscribeLattice(apply);
     const unsubGamut = subscribeGamut(apply);
+    const unsubAces = subscribeAces(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -2422,6 +2432,7 @@ export function DeskBoard({
       unsubPosterize();
       unsubLattice();
       unsubGamut();
+      unsubAces();
     };
   }, [listings, stall.id]);
 
@@ -7470,6 +7481,37 @@ export function DeskBoard({
                             {isListingGamutOverlay(listing.id, gamutIds)
                               ? "Leave the looks"
                               : "I will not gamut it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAces(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAcesWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAcesOverlay(listing.id, acesIds)
+                                ? "open"
+                                : "aces"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingAcesOverlay(listing.id, acesIds)
+                              ? "Leave the looks"
+                              : "I will not aces it"}
                           </button>
                         </form>
                       ) : null}

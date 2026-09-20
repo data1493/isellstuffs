@@ -1346,6 +1346,14 @@ export function listingGamutWritePath() {
   return "/listings/gamut";
 }
 
+export function listingAcesPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/aces`;
+}
+
+export function listingAcesWritePath() {
+  return "/listings/aces";
+}
+
 export function listingAtipPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/atip`;
 }

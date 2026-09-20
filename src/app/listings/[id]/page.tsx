@@ -58,6 +58,7 @@ import { ListingShaperNotice } from "@/components/listing-shaper-notice";
 import { ListingPosterizeNotice } from "@/components/listing-posterize-notice";
 import { ListingLatticeNotice } from "@/components/listing-lattice-notice";
 import { ListingGamutNotice } from "@/components/listing-gamut-notice";
+import { ListingAcesNotice } from "@/components/listing-aces-notice";
 import { ListingLogNotice } from "@/components/listing-log-notice";
 import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
@@ -344,6 +345,7 @@ import {
   listingPosterizePath,
   listingLatticePath,
   listingGamutPath,
+  listingAcesPath,
   listingMaskPath,
   listingPogoPath,
   listingReballPath,
@@ -811,6 +813,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "dl-camera-luts" ? (
                 <ListingGamutNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "dl-camera-luts" ? (
+                <ListingAcesNotice listingId={listing.id} />
               ) : null}
               {!physical ? <ListingLogNotice listingId={listing.id} /> : null}
               {!physical ? <ListingProfileNotice listingId={listing.id} /> : null}
@@ -2559,6 +2564,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not gamut it
+                    </Link>
+                  ) : null}
+                  {listing.id === "dl-camera-luts" ? (
+                    <Link
+                      href={listingAcesPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not aces it
                     </Link>
                   ) : null}
                   <Link
