@@ -1338,6 +1338,14 @@ export function listingTrussWritePath() {
   return "/listings/truss";
 }
 
+export function listingShieldPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/shield`;
+}
+
+export function listingShieldWritePath() {
+  return "/listings/shield";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

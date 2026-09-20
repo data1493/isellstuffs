@@ -537,6 +537,12 @@ import {
   subscribeDeox,
 } from "@/lib/listing-deox";
 import {
+  canTapeShield,
+  isListingShieldOverlay,
+  readShieldListingIds,
+  subscribeShield,
+} from "@/lib/listing-shield";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -947,6 +953,7 @@ import {
   listingProofWritePath,
   listingReflowWritePath,
   listingDeoxWritePath,
+  listingShieldWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingContrastWritePath,
@@ -1132,6 +1139,7 @@ export function DeskBoard({
   const [contrastIds, setContrastIds] = useState<string[]>([]);
   const [reflowIds, setReflowIds] = useState<string[]>([]);
   const [deoxIds, setDeoxIds] = useState<string[]>([]);
+  const [shieldIds, setShieldIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1287,6 +1295,7 @@ export function DeskBoard({
       setContrastIds(readContrastListingIds());
       setReflowIds(readReflowListingIds());
       setDeoxIds(readDeoxListingIds());
+      setShieldIds(readShieldListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -1431,6 +1440,7 @@ export function DeskBoard({
     const unsubContrast = subscribeContrast(apply);
     const unsubReflow = subscribeReflow(apply);
     const unsubDeox = subscribeDeox(apply);
+    const unsubShield = subscribeShield(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -1585,6 +1595,7 @@ export function DeskBoard({
       unsubContrast();
       unsubReflow();
       unsubDeox();
+      unsubShield();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -4302,6 +4313,37 @@ export function DeskBoard({
                             {isListingDeoxOverlay(listing.id, deoxIds)
                               ? "Leave the slot"
                               : "I will not deox it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeShield(listing) ? (
+                        <form
+                          method="post"
+                          action={listingShieldWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingShieldOverlay(listing.id, shieldIds)
+                                ? "open"
+                                : "shield"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingShieldOverlay(listing.id, shieldIds)
+                              ? "Leave the can"
+                              : "I will not shield it"}
                           </button>
                         </form>
                       ) : null}

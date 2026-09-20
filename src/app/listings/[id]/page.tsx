@@ -169,6 +169,7 @@ import { ListingBleedNotice } from "@/components/listing-bleed-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
+import { ListingShieldNotice } from "@/components/listing-shield-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingSkiveNotice } from "@/components/listing-skive-notice";
@@ -383,6 +384,7 @@ import {
   listingPaginatePath,
   listingCollatePath,
   listingContrastPath,
+  listingShieldPath,
   listingGatePath,
   listingQuantizePath,
   listingSaturatePath,
@@ -760,6 +762,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
               {physical ? <ListingDeoxNotice listingId={listing.id} /> : null}
+              {physical ? <ListingShieldNotice listingId={listing.id} /> : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
               {physical ? <ListingHandleNotice listingId={listing.id} /> : null}
@@ -1489,6 +1492,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not contrast it
+                  </Link>
+                  <Link
+                    href={listingShieldPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not shield it
                   </Link>
                   <Link
                     href={listingTinPath(listing.id)}
