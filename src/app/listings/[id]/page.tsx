@@ -209,6 +209,7 @@ import { ListingDressNotice } from "@/components/listing-dress-notice";
 import { ListingBlanchardNotice } from "@/components/listing-blanchard-notice";
 import { ListingWringNotice } from "@/components/listing-wring-notice";
 import { ListingSineNotice } from "@/components/listing-sine-notice";
+import { ListingWedgeNotice } from "@/components/listing-wedge-notice";
 import { ListingCalenderNotice } from "@/components/listing-calender-notice";
 import { ListingTenterNotice } from "@/components/listing-tenter-notice";
 import { ListingShearNotice } from "@/components/listing-shear-notice";
@@ -558,6 +559,7 @@ import {
   listingBlanchardPath,
   listingWringPath,
   listingSinePath,
+  listingWedgePath,
   listingPaginatePath,
   listingCollatePath,
   listingTrapPath,
@@ -1143,6 +1145,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "kdr-lid-no-pot" ? (
                 <ListingSineNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-lid-no-pot" ? (
+                <ListingWedgeNotice listingId={listing.id} />
               ) : null}
               {listing.id === "kdr-lid-no-pot" ? (
                 <ListingCountersinkNotice listingId={listing.id} />
@@ -2533,6 +2538,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not sine it
+                    </Link>
+                  ) : null}
+                  {listing.id === "kdr-lid-no-pot" ? (
+                    <Link
+                      href={listingWedgePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not wedge it
                     </Link>
                   ) : null}
                   {listing.id === "kdr-lid-no-pot" ? (

@@ -1077,6 +1077,12 @@ import {
   subscribeSine,
 } from "@/lib/listing-sine";
 import {
+  canTapeWedge,
+  isListingWedgeOverlay,
+  readWedgeListingIds,
+  subscribeWedge,
+} from "@/lib/listing-wedge";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1575,6 +1581,7 @@ import {
   listingBlanchardWritePath,
   listingWringWritePath,
   listingSineWritePath,
+  listingWedgeWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1906,6 +1913,7 @@ export function DeskBoard({
   const [blanchardIds, setBlanchardIds] = useState<string[]>([]);
   const [wringIds, setWringIds] = useState<string[]>([]);
   const [sineIds, setSineIds] = useState<string[]>([]);
+  const [wedgeIds, setWedgeIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2158,6 +2166,7 @@ export function DeskBoard({
       setBlanchardIds(readBlanchardListingIds());
       setWringIds(readWringListingIds());
       setSineIds(readSineListingIds());
+      setWedgeIds(readWedgeListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2399,6 +2408,7 @@ export function DeskBoard({
     const unsubBlanchard = subscribeBlanchard(apply);
     const unsubWring = subscribeWring(apply);
     const unsubSine = subscribeSine(apply);
+    const unsubWedge = subscribeWedge(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2650,6 +2660,7 @@ export function DeskBoard({
       unsubBlanchard();
       unsubWring();
       unsubSine();
+      unsubWedge();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5741,6 +5752,37 @@ export function DeskBoard({
                             {isListingSineOverlay(listing.id, sineIds)
                               ? "Leave the plate"
                               : "I will not sine it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWedge(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWedgeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWedgeOverlay(listing.id, wedgeIds)
+                                ? "open"
+                                : "wedge"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingWedgeOverlay(listing.id, wedgeIds)
+                              ? "Leave the rise"
+                              : "I will not wedge it"}
                           </button>
                         </form>
                       ) : null}

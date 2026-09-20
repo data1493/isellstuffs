@@ -1914,6 +1914,14 @@ export function listingSineWritePath() {
   return "/listings/sine";
 }
 
+export function listingWedgePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/wedge`;
+}
+
+export function listingWedgeWritePath() {
+  return "/listings/wedge";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
