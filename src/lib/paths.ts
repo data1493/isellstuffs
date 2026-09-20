@@ -2600,6 +2600,14 @@ export function stallWandWritePath() {
   return "/stalls/wand";
 }
 
+export function stallFumePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/fume`;
+}
+
+export function stallFumeWritePath() {
+  return "/stalls/fume";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

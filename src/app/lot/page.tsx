@@ -355,6 +355,11 @@ import {
   parseBoothWand,
 } from "@/lib/booth-wand";
 import {
+  BOOTH_FUME_COOKIE_NAME,
+  BOOTH_FUME_MIRROR_SCRIPT,
+  parseBoothFume,
+} from "@/lib/booth-fume";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -474,6 +479,7 @@ export default async function LotPage() {
   const variacMap = parseBoothVariac(jar.get(BOOTH_VARIAC_COOKIE_NAME)?.value);
   const plumbMap = parseBoothPlumb(jar.get(BOOTH_PLUMB_COOKIE_NAME)?.value);
   const wandMap = parseBoothWand(jar.get(BOOTH_WAND_COOKIE_NAME)?.value);
+  const fumeMap = parseBoothFume(jar.get(BOOTH_FUME_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -556,6 +562,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_VARIAC_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PLUMB_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WAND_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_FUME_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -639,6 +646,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_VARIAC_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PLUMB_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WAND_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_FUME_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -773,6 +781,7 @@ export default async function LotPage() {
                     variacNote={variacMap[row.stall.id]?.note}
                     plumbNote={plumbMap[row.stall.id]?.note}
                     wandNote={wandMap[row.stall.id]?.note}
+                    fumeNote={fumeMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -872,6 +881,7 @@ export default async function LotPage() {
                     variacNote={variacMap[row.stall.id]?.note}
                     plumbNote={plumbMap[row.stall.id]?.note}
                     wandNote={wandMap[row.stall.id]?.note}
+                    fumeNote={fumeMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

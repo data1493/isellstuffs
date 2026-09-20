@@ -511,6 +511,13 @@ import {
   stallWandPath,
 } from "@/lib/booth-wand";
 import {
+  BOOTH_FUME_COOKIE_NAME,
+  BOOTH_FUME_PAPER_LINE,
+  boothFumeFor,
+  parseBoothFume,
+  stallFumePath,
+} from "@/lib/booth-fume";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -910,6 +917,10 @@ export default async function StallPage({
   const wand = boothWandFor(
     stall.id,
     parseBoothWand(jar.get(BOOTH_WAND_COOKIE_NAME)?.value),
+  );
+  const fume = boothFumeFor(
+    stall.id,
+    parseBoothFume(jar.get(BOOTH_FUME_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2206,6 +2217,23 @@ export default async function StallPage({
             <p data-booth-wand-empty={stall.id} hidden />
           )}
 
+          {fume ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a fume"
+              title="Still a driveway. Still no bench."
+              body={
+                <p data-booth-fume-note={stall.id}>
+                  {fume.note} {BOOTH_FUME_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-fume-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2806,6 +2834,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a wand
+          </Link>
+
+          <Link
+            href={stallFumePath(stall.slug)}
+            data-booth-fume-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a fume
           </Link>
 
           <Link
