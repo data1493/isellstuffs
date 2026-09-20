@@ -627,6 +627,12 @@ import {
   subscribePink,
 } from "@/lib/listing-pink";
 import {
+  canTapeDarn,
+  isListingDarnOverlay,
+  readDarnListingIds,
+  subscribeDarn,
+} from "@/lib/listing-darn";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -981,6 +987,7 @@ import {
   listingSergeWritePath,
   listingFellWritePath,
   listingPinkWritePath,
+  listingDarnWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1217,6 +1224,7 @@ export function DeskBoard({
   const [sergeIds, setSergeIds] = useState<string[]>([]);
   const [fellIds, setFellIds] = useState<string[]>([]);
   const [pinkIds, setPinkIds] = useState<string[]>([]);
+  const [darnIds, setDarnIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
@@ -1382,6 +1390,7 @@ export function DeskBoard({
       setSergeIds(readSergeListingIds());
       setFellIds(readFellListingIds());
       setPinkIds(readPinkListingIds());
+      setDarnIds(readDarnListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
@@ -1536,6 +1545,7 @@ export function DeskBoard({
     const unsubSerge = subscribeSerge(apply);
     const unsubFell = subscribeFell(apply);
     const unsubPink = subscribePink(apply);
+    const unsubDarn = subscribeDarn(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
@@ -1700,6 +1710,7 @@ export function DeskBoard({
       unsubSerge();
       unsubFell();
       unsubPink();
+      unsubDarn();
       unsubPeen();
       unsubGlaze();
       unsubPickle();
@@ -4474,6 +4485,37 @@ export function DeskBoard({
                             {isListingPinkOverlay(listing.id, pinkIds)
                               ? "Leave the zigzag"
                               : "I will not pink it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDarn(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDarnWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDarnOverlay(listing.id, darnIds)
+                                ? "open"
+                                : "darn"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDarnOverlay(listing.id, darnIds)
+                              ? "Leave the hole"
+                              : "I will not darn it"}
                           </button>
                         </form>
                       ) : null}

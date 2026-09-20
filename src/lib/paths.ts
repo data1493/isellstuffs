@@ -1538,6 +1538,14 @@ export function listingPinkWritePath() {
   return "/listings/pink";
 }
 
+export function listingDarnPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/darn`;
+}
+
+export function listingDarnWritePath() {
+  return "/listings/darn";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }
