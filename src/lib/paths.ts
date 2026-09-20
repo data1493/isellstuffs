@@ -1370,6 +1370,14 @@ export function listingBslnWritePath() {
   return "/listings/bsln";
 }
 
+export function listingOpbdPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/opbd`;
+}
+
+export function listingOpbdWritePath() {
+  return "/listings/opbd";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
