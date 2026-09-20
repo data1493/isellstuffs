@@ -1005,6 +1005,12 @@ import {
   subscribeFlycut,
 } from "@/lib/listing-flycut";
 import {
+  canTapeDress,
+  isListingDressOverlay,
+  readDressListingIds,
+  subscribeDress,
+} from "@/lib/listing-dress";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1471,6 +1477,7 @@ import {
   listingTrepanWritePath,
   listingSpotfaceWritePath,
   listingFlycutWritePath,
+  listingDressWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1782,6 +1789,7 @@ export function DeskBoard({
   const [trepanIds, setTrepanIds] = useState<string[]>([]);
   const [spotfaceIds, setSpotfaceIds] = useState<string[]>([]);
   const [flycutIds, setFlycutIds] = useState<string[]>([]);
+  const [dressIds, setDressIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2018,6 +2026,7 @@ export function DeskBoard({
       setTrepanIds(readTrepanListingIds());
       setSpotfaceIds(readSpotfaceListingIds());
       setFlycutIds(readFlycutListingIds());
+      setDressIds(readDressListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2243,6 +2252,7 @@ export function DeskBoard({
     const unsubTrepan = subscribeTrepan(apply);
     const unsubSpotface = subscribeSpotface(apply);
     const unsubFlycut = subscribeFlycut(apply);
+    const unsubDress = subscribeDress(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2478,6 +2488,7 @@ export function DeskBoard({
       unsubTrepan();
       unsubSpotface();
       unsubFlycut();
+      unsubDress();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5317,6 +5328,37 @@ export function DeskBoard({
                             {isListingFlycutOverlay(listing.id, flycutIds)
                               ? "Leave the glass"
                               : "I will not flycut it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDress(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDressWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDressOverlay(listing.id, dressIds)
+                                ? "open"
+                                : "dress"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingDressOverlay(listing.id, dressIds)
+                              ? "Leave the glass"
+                              : "I will not dress it"}
                           </button>
                         </form>
                       ) : null}

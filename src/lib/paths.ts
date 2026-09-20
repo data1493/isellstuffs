@@ -1818,6 +1818,14 @@ export function listingFlycutWritePath() {
   return "/listings/flycut";
 }
 
+export function listingDressPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dress`;
+}
+
+export function listingDressWritePath() {
+  return "/listings/dress";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
