@@ -1474,6 +1474,14 @@ export function listingLoomWritePath() {
   return "/listings/loom";
 }
 
+export function listingShaperPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/shaper`;
+}
+
+export function listingShaperWritePath() {
+  return "/listings/shaper";
+}
+
 export function listingTemperPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/temper`;
 }

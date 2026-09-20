@@ -807,6 +807,12 @@ import {
   subscribeCube,
 } from "@/lib/listing-cube";
 import {
+  canTapeShaper,
+  isListingShaperOverlay,
+  readShaperListingIds,
+  subscribeShaper,
+} from "@/lib/listing-shaper";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -997,6 +1003,7 @@ import {
   listingShieldWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
+  listingShaperWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1244,6 +1251,7 @@ export function DeskBoard({
   const [registerIds, setRegisterIds] = useState<string[]>([]);
   const [grainIds, setGrainIds] = useState<string[]>([]);
   const [cubeIds, setCubeIds] = useState<string[]>([]);
+  const [shaperIds, setShaperIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1406,6 +1414,7 @@ export function DeskBoard({
       setRegisterIds(readRegisterListingIds());
       setGrainIds(readGrainListingIds());
       setCubeIds(readCubeListingIds());
+      setShaperIds(readShaperListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1557,6 +1566,7 @@ export function DeskBoard({
     const unsubRegister = subscribeRegister(apply);
     const unsubGrain = subscribeGrain(apply);
     const unsubCube = subscribeCube(apply);
+    const unsubShaper = subscribeShaper(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1718,6 +1728,7 @@ export function DeskBoard({
       unsubRegister();
       unsubGrain();
       unsubCube();
+      unsubShaper();
     };
   }, [listings, stall.id]);
 
@@ -5154,6 +5165,37 @@ export function DeskBoard({
                             {isListingCubeOverlay(listing.id, cubeIds)
                               ? "Leave the three looks"
                               : "I will not cube them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeShaper(listing) ? (
+                        <form
+                          method="post"
+                          action={listingShaperWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingShaperOverlay(listing.id, shaperIds)
+                                ? "open"
+                                : "shaper"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingShaperOverlay(listing.id, shaperIds)
+                              ? "Leave the looks"
+                              : "I will not shaper them"}
                           </button>
                         </form>
                       ) : null}
