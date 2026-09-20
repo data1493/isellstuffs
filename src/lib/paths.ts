@@ -1602,6 +1602,14 @@ export function listingPleatWritePath() {
   return "/listings/pleat";
 }
 
+export function listingNotchPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/notch`;
+}
+
+export function listingNotchWritePath() {
+  return "/listings/notch";
+}
+
 export function listingTrapPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/trap`;
 }

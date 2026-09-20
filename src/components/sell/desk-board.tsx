@@ -651,6 +651,12 @@ import {
   subscribePleat,
 } from "@/lib/listing-pleat";
 import {
+  canTapeNotch,
+  isListingNotchOverlay,
+  readNotchListingIds,
+  subscribeNotch,
+} from "@/lib/listing-notch";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -1051,6 +1057,7 @@ import {
   listingPinkWritePath,
   listingDarnWritePath,
   listingPleatWritePath,
+  listingNotchWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1298,6 +1305,7 @@ export function DeskBoard({
   const [pinkIds, setPinkIds] = useState<string[]>([]);
   const [darnIds, setDarnIds] = useState<string[]>([]);
   const [pleatIds, setPleatIds] = useState<string[]>([]);
+  const [notchIds, setNotchIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
@@ -1474,6 +1482,7 @@ export function DeskBoard({
       setPinkIds(readPinkListingIds());
       setDarnIds(readDarnListingIds());
       setPleatIds(readPleatListingIds());
+      setNotchIds(readNotchListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
@@ -1639,6 +1648,7 @@ export function DeskBoard({
     const unsubPink = subscribePink(apply);
     const unsubDarn = subscribeDarn(apply);
     const unsubPleat = subscribePleat(apply);
+    const unsubNotch = subscribeNotch(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
@@ -1814,6 +1824,7 @@ export function DeskBoard({
       unsubPink();
       unsubDarn();
       unsubPleat();
+      unsubNotch();
       unsubPeen();
       unsubGlaze();
       unsubPickle();
@@ -4843,6 +4854,37 @@ export function DeskBoard({
                             {isListingPleatOverlay(listing.id, pleatIds)
                               ? "Leave the front"
                               : "I will not pleat it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeNotch(listing) ? (
+                        <form
+                          method="post"
+                          action={listingNotchWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingNotchOverlay(listing.id, notchIds)
+                                ? "open"
+                                : "notch"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingNotchOverlay(listing.id, notchIds)
+                              ? "Leave the pits"
+                              : "I will not notch it"}
                           </button>
                         </form>
                       ) : null}
