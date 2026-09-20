@@ -441,6 +441,13 @@ import {
   stallStropPath,
 } from "@/lib/booth-strop";
 import {
+  BOOTH_DRIFT_COOKIE_NAME,
+  BOOTH_DRIFT_PAPER_LINE,
+  boothDriftFor,
+  parseBoothDrift,
+  stallDriftPath,
+} from "@/lib/booth-drift";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -800,6 +807,10 @@ export default async function StallPage({
   const strop = boothStropFor(
     stall.id,
     parseBoothStrop(jar.get(BOOTH_STROP_COOKIE_NAME)?.value),
+  );
+  const drift = boothDriftFor(
+    stall.id,
+    parseBoothDrift(jar.get(BOOTH_DRIFT_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1926,6 +1937,23 @@ export default async function StallPage({
             <p data-booth-strop-empty={stall.id} hidden />
           )}
 
+          {drift ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a drift"
+              title="Still a driveway. Still a crack."
+              body={
+                <p data-booth-drift-note={stall.id}>
+                  {drift.note} {BOOTH_DRIFT_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-drift-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2446,6 +2474,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a strop
+          </Link>
+
+          <Link
+            href={stallDriftPath(stall.slug)}
+            data-booth-drift-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a drift
           </Link>
 
           <Link

@@ -85,6 +85,7 @@ export function LotBoothCard({
   malletNote,
   snipsNote,
   stropNote,
+  driftNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -152,6 +153,7 @@ export function LotBoothCard({
   malletNote?: string;
   snipsNote?: string;
   stropNote?: string;
+  driftNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -814,6 +816,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-strop-empty={stall.id} hidden />
+          )}
+          {driftNote ? (
+            <p
+              data-booth-drift-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a drift. {driftNote}
+            </p>
+          ) : (
+            <p data-booth-drift-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

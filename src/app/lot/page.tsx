@@ -305,6 +305,11 @@ import {
   parseBoothStrop,
 } from "@/lib/booth-strop";
 import {
+  BOOTH_DRIFT_COOKIE_NAME,
+  BOOTH_DRIFT_MIRROR_SCRIPT,
+  parseBoothDrift,
+} from "@/lib/booth-drift";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -412,6 +417,7 @@ export default async function LotPage() {
   const malletMap = parseBoothMallet(jar.get(BOOTH_MALLET_COOKIE_NAME)?.value);
   const snipsMap = parseBoothSnips(jar.get(BOOTH_SNIPS_COOKIE_NAME)?.value);
   const stropMap = parseBoothStrop(jar.get(BOOTH_STROP_COOKIE_NAME)?.value);
+  const driftMap = parseBoothDrift(jar.get(BOOTH_DRIFT_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -484,6 +490,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_MALLET_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SNIPS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STROP_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -557,6 +564,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_MALLET_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SNIPS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STROP_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -681,6 +689,7 @@ export default async function LotPage() {
                     malletNote={malletMap[row.stall.id]?.note}
                     snipsNote={snipsMap[row.stall.id]?.note}
                     stropNote={stropMap[row.stall.id]?.note}
+                    driftNote={driftMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -770,6 +779,7 @@ export default async function LotPage() {
                     malletNote={malletMap[row.stall.id]?.note}
                     snipsNote={snipsMap[row.stall.id]?.note}
                     stropNote={stropMap[row.stall.id]?.note}
+                    driftNote={driftMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
