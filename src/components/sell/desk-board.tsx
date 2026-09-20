@@ -1491,6 +1491,12 @@ import {
   subscribeOpbd,
 } from "@/lib/listing-opbd";
 import {
+  canTapeLtsh,
+  isListingLtshOverlay,
+  readLtshListingIds,
+  subscribeLtsh,
+} from "@/lib/listing-ltsh";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1771,6 +1777,7 @@ import {
   listingHmtxWritePath,
   listingBslnWritePath,
   listingOpbdWritePath,
+  listingLtshWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -2070,6 +2077,7 @@ export function DeskBoard({
   const [hmtxIds, setHmtxIds] = useState<string[]>([]);
   const [bslnIds, setBslnIds] = useState<string[]>([]);
   const [opbdIds, setOpbdIds] = useState<string[]>([]);
+  const [ltshIds, setLtshIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2339,6 +2347,7 @@ export function DeskBoard({
       setHmtxIds(readHmtxListingIds());
       setBslnIds(readBslnListingIds());
       setOpbdIds(readOpbdListingIds());
+      setLtshIds(readLtshListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2597,6 +2606,7 @@ export function DeskBoard({
     const unsubHmtx = subscribeHmtx(apply);
     const unsubBsln = subscribeBsln(apply);
     const unsubOpbd = subscribeOpbd(apply);
+    const unsubLtsh = subscribeLtsh(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2865,6 +2875,7 @@ export function DeskBoard({
       unsubHmtx();
       unsubBsln();
       unsubOpbd();
+      unsubLtsh();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -10299,6 +10310,37 @@ export function DeskBoard({
                             {isListingOpbdOverlay(listing.id, opbdIds)
                               ? "Leave the bounds"
                               : "I will not opbd it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLtsh(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLtshWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLtshOverlay(listing.id, ltshIds)
+                                ? "open"
+                                : "ltsh"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLtshOverlay(listing.id, ltshIds)
+                              ? "Leave the threshold"
+                              : "I will not ltsh it"}
                           </button>
                         </form>
                       ) : null}

@@ -308,6 +308,7 @@ import { ListingCvtNotice } from "@/components/listing-cvt-notice";
 import { ListingHmtxNotice } from "@/components/listing-hmtx-notice";
 import { ListingBslnNotice } from "@/components/listing-bsln-notice";
 import { ListingOpbdNotice } from "@/components/listing-opbd-notice";
+import { ListingLtshNotice } from "@/components/listing-ltsh-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -628,6 +629,7 @@ import {
   listingHmtxPath,
   listingBslnPath,
   listingOpbdPath,
+  listingLtshPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -969,6 +971,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "dl-booth-font" ? (
                 <ListingOpbdNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "dl-booth-font" ? (
+                <ListingLtshNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -3252,6 +3257,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not opbd it
+                    </Link>
+                  ) : null}
+                  {listing.id === "dl-booth-font" ? (
+                    <Link
+                      href={listingLtshPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not ltsh it
                     </Link>
                   ) : null}
                   <Link
