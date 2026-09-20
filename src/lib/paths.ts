@@ -1290,6 +1290,14 @@ export function listingOverburnWritePath() {
   return "/listings/overburn";
 }
 
+export function listingFettlePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fettle`;
+}
+
+export function listingFettleWritePath() {
+  return "/listings/fettle";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

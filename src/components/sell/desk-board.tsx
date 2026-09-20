@@ -603,6 +603,12 @@ import {
   subscribePickle,
 } from "@/lib/listing-pickle";
 import {
+  canTapeFettle,
+  isListingFettleOverlay,
+  readFettleListingIds,
+  subscribeFettle,
+} from "@/lib/listing-fettle";
+import {
   canTapePuck,
   isListingPuckOverlay,
   readPuckListingIds,
@@ -877,6 +883,7 @@ import {
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
+  listingFettleWritePath,
   listingPuckWritePath,
   listingHoneWritePath,
   listingRinseWritePath,
@@ -1094,6 +1101,7 @@ export function DeskBoard({
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
+  const [fettleIds, setFettleIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [rinseIds, setRinseIds] = useState<string[]>([]);
@@ -1242,6 +1250,7 @@ export function DeskBoard({
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
+      setFettleIds(readFettleListingIds());
       setPuckIds(readPuckListingIds());
       setHoneIds(readHoneListingIds());
       setRinseIds(readRinseListingIds());
@@ -1379,6 +1388,7 @@ export function DeskBoard({
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
+    const unsubFettle = subscribeFettle(apply);
     const unsubPuck = subscribePuck(apply);
     const unsubHone = subscribeHone(apply);
     const unsubRinse = subscribeRinse(apply);
@@ -1526,6 +1536,7 @@ export function DeskBoard({
       unsubPeen();
       unsubGlaze();
       unsubPickle();
+      unsubFettle();
       unsubPuck();
       unsubHone();
       unsubRinse();
@@ -2923,6 +2934,37 @@ export function DeskBoard({
                             {isListingPickleOverlay(listing.id, pickleIds)
                               ? "Leave the craze"
                               : "I will not pickle it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFettle(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFettleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFettleOverlay(listing.id, fettleIds)
+                                ? "open"
+                                : "fettle"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFettleOverlay(listing.id, fettleIds)
+                              ? "Leave the rim"
+                              : "I will not fettle it"}
                           </button>
                         </form>
                       ) : null}

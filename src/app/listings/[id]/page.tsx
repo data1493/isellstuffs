@@ -150,6 +150,7 @@ import { ListingFellNotice } from "@/components/listing-fell-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
+import { ListingFettleNotice } from "@/components/listing-fettle-notice";
 import { ListingPuckNotice } from "@/components/listing-puck-notice";
 import { ListingHoneNotice } from "@/components/listing-hone-notice";
 import { ListingRinseNotice } from "@/components/listing-rinse-notice";
@@ -356,6 +357,7 @@ import {
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
+  listingFettlePath,
   listingPuckPath,
   listingHonePath,
   listingRinsePath,
@@ -762,6 +764,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPeenNotice listingId={listing.id} /> : null}
               {physical ? <ListingGlazeNotice listingId={listing.id} /> : null}
               {physical ? <ListingPickleNotice listingId={listing.id} /> : null}
+              {physical ? <ListingFettleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
               {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
 
@@ -1498,6 +1501,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not pickle it
+                  </Link>
+                  <Link
+                    href={listingFettlePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not fettle it
                   </Link>
                   <Link
                     href={listingBevelPath(listing.id)}
