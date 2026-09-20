@@ -723,6 +723,12 @@ import {
   subscribePinch,
 } from "@/lib/listing-pinch";
 import {
+  canTapeErase,
+  isListingEraseOverlay,
+  readEraseListingIds,
+  subscribeErase,
+} from "@/lib/listing-erase";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -1041,6 +1047,7 @@ import {
   listingPancakeWritePath,
   listingRecaseWritePath,
   listingPinchWritePath,
+  listingEraseWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
   listingTemperWritePath,
@@ -1284,6 +1291,7 @@ export function DeskBoard({
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
   const [pinchIds, setPinchIds] = useState<string[]>([]);
+  const [eraseIds, setEraseIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
   const [temperIds, setTemperIds] = useState<string[]>([]);
@@ -1456,6 +1464,7 @@ export function DeskBoard({
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
       setPinchIds(readPinchListingIds());
+      setEraseIds(readEraseListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
       setTemperIds(readTemperListingIds());
@@ -1617,6 +1626,7 @@ export function DeskBoard({
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
     const unsubPinch = subscribePinch(apply);
+    const unsubErase = subscribeErase(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
     const unsubTemper = subscribeTemper(apply);
@@ -1788,6 +1798,7 @@ export function DeskBoard({
       unsubPancake();
       unsubRecase();
       unsubPinch();
+      unsubErase();
       unsubFlux();
       unsubLoom();
       unsubTemper();
@@ -3590,6 +3601,37 @@ export function DeskBoard({
                             {isListingPinchOverlay(listing.id, pinchIds)
                               ? "Leave the hiss"
                               : "I will not pinch it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeErase(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEraseWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEraseOverlay(listing.id, eraseIds)
+                                ? "open"
+                                : "erase"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingEraseOverlay(listing.id, eraseIds)
+                              ? "Leave the radio edit"
+                              : "I will not erase it"}
                           </button>
                         </form>
                       ) : null}

@@ -1482,6 +1482,14 @@ export function listingPinchWritePath() {
   return "/listings/pinch";
 }
 
+export function listingErasePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/erase`;
+}
+
+export function listingEraseWritePath() {
+  return "/listings/erase";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
