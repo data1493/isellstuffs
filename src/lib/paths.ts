@@ -1290,6 +1290,14 @@ export function listingGridfitWritePath() {
   return "/listings/gridfit";
 }
 
+export function listingGaspPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gasp`;
+}
+
+export function listingGaspWritePath() {
+  return "/listings/gasp";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

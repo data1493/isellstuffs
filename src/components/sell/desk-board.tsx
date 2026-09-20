@@ -1137,6 +1137,12 @@ import {
   subscribeGridfit,
 } from "@/lib/listing-gridfit";
 import {
+  canTapeGasp,
+  isListingGaspOverlay,
+  readGaspListingIds,
+  subscribeGasp,
+} from "@/lib/listing-gasp";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1358,6 +1364,7 @@ import {
   listingOutlineWritePath,
   listingRasterWritePath,
   listingGridfitWritePath,
+  listingGaspWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1605,6 +1612,7 @@ export function DeskBoard({
   const [outlineIds, setOutlineIds] = useState<string[]>([]);
   const [rasterIds, setRasterIds] = useState<string[]>([]);
   const [gridfitIds, setGridfitIds] = useState<string[]>([]);
+  const [gaspIds, setGaspIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
@@ -1815,6 +1823,7 @@ export function DeskBoard({
       setOutlineIds(readOutlineListingIds());
       setRasterIds(readRasterListingIds());
       setGridfitIds(readGridfitListingIds());
+      setGaspIds(readGaspListingIds());
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
       setPreflightIds(readPreflightListingIds());
@@ -2014,6 +2023,7 @@ export function DeskBoard({
     const unsubOutline = subscribeOutline(apply);
     const unsubRaster = subscribeRaster(apply);
     const unsubGridfit = subscribeGridfit(apply);
+    const unsubGasp = subscribeGasp(apply);
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
     const unsubPreflight = subscribePreflight(apply);
@@ -2223,6 +2233,7 @@ export function DeskBoard({
       unsubOutline();
       unsubRaster();
       unsubGridfit();
+      unsubGasp();
       unsubPaginate();
       unsubCollate();
       unsubPreflight();
@@ -7883,6 +7894,37 @@ export function DeskBoard({
                             {isListingGridfitOverlay(listing.id, gridfitIds)
                               ? "Leave the map"
                               : "I will not gridfit it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGasp(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGaspWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGaspOverlay(listing.id, gaspIds)
+                                ? "open"
+                                : "gasp"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGaspOverlay(listing.id, gaspIds)
+                              ? "Leave the map"
+                              : "I will not gasp it"}
                           </button>
                         </form>
                       ) : null}
