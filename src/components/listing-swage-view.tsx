@@ -10,8 +10,9 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { exploreHref } from "@/lib/browse";
 import { formatMoney, type Listing } from "@/lib/commerce";
 import {
+  SWAGE_BENT_LINE,
   SWAGE_LEAVE_LINE,
-  SWAGE_LIGHTS_LINE,
+  SWAGE_METAL_LINE,
   SWAGE_MIRROR_SCRIPT,
   SWAGE_NOTICE_TITLE,
   SWAGE_REFUSE_COPY,
@@ -20,7 +21,6 @@ import {
   SWAGE_TABLE_LINE,
   SWAGE_TOTE_LINE,
   SWAGE_WALK_LINE,
-  SWAGE_WOBBLE_LINE,
 } from "@/lib/listing-swage";
 import { listingPath, listingSwageWritePath, stallPath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,7 @@ export type SwageViewKind =
   | "file-gone"
   | "missing"
   | "chair"
+  | "mug"
   | "lid"
   | "owned";
 
@@ -69,6 +70,7 @@ function SwageRefused({ sheet }: { sheet: SwageViewSheet }) {
   const gift = sheet.kind === "gift";
   const file = sheet.kind === "digital" || sheet.kind === "file-gone";
   const chair = sheet.kind === "chair";
+  const mug = sheet.kind === "mug";
   const lid = sheet.kind === "lid";
   const owned = sheet.kind === "owned";
 
@@ -82,12 +84,14 @@ function SwageRefused({ sheet }: { sheet: SwageViewSheet }) {
             : file
               ? "Files stay in the folder"
               : chair
-                ? "A chair is not a neck"
-                : lid
-                  ? "A lid is not a neck"
-                  : owned
-                    ? "Another note already owns that one"
-                    : "Walked"
+                ? "A chair is not a whisk"
+                : mug
+                  ? "A mug is not a swage"
+                  : lid
+                    ? "A lid is not a swage"
+                    : owned
+                      ? "Another note already owns that one"
+                      : "Walked"
         }
         title={SWAGE_REFUSE_COPY}
         body={
@@ -99,11 +103,11 @@ function SwageRefused({ sheet }: { sheet: SwageViewSheet }) {
                   {sheet.stallName ? <> · {sheet.stallName}</> : null}
                 </>
               ) : (
-                "A swage note is for the wobbly lamp on the table, not a PDF and not a gift code."
+                "A swage note is for the balloon whisk on the table, not a PDF and not a gift code."
               )}
             </p>
             <p>
-              {SWAGE_TABLE_LINE} {SWAGE_WOBBLE_LINE} {SWAGE_LIGHTS_LINE}{" "}
+              {SWAGE_TABLE_LINE} {SWAGE_BENT_LINE} {SWAGE_METAL_LINE}{" "}
               {SWAGE_STILL_LINE}
             </p>
           </div>
@@ -165,7 +169,7 @@ function SwageForm({
       <p className="text-sm leading-6 text-muted-foreground">
         {isSwage
           ? "Clear the tape. Status and the tote stay put."
-          : `${SWAGE_STAYS_LINE} ${SWAGE_WOBBLE_LINE} ${SWAGE_LIGHTS_LINE} ${SWAGE_STILL_LINE} ${SWAGE_TOTE_LINE}`}
+          : `${SWAGE_STAYS_LINE} ${SWAGE_BENT_LINE} ${SWAGE_METAL_LINE} ${SWAGE_STILL_LINE} ${SWAGE_TOTE_LINE}`}
       </p>
     </form>
   );
@@ -215,7 +219,7 @@ export function ListingSwageView({
             {sheet.isSwage ? SWAGE_NOTICE_TITLE : SWAGE_TABLE_LINE}
           </h1>
           <p className="text-base leading-7 text-muted-foreground">
-            {SWAGE_TABLE_LINE} {SWAGE_WOBBLE_LINE} {SWAGE_LIGHTS_LINE}{" "}
+            {SWAGE_TABLE_LINE} {SWAGE_BENT_LINE} {SWAGE_METAL_LINE}{" "}
             {SWAGE_WALK_LINE} {SWAGE_STAYS_LINE} {SWAGE_STILL_LINE}{" "}
             {SWAGE_TOTE_LINE}
           </p>
@@ -272,7 +276,7 @@ export function ListingSwageView({
           <p className="mt-5 text-sm leading-6 text-foreground">
             {sheet.isSwage
               ? "Still for sale. Seller taped the swage note. Status stays available. Not a hardware shop."
-              : "Still wobbly. Still lights. Tape it when walkers still want the neck squeezed."}
+              : "Still bent. Still metal. Tape it when walkers still want the tines die-formed."}
           </p>
         </article>
 
@@ -284,7 +288,7 @@ export function ListingSwageView({
               titleAs="h2"
               eyebrow="I will not swage it"
               title={SWAGE_NOTICE_TITLE}
-              body={`${SWAGE_STILL_LINE} avail=open still lists this lamp.`}
+              body={`${SWAGE_STILL_LINE} avail=open still lists this whisk.`}
             />
           ) : (
             <ListingSwageEmpty listingId={sheet.listingId} />

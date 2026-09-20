@@ -5258,7 +5258,7 @@ export function DeskBoard({
                             className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
                           >
                             {isListingSwageOverlay(listing.id, swageIds)
-                              ? "Leave the neck"
+                              ? "Leave the tines"
                               : "I will not swage it"}
                           </button>
                         </form>

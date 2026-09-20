@@ -3,13 +3,13 @@ import Link from "next/link";
 
 import { MallNotice } from "@/components/mall-notice";
 import {
+  SWAGE_BENT_LINE,
   SWAGE_COOKIE_NAME,
-  SWAGE_LIGHTS_LINE,
+  SWAGE_METAL_LINE,
   SWAGE_NOTICE_TITLE,
   SWAGE_STILL_LINE,
   SWAGE_TABLE_LINE,
   SWAGE_TOTE_LINE,
-  SWAGE_WOBBLE_LINE,
   isListingSwageOverlay,
   parseSwageListingIds,
 } from "@/lib/listing-swage";
@@ -36,7 +36,7 @@ export async function ListingSwageNotice({
         titleAs="h2"
         eyebrow={SWAGE_TABLE_LINE}
         title={SWAGE_NOTICE_TITLE}
-        body={`${SWAGE_WOBBLE_LINE} ${SWAGE_LIGHTS_LINE} ${SWAGE_STILL_LINE} ${SWAGE_TOTE_LINE}`}
+        body={`${SWAGE_BENT_LINE} ${SWAGE_METAL_LINE} ${SWAGE_STILL_LINE} ${SWAGE_TOTE_LINE}`}
       >
         <Link
           href={listingSwagePath(listingId)}

@@ -1,12 +1,12 @@
 /**
- * I will not swage it — the lamp stays wobbly and it still lights.
- * Still tote.
+ * I will not swage it — the whisk stays bent and metal. Still tote.
  *
- * Bush is sleeve-the-pipe. Rivet is pin-the-shade. Grommet is
- * shade-hole. Chase is queued. Walkers still want Tuesday to swage
- * the pipe, or “squeeze the neck so the harp seats.” I will not
- * swage it. Still wobbly. Still lights. Still for sale. Not bush.
- * Not rivet. Not a shop. Not chase.
+ * Quench is dunk-the-wires. Planish is hammer-smooth. Braze is
+ * join-the-splay. Joggle is offset-the-tines. Upset is thicken-the-
+ * ends. Walkers still want Sink Drawer to swage it, or “die-form
+ * the tines so the balloon reads shop-round without a shop quench.”
+ * I will not swage it. Still bent. Still metal. Still for sale.
+ * Not quench. Not planish. Not a shop. Not braze.
  *
  * Shape: JSON array of `Listing.id` strings from `@/lib/commerce`.
  * localStorage key `iss:swage-listing-ids` is the client swage set.
@@ -16,11 +16,11 @@
  * object — that literal 500s the PDP when `.includes` runs.
  *
  * Still baggable. Never rewrite `price`, `status`, or `cartEligible`.
- * Never write bush, rivet, grommet, chase, collar, twist, shim,
- * socket, gift, buy, digital eligibility, or tote keys.
- * Host is `ysk-wobbly-lamp` only. Chair, junk PDF, lid, gift, zine,
- * and listings already owned by another overlay stay off.
- * Fixture `sold` / `file-gone` rows stay as they are.
+ * Never write quench, planish, braze, joggle, upset, truss, peen,
+ * die, former, reducer, gift, buy, digital eligibility, or tote keys.
+ * Host is `kdr-bent-whisk` only. Mug, lid, recipes, gift, zine, and
+ * listings already owned by another overlay stay off. Fixture
+ * `sold` / `file-gone` rows stay as they are.
  */
 import {
   isGiftListing,
@@ -32,10 +32,13 @@ export const SWAGE_STORAGE_KEY = "iss:swage-listing-ids";
 export const SWAGE_COOKIE_NAME = "iss-swage-listing-ids";
 export const SWAGE_CHANGED_EVENT = "iss:swage-changed";
 
-export const SWAGE_HOST_ID = "ysk-wobbly-lamp";
-export const SWAGE_CHAIR_ID = "ysk-folding-chair";
+export const SWAGE_HOST_ID = "kdr-bent-whisk";
+export const SWAGE_MUG_ID = "kdr-chipped-mug";
 export const SWAGE_LID_ID = "kdr-lid-no-pot";
-export const SWAGE_JUNK_ID = "dl-junk-pricing-pdf";
+export const SWAGE_RECIPES_ID = "dl-drawer-recipes";
+export const SWAGE_ZINE_ID = "dl-stain-zine";
+export const SWAGE_CHAIR_ID = "ysk-folding-chair";
+export const SWAGE_GIFT_ID = "dl-mall-gift-card";
 
 /** Exclusive hosts of other listing overlays — stay off this cookie. */
 export const SWAGE_OWNED_IDS = [
@@ -44,34 +47,32 @@ export const SWAGE_OWNED_IDS = [
   "gtk-cable-drawer",
   "gtk-game-boy",
   "ysk-burned-cdr",
+  "ysk-wobbly-lamp",
   "dl-booth-font",
   "mdb-mixtape-93",
   "mdb-jewel-stack",
   "mdb-scratched-lp",
-  "kdr-bent-whisk",
-  "kdr-chipped-mug",
-  "kdr-lid-no-pot",
-  "dl-drawer-recipes",
   "dl-junk-pricing-pdf",
   "dl-sample-pack",
   "dl-camera-luts",
+  "dl-drawer-recipes",
 ] as const;
 
 export const SWAGE_REFUSE_COPY = "That one does not take a swage note.";
 export const SWAGE_TABLE_LINE = "I will not swage it.";
-export const SWAGE_WOBBLE_LINE = "Still wobbly.";
-export const SWAGE_LIGHTS_LINE = "Still lights.";
+export const SWAGE_BENT_LINE = "Still bent.";
+export const SWAGE_METAL_LINE = "Still metal.";
 export const SWAGE_NOTICE_TITLE =
-  "I will not swage it. Still wobbly. Still lights.";
+  "I will not swage it. Still bent. Still metal.";
 export const SWAGE_WALK_LINE =
-  "Walkers still want Tuesday to swage the pipe, or squeeze the neck so the harp seats.";
+  "Walkers still want Sink Drawer to swage it, or die-form the tines so the balloon reads shop-round without a shop quench.";
 export const SWAGE_STAYS_LINE =
-  "This is the swage note. I will not swage it. Still wobbly. Still lights.";
+  "This is the swage note. I will not swage it. Still bent. Still metal.";
 export const SWAGE_STILL_LINE =
-  "Still tote. Not bush. Not rivet. Not a shop. Not chase.";
+  "Still tote. Not quench. Not planish. Not a shop. Not braze.";
 export const SWAGE_TOTE_LINE = "Add to tote still works.";
 export const SWAGE_EMPTY_LINE = "Nobody taped a swage note yet.";
-export const SWAGE_LEAVE_LINE = "Leave the neck";
+export const SWAGE_LEAVE_LINE = "Leave the tines";
 
 const SERVER_STORE = Symbol.for("iss.swage-listing-ids");
 
@@ -224,19 +225,23 @@ export function isListingSwageOverlay(
   return listingIds.includes(listingId);
 }
 
-function isChairListing(listing: Listing) {
-  return listing.id === SWAGE_CHAIR_ID;
+function isMugListing(listing: Listing) {
+  return listing.id === SWAGE_MUG_ID;
 }
 
 function isLidListing(listing: Listing) {
   return listing.id === SWAGE_LID_ID;
 }
 
+function isChairListing(listing: Listing) {
+  return listing.id === SWAGE_CHAIR_ID;
+}
+
 function isOwnedListing(listing: Listing) {
   return ownedSet.has(listing.id);
 }
 
-/** Host lamp only. Chair, lid, overlay-owned rows, digital, gift, sold, and file-gone stay off. */
+/** Host whisk only. Mug, lid, overlay-owned rows, digital, gift, sold, and file-gone stay off. */
 export function canTapeSwage(
   listing: Listing | undefined,
 ): listing is Listing {
@@ -264,8 +269,9 @@ export type SwageWriteReason =
   | "gift"
   | "sold"
   | "file-gone"
-  | "chair"
+  | "mug"
   | "lid"
+  | "chair"
   | "owned";
 
 function refuseSwage(
@@ -283,11 +289,14 @@ function refuseSwage(
   if (isGiftListing(listing)) {
     return "gift";
   }
+  if (isChairListing(listing)) {
+    return "chair";
+  }
   if (!isPhysicalListing(listing)) {
     return "digital";
   }
-  if (isChairListing(listing)) {
-    return "chair";
+  if (isMugListing(listing)) {
+    return "mug";
   }
   if (isLidListing(listing)) {
     return "lid";

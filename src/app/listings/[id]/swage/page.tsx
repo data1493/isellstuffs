@@ -18,6 +18,7 @@ import {
   SWAGE_CHAIR_ID,
   SWAGE_COOKIE_NAME,
   SWAGE_LID_ID,
+  SWAGE_MUG_ID,
   SWAGE_REFUSE_COPY,
   canTapeSwage,
   isListingSwageOverlay,
@@ -50,6 +51,9 @@ function sheetKind(listing: ReturnType<typeof listingById>): SwageViewKind {
   }
   if (listing.id === SWAGE_CHAIR_ID) {
     return "chair";
+  }
+  if (listing.id === SWAGE_MUG_ID) {
+    return "mug";
   }
   if (listing.id === SWAGE_LID_ID) {
     return "lid";
@@ -107,12 +111,14 @@ export async function generateMetadata({
         sheet.kind === "gift"
           ? "The gift card is at the desk. A code does not take a swage note."
           : sheet.kind === "chair"
-            ? "A chair does not take a swage note. Swage is a lamp neck."
-            : sheet.kind === "lid"
-              ? "A lid does not take a swage note. Swage is a lamp neck."
-              : sheet.kind === "owned"
-                ? "A swage note is for the wobbly lamp. Another overlay already owns that listing."
-                : "A file does not take a swage note. A swage note is for the lamp on the table.",
+            ? "A chair does not take a swage note. Swage is a whisk die."
+            : sheet.kind === "mug"
+              ? "A mug does not take a swage note. Swage is a whisk die."
+              : sheet.kind === "lid"
+                ? "A lid does not take a swage note. Swage is a whisk die."
+                : sheet.kind === "owned"
+                  ? "A swage note is for the balloon whisk. Another overlay already owns that listing."
+                  : "A file does not take a swage note. A swage note is for the whisk on the table.",
       path: listingSwagePath(id),
       robots: { index: false, follow: false },
     });
@@ -120,7 +126,7 @@ export async function generateMetadata({
 
   return shareMetadata({
     title: `I will not swage it · ${sheet.title}`,
-    description: `${sheet.priceLabel} at ${sheet.stallName}. I will not swage it. Still wobbly. Still lights. Still tote. Not bush. Not rivet. Not chase.`,
+    description: `${sheet.priceLabel} at ${sheet.stallName}. I will not swage it. Still bent. Still metal. Still tote. Not quench. Not planish. Not braze.`,
     path: listingSwagePath(id),
     robots: { index: false, follow: false },
   });

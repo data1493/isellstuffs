@@ -14,7 +14,7 @@ export function ListingSwageEmpty({ listingId }: { listingId: string }) {
         titleAs="h2"
         eyebrow="Swage not taped"
         title={SWAGE_EMPTY_LINE}
-        body={`${SWAGE_TABLE_LINE} Tape it when walkers still want the neck squeezed. It does not drop the tote or mark it sold.`}
+        body={`${SWAGE_TABLE_LINE} Tape it when walkers still want the tines die-formed. It does not drop the tote or mark it sold.`}
         actions={
           <Button
             variant="outline"
