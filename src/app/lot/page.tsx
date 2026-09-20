@@ -370,6 +370,11 @@ import {
   parseBoothProtractor,
 } from "@/lib/booth-protractor";
 import {
+  BOOTH_PREHEATER_COOKIE_NAME,
+  BOOTH_PREHEATER_MIRROR_SCRIPT,
+  parseBoothPreheater,
+} from "@/lib/booth-preheater";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -496,6 +501,9 @@ export default async function LotPage() {
   const protractorMap = parseBoothProtractor(
     jar.get(BOOTH_PROTRACTOR_COOKIE_NAME)?.value,
   );
+  const preheaterMap = parseBoothPreheater(
+    jar.get(BOOTH_PREHEATER_COOKIE_NAME)?.value,
+  );
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -584,6 +592,9 @@ export default async function LotPage() {
         />
         <script
           dangerouslySetInnerHTML={{ __html: BOOTH_PROTRACTOR_MIRROR_SCRIPT }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_PREHEATER_MIRROR_SCRIPT }}
         />
         <LotEmpty />
       </>
@@ -674,6 +685,9 @@ export default async function LotPage() {
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_PROTRACTOR_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_PREHEATER_MIRROR_SCRIPT }}
       />
       <div>
         <MallHero>
@@ -812,6 +826,7 @@ export default async function LotPage() {
                     fumeNote={fumeMap[row.stall.id]?.note}
                     torpedoNote={torpedoMap[row.stall.id]?.note}
                     protractorNote={protractorMap[row.stall.id]?.note}
+                    preheaterNote={preheaterMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -914,6 +929,7 @@ export default async function LotPage() {
                     fumeNote={fumeMap[row.stall.id]?.note}
                     torpedoNote={torpedoMap[row.stall.id]?.note}
                     protractorNote={protractorMap[row.stall.id]?.note}
+                    preheaterNote={preheaterMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

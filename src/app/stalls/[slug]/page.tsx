@@ -532,6 +532,13 @@ import {
   stallProtractorPath,
 } from "@/lib/booth-protractor";
 import {
+  BOOTH_PREHEATER_COOKIE_NAME,
+  BOOTH_PREHEATER_PAPER_LINE,
+  boothPreheaterFor,
+  parseBoothPreheater,
+  stallPreheaterPath,
+} from "@/lib/booth-preheater";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -943,6 +950,10 @@ export default async function StallPage({
   const protractor = boothProtractorFor(
     stall.id,
     parseBoothProtractor(jar.get(BOOTH_PROTRACTOR_COOKIE_NAME)?.value),
+  );
+  const preheater = boothPreheaterFor(
+    stall.id,
+    parseBoothPreheater(jar.get(BOOTH_PREHEATER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2273,6 +2284,23 @@ export default async function StallPage({
             <p data-booth-protractor-empty={stall.id} hidden />
           )}
 
+          {preheater ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a preheater"
+              title="Still a driveway. Still no bench."
+              body={
+                <p data-booth-preheater-note={stall.id}>
+                  {preheater.note} {BOOTH_PREHEATER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-preheater-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -2914,6 +2942,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a protractor
+          </Link>
+
+          <Link
+            href={stallPreheaterPath(stall.slug)}
+            data-booth-preheater-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a preheater
           </Link>
 
           <Link

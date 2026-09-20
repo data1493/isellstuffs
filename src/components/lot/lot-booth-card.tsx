@@ -98,6 +98,7 @@ export function LotBoothCard({
   fumeNote,
   torpedoNote,
   protractorNote,
+  preheaterNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -178,6 +179,7 @@ export function LotBoothCard({
   fumeNote?: string;
   torpedoNote?: string;
   protractorNote?: string;
+  preheaterNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -970,6 +972,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-protractor-empty={stall.id} hidden />
+          )}
+          {preheaterNote ? (
+            <p
+              data-booth-preheater-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a preheater. {preheaterNote}
+            </p>
+          ) : (
+            <p data-booth-preheater-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

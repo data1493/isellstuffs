@@ -1,0 +1,39 @@
+import Link from "next/link";
+
+import { MallNotice } from "@/components/mall-notice";
+import { Button } from "@/components/ui/button";
+import {
+  BOOTH_PREHEATER_EMPTY_COPY,
+  BOOTH_PREHEATER_PAPER_LINE,
+} from "@/lib/booth-preheater";
+import { stallPath } from "@/lib/paths";
+
+export function BoothPreheaterEmpty({
+  slug,
+  boothName,
+}: {
+  slug: string;
+  boothName: string;
+}) {
+  return (
+    <div data-booth-preheater-empty="">
+      <MallNotice
+        tone="empty"
+        padded={false}
+        titleAs="h2"
+        eyebrow="I don't have a preheater"
+        title={BOOTH_PREHEATER_EMPTY_COPY}
+        body={`${BOOTH_PREHEATER_PAPER_LINE} Nobody taped a preheater note on ${boothName} in this browser. Still a driveway. Still no bench.`}
+        actions={
+          <Button
+            variant="outline"
+            className="rounded-full px-5"
+            render={<Link href={stallPath(slug)} />}
+          >
+            Back to the stall
+          </Button>
+        }
+      />
+    </div>
+  );
+}

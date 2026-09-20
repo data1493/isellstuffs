@@ -2728,6 +2728,14 @@ export function stallProtractorWritePath() {
   return "/stalls/protractor";
 }
 
+export function stallPreheaterPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/preheater`;
+}
+
+export function stallPreheaterWritePath() {
+  return "/stalls/preheater";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
