@@ -783,6 +783,12 @@ import {
   subscribeErase,
 } from "@/lib/listing-erase";
 import {
+  canTapeFlutter,
+  isListingFlutterOverlay,
+  readFlutterListingIds,
+  subscribeFlutter,
+} from "@/lib/listing-flutter";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -1153,6 +1159,7 @@ import {
   listingRecaseWritePath,
   listingPinchWritePath,
   listingEraseWritePath,
+  listingFlutterWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
   listingStrainWritePath,
@@ -1414,6 +1421,7 @@ export function DeskBoard({
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
   const [pinchIds, setPinchIds] = useState<string[]>([]);
   const [eraseIds, setEraseIds] = useState<string[]>([]);
+  const [flutterIds, setFlutterIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
   const [strainIds, setStrainIds] = useState<string[]>([]);
@@ -1603,6 +1611,7 @@ export function DeskBoard({
       setRecaseIds(readRecaseListingIds());
       setPinchIds(readPinchListingIds());
       setEraseIds(readEraseListingIds());
+      setFlutterIds(readFlutterListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
       setStrainIds(readStrainListingIds());
@@ -1781,6 +1790,7 @@ export function DeskBoard({
     const unsubRecase = subscribeRecase(apply);
     const unsubPinch = subscribePinch(apply);
     const unsubErase = subscribeErase(apply);
+    const unsubFlutter = subscribeFlutter(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
     const unsubStrain = subscribeStrain(apply);
@@ -1969,6 +1979,7 @@ export function DeskBoard({
       unsubRecase();
       unsubPinch();
       unsubErase();
+      unsubFlutter();
       unsubFlux();
       unsubLoom();
       unsubStrain();
@@ -3901,6 +3912,37 @@ export function DeskBoard({
                             {isListingEraseOverlay(listing.id, eraseIds)
                               ? "Leave the radio edit"
                               : "I will not erase it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFlutter(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFlutterWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFlutterOverlay(listing.id, flutterIds)
+                                ? "open"
+                                : "flutter"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingFlutterOverlay(listing.id, flutterIds)
+                              ? "Leave the hiss"
+                              : "I will not flutter it"}
                           </button>
                         </form>
                       ) : null}

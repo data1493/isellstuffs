@@ -1530,6 +1530,14 @@ export function listingEraseWritePath() {
   return "/listings/erase";
 }
 
+export function listingFlutterPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/flutter`;
+}
+
+export function listingFlutterWritePath() {
+  return "/listings/flutter";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
