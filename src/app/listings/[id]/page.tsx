@@ -252,6 +252,7 @@ import { ListingTombstoneNotice } from "@/components/listing-tombstone-notice";
 import { ListingBillboardNotice } from "@/components/listing-billboard-notice";
 import { ListingPillowNotice } from "@/components/listing-pillow-notice";
 import { ListingDewetNotice } from "@/components/listing-dewet-notice";
+import { ListingIcicleNotice } from "@/components/listing-icicle-notice";
 import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
 import { ListingZenithNotice } from "@/components/listing-zenith-notice";
 import { ListingRetipNotice } from "@/components/listing-retip-notice";
@@ -405,6 +406,7 @@ import {
   listingBillboardPath,
   listingPillowPath,
   listingDewetPath,
+  listingIciclePath,
   listingCountersinkPath,
   listingZenithPath,
   listingRetipPath,
@@ -1168,6 +1170,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "gtk-game-boy" ? (
                 <ListingDewetNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "gtk-game-boy" ? (
+                <ListingIcicleNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
@@ -2291,6 +2296,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not dewet it
+                    </Link>
+                  ) : null}
+                  {listing.id === "gtk-game-boy" ? (
+                    <Link
+                      href={listingIciclePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not icicle it
                     </Link>
                   ) : null}
                   <Link

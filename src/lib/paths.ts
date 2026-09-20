@@ -1834,6 +1834,14 @@ export function listingDewetWritePath() {
   return "/listings/dewet";
 }
 
+export function listingIciclePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/icicle`;
+}
+
+export function listingIcicleWritePath() {
+  return "/listings/icicle";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
