@@ -414,6 +414,7 @@ import {
   listingBoldPath,
   listingVariablePath,
   listingLigaturePath,
+  listingKernPath,
   listingOutlinePath,
   listingSizePath,
   listingSmokePath,
@@ -1972,6 +1973,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not ligature it
+                  </Link>
+                  <Link
+                    href={listingKernPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not kern it
                   </Link>
                   <Link
                     href={listingOutlinePath(listing.id)}
