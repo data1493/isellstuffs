@@ -1322,6 +1322,14 @@ export function listingGamutWritePath() {
   return "/listings/gamut";
 }
 
+export function listingAtipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/atip`;
+}
+
+export function listingAtipWritePath() {
+  return "/listings/atip";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

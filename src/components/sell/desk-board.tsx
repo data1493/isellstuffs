@@ -957,6 +957,12 @@ import {
   subscribeStamper,
 } from "@/lib/listing-stamper";
 import {
+  canTapeAtip,
+  isListingAtipOverlay,
+  readAtipListingIds,
+  subscribeAtip,
+} from "@/lib/listing-atip";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -1310,6 +1316,7 @@ import {
   listingCueWritePath,
   listingPregapWritePath,
   listingStamperWritePath,
+  listingAtipWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingRecaseWritePath,
@@ -1597,6 +1604,7 @@ export function DeskBoard({
   const [cueIds, setCueIds] = useState<string[]>([]);
   const [pregapIds, setPregapIds] = useState<string[]>([]);
   const [stamperIds, setStamperIds] = useState<string[]>([]);
+  const [atipIds, setAtipIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
@@ -1811,6 +1819,7 @@ export function DeskBoard({
       setCueIds(readCueListingIds());
       setPregapIds(readPregapListingIds());
       setStamperIds(readStamperListingIds());
+      setAtipIds(readAtipListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
@@ -2014,6 +2023,7 @@ export function DeskBoard({
     const unsubCue = subscribeCue(apply);
     const unsubPregap = subscribePregap(apply);
     const unsubStamper = subscribeStamper(apply);
+    const unsubAtip = subscribeAtip(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
@@ -2227,6 +2237,7 @@ export function DeskBoard({
       unsubCue();
       unsubPregap();
       unsubStamper();
+      unsubAtip();
       unsubDolby();
       unsubPancake();
       unsubRecase();
@@ -4207,6 +4218,37 @@ export function DeskBoard({
                             {isListingStamperOverlay(listing.id, stamperIds)
                               ? "Leave the burn"
                               : "I will not stamper it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAtip(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAtipWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAtipOverlay(listing.id, atipIds)
+                                ? "open"
+                                : "atip"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingAtipOverlay(listing.id, atipIds)
+                              ? "Leave the burn"
+                              : "I will not atip it"}
                           </button>
                         </form>
                       ) : null}
