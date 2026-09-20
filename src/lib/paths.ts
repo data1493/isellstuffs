@@ -1402,6 +1402,14 @@ export function listingCueWritePath() {
   return "/listings/cue";
 }
 
+export function listingIsrcPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/isrc`;
+}
+
+export function listingIsrcWritePath() {
+  return "/listings/isrc";
+}
+
 export function listingFettlePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fettle`;
 }

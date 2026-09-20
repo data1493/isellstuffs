@@ -222,6 +222,7 @@ import { ListingZenithNotice } from "@/components/listing-zenith-notice";
 import { ListingRetipNotice } from "@/components/listing-retip-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingCueNotice } from "@/components/listing-cue-notice";
+import { ListingIsrcNotice } from "@/components/listing-isrc-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingSkiveNotice } from "@/components/listing-skive-notice";
 import { ListingEdgeNotice } from "@/components/listing-edge-notice";
@@ -477,6 +478,7 @@ import {
   listingBevelPath,
   listingOverburnPath,
   listingCuePath,
+  listingIsrcPath,
   listingTumblePath,
   listingSkivePath,
   listingEdgePath,
@@ -1039,6 +1041,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
               {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
               {physical ? <ListingCueNotice listingId={listing.id} /> : null}
+              {listing.id === "ysk-burned-cdr" ? (
+                <ListingIsrcNotice listingId={listing.id} />
+              ) : null}
               {physical ? <ListingTumbleNotice listingId={listing.id} /> : null}
               {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
               {physical ? <ListingEdgeNotice listingId={listing.id} /> : null}
@@ -2079,6 +2084,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not upset it
+                    </Link>
+                  ) : null}
+                  {listing.id === "ysk-burned-cdr" ? (
+                    <Link
+                      href={listingIsrcPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not isrc it
                     </Link>
                   ) : null}
                   {listing.id === "ysk-burned-cdr" ? (

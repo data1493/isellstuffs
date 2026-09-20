@@ -987,6 +987,12 @@ import {
   subscribeCue,
 } from "@/lib/listing-cue";
 import {
+  canTapeIsrc,
+  isListingIsrcOverlay,
+  readIsrcListingIds,
+  subscribeIsrc,
+} from "@/lib/listing-isrc";
+import {
   canTapePregap,
   isListingPregapOverlay,
   readPregapListingIds,
@@ -1372,6 +1378,7 @@ import {
   listingBevelWritePath,
   listingOverburnWritePath,
   listingCueWritePath,
+  listingIsrcWritePath,
   listingPregapWritePath,
   listingStamperWritePath,
   listingAtipWritePath,
@@ -1670,6 +1677,7 @@ export function DeskBoard({
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [cueIds, setCueIds] = useState<string[]>([]);
+  const [isrcIds, setIsrcIds] = useState<string[]>([]);
   const [pregapIds, setPregapIds] = useState<string[]>([]);
   const [stamperIds, setStamperIds] = useState<string[]>([]);
   const [atipIds, setAtipIds] = useState<string[]>([]);
@@ -1894,6 +1902,7 @@ export function DeskBoard({
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setCueIds(readCueListingIds());
+      setIsrcIds(readIsrcListingIds());
       setPregapIds(readPregapListingIds());
       setStamperIds(readStamperListingIds());
       setAtipIds(readAtipListingIds());
@@ -2107,6 +2116,7 @@ export function DeskBoard({
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubCue = subscribeCue(apply);
+    const unsubIsrc = subscribeIsrc(apply);
     const unsubPregap = subscribePregap(apply);
     const unsubStamper = subscribeStamper(apply);
     const unsubAtip = subscribeAtip(apply);
@@ -2330,6 +2340,7 @@ export function DeskBoard({
       unsubBevel();
       unsubOverburn();
       unsubCue();
+      unsubIsrc();
       unsubPregap();
       unsubStamper();
       unsubAtip();
@@ -4317,6 +4328,37 @@ export function DeskBoard({
                             {isListingCueOverlay(listing.id, cueIds)
                               ? "Leave the Sharpie"
                               : "I will not cue it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeIsrc(listing) ? (
+                        <form
+                          method="post"
+                          action={listingIsrcWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingIsrcOverlay(listing.id, isrcIds)
+                                ? "open"
+                                : "isrc"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingIsrcOverlay(listing.id, isrcIds)
+                              ? "Leave the burn"
+                              : "I will not isrc it"}
                           </button>
                         </form>
                       ) : null}
