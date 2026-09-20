@@ -645,6 +645,12 @@ import {
   subscribeSoak,
 } from "@/lib/listing-soak";
 import {
+  canTapeAcf,
+  isListingAcfOverlay,
+  readAcfListingIds,
+  subscribeAcf,
+} from "@/lib/listing-acf";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1515,6 +1521,7 @@ import {
   listingFilletWritePath,
   listingHotbarWritePath,
   listingSoakWritePath,
+  listingAcfWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1731,6 +1738,7 @@ export function DeskBoard({
   const [filletIds, setFilletIds] = useState<string[]>([]);
   const [hotbarIds, setHotbarIds] = useState<string[]>([]);
   const [soakIds, setSoakIds] = useState<string[]>([]);
+  const [acfIds, setAcfIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1969,6 +1977,7 @@ export function DeskBoard({
       setFilletIds(readFilletListingIds());
       setHotbarIds(readHotbarListingIds());
       setSoakIds(readSoakListingIds());
+      setAcfIds(readAcfListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2196,6 +2205,7 @@ export function DeskBoard({
     const unsubFillet = subscribeFillet(apply);
     const unsubHotbar = subscribeHotbar(apply);
     const unsubSoak = subscribeSoak(apply);
+    const unsubAcf = subscribeAcf(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2433,6 +2443,7 @@ export function DeskBoard({
       unsubFillet();
       unsubHotbar();
       unsubSoak();
+      unsubAcf();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -7106,6 +7117,37 @@ export function DeskBoard({
                             {isListingSoakOverlay(listing.id, soakIds)
                               ? "Leave the flex"
                               : "I will not soak it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAcf(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAcfWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAcfOverlay(listing.id, acfIds)
+                                ? "open"
+                                : "acf"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingAcfOverlay(listing.id, acfIds)
+                              ? "Leave the film"
+                              : "I will not acf it"}
                           </button>
                         </form>
                       ) : null}

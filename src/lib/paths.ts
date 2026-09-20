@@ -1706,6 +1706,14 @@ export function listingSoakWritePath() {
   return "/listings/soak";
 }
 
+export function listingAcfPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/acf`;
+}
+
+export function listingAcfWritePath() {
+  return "/listings/acf";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
