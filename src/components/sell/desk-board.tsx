@@ -1299,6 +1299,12 @@ import {
   subscribeOpsz,
 } from "@/lib/listing-opsz";
 import {
+  canTapeAvar,
+  isListingAvarOverlay,
+  readAvarListingIds,
+  subscribeAvar,
+} from "@/lib/listing-avar";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1547,6 +1553,7 @@ import {
   listingGaspWritePath,
   listingBluezoneWritePath,
   listingOpszWritePath,
+  listingAvarWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1814,6 +1821,7 @@ export function DeskBoard({
   const [gaspIds, setGaspIds] = useState<string[]>([]);
   const [bluezoneIds, setBluezoneIds] = useState<string[]>([]);
   const [opszIds, setOpszIds] = useState<string[]>([]);
+  const [avarIds, setAvarIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2051,6 +2059,7 @@ export function DeskBoard({
       setGaspIds(readGaspListingIds());
       setBluezoneIds(readBluezoneListingIds());
       setOpszIds(readOpszListingIds());
+      setAvarIds(readAvarListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2277,6 +2286,7 @@ export function DeskBoard({
     const unsubGasp = subscribeGasp(apply);
     const unsubBluezone = subscribeBluezone(apply);
     const unsubOpsz = subscribeOpsz(apply);
+    const unsubAvar = subscribeAvar(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2513,6 +2523,7 @@ export function DeskBoard({
       unsubGasp();
       unsubBluezone();
       unsubOpsz();
+      unsubAvar();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -8955,6 +8966,37 @@ export function DeskBoard({
                             {isListingOpszOverlay(listing.id, opszIds)
                               ? "Leave the map"
                               : "I will not opsz it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAvar(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAvarWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAvarOverlay(listing.id, avarIds)
+                                ? "open"
+                                : "avar"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingAvarOverlay(listing.id, avarIds)
+                              ? "Leave the map"
+                              : "I will not avar it"}
                           </button>
                         </form>
                       ) : null}

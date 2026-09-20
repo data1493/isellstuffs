@@ -1314,6 +1314,14 @@ export function listingOpszWritePath() {
   return "/listings/opsz";
 }
 
+export function listingAvarPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/avar`;
+}
+
+export function listingAvarWritePath() {
+  return "/listings/avar";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
