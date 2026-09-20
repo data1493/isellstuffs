@@ -497,6 +497,13 @@ import {
   stallVariacPath,
 } from "@/lib/booth-variac";
 import {
+  BOOTH_PLUMB_COOKIE_NAME,
+  BOOTH_PLUMB_PAPER_LINE,
+  boothPlumbFor,
+  parseBoothPlumb,
+  stallPlumbPath,
+} from "@/lib/booth-plumb";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -888,6 +895,10 @@ export default async function StallPage({
   const variac = boothVariacFor(
     stall.id,
     parseBoothVariac(jar.get(BOOTH_VARIAC_COOKIE_NAME)?.value),
+  );
+  const plumb = boothPlumbFor(
+    stall.id,
+    parseBoothPlumb(jar.get(BOOTH_PLUMB_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2150,6 +2161,23 @@ export default async function StallPage({
             <p data-booth-variac-empty={stall.id} hidden />
           )}
 
+          {plumb ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a plumb"
+              title="Still a crack. Still a stain."
+              body={
+                <p data-booth-plumb-note={stall.id}>
+                  {plumb.note} {BOOTH_PLUMB_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-plumb-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2734,6 +2762,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a variac
+          </Link>
+
+          <Link
+            href={stallPlumbPath(stall.slug)}
+            data-booth-plumb-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a plumb
           </Link>
 
           <Link

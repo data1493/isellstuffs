@@ -93,6 +93,7 @@ export function LotBoothCard({
   feelerNote,
   riserNote,
   variacNote,
+  plumbNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -168,6 +169,7 @@ export function LotBoothCard({
   feelerNote?: string;
   riserNote?: string;
   variacNote?: string;
+  plumbNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -910,6 +912,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-variac-empty={stall.id} hidden />
+          )}
+          {plumbNote ? (
+            <p
+              data-booth-plumb-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a plumb. {plumbNote}
+            </p>
+          ) : (
+            <p data-booth-plumb-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

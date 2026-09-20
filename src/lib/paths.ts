@@ -2528,6 +2528,14 @@ export function stallVariacWritePath() {
   return "/stalls/variac";
 }
 
+export function stallPlumbPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/plumb`;
+}
+
+export function stallPlumbWritePath() {
+  return "/stalls/plumb";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
