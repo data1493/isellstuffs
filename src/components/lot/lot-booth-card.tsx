@@ -90,6 +90,7 @@ export function LotBoothCard({
   tweezersNote,
   chalkNote,
   goboNote,
+  feelerNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -162,6 +163,7 @@ export function LotBoothCard({
   tweezersNote?: string;
   chalkNote?: string;
   goboNote?: string;
+  feelerNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -874,6 +876,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-gobo-empty={stall.id} hidden />
+          )}
+          {feelerNote ? (
+            <p
+              data-booth-feeler-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a feeler. {feelerNote}
+            </p>
+          ) : (
+            <p data-booth-feeler-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

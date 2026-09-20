@@ -476,6 +476,13 @@ import {
   stallGoboPath,
 } from "@/lib/booth-gobo";
 import {
+  BOOTH_FEELER_COOKIE_NAME,
+  BOOTH_FEELER_PAPER_LINE,
+  boothFeelerFor,
+  parseBoothFeeler,
+  stallFeelerPath,
+} from "@/lib/booth-feeler";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -855,6 +862,10 @@ export default async function StallPage({
   const gobo = boothGoboFor(
     stall.id,
     parseBoothGobo(jar.get(BOOTH_GOBO_COOKIE_NAME)?.value),
+  );
+  const feeler = boothFeelerFor(
+    stall.id,
+    parseBoothFeeler(jar.get(BOOTH_FEELER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2066,6 +2077,23 @@ export default async function StallPage({
             <p data-booth-gobo-empty={stall.id} hidden />
           )}
 
+          {feeler ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a feeler"
+              title="Still a crack. Still a stain."
+              body={
+                <p data-booth-feeler-note={stall.id}>
+                  {feeler.note} {BOOTH_FEELER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-feeler-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2626,6 +2654,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a gobo
+          </Link>
+
+          <Link
+            href={stallFeelerPath(stall.slug)}
+            data-booth-feeler-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a feeler
           </Link>
 
           <Link
