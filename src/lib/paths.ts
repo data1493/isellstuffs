@@ -1834,6 +1834,14 @@ export function listingRiaaWritePath() {
   return "/listings/riaa";
 }
 
+export function listingVtaPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/vta`;
+}
+
+export function listingVtaWritePath() {
+  return "/listings/vta";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }

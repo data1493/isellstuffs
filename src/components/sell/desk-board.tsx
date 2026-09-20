@@ -867,6 +867,12 @@ import {
   subscribeRiaa,
 } from "@/lib/listing-riaa";
 import {
+  canTapeVta,
+  isListingVtaOverlay,
+  readVtaListingIds,
+  subscribeVta,
+} from "@/lib/listing-vta";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1435,6 +1441,7 @@ import {
   listingVacuumWritePath,
   listingOverhangWritePath,
   listingRiaaWritePath,
+  listingVtaWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -1745,6 +1752,7 @@ export function DeskBoard({
   const [vacuumIds, setVacuumIds] = useState<string[]>([]);
   const [overhangIds, setOverhangIds] = useState<string[]>([]);
   const [riaaIds, setRiaaIds] = useState<string[]>([]);
+  const [vtaIds, setVtaIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -1980,6 +1988,7 @@ export function DeskBoard({
       setVacuumIds(readVacuumListingIds());
       setOverhangIds(readOverhangListingIds());
       setRiaaIds(readRiaaListingIds());
+      setVtaIds(readVtaListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2204,6 +2213,7 @@ export function DeskBoard({
     const unsubVacuum = subscribeVacuum(apply);
     const unsubOverhang = subscribeOverhang(apply);
     const unsubRiaa = subscribeRiaa(apply);
+    const unsubVta = subscribeVta(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2438,6 +2448,7 @@ export function DeskBoard({
       unsubVacuum();
       unsubOverhang();
       unsubRiaa();
+      unsubVta();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -4376,6 +4387,37 @@ export function DeskBoard({
                             {isListingRiaaOverlay(listing.id, riaaIds)
                               ? "Leave the skip"
                               : "I will not riaa it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVta(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVtaWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVtaOverlay(listing.id, vtaIds)
+                                ? "open"
+                                : "vta"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVtaOverlay(listing.id, vtaIds)
+                              ? "Leave the skip"
+                              : "I will not vta it"}
                           </button>
                         </form>
                       ) : null}

@@ -179,6 +179,7 @@ import { ListingScrapeNotice } from "@/components/listing-scrape-notice";
 import { ListingVacuumNotice } from "@/components/listing-vacuum-notice";
 import { ListingOverhangNotice } from "@/components/listing-overhang-notice";
 import { ListingRiaaNotice } from "@/components/listing-riaa-notice";
+import { ListingVtaNotice } from "@/components/listing-vta-notice";
 import { ListingBevelNotice } from "@/components/listing-bevel-notice";
 import { ListingDolbyNotice } from "@/components/listing-dolby-notice";
 import { ListingPancakeNotice } from "@/components/listing-pancake-notice";
@@ -492,6 +493,7 @@ import {
   listingVacuumPath,
   listingOverhangPath,
   listingRiaaPath,
+  listingVtaPath,
   listingBevelPath,
   listingOverburnPath,
   listingCuePath,
@@ -952,6 +954,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "mdb-scratched-lp" ? (
                 <ListingRiaaNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "mdb-scratched-lp" ? (
+                <ListingVtaNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingShimNotice listingId={listing.id} /> : null}
@@ -1680,6 +1685,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not riaa it
+                    </Link>
+                  ) : null}
+                  {listing.id === "mdb-scratched-lp" ? (
+                    <Link
+                      href={listingVtaPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not vta it
                     </Link>
                   ) : null}
                   <Link
