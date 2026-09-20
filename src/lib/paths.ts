@@ -1362,6 +1362,14 @@ export function listingHmtxWritePath() {
   return "/listings/hmtx";
 }
 
+export function listingBslnPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bsln`;
+}
+
+export function listingBslnWritePath() {
+  return "/listings/bsln";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }

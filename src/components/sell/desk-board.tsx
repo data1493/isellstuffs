@@ -1437,6 +1437,12 @@ import {
   subscribeHmtx,
 } from "@/lib/listing-hmtx";
 import {
+  canTapeBsln,
+  isListingBslnOverlay,
+  readBslnListingIds,
+  subscribeBsln,
+} from "@/lib/listing-bsln";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1708,6 +1714,7 @@ import {
   listingGdefWritePath,
   listingCvtWritePath,
   listingHmtxWritePath,
+  listingBslnWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1998,6 +2005,7 @@ export function DeskBoard({
   const [gdefIds, setGdefIds] = useState<string[]>([]);
   const [cvtIds, setCvtIds] = useState<string[]>([]);
   const [hmtxIds, setHmtxIds] = useState<string[]>([]);
+  const [bslnIds, setBslnIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2258,6 +2266,7 @@ export function DeskBoard({
       setGdefIds(readGdefListingIds());
       setCvtIds(readCvtListingIds());
       setHmtxIds(readHmtxListingIds());
+      setBslnIds(readBslnListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2507,6 +2516,7 @@ export function DeskBoard({
     const unsubGdef = subscribeGdef(apply);
     const unsubCvt = subscribeCvt(apply);
     const unsubHmtx = subscribeHmtx(apply);
+    const unsubBsln = subscribeBsln(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2766,6 +2776,7 @@ export function DeskBoard({
       unsubGdef();
       unsubCvt();
       unsubHmtx();
+      unsubBsln();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -9921,6 +9932,37 @@ export function DeskBoard({
                             {isListingHmtxOverlay(listing.id, hmtxIds)
                               ? "Leave the advances"
                               : "I will not hmtx it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBsln(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBslnWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBslnOverlay(listing.id, bslnIds)
+                                ? "open"
+                                : "bsln"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBslnOverlay(listing.id, bslnIds)
+                              ? "Leave the baseline"
+                              : "I will not bsln it"}
                           </button>
                         </form>
                       ) : null}
