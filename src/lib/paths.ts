@@ -1578,6 +1578,14 @@ export function listingTrapWritePath() {
   return "/listings/trap";
 }
 
+export function listingMatPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/mat`;
+}
+
+export function listingMatWritePath() {
+  return "/listings/mat";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

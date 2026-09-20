@@ -795,6 +795,12 @@ import {
   subscribeBleed,
 } from "@/lib/listing-bleed";
 import {
+  canTapeMat,
+  isListingMatOverlay,
+  readMatListingIds,
+  subscribeMat,
+} from "@/lib/listing-mat";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -1039,6 +1045,7 @@ import {
   listingPreflightWritePath,
   listingTrapWritePath,
   listingBleedWritePath,
+  listingMatWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
@@ -1298,6 +1305,7 @@ export function DeskBoard({
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
   const [trapIds, setTrapIds] = useState<string[]>([]);
   const [bleedIds, setBleedIds] = useState<string[]>([]);
+  const [matIds, setMatIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
@@ -1468,6 +1476,7 @@ export function DeskBoard({
       setPreflightIds(readPreflightListingIds());
       setTrapIds(readTrapListingIds());
       setBleedIds(readBleedListingIds());
+      setMatIds(readMatListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
@@ -1627,6 +1636,7 @@ export function DeskBoard({
     const unsubPreflight = subscribePreflight(apply);
     const unsubTrap = subscribeTrap(apply);
     const unsubBleed = subscribeBleed(apply);
+    const unsubMat = subscribeMat(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
@@ -1796,6 +1806,7 @@ export function DeskBoard({
       unsubPreflight();
       unsubTrap();
       unsubBleed();
+      unsubMat();
       unsubScale();
       unsubGate();
       unsubQuantize();
@@ -6513,6 +6524,37 @@ export function DeskBoard({
                             {isListingBleedOverlay(listing.id, bleedIds)
                               ? "Leave the page"
                               : "I will not bleed it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeMat(listing) ? (
+                        <form
+                          method="post"
+                          action={listingMatWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingMatOverlay(listing.id, matIds)
+                                ? "open"
+                                : "mat"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingMatOverlay(listing.id, matIds)
+                              ? "Leave the mount"
+                              : "I will not mat it"}
                           </button>
                         </form>
                       ) : null}
