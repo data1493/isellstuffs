@@ -693,6 +693,12 @@ import {
   subscribeAntistat,
 } from "@/lib/listing-antistat";
 import {
+  canTapeScrape,
+  isListingScrapeOverlay,
+  readScrapeListingIds,
+  subscribeScrape,
+} from "@/lib/listing-scrape";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -1016,6 +1022,7 @@ import {
   listingHoneWritePath,
   listingRinseWritePath,
   listingAntistatWritePath,
+  listingScrapeWritePath,
   listingBevelWritePath,
   listingOverburnWritePath,
   listingDolbyWritePath,
@@ -1256,6 +1263,7 @@ export function DeskBoard({
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [rinseIds, setRinseIds] = useState<string[]>([]);
   const [antistatIds, setAntistatIds] = useState<string[]>([]);
+  const [scrapeIds, setScrapeIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
@@ -1425,6 +1433,7 @@ export function DeskBoard({
       setHoneIds(readHoneListingIds());
       setRinseIds(readRinseListingIds());
       setAntistatIds(readAntistatListingIds());
+      setScrapeIds(readScrapeListingIds());
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setDolbyIds(readDolbyListingIds());
@@ -1583,6 +1592,7 @@ export function DeskBoard({
     const unsubHone = subscribeHone(apply);
     const unsubRinse = subscribeRinse(apply);
     const unsubAntistat = subscribeAntistat(apply);
+    const unsubScrape = subscribeScrape(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubDolby = subscribeDolby(apply);
@@ -1751,6 +1761,7 @@ export function DeskBoard({
       unsubHone();
       unsubRinse();
       unsubAntistat();
+      unsubScrape();
       unsubBevel();
       unsubOverburn();
       unsubDolby();
@@ -3340,6 +3351,37 @@ export function DeskBoard({
                             {isListingAntistatOverlay(listing.id, antistatIds)
                               ? "Leave the scratch"
                               : "I will not antistat it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeScrape(listing) ? (
+                        <form
+                          method="post"
+                          action={listingScrapeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingScrapeOverlay(listing.id, scrapeIds)
+                                ? "open"
+                                : "scrape"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingScrapeOverlay(listing.id, scrapeIds)
+                              ? "Leave the scratch"
+                              : "I will not scrape it"}
                           </button>
                         </form>
                       ) : null}

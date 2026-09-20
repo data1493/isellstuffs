@@ -1434,6 +1434,14 @@ export function listingAntistatWritePath() {
   return "/listings/antistat";
 }
 
+export function listingScrapePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/scrape`;
+}
+
+export function listingScrapeWritePath() {
+  return "/listings/scrape";
+}
+
 export function listingPicklePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/pickle`;
 }
