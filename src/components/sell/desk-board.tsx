@@ -1059,6 +1059,12 @@ import {
   subscribeRaster,
 } from "@/lib/listing-raster";
 import {
+  canTapeGridfit,
+  isListingGridfitOverlay,
+  readGridfitListingIds,
+  subscribeGridfit,
+} from "@/lib/listing-gridfit";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1267,6 +1273,7 @@ import {
   listingKernWritePath,
   listingOutlineWritePath,
   listingRasterWritePath,
+  listingGridfitWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1503,6 +1510,7 @@ export function DeskBoard({
   const [kernIds, setKernIds] = useState<string[]>([]);
   const [outlineIds, setOutlineIds] = useState<string[]>([]);
   const [rasterIds, setRasterIds] = useState<string[]>([]);
+  const [gridfitIds, setGridfitIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
@@ -1700,6 +1708,7 @@ export function DeskBoard({
       setKernIds(readKernListingIds());
       setOutlineIds(readOutlineListingIds());
       setRasterIds(readRasterListingIds());
+      setGridfitIds(readGridfitListingIds());
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
       setPreflightIds(readPreflightListingIds());
@@ -1886,6 +1895,7 @@ export function DeskBoard({
     const unsubKern = subscribeKern(apply);
     const unsubOutline = subscribeOutline(apply);
     const unsubRaster = subscribeRaster(apply);
+    const unsubGridfit = subscribeGridfit(apply);
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
     const unsubPreflight = subscribePreflight(apply);
@@ -2082,6 +2092,7 @@ export function DeskBoard({
       unsubKern();
       unsubOutline();
       unsubRaster();
+      unsubGridfit();
       unsubPaginate();
       unsubCollate();
       unsubPreflight();
@@ -7368,6 +7379,37 @@ export function DeskBoard({
                             {isListingRasterOverlay(listing.id, rasterIds)
                               ? "Leave the food-court"
                               : "I will not raster it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGridfit(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGridfitWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGridfitOverlay(listing.id, gridfitIds)
+                                ? "open"
+                                : "gridfit"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGridfitOverlay(listing.id, gridfitIds)
+                              ? "Leave the map"
+                              : "I will not gridfit it"}
                           </button>
                         </form>
                       ) : null}

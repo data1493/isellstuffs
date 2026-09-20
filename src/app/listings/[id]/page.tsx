@@ -236,6 +236,7 @@ import { ListingLigatureNotice } from "@/components/listing-ligature-notice";
 import { ListingKernNotice } from "@/components/listing-kern-notice";
 import { ListingOutlineNotice } from "@/components/listing-outline-notice";
 import { ListingRasterNotice } from "@/components/listing-raster-notice";
+import { ListingGridfitNotice } from "@/components/listing-gridfit-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
 import { ListingWithNotice } from "@/components/listing-with-notice";
@@ -487,6 +488,7 @@ import {
   listingKernPath,
   listingOutlinePath,
   listingRasterPath,
+  listingGridfitPath,
   listingSizePath,
   listingSmokePath,
   listingTagPath,
@@ -774,6 +776,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingRasterNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "dl-booth-font" ? (
+                <ListingGridfitNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingPileNotice listingId={listing.id} /> : null}
               {physical ? <ListingStrapNotice listingId={listing.id} /> : null}
@@ -2345,6 +2350,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not raster it
                   </Link>
+                  {listing.id === "dl-booth-font" ? (
+                    <Link
+                      href={listingGridfitPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not gridfit it
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingSubsetPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

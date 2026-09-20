@@ -1282,6 +1282,14 @@ export function listingRasterWritePath() {
   return "/listings/raster";
 }
 
+export function listingGridfitPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gridfit`;
+}
+
+export function listingGridfitWritePath() {
+  return "/listings/gridfit";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }
