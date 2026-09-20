@@ -639,6 +639,12 @@ import {
   subscribePancake,
 } from "@/lib/listing-pancake";
 import {
+  canTapeRecase,
+  isListingRecaseOverlay,
+  readRecaseListingIds,
+  subscribeRecase,
+} from "@/lib/listing-recase";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -891,6 +897,7 @@ import {
   listingOverburnWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
+  listingRecaseWritePath,
   listingFluxWritePath,
   listingTemperWritePath,
   listingScribeWritePath,
@@ -1109,6 +1116,7 @@ export function DeskBoard({
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
+  const [recaseIds, setRecaseIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [temperIds, setTemperIds] = useState<string[]>([]);
   const [scribeIds, setScribeIds] = useState<string[]>([]);
@@ -1258,6 +1266,7 @@ export function DeskBoard({
       setOverburnIds(readOverburnListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
+      setRecaseIds(readRecaseListingIds());
       setFluxIds(readFluxListingIds());
       setTemperIds(readTemperListingIds());
       setScribeIds(readScribeListingIds());
@@ -1396,6 +1405,7 @@ export function DeskBoard({
     const unsubOverburn = subscribeOverburn(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
+    const unsubRecase = subscribeRecase(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubTemper = subscribeTemper(apply);
     const unsubScribe = subscribeScribe(apply);
@@ -1544,6 +1554,7 @@ export function DeskBoard({
       unsubOverburn();
       unsubDolby();
       unsubPancake();
+      unsubRecase();
       unsubFlux();
       unsubTemper();
       unsubScribe();
@@ -3182,6 +3193,37 @@ export function DeskBoard({
                             {isListingPancakeOverlay(listing.id, pancakeIds)
                               ? "Leave the flop"
                               : "I will not pancake it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRecase(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRecaseWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRecaseOverlay(listing.id, recaseIds)
+                                ? "open"
+                                : "recase"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRecaseOverlay(listing.id, recaseIds)
+                              ? "Leave the shell"
+                              : "I will not recase it"}
                           </button>
                         </form>
                       ) : null}

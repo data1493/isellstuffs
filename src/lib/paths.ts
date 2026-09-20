@@ -1394,6 +1394,14 @@ export function listingPancakeWritePath() {
   return "/listings/pancake";
 }
 
+export function listingRecasePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/recase`;
+}
+
+export function listingRecaseWritePath() {
+  return "/listings/recase";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
