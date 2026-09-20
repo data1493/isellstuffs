@@ -2368,6 +2368,14 @@ export function stallChalkWritePath() {
   return "/stalls/chalk";
 }
 
+export function stallGoboPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/gobo`;
+}
+
+export function stallGoboWritePath() {
+  return "/stalls/gobo";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

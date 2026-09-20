@@ -469,6 +469,13 @@ import {
   stallChalkPath,
 } from "@/lib/booth-chalk";
 import {
+  BOOTH_GOBO_COOKIE_NAME,
+  BOOTH_GOBO_PAPER_LINE,
+  boothGoboFor,
+  parseBoothGobo,
+  stallGoboPath,
+} from "@/lib/booth-gobo";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -844,6 +851,10 @@ export default async function StallPage({
   const chalk = boothChalkFor(
     stall.id,
     parseBoothChalk(jar.get(BOOTH_CHALK_COOKIE_NAME)?.value),
+  );
+  const gobo = boothGoboFor(
+    stall.id,
+    parseBoothGobo(jar.get(BOOTH_GOBO_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2038,6 +2049,23 @@ export default async function StallPage({
             <p data-booth-chalk-empty={stall.id} hidden />
           )}
 
+          {gobo ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a gobo"
+              title="Still a folder. Still a jewel case."
+              body={
+                <p data-booth-gobo-note={stall.id}>
+                  {gobo.note} {BOOTH_GOBO_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-gobo-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2590,6 +2618,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have chalk
+          </Link>
+
+          <Link
+            href={stallGoboPath(stall.slug)}
+            data-booth-gobo-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a gobo
           </Link>
 
           <Link
