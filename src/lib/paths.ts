@@ -1490,6 +1490,14 @@ export function listingShaperWritePath() {
   return "/listings/shaper";
 }
 
+export function listingMaskPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/mask`;
+}
+
+export function listingMaskWritePath() {
+  return "/listings/mask";
+}
+
 export function listingTemperPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/temper`;
 }
