@@ -208,6 +208,7 @@ import { ListingShieldNotice } from "@/components/listing-shield-notice";
 import { ListingMaskNotice } from "@/components/listing-mask-notice";
 import { ListingPogoNotice } from "@/components/listing-pogo-notice";
 import { ListingReballNotice } from "@/components/listing-reball-notice";
+import { ListingUnderfillNotice } from "@/components/listing-underfill-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingCueNotice } from "@/components/listing-cue-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
@@ -327,6 +328,7 @@ import {
   listingMaskPath,
   listingPogoPath,
   listingReballPath,
+  listingUnderfillPath,
   listingLogPath,
   listingBpmPath,
   listingManualPath,
@@ -918,6 +920,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPogoNotice listingId={listing.id} /> : null}
               {listing.id === "gtk-game-boy" ? (
                 <ListingReballNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "gtk-game-boy" ? (
+                <ListingUnderfillNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
@@ -1786,6 +1791,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not reball it
+                    </Link>
+                  ) : null}
+                  {listing.id === "gtk-game-boy" ? (
+                    <Link
+                      href={listingUnderfillPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not underfill it
                     </Link>
                   ) : null}
                   <Link

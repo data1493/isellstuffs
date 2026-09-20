@@ -1842,6 +1842,14 @@ export function listingDescreenWritePath() {
   return "/listings/descreen";
 }
 
+export function listingUnderfillPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/underfill`;
+}
+
+export function listingUnderfillWritePath() {
+  return "/listings/underfill";
+}
+
 export function listingUpsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/upset`;
 }

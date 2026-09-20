@@ -609,6 +609,12 @@ import {
   subscribeReball,
 } from "@/lib/listing-reball";
 import {
+  canTapeUnderfill,
+  isListingUnderfillOverlay,
+  readUnderfillListingIds,
+  subscribeUnderfill,
+} from "@/lib/listing-underfill";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1305,6 +1311,7 @@ import {
   listingMaskWritePath,
   listingPogoWritePath,
   listingReballWritePath,
+  listingUnderfillWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1508,6 +1515,7 @@ export function DeskBoard({
   const [maskIds, setMaskIds] = useState<string[]>([]);
   const [pogoIds, setPogoIds] = useState<string[]>([]);
   const [reballIds, setReballIds] = useState<string[]>([]);
+  const [underfillIds, setUnderfillIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1715,6 +1723,7 @@ export function DeskBoard({
       setMaskIds(readMaskListingIds());
       setPogoIds(readPogoListingIds());
       setReballIds(readReballListingIds());
+      setUnderfillIds(readUnderfillListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -1911,6 +1920,7 @@ export function DeskBoard({
     const unsubMask = subscribeMask(apply);
     const unsubPogo = subscribePogo(apply);
     const unsubReball = subscribeReball(apply);
+    const unsubUnderfill = subscribeUnderfill(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2117,6 +2127,7 @@ export function DeskBoard({
       unsubMask();
       unsubPogo();
       unsubReball();
+      unsubUnderfill();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -6052,6 +6063,37 @@ export function DeskBoard({
                             {isListingReballOverlay(listing.id, reballIds)
                               ? "Leave the spheres"
                               : "I will not reball it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeUnderfill(listing) ? (
+                        <form
+                          method="post"
+                          action={listingUnderfillWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingUnderfillOverlay(listing.id, underfillIds)
+                                ? "open"
+                                : "underfill"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingUnderfillOverlay(listing.id, underfillIds)
+                              ? "Leave the crack"
+                              : "I will not underfill it"}
                           </button>
                         </form>
                       ) : null}
