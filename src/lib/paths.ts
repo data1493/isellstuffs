@@ -1938,6 +1938,14 @@ export function listingAntiskateWritePath() {
   return "/listings/antiskate";
 }
 
+export function listingGimbalPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gimbal`;
+}
+
+export function listingGimbalWritePath() {
+  return "/listings/gimbal";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
