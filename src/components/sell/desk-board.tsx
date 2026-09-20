@@ -1053,6 +1053,12 @@ import {
   subscribeWring,
 } from "@/lib/listing-wring";
 import {
+  canTapeSine,
+  isListingSineOverlay,
+  readSineListingIds,
+  subscribeSine,
+} from "@/lib/listing-sine";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1542,6 +1548,7 @@ import {
   listingDressWritePath,
   listingBlanchardWritePath,
   listingWringWritePath,
+  listingSineWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1867,6 +1874,7 @@ export function DeskBoard({
   const [dressIds, setDressIds] = useState<string[]>([]);
   const [blanchardIds, setBlanchardIds] = useState<string[]>([]);
   const [wringIds, setWringIds] = useState<string[]>([]);
+  const [sineIds, setSineIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2114,6 +2122,7 @@ export function DeskBoard({
       setDressIds(readDressListingIds());
       setBlanchardIds(readBlanchardListingIds());
       setWringIds(readWringListingIds());
+      setSineIds(readSineListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2350,6 +2359,7 @@ export function DeskBoard({
     const unsubDress = subscribeDress(apply);
     const unsubBlanchard = subscribeBlanchard(apply);
     const unsubWring = subscribeWring(apply);
+    const unsubSine = subscribeSine(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2596,6 +2606,7 @@ export function DeskBoard({
       unsubDress();
       unsubBlanchard();
       unsubWring();
+      unsubSine();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5593,6 +5604,37 @@ export function DeskBoard({
                             {isListingWringOverlay(listing.id, wringIds)
                               ? "Leave the blocks"
                               : "I will not wring it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSine(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSineWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSineOverlay(listing.id, sineIds)
+                                ? "open"
+                                : "sine"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingSineOverlay(listing.id, sineIds)
+                              ? "Leave the plate"
+                              : "I will not sine it"}
                           </button>
                         </form>
                       ) : null}

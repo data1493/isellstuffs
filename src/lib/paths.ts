@@ -1890,6 +1890,14 @@ export function listingWringWritePath() {
   return "/listings/wring";
 }
 
+export function listingSinePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/sine`;
+}
+
+export function listingSineWritePath() {
+  return "/listings/sine";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
