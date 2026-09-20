@@ -430,6 +430,11 @@ import {
   parseBoothEddy,
 } from "@/lib/booth-eddy";
 import {
+  BOOTH_STATOR_COOKIE_NAME,
+  BOOTH_STATOR_MIRROR_SCRIPT,
+  parseBoothStator,
+} from "@/lib/booth-stator";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -576,6 +581,7 @@ export default async function LotPage() {
     jar.get(BOOTH_FLYWHEEL_COOKIE_NAME)?.value,
   );
   const eddyMap = parseBoothEddy(jar.get(BOOTH_EDDY_COOKIE_NAME)?.value);
+  const statorMap = parseBoothStator(jar.get(BOOTH_STATOR_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -700,6 +706,9 @@ export default async function LotPage() {
         />
         <script
           dangerouslySetInnerHTML={{ __html: BOOTH_EDDY_MIRROR_SCRIPT }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_STATOR_MIRROR_SCRIPT }}
         />
         <LotEmpty />
       </>
@@ -826,6 +835,9 @@ export default async function LotPage() {
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_EDDY_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_STATOR_MIRROR_SCRIPT }}
       />
       <div>
         <MallHero>
@@ -976,6 +988,7 @@ export default async function LotPage() {
                     raceNote={raceMap[row.stall.id]?.note}
                     flywheelNote={flywheelMap[row.stall.id]?.note}
                     eddyNote={eddyMap[row.stall.id]?.note}
+                    statorNote={statorMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -1090,6 +1103,7 @@ export default async function LotPage() {
                     raceNote={raceMap[row.stall.id]?.note}
                     flywheelNote={flywheelMap[row.stall.id]?.note}
                     eddyNote={eddyMap[row.stall.id]?.note}
+                    statorNote={statorMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

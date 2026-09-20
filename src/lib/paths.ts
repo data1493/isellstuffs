@@ -3232,6 +3232,14 @@ export function stallEddyWritePath() {
   return "/stalls/eddy";
 }
 
+export function stallStatorPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/stator`;
+}
+
+export function stallStatorWritePath() {
+  return "/stalls/stator";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

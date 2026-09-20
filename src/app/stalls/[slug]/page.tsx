@@ -616,6 +616,13 @@ import {
   stallEddyPath,
 } from "@/lib/booth-eddy";
 import {
+  BOOTH_STATOR_COOKIE_NAME,
+  BOOTH_STATOR_PAPER_LINE,
+  boothStatorFor,
+  parseBoothStator,
+  stallStatorPath,
+} from "@/lib/booth-stator";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1075,6 +1082,10 @@ export default async function StallPage({
   const eddy = boothEddyFor(
     stall.id,
     parseBoothEddy(jar.get(BOOTH_EDDY_COOKIE_NAME)?.value),
+  );
+  const stator = boothStatorFor(
+    stall.id,
+    parseBoothStator(jar.get(BOOTH_STATOR_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2609,6 +2620,23 @@ export default async function StallPage({
             <p data-booth-eddy-empty={stall.id} hidden />
           )}
 
+          {stator ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a stator"
+              title="Still a crate."
+              body={
+                <p data-booth-stator-note={stall.id}>
+                  {stator.note} {BOOTH_STATOR_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-stator-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3346,6 +3374,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have an eddy
+          </Link>
+
+          <Link
+            href={stallStatorPath(stall.slug)}
+            data-booth-stator-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a stator
           </Link>
 
           <Link
