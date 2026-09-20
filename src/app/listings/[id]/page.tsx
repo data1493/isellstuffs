@@ -158,6 +158,7 @@ import { ListingNotchNotice } from "@/components/listing-notch-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
+import { ListingSprigNotice } from "@/components/listing-sprig-notice";
 import { ListingFettleNotice } from "@/components/listing-fettle-notice";
 import { ListingBisqueNotice } from "@/components/listing-bisque-notice";
 import { ListingPuckNotice } from "@/components/listing-puck-notice";
@@ -406,6 +407,7 @@ import {
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
+  listingSprigPath,
   listingFettlePath,
   listingBisquePath,
   listingBleedPath,
@@ -881,6 +883,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPeenNotice listingId={listing.id} /> : null}
               {physical ? <ListingGlazeNotice listingId={listing.id} /> : null}
               {physical ? <ListingPickleNotice listingId={listing.id} /> : null}
+              {listing.id === "kdr-chipped-mug" ? (
+                <ListingSprigNotice listingId={listing.id} />
+              ) : null}
               {physical ? <ListingFettleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBisqueNotice listingId={listing.id} /> : null}
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
@@ -1694,6 +1699,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not pickle it
                   </Link>
+                  {listing.id === "kdr-chipped-mug" ? (
+                    <Link
+                      href={listingSprigPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not sprig it
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingFettlePath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

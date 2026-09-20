@@ -1714,6 +1714,14 @@ export function listingHickeyWritePath() {
   return "/listings/hickey";
 }
 
+export function listingSprigPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/sprig`;
+}
+
+export function listingSprigWritePath() {
+  return "/listings/sprig";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

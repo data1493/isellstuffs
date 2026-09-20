@@ -699,6 +699,12 @@ import {
   subscribePickle,
 } from "@/lib/listing-pickle";
 import {
+  canTapeSprig,
+  isListingSprigOverlay,
+  readSprigListingIds,
+  subscribeSprig,
+} from "@/lib/listing-sprig";
+import {
   canTapeFettle,
   isListingFettleOverlay,
   readFettleListingIds,
@@ -1130,6 +1136,7 @@ import {
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
+  listingSprigWritePath,
   listingFettleWritePath,
   listingBisqueWritePath,
   listingPuckWritePath,
@@ -1390,6 +1397,7 @@ export function DeskBoard({
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
+  const [sprigIds, setSprigIds] = useState<string[]>([]);
   const [fettleIds, setFettleIds] = useState<string[]>([]);
   const [bisqueIds, setBisqueIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
@@ -1578,6 +1586,7 @@ export function DeskBoard({
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
+      setSprigIds(readSprigListingIds());
       setFettleIds(readFettleListingIds());
       setBisqueIds(readBisqueListingIds());
       setPuckIds(readPuckListingIds());
@@ -1755,6 +1764,7 @@ export function DeskBoard({
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
+    const unsubSprig = subscribeSprig(apply);
     const unsubFettle = subscribeFettle(apply);
     const unsubBisque = subscribeBisque(apply);
     const unsubPuck = subscribePuck(apply);
@@ -1942,6 +1952,7 @@ export function DeskBoard({
       unsubPeen();
       unsubGlaze();
       unsubPickle();
+      unsubSprig();
       unsubFettle();
       unsubBisque();
       unsubPuck();
@@ -3363,6 +3374,37 @@ export function DeskBoard({
                             {isListingPickleOverlay(listing.id, pickleIds)
                               ? "Leave the craze"
                               : "I will not pickle it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSprig(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSprigWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSprigOverlay(listing.id, sprigIds)
+                                ? "open"
+                                : "sprig"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSprigOverlay(listing.id, sprigIds)
+                              ? "Leave the chip"
+                              : "I will not sprig it"}
                           </button>
                         </form>
                       ) : null}
