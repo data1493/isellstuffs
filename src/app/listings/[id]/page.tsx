@@ -155,6 +155,7 @@ import { ListingPinkNotice } from "@/components/listing-pink-notice";
 import { ListingDarnNotice } from "@/components/listing-darn-notice";
 import { ListingPleatNotice } from "@/components/listing-pleat-notice";
 import { ListingNotchNotice } from "@/components/listing-notch-notice";
+import { ListingSingeNotice } from "@/components/listing-singe-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
@@ -407,6 +408,7 @@ import {
   listingDarnPath,
   listingPleatPath,
   listingNotchPath,
+  listingSingePath,
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
@@ -860,6 +862,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDarnNotice listingId={listing.id} /> : null}
               {physical ? <ListingPleatNotice listingId={listing.id} /> : null}
               {physical ? <ListingNotchNotice listingId={listing.id} /> : null}
+              {listing.id === "clo-windbreaker" ? (
+                <ListingSingeNotice listingId={listing.id} />
+              ) : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
               {physical ? <ListingDeoxNotice listingId={listing.id} /> : null}
@@ -1658,6 +1663,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not notch it
                   </Link>
+                  {listing.id === "clo-windbreaker" ? (
+                    <Link
+                      href={listingSingePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not singe it
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingContrastPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

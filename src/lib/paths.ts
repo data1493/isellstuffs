@@ -1666,6 +1666,14 @@ export function listingNotchWritePath() {
   return "/listings/notch";
 }
 
+export function listingSingePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/singe`;
+}
+
+export function listingSingeWritePath() {
+  return "/listings/singe";
+}
+
 export function listingTrapPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/trap`;
 }

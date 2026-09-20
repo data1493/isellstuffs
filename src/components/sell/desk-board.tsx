@@ -687,6 +687,12 @@ import {
   subscribeNotch,
 } from "@/lib/listing-notch";
 import {
+  canTapeSinge,
+  isListingSingeOverlay,
+  readSingeListingIds,
+  subscribeSinge,
+} from "@/lib/listing-singe";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -1152,6 +1158,7 @@ import {
   listingDarnWritePath,
   listingPleatWritePath,
   listingNotchWritePath,
+  listingSingeWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1416,6 +1423,7 @@ export function DeskBoard({
   const [darnIds, setDarnIds] = useState<string[]>([]);
   const [pleatIds, setPleatIds] = useState<string[]>([]);
   const [notchIds, setNotchIds] = useState<string[]>([]);
+  const [singeIds, setSingeIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
@@ -1608,6 +1616,7 @@ export function DeskBoard({
       setDarnIds(readDarnListingIds());
       setPleatIds(readPleatListingIds());
       setNotchIds(readNotchListingIds());
+      setSingeIds(readSingeListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
@@ -1789,6 +1798,7 @@ export function DeskBoard({
     const unsubDarn = subscribeDarn(apply);
     const unsubPleat = subscribePleat(apply);
     const unsubNotch = subscribeNotch(apply);
+    const unsubSinge = subscribeSinge(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
@@ -1980,6 +1990,7 @@ export function DeskBoard({
       unsubDarn();
       unsubPleat();
       unsubNotch();
+      unsubSinge();
       unsubPeen();
       unsubGlaze();
       unsubPickle();
@@ -5360,6 +5371,37 @@ export function DeskBoard({
                             {isListingNotchOverlay(listing.id, notchIds)
                               ? "Leave the pits"
                               : "I will not notch it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSinge(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSingeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSingeOverlay(listing.id, singeIds)
+                                ? "open"
+                                : "singe"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSingeOverlay(listing.id, singeIds)
+                              ? "Leave the pills"
+                              : "I will not singe it"}
                           </button>
                         </form>
                       ) : null}
