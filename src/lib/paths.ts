@@ -1786,6 +1786,14 @@ export function listingTombstoneWritePath() {
   return "/listings/tombstone";
 }
 
+export function listingBillboardPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/billboard`;
+}
+
+export function listingBillboardWritePath() {
+  return "/listings/billboard";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }

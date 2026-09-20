@@ -675,6 +675,12 @@ import {
   subscribeTombstone,
 } from "@/lib/listing-tombstone";
 import {
+  canTapeBillboard,
+  isListingBillboardOverlay,
+  readBillboardListingIds,
+  subscribeBillboard,
+} from "@/lib/listing-billboard";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1650,6 +1656,7 @@ import {
   listingDamWritePath,
   listingSqueegeeWritePath,
   listingTombstoneWritePath,
+  listingBillboardWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1876,6 +1883,7 @@ export function DeskBoard({
   const [damIds, setDamIds] = useState<string[]>([]);
   const [squeegeeIds, setSqueegeeIds] = useState<string[]>([]);
   const [tombstoneIds, setTombstoneIds] = useState<string[]>([]);
+  const [billboardIds, setBillboardIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2134,6 +2142,7 @@ export function DeskBoard({
       setDamIds(readDamListingIds());
       setSqueegeeIds(readSqueegeeListingIds());
       setTombstoneIds(readTombstoneListingIds());
+      setBillboardIds(readBillboardListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2381,6 +2390,7 @@ export function DeskBoard({
     const unsubDam = subscribeDam(apply);
     const unsubSqueegee = subscribeSqueegee(apply);
     const unsubTombstone = subscribeTombstone(apply);
+    const unsubBillboard = subscribeBillboard(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2638,6 +2648,7 @@ export function DeskBoard({
       unsubDam();
       unsubSqueegee();
       unsubTombstone();
+      unsubBillboard();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -7791,6 +7802,37 @@ export function DeskBoard({
                             {isListingTombstoneOverlay(listing.id, tombstoneIds)
                               ? "Leave the joint"
                               : "I will not tombstone it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBillboard(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBillboardWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBillboardOverlay(listing.id, billboardIds)
+                                ? "open"
+                                : "billboard"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingBillboardOverlay(listing.id, billboardIds)
+                              ? "Leave the stand"
+                              : "I will not billboard it"}
                           </button>
                         </form>
                       ) : null}
