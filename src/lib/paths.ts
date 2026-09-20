@@ -1466,6 +1466,14 @@ export function listingScrapeWritePath() {
   return "/listings/scrape";
 }
 
+export function listingVacuumPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/vacuum`;
+}
+
+export function listingVacuumWritePath() {
+  return "/listings/vacuum";
+}
+
 export function listingPicklePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/pickle`;
 }

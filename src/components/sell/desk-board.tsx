@@ -717,6 +717,12 @@ import {
   subscribeScrape,
 } from "@/lib/listing-scrape";
 import {
+  canTapeVacuum,
+  isListingVacuumOverlay,
+  readVacuumListingIds,
+  subscribeVacuum,
+} from "@/lib/listing-vacuum";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -1086,6 +1092,7 @@ import {
   listingRinseWritePath,
   listingAntistatWritePath,
   listingScrapeWritePath,
+  listingVacuumWritePath,
   listingBevelWritePath,
   listingOverburnWritePath,
   listingCueWritePath,
@@ -1337,6 +1344,7 @@ export function DeskBoard({
   const [rinseIds, setRinseIds] = useState<string[]>([]);
   const [antistatIds, setAntistatIds] = useState<string[]>([]);
   const [scrapeIds, setScrapeIds] = useState<string[]>([]);
+  const [vacuumIds, setVacuumIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [cueIds, setCueIds] = useState<string[]>([]);
@@ -1517,6 +1525,7 @@ export function DeskBoard({
       setRinseIds(readRinseListingIds());
       setAntistatIds(readAntistatListingIds());
       setScrapeIds(readScrapeListingIds());
+      setVacuumIds(readVacuumListingIds());
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setCueIds(readCueListingIds());
@@ -1686,6 +1695,7 @@ export function DeskBoard({
     const unsubRinse = subscribeRinse(apply);
     const unsubAntistat = subscribeAntistat(apply);
     const unsubScrape = subscribeScrape(apply);
+    const unsubVacuum = subscribeVacuum(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubCue = subscribeCue(apply);
@@ -1865,6 +1875,7 @@ export function DeskBoard({
       unsubRinse();
       unsubAntistat();
       unsubScrape();
+      unsubVacuum();
       unsubBevel();
       unsubOverburn();
       unsubCue();
@@ -3492,6 +3503,37 @@ export function DeskBoard({
                             {isListingScrapeOverlay(listing.id, scrapeIds)
                               ? "Leave the scratch"
                               : "I will not scrape it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVacuum(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVacuumWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVacuumOverlay(listing.id, vacuumIds)
+                                ? "open"
+                                : "vacuum"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVacuumOverlay(listing.id, vacuumIds)
+                              ? "Leave the skip"
+                              : "I will not vacuum it"}
                           </button>
                         </form>
                       ) : null}
