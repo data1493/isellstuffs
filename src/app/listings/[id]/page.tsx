@@ -197,6 +197,7 @@ import { ListingTrepanNotice } from "@/components/listing-trepan-notice";
 import { ListingSpotfaceNotice } from "@/components/listing-spotface-notice";
 import { ListingCalenderNotice } from "@/components/listing-calender-notice";
 import { ListingTenterNotice } from "@/components/listing-tenter-notice";
+import { ListingShearNotice } from "@/components/listing-shear-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
@@ -451,6 +452,7 @@ import {
   listingSingePath,
   listingCalenderPath,
   listingTenterPath,
+  listingShearPath,
   listingAtipPath,
   listingJogglePath,
   listingPeenPath,
@@ -966,6 +968,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "clo-windbreaker" ? (
                 <ListingTenterNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "clo-windbreaker" ? (
+                <ListingShearNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
@@ -1868,6 +1873,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not tenter it
+                    </Link>
+                  ) : null}
+                  {listing.id === "clo-windbreaker" ? (
+                    <Link
+                      href={listingShearPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not shear it
                     </Link>
                   ) : null}
                   <Link

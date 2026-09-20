@@ -1322,6 +1322,14 @@ export function listingCoggleWritePath() {
   return "/listings/coggle";
 }
 
+export function listingShearPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/shear`;
+}
+
+export function listingShearWritePath() {
+  return "/listings/shear";
+}
+
 export function listingTenterPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tenter`;
 }

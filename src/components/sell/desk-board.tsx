@@ -747,6 +747,12 @@ import {
   subscribeTenter,
 } from "@/lib/listing-tenter";
 import {
+  canTapeShear,
+  isListingShearOverlay,
+  readShearListingIds,
+  subscribeShear,
+} from "@/lib/listing-shear";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -1357,6 +1363,7 @@ import {
   listingSingeWritePath,
   listingCalenderWritePath,
   listingTenterWritePath,
+  listingShearWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1723,6 +1730,7 @@ export function DeskBoard({
   const [gaspIds, setGaspIds] = useState<string[]>([]);
   const [bluezoneIds, setBluezoneIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
+  const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
@@ -1948,6 +1956,7 @@ export function DeskBoard({
       setGaspIds(readGaspListingIds());
       setBluezoneIds(readBluezoneListingIds());
       setTenterIds(readTenterListingIds());
+      setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
       setPreflightIds(readPreflightListingIds());
@@ -2162,6 +2171,7 @@ export function DeskBoard({
     const unsubGasp = subscribeGasp(apply);
     const unsubBluezone = subscribeBluezone(apply);
     const unsubTenter = subscribeTenter(apply);
+    const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
     const unsubPreflight = subscribePreflight(apply);
@@ -2386,6 +2396,7 @@ export function DeskBoard({
       unsubGasp();
       unsubBluezone();
       unsubTenter();
+      unsubShear();
       unsubPaginate();
       unsubCollate();
       unsubPreflight();
@@ -6405,6 +6416,37 @@ export function DeskBoard({
                             {isListingTenterOverlay(listing.id, tenterIds)
                               ? "Leave the nylon"
                               : "I will not tenter it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeShear(listing) ? (
+                        <form
+                          method="post"
+                          action={listingShearWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingShearOverlay(listing.id, shearIds)
+                                ? "open"
+                                : "shear"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingShearOverlay(listing.id, shearIds)
+                              ? "Leave the nylon"
+                              : "I will not shear it"}
                           </button>
                         </form>
                       ) : null}
