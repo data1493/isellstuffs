@@ -1274,6 +1274,14 @@ export function listingRasterWritePath() {
   return "/listings/raster";
 }
 
+export function listingQuenchPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/quench`;
+}
+
+export function listingQuenchWritePath() {
+  return "/listings/quench";
+}
+
 export function listingDeoxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/deox`;
 }

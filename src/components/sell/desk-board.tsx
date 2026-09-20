@@ -513,6 +513,12 @@ import {
   subscribeAnneal,
 } from "@/lib/listing-anneal";
 import {
+  canTapeQuench,
+  isListingQuenchOverlay,
+  readQuenchListingIds,
+  subscribeQuench,
+} from "@/lib/listing-quench";
+import {
   canTapeGrommet,
   isListingGrommetOverlay,
   readGrommetListingIds,
@@ -1027,6 +1033,7 @@ import {
   listingEdgeWritePath,
   listingTrussWritePath,
   listingAnnealWritePath,
+  listingQuenchWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
   listingTinWritePath,
@@ -1268,6 +1275,7 @@ export function DeskBoard({
   const [edgeIds, setEdgeIds] = useState<string[]>([]);
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
+  const [quenchIds, setQuenchIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
@@ -1443,6 +1451,7 @@ export function DeskBoard({
       setEdgeIds(readEdgeListingIds());
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
+      setQuenchIds(readQuenchListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
@@ -1607,6 +1616,7 @@ export function DeskBoard({
     const unsubEdge = subscribeEdge(apply);
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
+    const unsubQuench = subscribeQuench(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
@@ -1781,6 +1791,7 @@ export function DeskBoard({
       unsubEdge();
       unsubTruss();
       unsubAnneal();
+      unsubQuench();
       unsubGrommet();
       unsubDart();
       unsubContrast();
@@ -4584,6 +4595,37 @@ export function DeskBoard({
                             {isListingAnnealOverlay(listing.id, annealIds)
                               ? "Leave the splay"
                               : "I will not anneal it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeQuench(listing) ? (
+                        <form
+                          method="post"
+                          action={listingQuenchWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingQuenchOverlay(listing.id, quenchIds)
+                                ? "open"
+                                : "quench"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingQuenchOverlay(listing.id, quenchIds)
+                              ? "Leave the splay"
+                              : "I will not quench it"}
                           </button>
                         </form>
                       ) : null}
