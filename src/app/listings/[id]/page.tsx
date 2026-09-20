@@ -187,6 +187,7 @@ import { ListingDeoxNotice } from "@/components/listing-deox-notice";
 import { ListingShieldNotice } from "@/components/listing-shield-notice";
 import { ListingMaskNotice } from "@/components/listing-mask-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
+import { ListingCueNotice } from "@/components/listing-cue-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingSkiveNotice } from "@/components/listing-skive-notice";
 import { ListingEdgeNotice } from "@/components/listing-edge-notice";
@@ -403,6 +404,7 @@ import {
   listingScrapePath,
   listingBevelPath,
   listingOverburnPath,
+  listingCuePath,
   listingTumblePath,
   listingSkivePath,
   listingEdgePath,
@@ -853,6 +855,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBisqueNotice listingId={listing.id} /> : null}
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
               {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
+              {physical ? <ListingCueNotice listingId={listing.id} /> : null}
               {physical ? <ListingTumbleNotice listingId={listing.id} /> : null}
               {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
               {physical ? <ListingEdgeNotice listingId={listing.id} /> : null}
@@ -1664,6 +1667,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not overburn it
+                  </Link>
+                  <Link
+                    href={listingCuePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not cue it
                   </Link>
                   <Link
                     href={listingTumblePath(listing.id)}

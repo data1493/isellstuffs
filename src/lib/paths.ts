@@ -1306,6 +1306,14 @@ export function listingOverburnWritePath() {
   return "/listings/overburn";
 }
 
+export function listingCuePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cue`;
+}
+
+export function listingCueWritePath() {
+  return "/listings/cue";
+}
+
 export function listingFettlePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fettle`;
 }

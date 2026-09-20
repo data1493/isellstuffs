@@ -795,6 +795,12 @@ import {
   subscribeOverburn,
 } from "@/lib/listing-overburn";
 import {
+  canTapeCue,
+  isListingCueOverlay,
+  readCueListingIds,
+  subscribeCue,
+} from "@/lib/listing-cue";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -1070,6 +1076,7 @@ import {
   listingScrapeWritePath,
   listingBevelWritePath,
   listingOverburnWritePath,
+  listingCueWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingRecaseWritePath,
@@ -1318,6 +1325,7 @@ export function DeskBoard({
   const [scrapeIds, setScrapeIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
+  const [cueIds, setCueIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
@@ -1495,6 +1503,7 @@ export function DeskBoard({
       setScrapeIds(readScrapeListingIds());
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
+      setCueIds(readCueListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
@@ -1661,6 +1670,7 @@ export function DeskBoard({
     const unsubScrape = subscribeScrape(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
+    const unsubCue = subscribeCue(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
@@ -1837,6 +1847,7 @@ export function DeskBoard({
       unsubScrape();
       unsubBevel();
       unsubOverburn();
+      unsubCue();
       unsubDolby();
       unsubPancake();
       unsubRecase();
@@ -3521,6 +3532,37 @@ export function DeskBoard({
                             {isListingOverburnOverlay(listing.id, overburnIds)
                               ? "Leave the extra"
                               : "I will not overburn it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCue(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCueWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCueOverlay(listing.id, cueIds)
+                                ? "open"
+                                : "cue"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCueOverlay(listing.id, cueIds)
+                              ? "Leave the Sharpie"
+                              : "I will not cue it"}
                           </button>
                         </form>
                       ) : null}
