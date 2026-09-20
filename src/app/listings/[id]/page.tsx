@@ -151,6 +151,7 @@ import { ListingSergeNotice } from "@/components/listing-serge-notice";
 import { ListingFellNotice } from "@/components/listing-fell-notice";
 import { ListingPinkNotice } from "@/components/listing-pink-notice";
 import { ListingDarnNotice } from "@/components/listing-darn-notice";
+import { ListingPleatNotice } from "@/components/listing-pleat-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
@@ -377,6 +378,7 @@ import {
   listingFellPath,
   listingPinkPath,
   listingDarnPath,
+  listingPleatPath,
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
@@ -791,6 +793,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingFellNotice listingId={listing.id} /> : null}
               {physical ? <ListingPinkNotice listingId={listing.id} /> : null}
               {physical ? <ListingDarnNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPleatNotice listingId={listing.id} /> : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
               {physical ? <ListingDeoxNotice listingId={listing.id} /> : null}
@@ -1541,6 +1544,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not darn it
+                  </Link>
+                  <Link
+                    href={listingPleatPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not pleat it
                   </Link>
                   <Link
                     href={listingContrastPath(listing.id)}

@@ -633,6 +633,12 @@ import {
   subscribeDarn,
 } from "@/lib/listing-darn";
 import {
+  canTapePleat,
+  isListingPleatOverlay,
+  readPleatListingIds,
+  subscribePleat,
+} from "@/lib/listing-pleat";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -994,6 +1000,7 @@ import {
   listingFellWritePath,
   listingPinkWritePath,
   listingDarnWritePath,
+  listingPleatWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1232,6 +1239,7 @@ export function DeskBoard({
   const [fellIds, setFellIds] = useState<string[]>([]);
   const [pinkIds, setPinkIds] = useState<string[]>([]);
   const [darnIds, setDarnIds] = useState<string[]>([]);
+  const [pleatIds, setPleatIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
@@ -1399,6 +1407,7 @@ export function DeskBoard({
       setFellIds(readFellListingIds());
       setPinkIds(readPinkListingIds());
       setDarnIds(readDarnListingIds());
+      setPleatIds(readPleatListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
@@ -1555,6 +1564,7 @@ export function DeskBoard({
     const unsubFell = subscribeFell(apply);
     const unsubPink = subscribePink(apply);
     const unsubDarn = subscribeDarn(apply);
+    const unsubPleat = subscribePleat(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
@@ -1721,6 +1731,7 @@ export function DeskBoard({
       unsubFell();
       unsubPink();
       unsubDarn();
+      unsubPleat();
       unsubPeen();
       unsubGlaze();
       unsubPickle();
@@ -4558,6 +4569,37 @@ export function DeskBoard({
                             {isListingDarnOverlay(listing.id, darnIds)
                               ? "Leave the hole"
                               : "I will not darn it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePleat(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPleatWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPleatOverlay(listing.id, pleatIds)
+                                ? "open"
+                                : "pleat"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPleatOverlay(listing.id, pleatIds)
+                              ? "Leave the front"
+                              : "I will not pleat it"}
                           </button>
                         </form>
                       ) : null}

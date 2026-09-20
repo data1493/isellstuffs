@@ -1554,6 +1554,14 @@ export function listingDarnWritePath() {
   return "/listings/darn";
 }
 
+export function listingPleatPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pleat`;
+}
+
+export function listingPleatWritePath() {
+  return "/listings/pleat";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }
