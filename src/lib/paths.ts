@@ -1314,6 +1314,14 @@ export function listingTenterWritePath() {
   return "/listings/tenter";
 }
 
+export function listingGamutPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gamut`;
+}
+
+export function listingGamutWritePath() {
+  return "/listings/gamut";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

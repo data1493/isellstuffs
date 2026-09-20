@@ -1095,6 +1095,12 @@ import {
   subscribeLattice,
 } from "@/lib/listing-lattice";
 import {
+  canTapeGamut,
+  isListingGamutOverlay,
+  readGamutListingIds,
+  subscribeGamut,
+} from "@/lib/listing-gamut";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -1351,6 +1357,7 @@ import {
   listingShaperWritePath,
   listingPosterizeWritePath,
   listingLatticeWritePath,
+  listingGamutWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1652,6 +1659,7 @@ export function DeskBoard({
   const [shaperIds, setShaperIds] = useState<string[]>([]);
   const [posterizeIds, setPosterizeIds] = useState<string[]>([]);
   const [latticeIds, setLatticeIds] = useState<string[]>([]);
+  const [gamutIds, setGamutIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1865,6 +1873,7 @@ export function DeskBoard({
       setShaperIds(readShaperListingIds());
       setPosterizeIds(readPosterizeListingIds());
       setLatticeIds(readLatticeListingIds());
+      setGamutIds(readGamutListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -2067,6 +2076,7 @@ export function DeskBoard({
     const unsubShaper = subscribeShaper(apply);
     const unsubPosterize = subscribePosterize(apply);
     const unsubLattice = subscribeLattice(apply);
+    const unsubGamut = subscribeGamut(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -2279,6 +2289,7 @@ export function DeskBoard({
       unsubShaper();
       unsubPosterize();
       unsubLattice();
+      unsubGamut();
     };
   }, [listings, stall.id]);
 
@@ -6986,6 +6997,37 @@ export function DeskBoard({
                             {isListingLatticeOverlay(listing.id, latticeIds)
                               ? "Leave the looks"
                               : "I will not lattice them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGamut(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGamutWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGamutOverlay(listing.id, gamutIds)
+                                ? "open"
+                                : "gamut"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGamutOverlay(listing.id, gamutIds)
+                              ? "Leave the looks"
+                              : "I will not gamut it"}
                           </button>
                         </form>
                       ) : null}
