@@ -837,6 +837,12 @@ import {
   subscribeFlutter,
 } from "@/lib/listing-flutter";
 import {
+  canTapeTorque,
+  isListingTorqueOverlay,
+  readTorqueListingIds,
+  subscribeTorque,
+} from "@/lib/listing-torque";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -1259,6 +1265,7 @@ import {
   listingPinchWritePath,
   listingEraseWritePath,
   listingFlutterWritePath,
+  listingTorqueWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
   listingStrainWritePath,
@@ -1537,6 +1544,7 @@ export function DeskBoard({
   const [pinchIds, setPinchIds] = useState<string[]>([]);
   const [eraseIds, setEraseIds] = useState<string[]>([]);
   const [flutterIds, setFlutterIds] = useState<string[]>([]);
+  const [torqueIds, setTorqueIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
   const [strainIds, setStrainIds] = useState<string[]>([]);
@@ -1742,6 +1750,7 @@ export function DeskBoard({
       setPinchIds(readPinchListingIds());
       setEraseIds(readEraseListingIds());
       setFlutterIds(readFlutterListingIds());
+      setTorqueIds(readTorqueListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
       setStrainIds(readStrainListingIds());
@@ -1936,6 +1945,7 @@ export function DeskBoard({
     const unsubPinch = subscribePinch(apply);
     const unsubErase = subscribeErase(apply);
     const unsubFlutter = subscribeFlutter(apply);
+    const unsubTorque = subscribeTorque(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
     const unsubStrain = subscribeStrain(apply);
@@ -2140,6 +2150,7 @@ export function DeskBoard({
       unsubPinch();
       unsubErase();
       unsubFlutter();
+      unsubTorque();
       unsubFlux();
       unsubLoom();
       unsubStrain();
@@ -4232,6 +4243,37 @@ export function DeskBoard({
                             {isListingFlutterOverlay(listing.id, flutterIds)
                               ? "Leave the hiss"
                               : "I will not flutter it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTorque(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTorqueWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTorqueOverlay(listing.id, torqueIds)
+                                ? "open"
+                                : "torque"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingTorqueOverlay(listing.id, torqueIds)
+                              ? "Leave the hiss"
+                              : "I will not torque it"}
                           </button>
                         </form>
                       ) : null}

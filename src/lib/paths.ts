@@ -1546,6 +1546,14 @@ export function listingFlutterWritePath() {
   return "/listings/flutter";
 }
 
+export function listingTorquePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/torque`;
+}
+
+export function listingTorqueWritePath() {
+  return "/listings/torque";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
