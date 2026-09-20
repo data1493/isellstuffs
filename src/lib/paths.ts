@@ -1818,6 +1818,14 @@ export function listingPillowWritePath() {
   return "/listings/pillow";
 }
 
+export function listingDewetPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dewet`;
+}
+
+export function listingDewetWritePath() {
+  return "/listings/dewet";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }

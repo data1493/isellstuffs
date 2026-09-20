@@ -687,6 +687,12 @@ import {
   subscribePillow,
 } from "@/lib/listing-pillow";
 import {
+  canTapeDewet,
+  isListingDewetOverlay,
+  readDewetListingIds,
+  subscribeDewet,
+} from "@/lib/listing-dewet";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1704,6 +1710,7 @@ import {
   listingTombstoneWritePath,
   listingBillboardWritePath,
   listingPillowWritePath,
+  listingDewetWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1934,6 +1941,7 @@ export function DeskBoard({
   const [tombstoneIds, setTombstoneIds] = useState<string[]>([]);
   const [billboardIds, setBillboardIds] = useState<string[]>([]);
   const [pillowIds, setPillowIds] = useState<string[]>([]);
+  const [dewetIds, setDewetIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2200,6 +2208,7 @@ export function DeskBoard({
       setTombstoneIds(readTombstoneListingIds());
       setBillboardIds(readBillboardListingIds());
       setPillowIds(readPillowListingIds());
+      setDewetIds(readDewetListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2455,6 +2464,7 @@ export function DeskBoard({
     const unsubTombstone = subscribeTombstone(apply);
     const unsubBillboard = subscribeBillboard(apply);
     const unsubPillow = subscribePillow(apply);
+    const unsubDewet = subscribeDewet(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2720,6 +2730,7 @@ export function DeskBoard({
       unsubTombstone();
       unsubBillboard();
       unsubPillow();
+      unsubDewet();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -8065,6 +8076,37 @@ export function DeskBoard({
                             {isListingPillowOverlay(listing.id, pillowIds)
                               ? "Leave the pillow"
                               : "I will not pillow it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDewet(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDewetWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDewetOverlay(listing.id, dewetIds)
+                                ? "open"
+                                : "dewet"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingDewetOverlay(listing.id, dewetIds)
+                              ? "Leave the dewet"
+                              : "I will not dewet it"}
                           </button>
                         </form>
                       ) : null}
