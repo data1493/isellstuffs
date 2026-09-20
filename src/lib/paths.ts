@@ -1858,6 +1858,14 @@ export function listingChannelWritePath() {
   return "/listings/channel";
 }
 
+export function listingGemPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gem`;
+}
+
+export function listingGemWritePath() {
+  return "/listings/gem";
+}
+
 export function listingGalleyPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/galley`;
 }

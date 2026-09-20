@@ -227,6 +227,7 @@ import { ListingUpsetNotice } from "@/components/listing-upset-notice";
 import { ListingPregapNotice } from "@/components/listing-pregap-notice";
 import { ListingStamperNotice } from "@/components/listing-stamper-notice";
 import { ListingAtipNotice } from "@/components/listing-atip-notice";
+import { ListingGemNotice } from "@/components/listing-gem-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -468,6 +469,7 @@ import {
   listingEdgePath,
   listingShankPath,
   listingChannelPath,
+  listingGemPath,
   listingHickeyPath,
   listingTrussPath,
   listingQuenchPath,
@@ -1006,6 +1008,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingShankNotice listingId={listing.id} /> : null}
               {listing.id === "clo-split-soles" ? (
                 <ListingChannelNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "clo-split-soles" ? (
+                <ListingGemNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingHickeyNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
@@ -1966,6 +1971,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not channel them
+                    </Link>
+                  ) : null}
+                  {listing.id === "clo-split-soles" ? (
+                    <Link
+                      href={listingGemPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not gem them
                     </Link>
                   ) : null}
                   {listing.id === "ysk-wobbly-lamp" ? (

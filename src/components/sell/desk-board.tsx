@@ -519,6 +519,12 @@ import {
   subscribeChannel,
 } from "@/lib/listing-channel";
 import {
+  canTapeGem,
+  isListingGemOverlay,
+  readGemListingIds,
+  subscribeGem,
+} from "@/lib/listing-gem";
+import {
   canTapeHickey,
   isListingHickeyOverlay,
   readHickeyListingIds,
@@ -1268,6 +1274,7 @@ import {
   listingEdgeWritePath,
   listingShankWritePath,
   listingChannelWritePath,
+  listingGemWritePath,
   listingHickeyWritePath,
   listingTrussWritePath,
   listingAnnealWritePath,
@@ -1549,6 +1556,7 @@ export function DeskBoard({
   const [edgeIds, setEdgeIds] = useState<string[]>([]);
   const [shankIds, setShankIds] = useState<string[]>([]);
   const [channelIds, setChannelIds] = useState<string[]>([]);
+  const [gemIds, setGemIds] = useState<string[]>([]);
   const [hickeyIds, setHickeyIds] = useState<string[]>([]);
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
@@ -1764,6 +1772,7 @@ export function DeskBoard({
       setEdgeIds(readEdgeListingIds());
       setShankIds(readShankListingIds());
       setChannelIds(readChannelListingIds());
+      setGemIds(readGemListingIds());
       setHickeyIds(readHickeyListingIds());
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
@@ -1968,6 +1977,7 @@ export function DeskBoard({
     const unsubEdge = subscribeEdge(apply);
     const unsubShank = subscribeShank(apply);
     const unsubChannel = subscribeChannel(apply);
+    const unsubGem = subscribeGem(apply);
     const unsubHickey = subscribeHickey(apply);
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
@@ -2182,6 +2192,7 @@ export function DeskBoard({
       unsubEdge();
       unsubShank();
       unsubChannel();
+      unsubGem();
       unsubHickey();
       unsubTruss();
       unsubAnneal();
@@ -5582,6 +5593,37 @@ export function DeskBoard({
                             {isListingChannelOverlay(listing.id, channelIds)
                               ? "Leave the flex"
                               : "I will not channel them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGem(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGemWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGemOverlay(listing.id, gemIds)
+                                ? "open"
+                                : "gem"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGemOverlay(listing.id, gemIds)
+                              ? "Leave the flex"
+                              : "I will not gem them"}
                           </button>
                         </form>
                       ) : null}
