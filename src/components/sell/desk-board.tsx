@@ -687,6 +687,12 @@ import {
   subscribeRecase,
 } from "@/lib/listing-recase";
 import {
+  canTapePinch,
+  isListingPinchOverlay,
+  readPinchListingIds,
+  subscribePinch,
+} from "@/lib/listing-pinch";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -982,6 +988,7 @@ import {
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingRecaseWritePath,
+  listingPinchWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
   listingTemperWritePath,
@@ -1215,6 +1222,7 @@ export function DeskBoard({
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
+  const [pinchIds, setPinchIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
   const [temperIds, setTemperIds] = useState<string[]>([]);
@@ -1378,6 +1386,7 @@ export function DeskBoard({
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
+      setPinchIds(readPinchListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
       setTemperIds(readTemperListingIds());
@@ -1530,6 +1539,7 @@ export function DeskBoard({
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
+    const unsubPinch = subscribePinch(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
     const unsubTemper = subscribeTemper(apply);
@@ -1692,6 +1702,7 @@ export function DeskBoard({
       unsubDolby();
       unsubPancake();
       unsubRecase();
+      unsubPinch();
       unsubFlux();
       unsubLoom();
       unsubTemper();
@@ -3398,6 +3409,37 @@ export function DeskBoard({
                             {isListingRecaseOverlay(listing.id, recaseIds)
                               ? "Leave the shell"
                               : "I will not recase it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePinch(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPinchWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPinchOverlay(listing.id, pinchIds)
+                                ? "open"
+                                : "pinch"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPinchOverlay(listing.id, pinchIds)
+                              ? "Leave the hiss"
+                              : "I will not pinch it"}
                           </button>
                         </form>
                       ) : null}

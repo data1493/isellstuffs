@@ -1458,6 +1458,14 @@ export function listingRecaseWritePath() {
   return "/listings/recase";
 }
 
+export function listingPinchPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pinch`;
+}
+
+export function listingPinchWritePath() {
+  return "/listings/pinch";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
