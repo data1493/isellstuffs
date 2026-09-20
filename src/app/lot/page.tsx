@@ -405,6 +405,11 @@ import {
   parseBoothFooter,
 } from "@/lib/booth-footer";
 import {
+  BOOTH_REFLEX_COOKIE_NAME,
+  BOOTH_REFLEX_MIRROR_SCRIPT,
+  parseBoothReflex,
+} from "@/lib/booth-reflex";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -544,6 +549,7 @@ export default async function LotPage() {
     jar.get(BOOTH_BEARING_COOKIE_NAME)?.value,
   );
   const footerMap = parseBoothFooter(jar.get(BOOTH_FOOTER_COOKIE_NAME)?.value);
+  const reflexMap = parseBoothReflex(jar.get(BOOTH_REFLEX_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -653,6 +659,9 @@ export default async function LotPage() {
         />
         <script
           dangerouslySetInnerHTML={{ __html: BOOTH_FOOTER_MIRROR_SCRIPT }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_REFLEX_MIRROR_SCRIPT }}
         />
         <LotEmpty />
       </>
@@ -764,6 +773,9 @@ export default async function LotPage() {
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_FOOTER_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_REFLEX_MIRROR_SCRIPT }}
       />
       <div>
         <MallHero>
@@ -909,6 +921,7 @@ export default async function LotPage() {
                     plinthNote={plinthMap[row.stall.id]?.note}
                     bearingNote={bearingMap[row.stall.id]?.note}
                     footerNote={footerMap[row.stall.id]?.note}
+                    reflexNote={reflexMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -1018,6 +1031,7 @@ export default async function LotPage() {
                     plinthNote={plinthMap[row.stall.id]?.note}
                     bearingNote={bearingMap[row.stall.id]?.note}
                     footerNote={footerMap[row.stall.id]?.note}
+                    reflexNote={reflexMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

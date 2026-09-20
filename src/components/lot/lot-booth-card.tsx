@@ -105,6 +105,7 @@ export function LotBoothCard({
   plinthNote,
   bearingNote,
   footerNote,
+  reflexNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -192,6 +193,7 @@ export function LotBoothCard({
   plinthNote?: string;
   bearingNote?: string;
   footerNote?: string;
+  reflexNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -1054,6 +1056,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-footer-empty={stall.id} hidden />
+          )}
+          {reflexNote ? (
+            <p
+              data-booth-reflex-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a reflex. {reflexNote}
+            </p>
+          ) : (
+            <p data-booth-reflex-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

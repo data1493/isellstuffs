@@ -3032,6 +3032,14 @@ export function stallFooterWritePath() {
   return "/stalls/footer";
 }
 
+export function stallReflexPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/reflex`;
+}
+
+export function stallReflexWritePath() {
+  return "/stalls/reflex";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

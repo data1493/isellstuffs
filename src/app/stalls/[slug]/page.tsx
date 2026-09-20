@@ -581,6 +581,13 @@ import {
   stallFooterPath,
 } from "@/lib/booth-footer";
 import {
+  BOOTH_REFLEX_COOKIE_NAME,
+  BOOTH_REFLEX_PAPER_LINE,
+  boothReflexFor,
+  parseBoothReflex,
+  stallReflexPath,
+} from "@/lib/booth-reflex";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1020,6 +1027,10 @@ export default async function StallPage({
   const footer = boothFooterFor(
     stall.id,
     parseBoothFooter(jar.get(BOOTH_FOOTER_COOKIE_NAME)?.value),
+  );
+  const reflex = boothReflexFor(
+    stall.id,
+    parseBoothReflex(jar.get(BOOTH_REFLEX_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2469,6 +2480,23 @@ export default async function StallPage({
             <p data-booth-footer-empty={stall.id} hidden />
           )}
 
+          {reflex ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a reflex"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-reflex-note={stall.id}>
+                  {reflex.note} {BOOTH_REFLEX_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-reflex-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3166,6 +3194,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a footer
+          </Link>
+
+          <Link
+            href={stallReflexPath(stall.slug)}
+            data-booth-reflex-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a reflex
           </Link>
 
           <Link
