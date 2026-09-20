@@ -945,6 +945,12 @@ import {
   subscribeResonance,
 } from "@/lib/listing-resonance";
 import {
+  canTapeRake,
+  isListingRakeOverlay,
+  readRakeListingIds,
+  subscribeRake,
+} from "@/lib/listing-rake";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1604,6 +1610,7 @@ import {
   listingDashpotWritePath,
   listingPivotWritePath,
   listingResonanceWritePath,
+  listingRakeWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -1947,6 +1954,7 @@ export function DeskBoard({
   const [dashpotIds, setDashpotIds] = useState<string[]>([]);
   const [pivotIds, setPivotIds] = useState<string[]>([]);
   const [resonanceIds, setResonanceIds] = useState<string[]>([]);
+  const [rakeIds, setRakeIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -2209,6 +2217,7 @@ export function DeskBoard({
       setDashpotIds(readDashpotListingIds());
       setPivotIds(readPivotListingIds());
       setResonanceIds(readResonanceListingIds());
+      setRakeIds(readRakeListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2460,6 +2469,7 @@ export function DeskBoard({
     const unsubDashpot = subscribeDashpot(apply);
     const unsubPivot = subscribePivot(apply);
     const unsubResonance = subscribeResonance(apply);
+    const unsubRake = subscribeRake(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2721,6 +2731,7 @@ export function DeskBoard({
       unsubDashpot();
       unsubPivot();
       unsubResonance();
+      unsubRake();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -4890,6 +4901,37 @@ export function DeskBoard({
                             {isListingResonanceOverlay(listing.id, resonanceIds)
                               ? "Leave the resonance"
                               : "I will not resonance it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRake(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRakeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRakeOverlay(listing.id, rakeIds)
+                                ? "open"
+                                : "rake"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRakeOverlay(listing.id, rakeIds)
+                              ? "Leave the rake"
+                              : "I will not rake it"}
                           </button>
                         </form>
                       ) : null}

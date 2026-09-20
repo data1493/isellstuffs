@@ -2050,6 +2050,14 @@ export function listingResonanceWritePath() {
   return "/listings/resonance";
 }
 
+export function listingRakePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rake`;
+}
+
+export function listingRakeWritePath() {
+  return "/listings/rake";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
