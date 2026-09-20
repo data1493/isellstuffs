@@ -1,0 +1,158 @@
+import Link from "next/link";
+
+import { BoothChalkEmpty } from "@/app/stalls/[slug]/chalk/empty";
+import { BoothChalkForm } from "@/components/stalls/booth-chalk-form";
+import { SyncBoothChalk } from "@/components/stalls/sync-booth-chalk";
+import { CrumbSep, MallCrumb } from "@/components/mall-crumb";
+import { MallNotice } from "@/components/mall-notice";
+import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
+import { Badge } from "@/components/ui/badge";
+import {
+  BOOTH_CHALK_EMPTY_TAPE,
+  BOOTH_CHALK_MIRROR_SCRIPT,
+  BOOTH_CHALK_PACKED_LEFTOVER,
+  BOOTH_CHALK_PAPER_LINE,
+  type BoothChalkMap,
+  type BoothChalkNote,
+} from "@/lib/booth-chalk";
+import type { Stall } from "@/lib/commerce";
+import { lotPath, stallPath } from "@/lib/paths";
+
+export function BoothChalkBoard({
+  stall,
+  map,
+  current,
+  packed,
+  emptyTape,
+}: {
+  stall: Stall;
+  map: BoothChalkMap;
+  current?: BoothChalkNote;
+  packed: boolean;
+  emptyTape?: boolean;
+}) {
+  return (
+    <div data-booth-chalk-state={current ? "taped" : "open"}>
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_CHALK_MIRROR_SCRIPT }} />
+      <SyncBoothChalk map={map} />
+
+      <MallHero>
+        <MallCrumb label="I don't have chalk">
+          <CrumbSep />
+          <Link
+            href={stallPath(stall.slug)}
+            className="hover:text-foreground hover:underline"
+          >
+            {stall.boothName}
+          </Link>
+          <CrumbSep />
+          <span className="text-foreground">Still a season</span>
+        </MallCrumb>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="secondary" className="rounded-full">
+            That booth
+          </Badge>
+          <Badge variant="outline" className="rounded-full">
+            Still a season
+          </Badge>
+          <Badge variant="outline" className="rounded-full">
+            Still no lookbook
+          </Badge>
+          <Badge variant="outline" className="rounded-full">
+            Still Closet
+          </Badge>
+        </div>
+
+        <div className="max-w-2xl space-y-4">
+          <MallEyebrow>I don&apos;t have chalk</MallEyebrow>
+          <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-6xl">
+            Still a season. Still no lookbook.
+          </h1>
+          <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+            {BOOTH_CHALK_PAPER_LINE} {stall.boothName} keeps this note. Walkers
+            still want chalk, or so they can mark the peel without
+            Tuesday&apos;s drift pin.
+          </p>
+        </div>
+      </MallHero>
+
+      <MallSection>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)] lg:items-start">
+          <div className="space-y-8">
+            <div>
+              <MallEyebrow>The chalk note</MallEyebrow>
+              <h2 className="mt-2 font-heading text-3xl tracking-tight">
+                I don&apos;t have chalk.
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
+                One sentence for this booth. I don&apos;t have chalk. Still a
+                season. Still no lookbook. Clear deletes this booth only.
+              </p>
+            </div>
+            <BoothChalkForm
+              stallId={stall.id}
+              slug={stall.slug}
+              current={current}
+            />
+            <p className="text-sm leading-6 text-muted-foreground">
+              The stall is still{" "}
+              <Link
+                href={stallPath(stall.slug)}
+                className="underline underline-offset-4"
+              >
+                {stall.boothName}
+              </Link>
+              . The lot still says who set up. This note does not rewrite
+              slicker, pony, last, or the tote.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {emptyTape ? (
+              <MallNotice
+                tone="error"
+                padded={false}
+                titleAs="h2"
+                eyebrow="Blank chalk note"
+                title={BOOTH_CHALK_EMPTY_TAPE}
+                body="Empty tape does not stick. Write the chalk note — I don't have chalk — then tape it."
+              />
+            ) : null}
+
+            {current ? (
+              <MallNotice
+                tone="empty"
+                padded={false}
+                titleAs="h2"
+                eyebrow="On this booth"
+                title="I don't have chalk."
+                body={
+                  <div className="space-y-3">
+                    <p data-booth-chalk-note={stall.id}>{current.note}</p>
+                    {packed ? (
+                      <p data-booth-chalk-leftover="">
+                        {BOOTH_CHALK_PACKED_LEFTOVER}
+                      </p>
+                    ) : null}
+                  </div>
+                }
+              >
+                <p className="text-sm text-muted-foreground">
+                  <Link
+                    href={lotPath()}
+                    className="underline underline-offset-4"
+                  >
+                    See the lot
+                  </Link>
+                </p>
+              </MallNotice>
+            ) : emptyTape ? null : (
+              <BoothChalkEmpty slug={stall.slug} boothName={stall.boothName} />
+            )}
+          </div>
+        </div>
+      </MallSection>
+    </div>
+  );
+}

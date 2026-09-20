@@ -320,6 +320,11 @@ import {
   parseBoothTweezers,
 } from "@/lib/booth-tweezers";
 import {
+  BOOTH_CHALK_COOKIE_NAME,
+  BOOTH_CHALK_MIRROR_SCRIPT,
+  parseBoothChalk,
+} from "@/lib/booth-chalk";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -432,6 +437,7 @@ export default async function LotPage() {
   const tweezersMap = parseBoothTweezers(
     jar.get(BOOTH_TWEEZERS_COOKIE_NAME)?.value,
   );
+  const chalkMap = parseBoothChalk(jar.get(BOOTH_CHALK_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -507,6 +513,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_BONE_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_TWEEZERS_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_CHALK_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -583,6 +590,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_BONE_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_TWEEZERS_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_CHALK_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -710,6 +718,7 @@ export default async function LotPage() {
                     driftNote={driftMap[row.stall.id]?.note}
                     boneNote={boneMap[row.stall.id]?.note}
                     tweezersNote={tweezersMap[row.stall.id]?.note}
+                    chalkNote={chalkMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -802,6 +811,7 @@ export default async function LotPage() {
                     driftNote={driftMap[row.stall.id]?.note}
                     boneNote={boneMap[row.stall.id]?.note}
                     tweezersNote={tweezersMap[row.stall.id]?.note}
+                    chalkNote={chalkMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

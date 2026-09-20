@@ -2328,6 +2328,14 @@ export function stallTweezersWritePath() {
   return "/stalls/tweezers";
 }
 
+export function stallChalkPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/chalk`;
+}
+
+export function stallChalkWritePath() {
+  return "/stalls/chalk";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

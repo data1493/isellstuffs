@@ -462,6 +462,13 @@ import {
   stallTweezersPath,
 } from "@/lib/booth-tweezers";
 import {
+  BOOTH_CHALK_COOKIE_NAME,
+  BOOTH_CHALK_PAPER_LINE,
+  boothChalkFor,
+  parseBoothChalk,
+  stallChalkPath,
+} from "@/lib/booth-chalk";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -833,6 +840,10 @@ export default async function StallPage({
   const tweezers = boothTweezersFor(
     stall.id,
     parseBoothTweezers(jar.get(BOOTH_TWEEZERS_COOKIE_NAME)?.value),
+  );
+  const chalk = boothChalkFor(
+    stall.id,
+    parseBoothChalk(jar.get(BOOTH_CHALK_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2010,6 +2021,23 @@ export default async function StallPage({
             <p data-booth-tweezers-empty={stall.id} hidden />
           )}
 
+          {chalk ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have chalk"
+              title="Still a season. Still no lookbook."
+              body={
+                <p data-booth-chalk-note={stall.id}>
+                  {chalk.note} {BOOTH_CHALK_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-chalk-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2554,6 +2582,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have tweezers
+          </Link>
+
+          <Link
+            href={stallChalkPath(stall.slug)}
+            data-booth-chalk-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have chalk
           </Link>
 
           <Link

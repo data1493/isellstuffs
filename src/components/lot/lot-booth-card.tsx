@@ -88,6 +88,7 @@ export function LotBoothCard({
   driftNote,
   boneNote,
   tweezersNote,
+  chalkNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -158,6 +159,7 @@ export function LotBoothCard({
   driftNote?: string;
   boneNote?: string;
   tweezersNote?: string;
+  chalkNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -850,6 +852,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-tweezers-empty={stall.id} hidden />
+          )}
+          {chalkNote ? (
+            <p
+              data-booth-chalk-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have chalk. {chalkNote}
+            </p>
+          ) : (
+            <p data-booth-chalk-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
