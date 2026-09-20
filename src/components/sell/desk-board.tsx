@@ -963,6 +963,12 @@ import {
   subscribeRake,
 } from "@/lib/listing-rake";
 import {
+  canTapeMistrack,
+  isListingMistrackOverlay,
+  readMistrackListingIds,
+  subscribeMistrack,
+} from "@/lib/listing-mistrack";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1641,6 +1647,7 @@ import {
   listingPivotWritePath,
   listingResonanceWritePath,
   listingRakeWritePath,
+  listingMistrackWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -1992,6 +1999,7 @@ export function DeskBoard({
   const [pivotIds, setPivotIds] = useState<string[]>([]);
   const [resonanceIds, setResonanceIds] = useState<string[]>([]);
   const [rakeIds, setRakeIds] = useState<string[]>([]);
+  const [mistrackIds, setMistrackIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -2260,6 +2268,7 @@ export function DeskBoard({
       setPivotIds(readPivotListingIds());
       setResonanceIds(readResonanceListingIds());
       setRakeIds(readRakeListingIds());
+      setMistrackIds(readMistrackListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2517,6 +2526,7 @@ export function DeskBoard({
     const unsubPivot = subscribePivot(apply);
     const unsubResonance = subscribeResonance(apply);
     const unsubRake = subscribeRake(apply);
+    const unsubMistrack = subscribeMistrack(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2784,6 +2794,7 @@ export function DeskBoard({
       unsubPivot();
       unsubResonance();
       unsubRake();
+      unsubMistrack();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -4987,6 +4998,37 @@ export function DeskBoard({
                             {isListingRakeOverlay(listing.id, rakeIds)
                               ? "Leave the rake"
                               : "I will not rake it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeMistrack(listing) ? (
+                        <form
+                          method="post"
+                          action={listingMistrackWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingMistrackOverlay(listing.id, mistrackIds)
+                                ? "open"
+                                : "mistrack"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingMistrackOverlay(listing.id, mistrackIds)
+                              ? "Leave the mistrack"
+                              : "I will not mistrack it"}
                           </button>
                         </form>
                       ) : null}

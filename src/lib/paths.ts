@@ -2098,6 +2098,14 @@ export function listingRakeWritePath() {
   return "/listings/rake";
 }
 
+export function listingMistrackPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/mistrack`;
+}
+
+export function listingMistrackWritePath() {
+  return "/listings/mistrack";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
