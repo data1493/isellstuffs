@@ -903,6 +903,12 @@ import {
   subscribePregap,
 } from "@/lib/listing-pregap";
 import {
+  canTapeStamper,
+  isListingStamperOverlay,
+  readStamperListingIds,
+  subscribeStamper,
+} from "@/lib/listing-stamper";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -1226,6 +1232,7 @@ import {
   listingOverburnWritePath,
   listingCueWritePath,
   listingPregapWritePath,
+  listingStamperWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingRecaseWritePath,
@@ -1500,6 +1507,7 @@ export function DeskBoard({
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [cueIds, setCueIds] = useState<string[]>([]);
   const [pregapIds, setPregapIds] = useState<string[]>([]);
+  const [stamperIds, setStamperIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
@@ -1701,6 +1709,7 @@ export function DeskBoard({
       setOverburnIds(readOverburnListingIds());
       setCueIds(readCueListingIds());
       setPregapIds(readPregapListingIds());
+      setStamperIds(readStamperListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
@@ -1891,6 +1900,7 @@ export function DeskBoard({
     const unsubOverburn = subscribeOverburn(apply);
     const unsubCue = subscribeCue(apply);
     const unsubPregap = subscribePregap(apply);
+    const unsubStamper = subscribeStamper(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
@@ -2091,6 +2101,7 @@ export function DeskBoard({
       unsubOverburn();
       unsubCue();
       unsubPregap();
+      unsubStamper();
       unsubDolby();
       unsubPancake();
       unsubRecase();
@@ -3971,6 +3982,37 @@ export function DeskBoard({
                             {isListingPregapOverlay(listing.id, pregapIds)
                               ? "Leave the burn"
                               : "I will not pregap it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeStamper(listing) ? (
+                        <form
+                          method="post"
+                          action={listingStamperWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingStamperOverlay(listing.id, stamperIds)
+                                ? "open"
+                                : "stamper"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingStamperOverlay(listing.id, stamperIds)
+                              ? "Leave the burn"
+                              : "I will not stamper it"}
                           </button>
                         </form>
                       ) : null}

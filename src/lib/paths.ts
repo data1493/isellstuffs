@@ -1818,6 +1818,14 @@ export function listingPregapWritePath() {
   return "/listings/pregap";
 }
 
+export function listingStamperPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/stamper`;
+}
+
+export function listingStamperWritePath() {
+  return "/listings/stamper";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

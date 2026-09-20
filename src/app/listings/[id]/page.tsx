@@ -214,6 +214,7 @@ import { ListingTrussNotice } from "@/components/listing-truss-notice";
 import { ListingQuenchNotice } from "@/components/listing-quench-notice";
 import { ListingUpsetNotice } from "@/components/listing-upset-notice";
 import { ListingPregapNotice } from "@/components/listing-pregap-notice";
+import { ListingStamperNotice } from "@/components/listing-stamper-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -449,6 +450,7 @@ import {
   listingQuenchPath,
   listingUpsetPath,
   listingPregapPath,
+  listingStamperPath,
   listingRegisterPath,
   listingDolbyPath,
   listingPancakePath,
@@ -955,6 +957,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "ysk-burned-cdr" ? (
                 <ListingPregapNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "ysk-burned-cdr" ? (
+                <ListingStamperNotice listingId={listing.id} />
               ) : null}
 
               {physical ? (
@@ -1893,6 +1898,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not pregap it
+                    </Link>
+                  ) : null}
+                  {listing.id === "ysk-burned-cdr" ? (
+                    <Link
+                      href={listingStamperPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not stamper it
                     </Link>
                   ) : null}
                   <Link
