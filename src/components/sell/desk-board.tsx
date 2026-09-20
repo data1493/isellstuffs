@@ -699,6 +699,12 @@ import {
   subscribeScribe,
 } from "@/lib/listing-scribe";
 import {
+  canTapeStake,
+  isListingStakeOverlay,
+  readStakeListingIds,
+  subscribeStake,
+} from "@/lib/listing-stake";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -954,6 +960,7 @@ import {
   listingFluxWritePath,
   listingTemperWritePath,
   listingScribeWritePath,
+  listingStakeWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingPreflightWritePath,
@@ -1182,6 +1189,7 @@ export function DeskBoard({
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [temperIds, setTemperIds] = useState<string[]>([]);
   const [scribeIds, setScribeIds] = useState<string[]>([]);
+  const [stakeIds, setStakeIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1340,6 +1348,7 @@ export function DeskBoard({
       setFluxIds(readFluxListingIds());
       setTemperIds(readTemperListingIds());
       setScribeIds(readScribeListingIds());
+      setStakeIds(readStakeListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1487,6 +1496,7 @@ export function DeskBoard({
     const unsubFlux = subscribeFlux(apply);
     const unsubTemper = subscribeTemper(apply);
     const unsubScribe = subscribeScribe(apply);
+    const unsubStake = subscribeStake(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1644,6 +1654,7 @@ export function DeskBoard({
       unsubFlux();
       unsubTemper();
       unsubScribe();
+      unsubStake();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -3498,6 +3509,37 @@ export function DeskBoard({
                             {isListingKnurlOverlay(listing.id, knurlIds)
                               ? "Leave the lid"
                               : "I will not knurl it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeStake(listing) ? (
+                        <form
+                          method="post"
+                          action={listingStakeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingStakeOverlay(listing.id, stakeIds)
+                                ? "open"
+                                : "stake"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingStakeOverlay(listing.id, stakeIds)
+                              ? "Leave the knob"
+                              : "I will not stake it"}
                           </button>
                         </form>
                       ) : null}

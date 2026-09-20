@@ -1482,6 +1482,14 @@ export function listingScribeWritePath() {
   return "/listings/scribe";
 }
 
+export function listingStakePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/stake`;
+}
+
+export function listingStakeWritePath() {
+  return "/listings/stake";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
