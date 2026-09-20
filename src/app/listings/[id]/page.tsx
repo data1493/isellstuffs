@@ -205,6 +205,7 @@ import { ListingShankNotice } from "@/components/listing-shank-notice";
 import { ListingHickeyNotice } from "@/components/listing-hickey-notice";
 import { ListingTrussNotice } from "@/components/listing-truss-notice";
 import { ListingQuenchNotice } from "@/components/listing-quench-notice";
+import { ListingUpsetNotice } from "@/components/listing-upset-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -431,6 +432,7 @@ import {
   listingHickeyPath,
   listingTrussPath,
   listingQuenchPath,
+  listingUpsetPath,
   listingRegisterPath,
   listingDolbyPath,
   listingPancakePath,
@@ -906,6 +908,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingHickeyNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
               {physical ? <ListingQuenchNotice listingId={listing.id} /> : null}
+              {listing.id === "kdr-bent-whisk" ? (
+                <ListingUpsetNotice listingId={listing.id} />
+              ) : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1789,6 +1794,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not quench it
                   </Link>
+                  {listing.id === "kdr-bent-whisk" ? (
+                    <Link
+                      href={listingUpsetPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not upset it
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingDegaussPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

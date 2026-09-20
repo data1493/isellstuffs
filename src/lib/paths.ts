@@ -1738,6 +1738,14 @@ export function listingGalleyWritePath() {
   return "/listings/galley";
 }
 
+export function listingUpsetPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/upset`;
+}
+
+export function listingUpsetWritePath() {
+  return "/listings/upset";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

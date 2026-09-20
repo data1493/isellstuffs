@@ -537,6 +537,12 @@ import {
   subscribeQuench,
 } from "@/lib/listing-quench";
 import {
+  canTapeUpset,
+  isListingUpsetOverlay,
+  readUpsetListingIds,
+  subscribeUpset,
+} from "@/lib/listing-upset";
+import {
   canTapeGrommet,
   isListingGrommetOverlay,
   readGrommetListingIds,
@@ -1127,6 +1133,7 @@ import {
   listingTrussWritePath,
   listingAnnealWritePath,
   listingQuenchWritePath,
+  listingUpsetWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
   listingTinWritePath,
@@ -1384,6 +1391,7 @@ export function DeskBoard({
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [quenchIds, setQuenchIds] = useState<string[]>([]);
+  const [upsetIds, setUpsetIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
@@ -1575,6 +1583,7 @@ export function DeskBoard({
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
       setQuenchIds(readQuenchListingIds());
+      setUpsetIds(readUpsetListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
@@ -1755,6 +1764,7 @@ export function DeskBoard({
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubQuench = subscribeQuench(apply);
+    const unsubUpset = subscribeUpset(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
@@ -1945,6 +1955,7 @@ export function DeskBoard({
       unsubTruss();
       unsubAnneal();
       unsubQuench();
+      unsubUpset();
       unsubGrommet();
       unsubDart();
       unsubContrast();
@@ -5070,6 +5081,37 @@ export function DeskBoard({
                             {isListingQuenchOverlay(listing.id, quenchIds)
                               ? "Leave the splay"
                               : "I will not quench it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeUpset(listing) ? (
+                        <form
+                          method="post"
+                          action={listingUpsetWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingUpsetOverlay(listing.id, upsetIds)
+                                ? "open"
+                                : "upset"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingUpsetOverlay(listing.id, upsetIds)
+                              ? "Leave the splay"
+                              : "I will not upset it"}
                           </button>
                         </form>
                       ) : null}
