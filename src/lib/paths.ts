@@ -1976,6 +1976,14 @@ export function stallCaliperWritePath() {
   return "/stalls/caliper";
 }
 
+export function stallRicerPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/ricer`;
+}
+
+export function stallRicerWritePath() {
+  return "/stalls/ricer";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

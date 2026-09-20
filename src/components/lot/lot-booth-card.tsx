@@ -79,6 +79,7 @@ export function LotBoothCard({
   wickNote,
   lastNote,
   caliperNote,
+  ricerNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -140,6 +141,7 @@ export function LotBoothCard({
   wickNote?: string;
   lastNote?: string;
   caliperNote?: string;
+  ricerNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -742,6 +744,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-caliper-empty={stall.id} hidden />
+          )}
+          {ricerNote ? (
+            <p
+              data-booth-ricer-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a ricer. {ricerNote}
+            </p>
+          ) : (
+            <p data-booth-ricer-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

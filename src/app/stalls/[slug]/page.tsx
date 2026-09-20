@@ -399,6 +399,13 @@ import {
   stallCaliperPath,
 } from "@/lib/booth-caliper";
 import {
+  BOOTH_RICER_COOKIE_NAME,
+  BOOTH_RICER_PAPER_LINE,
+  boothRicerFor,
+  parseBoothRicer,
+  stallRicerPath,
+} from "@/lib/booth-ricer";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -734,6 +741,10 @@ export default async function StallPage({
   const caliper = boothCaliperFor(
     stall.id,
     parseBoothCaliper(jar.get(BOOTH_CALIPER_COOKIE_NAME)?.value),
+  );
+  const ricer = boothRicerFor(
+    stall.id,
+    parseBoothRicer(jar.get(BOOTH_RICER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1758,6 +1769,23 @@ export default async function StallPage({
             <p data-booth-caliper-empty={stall.id} hidden />
           )}
 
+          {ricer ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a ricer"
+              title="Still a drawer."
+              body={
+                <p data-booth-ricer-note={stall.id}>
+                  {ricer.note} {BOOTH_RICER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-ricer-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2230,6 +2258,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a caliper
+          </Link>
+
+          <Link
+            href={stallRicerPath(stall.slug)}
+            data-booth-ricer-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a ricer
           </Link>
 
           <Link
