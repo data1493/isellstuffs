@@ -987,6 +987,12 @@ import {
   subscribeEccentric,
 } from "@/lib/listing-eccentric";
 import {
+  canTapeMother,
+  isListingMotherOverlay,
+  readMotherListingIds,
+  subscribeMother,
+} from "@/lib/listing-mother";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1691,6 +1697,7 @@ import {
   listingRakeWritePath,
   listingMistrackWritePath,
   listingEccentricWritePath,
+  listingMotherWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -2052,6 +2059,7 @@ export function DeskBoard({
   const [rakeIds, setRakeIds] = useState<string[]>([]);
   const [mistrackIds, setMistrackIds] = useState<string[]>([]);
   const [eccentricIds, setEccentricIds] = useState<string[]>([]);
+  const [motherIds, setMotherIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -2328,6 +2336,7 @@ export function DeskBoard({
       setRakeIds(readRakeListingIds());
       setMistrackIds(readMistrackListingIds());
       setEccentricIds(readEccentricListingIds());
+      setMotherIds(readMotherListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2593,6 +2602,7 @@ export function DeskBoard({
     const unsubRake = subscribeRake(apply);
     const unsubMistrack = subscribeMistrack(apply);
     const unsubEccentric = subscribeEccentric(apply);
+    const unsubMother = subscribeMother(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2868,6 +2878,7 @@ export function DeskBoard({
       unsubRake();
       unsubMistrack();
       unsubEccentric();
+      unsubMother();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -5137,6 +5148,37 @@ export function DeskBoard({
                             {isListingEccentricOverlay(listing.id, eccentricIds)
                               ? "Leave the eccentric"
                               : "I will not eccentric it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeMother(listing) ? (
+                        <form
+                          method="post"
+                          action={listingMotherWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingMotherOverlay(listing.id, motherIds)
+                                ? "open"
+                                : "mother"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingMotherOverlay(listing.id, motherIds)
+                              ? "Leave the mother"
+                              : "I will not mother it"}
                           </button>
                         </form>
                       ) : null}

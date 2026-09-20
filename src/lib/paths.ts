@@ -2162,6 +2162,14 @@ export function listingEccentricWritePath() {
   return "/listings/eccentric";
 }
 
+export function listingMotherPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/mother`;
+}
+
+export function listingMotherWritePath() {
+  return "/listings/mother";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
