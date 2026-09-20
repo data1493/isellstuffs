@@ -1594,6 +1594,14 @@ export function listingTorqueWritePath() {
   return "/listings/torque";
 }
 
+export function listingRelapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/relap`;
+}
+
+export function listingRelapWritePath() {
+  return "/listings/relap";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }

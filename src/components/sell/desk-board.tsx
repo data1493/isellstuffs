@@ -873,6 +873,12 @@ import {
   subscribeTorque,
 } from "@/lib/listing-torque";
 import {
+  canTapeRelap,
+  isListingRelapOverlay,
+  readRelapListingIds,
+  subscribeRelap,
+} from "@/lib/listing-relap";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -1331,6 +1337,7 @@ import {
   listingEraseWritePath,
   listingFlutterWritePath,
   listingTorqueWritePath,
+  listingRelapWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
   listingStrainWritePath,
@@ -1620,6 +1627,7 @@ export function DeskBoard({
   const [eraseIds, setEraseIds] = useState<string[]>([]);
   const [flutterIds, setFlutterIds] = useState<string[]>([]);
   const [torqueIds, setTorqueIds] = useState<string[]>([]);
+  const [relapIds, setRelapIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
   const [strainIds, setStrainIds] = useState<string[]>([]);
@@ -1836,6 +1844,7 @@ export function DeskBoard({
       setEraseIds(readEraseListingIds());
       setFlutterIds(readFlutterListingIds());
       setTorqueIds(readTorqueListingIds());
+      setRelapIds(readRelapListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
       setStrainIds(readStrainListingIds());
@@ -2041,6 +2050,7 @@ export function DeskBoard({
     const unsubErase = subscribeErase(apply);
     const unsubFlutter = subscribeFlutter(apply);
     const unsubTorque = subscribeTorque(apply);
+    const unsubRelap = subscribeRelap(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
     const unsubStrain = subscribeStrain(apply);
@@ -2256,6 +2266,7 @@ export function DeskBoard({
       unsubErase();
       unsubFlutter();
       unsubTorque();
+      unsubRelap();
       unsubFlux();
       unsubLoom();
       unsubStrain();
@@ -4477,6 +4488,37 @@ export function DeskBoard({
                             {isListingTorqueOverlay(listing.id, torqueIds)
                               ? "Leave the hiss"
                               : "I will not torque it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRelap(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRelapWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRelapOverlay(listing.id, relapIds)
+                                ? "open"
+                                : "relap"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRelapOverlay(listing.id, relapIds)
+                              ? "Leave the hiss"
+                              : "I will not relap it"}
                           </button>
                         </form>
                       ) : null}

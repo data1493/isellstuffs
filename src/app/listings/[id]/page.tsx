@@ -183,6 +183,7 @@ import { ListingPinchNotice } from "@/components/listing-pinch-notice";
 import { ListingEraseNotice } from "@/components/listing-erase-notice";
 import { ListingFlutterNotice } from "@/components/listing-flutter-notice";
 import { ListingTorqueNotice } from "@/components/listing-torque-notice";
+import { ListingRelapNotice } from "@/components/listing-relap-notice";
 import { ListingFluxNotice } from "@/components/listing-flux-notice";
 import { ListingLoomNotice } from "@/components/listing-loom-notice";
 import { ListingStrainNotice } from "@/components/listing-strain-notice";
@@ -484,6 +485,7 @@ import {
   listingErasePath,
   listingFlutterPath,
   listingTorquePath,
+  listingRelapPath,
   listingFluxPath,
   listingLoomPath,
   listingStrainPath,
@@ -964,6 +966,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingFlutterNotice listingId={listing.id} /> : null}
               {listing.id === "mdb-mixtape-93" ? (
                 <ListingTorqueNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "mdb-mixtape-93" ? (
+                <ListingRelapNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingFluxNotice listingId={listing.id} /> : null}
               {physical ? <ListingLoomNotice listingId={listing.id} /> : null}
@@ -2081,6 +2086,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not torque it
+                    </Link>
+                  ) : null}
+                  {listing.id === "mdb-mixtape-93" ? (
+                    <Link
+                      href={listingRelapPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not relap it
                     </Link>
                   ) : null}
                   <Link
