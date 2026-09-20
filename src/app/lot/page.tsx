@@ -285,6 +285,11 @@ import {
   parseBoothMandrel,
 } from "@/lib/booth-mandrel";
 import {
+  BOOTH_PONY_COOKIE_NAME,
+  BOOTH_PONY_MIRROR_SCRIPT,
+  parseBoothPony,
+} from "@/lib/booth-pony";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -388,6 +393,7 @@ export default async function LotPage() {
   const caliperMap = parseBoothCaliper(jar.get(BOOTH_CALIPER_COOKIE_NAME)?.value);
   const ricerMap = parseBoothRicer(jar.get(BOOTH_RICER_COOKIE_NAME)?.value);
   const mandrelMap = parseBoothMandrel(jar.get(BOOTH_MANDREL_COOKIE_NAME)?.value);
+  const ponyMap = parseBoothPony(jar.get(BOOTH_PONY_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -456,6 +462,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_CALIPER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_RICER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_MANDREL_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_PONY_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -525,6 +532,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_CALIPER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_RICER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_MANDREL_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_PONY_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -645,6 +653,7 @@ export default async function LotPage() {
                     caliperNote={caliperMap[row.stall.id]?.note}
                     ricerNote={ricerMap[row.stall.id]?.note}
                     mandrelNote={mandrelMap[row.stall.id]?.note}
+                    ponyNote={ponyMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -730,6 +739,7 @@ export default async function LotPage() {
                     caliperNote={caliperMap[row.stall.id]?.note}
                     ricerNote={ricerMap[row.stall.id]?.note}
                     mandrelNote={mandrelMap[row.stall.id]?.note}
+                    ponyNote={ponyMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

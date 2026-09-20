@@ -2048,6 +2048,14 @@ export function stallMandrelWritePath() {
   return "/stalls/mandrel";
 }
 
+export function stallPonyPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/pony`;
+}
+
+export function stallPonyWritePath() {
+  return "/stalls/pony";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

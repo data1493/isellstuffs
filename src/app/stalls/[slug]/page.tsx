@@ -413,6 +413,13 @@ import {
   stallMandrelPath,
 } from "@/lib/booth-mandrel";
 import {
+  BOOTH_PONY_COOKIE_NAME,
+  BOOTH_PONY_PAPER_LINE,
+  boothPonyFor,
+  parseBoothPony,
+  stallPonyPath,
+} from "@/lib/booth-pony";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -756,6 +763,10 @@ export default async function StallPage({
   const mandrel = boothMandrelFor(
     stall.id,
     parseBoothMandrel(jar.get(BOOTH_MANDREL_COOKIE_NAME)?.value),
+  );
+  const pony = boothPonyFor(
+    stall.id,
+    parseBoothPony(jar.get(BOOTH_PONY_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1814,6 +1825,23 @@ export default async function StallPage({
             <p data-booth-mandrel-empty={stall.id} hidden />
           )}
 
+          {pony ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a pony"
+              title="Still a closet."
+              body={
+                <p data-booth-pony-note={stall.id}>
+                  {pony.note} {BOOTH_PONY_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-pony-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2302,6 +2330,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a mandrel
+          </Link>
+
+          <Link
+            href={stallPonyPath(stall.slug)}
+            data-booth-pony-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a pony
           </Link>
 
           <Link
