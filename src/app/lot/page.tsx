@@ -365,6 +365,11 @@ import {
   parseBoothTorpedo,
 } from "@/lib/booth-torpedo";
 import {
+  BOOTH_PROTRACTOR_COOKIE_NAME,
+  BOOTH_PROTRACTOR_MIRROR_SCRIPT,
+  parseBoothProtractor,
+} from "@/lib/booth-protractor";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -488,6 +493,9 @@ export default async function LotPage() {
   const torpedoMap = parseBoothTorpedo(
     jar.get(BOOTH_TORPEDO_COOKIE_NAME)?.value,
   );
+  const protractorMap = parseBoothProtractor(
+    jar.get(BOOTH_PROTRACTOR_COOKIE_NAME)?.value,
+  );
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -573,6 +581,9 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FUME_MIRROR_SCRIPT }} />
         <script
           dangerouslySetInnerHTML={{ __html: BOOTH_TORPEDO_MIRROR_SCRIPT }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_PROTRACTOR_MIRROR_SCRIPT }}
         />
         <LotEmpty />
       </>
@@ -660,6 +671,9 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FUME_MIRROR_SCRIPT }} />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_TORPEDO_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_PROTRACTOR_MIRROR_SCRIPT }}
       />
       <div>
         <MallHero>
@@ -797,6 +811,7 @@ export default async function LotPage() {
                     wandNote={wandMap[row.stall.id]?.note}
                     fumeNote={fumeMap[row.stall.id]?.note}
                     torpedoNote={torpedoMap[row.stall.id]?.note}
+                    protractorNote={protractorMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -898,6 +913,7 @@ export default async function LotPage() {
                     wandNote={wandMap[row.stall.id]?.note}
                     fumeNote={fumeMap[row.stall.id]?.note}
                     torpedoNote={torpedoMap[row.stall.id]?.note}
+                    protractorNote={protractorMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

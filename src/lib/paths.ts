@@ -2688,6 +2688,14 @@ export function stallTorpedoWritePath() {
   return "/stalls/torpedo";
 }
 
+export function stallProtractorPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/protractor`;
+}
+
+export function stallProtractorWritePath() {
+  return "/stalls/protractor";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

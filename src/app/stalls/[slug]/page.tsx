@@ -525,6 +525,13 @@ import {
   stallTorpedoPath,
 } from "@/lib/booth-torpedo";
 import {
+  BOOTH_PROTRACTOR_COOKIE_NAME,
+  BOOTH_PROTRACTOR_PAPER_LINE,
+  boothProtractorFor,
+  parseBoothProtractor,
+  stallProtractorPath,
+} from "@/lib/booth-protractor";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -932,6 +939,10 @@ export default async function StallPage({
   const torpedo = boothTorpedoFor(
     stall.id,
     parseBoothTorpedo(jar.get(BOOTH_TORPEDO_COOKIE_NAME)?.value),
+  );
+  const protractor = boothProtractorFor(
+    stall.id,
+    parseBoothProtractor(jar.get(BOOTH_PROTRACTOR_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2245,6 +2256,23 @@ export default async function StallPage({
             <p data-booth-fume-empty={stall.id} hidden />
           )}
 
+          {protractor ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a protractor"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-protractor-note={stall.id}>
+                  {protractor.note} {BOOTH_PROTRACTOR_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-protractor-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -2878,6 +2906,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a torpedo
+          </Link>
+
+          <Link
+            href={stallProtractorPath(stall.slug)}
+            data-booth-protractor-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a protractor
           </Link>
 
           <Link
