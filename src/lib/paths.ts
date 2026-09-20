@@ -1306,6 +1306,14 @@ export function listingBleedWritePath() {
   return "/listings/bleed";
 }
 
+export function listingTumblePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tumble`;
+}
+
+export function listingTumbleWritePath() {
+  return "/listings/tumble";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

@@ -169,6 +169,7 @@ import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
+import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -773,6 +774,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingFettleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
               {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
+              {physical ? <ListingTumbleNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
