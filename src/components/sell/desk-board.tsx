@@ -507,6 +507,12 @@ import {
   subscribeEdge,
 } from "@/lib/listing-edge";
 import {
+  canTapeShank,
+  isListingShankOverlay,
+  readShankListingIds,
+  subscribeShank,
+} from "@/lib/listing-shank";
+import {
   canTapeTruss,
   isListingTrussOverlay,
   readTrussListingIds,
@@ -1086,6 +1092,7 @@ import {
   listingTumbleWritePath,
   listingSkiveWritePath,
   listingEdgeWritePath,
+  listingShankWritePath,
   listingTrussWritePath,
   listingAnnealWritePath,
   listingQuenchWritePath,
@@ -1337,6 +1344,7 @@ export function DeskBoard({
   const [tumbleIds, setTumbleIds] = useState<string[]>([]);
   const [skiveIds, setSkiveIds] = useState<string[]>([]);
   const [edgeIds, setEdgeIds] = useState<string[]>([]);
+  const [shankIds, setShankIds] = useState<string[]>([]);
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [quenchIds, setQuenchIds] = useState<string[]>([]);
@@ -1522,6 +1530,7 @@ export function DeskBoard({
       setTumbleIds(readTumbleListingIds());
       setSkiveIds(readSkiveListingIds());
       setEdgeIds(readEdgeListingIds());
+      setShankIds(readShankListingIds());
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
       setQuenchIds(readQuenchListingIds());
@@ -1696,6 +1705,7 @@ export function DeskBoard({
     const unsubTumble = subscribeTumble(apply);
     const unsubSkive = subscribeSkive(apply);
     const unsubEdge = subscribeEdge(apply);
+    const unsubShank = subscribeShank(apply);
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubQuench = subscribeQuench(apply);
@@ -1880,6 +1890,7 @@ export function DeskBoard({
       unsubTumble();
       unsubSkive();
       unsubEdge();
+      unsubShank();
       unsubTruss();
       unsubAnneal();
       unsubQuench();
@@ -4818,6 +4829,37 @@ export function DeskBoard({
                             {isListingEdgeOverlay(listing.id, edgeIds)
                               ? "Leave the peel"
                               : "I will not edge it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeShank(listing) ? (
+                        <form
+                          method="post"
+                          action={listingShankWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingShankOverlay(listing.id, shankIds)
+                                ? "open"
+                                : "shank"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingShankOverlay(listing.id, shankIds)
+                              ? "Leave the flex"
+                              : "I will not shank them"}
                           </button>
                         </form>
                       ) : null}

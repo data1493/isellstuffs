@@ -198,6 +198,7 @@ import { ListingCueNotice } from "@/components/listing-cue-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingSkiveNotice } from "@/components/listing-skive-notice";
 import { ListingEdgeNotice } from "@/components/listing-edge-notice";
+import { ListingShankNotice } from "@/components/listing-shank-notice";
 import { ListingTrussNotice } from "@/components/listing-truss-notice";
 import { ListingQuenchNotice } from "@/components/listing-quench-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
@@ -419,6 +420,7 @@ import {
   listingTumblePath,
   listingSkivePath,
   listingEdgePath,
+  listingShankPath,
   listingTrussPath,
   listingQuenchPath,
   listingRegisterPath,
@@ -882,6 +884,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingTumbleNotice listingId={listing.id} /> : null}
               {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
               {physical ? <ListingEdgeNotice listingId={listing.id} /> : null}
+              {physical ? <ListingShankNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
               {physical ? <ListingQuenchNotice listingId={listing.id} /> : null}
 
@@ -1732,6 +1735,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not edge it
+                  </Link>
+                  <Link
+                    href={listingShankPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not shank them
                   </Link>
                   <Link
                     href={listingTrussPath(listing.id)}

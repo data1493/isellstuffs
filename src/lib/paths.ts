@@ -1690,6 +1690,14 @@ export function listingEdgeWritePath() {
   return "/listings/edge";
 }
 
+export function listingShankPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/shank`;
+}
+
+export function listingShankWritePath() {
+  return "/listings/shank";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }
