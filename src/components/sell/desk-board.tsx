@@ -645,6 +645,12 @@ import {
   subscribeFettle,
 } from "@/lib/listing-fettle";
 import {
+  canTapeBisque,
+  isListingBisqueOverlay,
+  readBisqueListingIds,
+  subscribeBisque,
+} from "@/lib/listing-bisque";
+import {
   canTapePuck,
   isListingPuckOverlay,
   readPuckListingIds,
@@ -961,6 +967,7 @@ import {
   listingGlazeWritePath,
   listingPickleWritePath,
   listingFettleWritePath,
+  listingBisqueWritePath,
   listingPuckWritePath,
   listingHoneWritePath,
   listingRinseWritePath,
@@ -1192,6 +1199,7 @@ export function DeskBoard({
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
   const [fettleIds, setFettleIds] = useState<string[]>([]);
+  const [bisqueIds, setBisqueIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [rinseIds, setRinseIds] = useState<string[]>([]);
@@ -1353,6 +1361,7 @@ export function DeskBoard({
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
       setFettleIds(readFettleListingIds());
+      setBisqueIds(readBisqueListingIds());
       setPuckIds(readPuckListingIds());
       setHoneIds(readHoneListingIds());
       setRinseIds(readRinseListingIds());
@@ -1503,6 +1512,7 @@ export function DeskBoard({
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
     const unsubFettle = subscribeFettle(apply);
+    const unsubBisque = subscribeBisque(apply);
     const unsubPuck = subscribePuck(apply);
     const unsubHone = subscribeHone(apply);
     const unsubRinse = subscribeRinse(apply);
@@ -1663,6 +1673,7 @@ export function DeskBoard({
       unsubGlaze();
       unsubPickle();
       unsubFettle();
+      unsubBisque();
       unsubPuck();
       unsubHone();
       unsubRinse();
@@ -3097,6 +3108,37 @@ export function DeskBoard({
                             {isListingFettleOverlay(listing.id, fettleIds)
                               ? "Leave the rim"
                               : "I will not fettle it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBisque(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBisqueWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBisqueOverlay(listing.id, bisqueIds)
+                                ? "open"
+                                : "bisque"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingBisqueOverlay(listing.id, bisqueIds)
+                              ? "Leave the kiln"
+                              : "I will not bisque it"}
                           </button>
                         </form>
                       ) : null}

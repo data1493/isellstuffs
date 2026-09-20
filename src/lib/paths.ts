@@ -1522,6 +1522,14 @@ export function listingKernWritePath() {
   return "/listings/kern";
 }
 
+export function listingBisquePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bisque`;
+}
+
+export function listingBisqueWritePath() {
+  return "/listings/bisque";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
