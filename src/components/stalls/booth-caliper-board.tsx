@@ -48,7 +48,7 @@ export function BoothCaliperBoard({
             {stall.boothName}
           </Link>
           <CrumbSep />
-          <span className="text-foreground">Still a table</span>
+          <span className="text-foreground">Still a crack</span>
         </MallCrumb>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -56,7 +56,10 @@ export function BoothCaliperBoard({
             That booth
           </Badge>
           <Badge variant="outline" className="rounded-full">
-            Still a table
+            Still a crack
+          </Badge>
+          <Badge variant="outline" className="rounded-full">
+            Still a stain
           </Badge>
           <Badge variant="outline" className="rounded-full">
             Still Tuesday
@@ -66,11 +69,12 @@ export function BoothCaliperBoard({
         <div className="max-w-2xl space-y-4">
           <MallEyebrow>I don&apos;t have a caliper</MallEyebrow>
           <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-balance sm:text-6xl">
-            Still a table.
+            Still a crack. Still a stain.
           </h1>
           <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
             {BOOTH_CALIPER_PAPER_LINE} {stall.boothName} keeps this note. Walkers
-            still want a caliper, or so they can measure the shade ring.
+            still want a caliper, or so the wobbly lamp measures without a shop
+            feeler.
           </p>
         </div>
       </MallHero>
@@ -85,7 +89,7 @@ export function BoothCaliperBoard({
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
                 One sentence for this booth. I don&apos;t have a caliper. Still
-                a table. Clear deletes this booth only.
+                a crack. Still a stain. Clear deletes this booth only.
               </p>
             </div>
             <BoothCaliperForm
@@ -102,7 +106,7 @@ export function BoothCaliperBoard({
                 {stall.boothName}
               </Link>
               . The lot still says who set up. This note does not rewrite
-              square, clamp, kit, or the tote.
+              feeler, drift, mallet, or the tote.
             </p>
           </div>
 

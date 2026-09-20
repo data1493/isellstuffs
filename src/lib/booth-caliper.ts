@@ -1,13 +1,17 @@
 /**
- * I don't have a caliper — still a table. Still Tuesday.
- * Square is try-square. Clamp is C-clamp. Kit is assemble. Bush is the lamp bushing.
- * Walkers still want Tuesday to hand over a caliper, or so they can measure
- * the shade ring. I don't have a caliper. Still a table.
+ * I don't have a caliper — still a crack. Still a stain. Still Tuesday.
+ * Feeler is the gap gauge. Torpedo is the pocket level. Plumb is the hanging bob.
+ * Drift is drive-the-pin. Mallet is the soft face. Harp is the stall finial.
+ * Wrap stays wrap. Micrometer / vernier / dial are not this booth.
+ * Walkers still want Tuesday to hand over a caliper, or so the wobbly lamp
+ * measures without a shop feeler. I don't have a caliper. Still a crack.
+ * Still a stain.
  *
- * Never write `iss:booth-square`, `iss:booth-clamp`, `iss:booth-kit`,
- * `iss:booth-jig`, `iss:booth-last`, `iss:booth-wick`, `iss:bush-listing-ids`,
- * `iss:swage-listing-ids`, `iss:preflight-listing-ids`, `iss:rinse-listing-ids`,
- * tote, sold, packed, or $0 SKUs.
+ * Never write `iss:booth-feeler`, `iss:booth-torpedo`, `iss:booth-plumb`,
+ * `iss:booth-drift`, `iss:booth-mallet`, `iss:booth-harp`, `iss:booth-gobo`,
+ * `iss:booth-chalk`, `iss:booth-tweezers`, `iss:booth-variac`, `iss:booth-riser`,
+ * `iss:booth-wand`, `iss:booth-fume`, `iss:booth-preheater`, `iss:booth-protractor`,
+ * `iss:booth-bone`, tote, sold, packed, or $0 SKUs.
  *
  * Shape: JSON object `{ [stallId]: { note, at } }`.
  * localStorage key `iss:booth-caliper` is the client cork.
@@ -26,9 +30,9 @@ export const BOOTH_CALIPER_CHANGED_EVENT = "iss:booth-caliper-changed";
 export const BOOTH_CALIPER_NOTE_MAX = 140;
 
 export const BOOTH_CALIPER_PAPER_LINE =
-  "I don't have a caliper. Still a table.";
+  "I don't have a caliper. Still a crack. Still a stain.";
 export const BOOTH_CALIPER_EMPTY_COPY =
-  "Nobody taped a caliper note on this booth. Still a table.";
+  "Nobody taped a caliper note on this booth. Still a crack.";
 export const BOOTH_CALIPER_EMPTY_TAPE =
   "Say you don't have a caliper or leave the table.";
 export const BOOTH_CALIPER_PACKED_LEFTOVER =

@@ -1967,7 +1967,7 @@ export default async function StallPage({
               padded={false}
               titleAs="h2"
               eyebrow="I don't have a caliper"
-              title="Still a table."
+              title="Still a crack. Still a stain."
               body={
                 <p data-booth-caliper-note={stall.id}>
                   {caliper.note} {BOOTH_CALIPER_PAPER_LINE}

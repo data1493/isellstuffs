@@ -23,7 +23,7 @@ export function BoothCaliperEmpty({
         titleAs="h2"
         eyebrow="I don't have a caliper"
         title={BOOTH_CALIPER_EMPTY_COPY}
-        body={`${BOOTH_CALIPER_PAPER_LINE} Nobody taped a caliper note on ${boothName} in this browser. Still a table.`}
+        body={`${BOOTH_CALIPER_PAPER_LINE} Nobody taped a caliper note on ${boothName} in this browser. Still a crack. Still a stain.`}
         actions={
           <Button
             variant="outline"

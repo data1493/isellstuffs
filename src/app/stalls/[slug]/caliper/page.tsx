@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   return shareMetadata({
     title: `I don't have a caliper · ${stall.boothName}`,
-    description: `${BOOTH_CALIPER_PAPER_LINE} Tape the caliper note on ${stall.boothName}. Still a table.`,
+    description: `${BOOTH_CALIPER_PAPER_LINE} Tape the caliper note on ${stall.boothName}. Still a crack. Still a stain.`,
     path: stallCaliperPath(stall.slug),
     robots: { index: false, follow: false },
   });

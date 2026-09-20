@@ -36,7 +36,7 @@ export function BoothCaliperForm({
             maxLength={BOOTH_CALIPER_NOTE_MAX}
             autoComplete="off"
             defaultValue={current?.note}
-            placeholder="I don't have a caliper. Still a table."
+            placeholder="I don't have a caliper. Still a crack."
             className="w-full"
           />
         </div>
