@@ -148,6 +148,7 @@ import { ListingReamNotice } from "@/components/listing-ream-notice";
 import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingSergeNotice } from "@/components/listing-serge-notice";
 import { ListingFellNotice } from "@/components/listing-fell-notice";
+import { ListingPinkNotice } from "@/components/listing-pink-notice";
 import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
@@ -363,6 +364,7 @@ import {
   listingBraidPath,
   listingSergePath,
   listingFellPath,
+  listingPinkPath,
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
@@ -764,6 +766,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingDartNotice listingId={listing.id} /> : null}
               {physical ? <ListingSergeNotice listingId={listing.id} /> : null}
               {physical ? <ListingFellNotice listingId={listing.id} /> : null}
+              {physical ? <ListingPinkNotice listingId={listing.id} /> : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
               {physical ? <ListingDeoxNotice listingId={listing.id} /> : null}
@@ -1491,6 +1494,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not fell it
+                  </Link>
+                  <Link
+                    href={listingPinkPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not pink it
                   </Link>
                   <Link
                     href={listingContrastPath(listing.id)}

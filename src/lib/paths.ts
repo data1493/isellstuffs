@@ -1490,6 +1490,14 @@ export function listingFellWritePath() {
   return "/listings/fell";
 }
 
+export function listingPinkPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pink`;
+}
+
+export function listingPinkWritePath() {
+  return "/listings/pink";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
