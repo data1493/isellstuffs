@@ -867,6 +867,12 @@ import {
   subscribeCue,
 } from "@/lib/listing-cue";
 import {
+  canTapePregap,
+  isListingPregapOverlay,
+  readPregapListingIds,
+  subscribePregap,
+} from "@/lib/listing-pregap";
+import {
   canTapePaginate,
   isListingPaginateOverlay,
   readPaginateListingIds,
@@ -1180,6 +1186,7 @@ import {
   listingBevelWritePath,
   listingOverburnWritePath,
   listingCueWritePath,
+  listingPregapWritePath,
   listingDolbyWritePath,
   listingPancakeWritePath,
   listingRecaseWritePath,
@@ -1446,6 +1453,7 @@ export function DeskBoard({
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [cueIds, setCueIds] = useState<string[]>([]);
+  const [pregapIds, setPregapIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
@@ -1640,6 +1648,7 @@ export function DeskBoard({
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setCueIds(readCueListingIds());
+      setPregapIds(readPregapListingIds());
       setDolbyIds(readDolbyListingIds());
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
@@ -1823,6 +1832,7 @@ export function DeskBoard({
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubCue = subscribeCue(apply);
+    const unsubPregap = subscribePregap(apply);
     const unsubDolby = subscribeDolby(apply);
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
@@ -2016,6 +2026,7 @@ export function DeskBoard({
       unsubBevel();
       unsubOverburn();
       unsubCue();
+      unsubPregap();
       unsubDolby();
       unsubPancake();
       unsubRecase();
@@ -3801,6 +3812,37 @@ export function DeskBoard({
                             {isListingCueOverlay(listing.id, cueIds)
                               ? "Leave the Sharpie"
                               : "I will not cue it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePregap(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPregapWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPregapOverlay(listing.id, pregapIds)
+                                ? "open"
+                                : "pregap"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPregapOverlay(listing.id, pregapIds)
+                              ? "Leave the burn"
+                              : "I will not pregap it"}
                           </button>
                         </form>
                       ) : null}

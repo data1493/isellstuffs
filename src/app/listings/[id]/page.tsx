@@ -208,6 +208,7 @@ import { ListingHickeyNotice } from "@/components/listing-hickey-notice";
 import { ListingTrussNotice } from "@/components/listing-truss-notice";
 import { ListingQuenchNotice } from "@/components/listing-quench-notice";
 import { ListingUpsetNotice } from "@/components/listing-upset-notice";
+import { ListingPregapNotice } from "@/components/listing-pregap-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -437,6 +438,7 @@ import {
   listingTrussPath,
   listingQuenchPath,
   listingUpsetPath,
+  listingPregapPath,
   listingRegisterPath,
   listingDolbyPath,
   listingPancakePath,
@@ -920,6 +922,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingQuenchNotice listingId={listing.id} /> : null}
               {listing.id === "kdr-bent-whisk" ? (
                 <ListingUpsetNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "ysk-burned-cdr" ? (
+                <ListingPregapNotice listingId={listing.id} />
               ) : null}
 
               {physical ? (
@@ -1818,6 +1823,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not upset it
+                    </Link>
+                  ) : null}
+                  {listing.id === "ysk-burned-cdr" ? (
+                    <Link
+                      href={listingPregapPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not pregap it
                     </Link>
                   ) : null}
                   <Link

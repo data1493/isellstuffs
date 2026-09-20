@@ -1762,6 +1762,14 @@ export function listingUpsetWritePath() {
   return "/listings/upset";
 }
 
+export function listingPregapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pregap`;
+}
+
+export function listingPregapWritePath() {
+  return "/listings/pregap";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }
