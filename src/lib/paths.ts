@@ -1802,6 +1802,14 @@ export function listingBillboardWritePath() {
   return "/listings/billboard";
 }
 
+export function listingPillowPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pillow`;
+}
+
+export function listingPillowWritePath() {
+  return "/listings/pillow";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
