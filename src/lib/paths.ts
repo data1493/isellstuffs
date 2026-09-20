@@ -1330,6 +1330,14 @@ export function listingAtipWritePath() {
   return "/listings/atip";
 }
 
+export function listingJogglePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/joggle`;
+}
+
+export function listingJoggleWritePath() {
+  return "/listings/joggle";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

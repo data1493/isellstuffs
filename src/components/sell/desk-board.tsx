@@ -549,6 +549,12 @@ import {
   subscribeQuench,
 } from "@/lib/listing-quench";
 import {
+  canTapeJoggle,
+  isListingJoggleOverlay,
+  readJoggleListingIds,
+  subscribeJoggle,
+} from "@/lib/listing-joggle";
+import {
   canTapeUpset,
   isListingUpsetOverlay,
   readUpsetListingIds,
@@ -1285,6 +1291,7 @@ import {
   listingTrussWritePath,
   listingAnnealWritePath,
   listingQuenchWritePath,
+  listingJoggleWritePath,
   listingUpsetWritePath,
   listingBrazeWritePath,
   listingGrommetWritePath,
@@ -1568,6 +1575,7 @@ export function DeskBoard({
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [quenchIds, setQuenchIds] = useState<string[]>([]);
+  const [joggleIds, setJoggleIds] = useState<string[]>([]);
   const [upsetIds, setUpsetIds] = useState<string[]>([]);
   const [brazeIds, setBrazeIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
@@ -1785,6 +1793,7 @@ export function DeskBoard({
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
       setQuenchIds(readQuenchListingIds());
+      setJoggleIds(readJoggleListingIds());
       setUpsetIds(readUpsetListingIds());
       setBrazeIds(readBrazeListingIds());
       setGrommetIds(readGrommetListingIds());
@@ -1991,6 +2000,7 @@ export function DeskBoard({
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubQuench = subscribeQuench(apply);
+    const unsubJoggle = subscribeJoggle(apply);
     const unsubUpset = subscribeUpset(apply);
     const unsubBraze = subscribeBraze(apply);
     const unsubGrommet = subscribeGrommet(apply);
@@ -2207,6 +2217,7 @@ export function DeskBoard({
       unsubTruss();
       unsubAnneal();
       unsubQuench();
+      unsubJoggle();
       unsubUpset();
       unsubBraze();
       unsubGrommet();
@@ -5759,6 +5770,37 @@ export function DeskBoard({
                             {isListingQuenchOverlay(listing.id, quenchIds)
                               ? "Leave the splay"
                               : "I will not quench it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeJoggle(listing) ? (
+                        <form
+                          method="post"
+                          action={listingJoggleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingJoggleOverlay(listing.id, joggleIds)
+                                ? "open"
+                                : "joggle"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingJoggleOverlay(listing.id, joggleIds)
+                              ? "Leave the tines"
+                              : "I will not joggle it"}
                           </button>
                         </form>
                       ) : null}

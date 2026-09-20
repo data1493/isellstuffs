@@ -229,6 +229,7 @@ import { ListingPregapNotice } from "@/components/listing-pregap-notice";
 import { ListingStamperNotice } from "@/components/listing-stamper-notice";
 import { ListingAtipNotice } from "@/components/listing-atip-notice";
 import { ListingGemNotice } from "@/components/listing-gem-notice";
+import { ListingJoggleNotice } from "@/components/listing-joggle-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -442,6 +443,7 @@ import {
   listingCalenderPath,
   listingTenterPath,
   listingAtipPath,
+  listingJogglePath,
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
@@ -1034,6 +1036,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "ysk-burned-cdr" ? (
                 <ListingAtipNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-bent-whisk" ? (
+                <ListingJoggleNotice listingId={listing.id} />
               ) : null}
 
               {physical ? (
@@ -2006,6 +2011,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not quench it
                   </Link>
+                  {listing.id === "kdr-bent-whisk" ? (
+                    <Link
+                      href={listingJogglePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not joggle it
+                    </Link>
+                  ) : null}
                   {listing.id === "kdr-bent-whisk" ? (
                     <Link
                       href={listingUpsetPath(listing.id)}
