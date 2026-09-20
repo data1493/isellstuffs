@@ -1338,6 +1338,14 @@ export function listingJoggleWritePath() {
   return "/listings/joggle";
 }
 
+export function listingFilletPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fillet`;
+}
+
+export function listingFilletWritePath() {
+  return "/listings/fillet";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

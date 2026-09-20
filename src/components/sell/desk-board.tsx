@@ -627,6 +627,12 @@ import {
   subscribeUnderfill,
 } from "@/lib/listing-underfill";
 import {
+  canTapeFillet,
+  isListingFilletOverlay,
+  readFilletListingIds,
+  subscribeFillet,
+} from "@/lib/listing-fillet";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1387,6 +1393,7 @@ import {
   listingPogoWritePath,
   listingReballWritePath,
   listingUnderfillWritePath,
+  listingFilletWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1595,6 +1602,7 @@ export function DeskBoard({
   const [pogoIds, setPogoIds] = useState<string[]>([]);
   const [reballIds, setReballIds] = useState<string[]>([]);
   const [underfillIds, setUnderfillIds] = useState<string[]>([]);
+  const [filletIds, setFilletIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1814,6 +1822,7 @@ export function DeskBoard({
       setPogoIds(readPogoListingIds());
       setReballIds(readReballListingIds());
       setUnderfillIds(readUnderfillListingIds());
+      setFilletIds(readFilletListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2022,6 +2031,7 @@ export function DeskBoard({
     const unsubPogo = subscribePogo(apply);
     const unsubReball = subscribeReball(apply);
     const unsubUnderfill = subscribeUnderfill(apply);
+    const unsubFillet = subscribeFillet(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2240,6 +2250,7 @@ export function DeskBoard({
       unsubPogo();
       unsubReball();
       unsubUnderfill();
+      unsubFillet();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -6463,6 +6474,37 @@ export function DeskBoard({
                             {isListingUnderfillOverlay(listing.id, underfillIds)
                               ? "Leave the crack"
                               : "I will not underfill it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFillet(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFilletWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFilletOverlay(listing.id, filletIds)
+                                ? "open"
+                                : "fillet"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingFilletOverlay(listing.id, filletIds)
+                              ? "Leave the crack"
+                              : "I will not fillet it"}
                           </button>
                         </form>
                       ) : null}

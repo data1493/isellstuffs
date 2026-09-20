@@ -214,6 +214,7 @@ import { ListingMaskNotice } from "@/components/listing-mask-notice";
 import { ListingPogoNotice } from "@/components/listing-pogo-notice";
 import { ListingReballNotice } from "@/components/listing-reball-notice";
 import { ListingUnderfillNotice } from "@/components/listing-underfill-notice";
+import { ListingFilletNotice } from "@/components/listing-fillet-notice";
 import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
 import { ListingZenithNotice } from "@/components/listing-zenith-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
@@ -341,6 +342,7 @@ import {
   listingPogoPath,
   listingReballPath,
   listingUnderfillPath,
+  listingFilletPath,
   listingCountersinkPath,
   listingZenithPath,
   listingLogPath,
@@ -960,6 +962,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "gtk-game-boy" ? (
                 <ListingUnderfillNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "gtk-game-boy" ? (
+                <ListingFilletNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
@@ -1870,6 +1875,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not underfill it
+                    </Link>
+                  ) : null}
+                  {listing.id === "gtk-game-boy" ? (
+                    <Link
+                      href={listingFilletPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not fillet it
                     </Link>
                   ) : null}
                   <Link
