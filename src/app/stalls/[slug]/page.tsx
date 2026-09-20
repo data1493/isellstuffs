@@ -546,6 +546,13 @@ import {
   stallCradlePath,
 } from "@/lib/booth-cradle";
 import {
+  BOOTH_HEADSHELL_COOKIE_NAME,
+  BOOTH_HEADSHELL_PAPER_LINE,
+  boothHeadshellFor,
+  parseBoothHeadshell,
+  stallHeadshellPath,
+} from "@/lib/booth-headshell";
+import {
   BOOTH_PREHEATER_COOKIE_NAME,
   BOOTH_PREHEATER_PAPER_LINE,
   boothPreheaterFor,
@@ -972,6 +979,10 @@ export default async function StallPage({
   const cradle = boothCradleFor(
     stall.id,
     parseBoothCradle(jar.get(BOOTH_CRADLE_COOKIE_NAME)?.value),
+  );
+  const headshell = boothHeadshellFor(
+    stall.id,
+    parseBoothHeadshell(jar.get(BOOTH_HEADSHELL_COOKIE_NAME)?.value),
   );
   const preheater = boothPreheaterFor(
     stall.id,
@@ -2340,6 +2351,23 @@ export default async function StallPage({
             <p data-booth-cradle-empty={stall.id} hidden />
           )}
 
+          {headshell ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a headshell"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-headshell-note={stall.id}>
+                  {headshell.note} {BOOTH_HEADSHELL_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-headshell-empty={stall.id} hidden />
+          )}
+
           {preheater ? (
             <MallNotice
               tone="empty"
@@ -3014,6 +3042,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a cradle
+          </Link>
+
+          <Link
+            href={stallHeadshellPath(stall.slug)}
+            data-booth-headshell-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a headshell
           </Link>
 
           <Link

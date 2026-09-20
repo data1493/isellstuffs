@@ -2856,6 +2856,14 @@ export function stallCradleWritePath() {
   return "/stalls/cradle";
 }
 
+export function stallHeadshellPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/headshell`;
+}
+
+export function stallHeadshellWritePath() {
+  return "/stalls/headshell";
+}
+
 export function stallPreheaterPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/preheater`;
 }

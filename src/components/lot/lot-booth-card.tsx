@@ -100,6 +100,7 @@ export function LotBoothCard({
   protractorNote,
   lifterNote,
   cradleNote,
+  headshellNote,
   preheaterNote,
 }: {
   row: LotBooth;
@@ -183,6 +184,7 @@ export function LotBoothCard({
   protractorNote?: string;
   lifterNote?: string;
   cradleNote?: string;
+  headshellNote?: string;
   preheaterNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
@@ -996,6 +998,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-cradle-empty={stall.id} hidden />
+          )}
+          {headshellNote ? (
+            <p
+              data-booth-headshell-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a headshell. {headshellNote}
+            </p>
+          ) : (
+            <p data-booth-headshell-empty={stall.id} hidden />
           )}
           {preheaterNote ? (
             <p
