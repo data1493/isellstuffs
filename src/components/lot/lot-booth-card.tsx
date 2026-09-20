@@ -87,6 +87,7 @@ export function LotBoothCard({
   stropNote,
   driftNote,
   boneNote,
+  tweezersNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -156,6 +157,7 @@ export function LotBoothCard({
   stropNote?: string;
   driftNote?: string;
   boneNote?: string;
+  tweezersNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -838,6 +840,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-bone-empty={stall.id} hidden />
+          )}
+          {tweezersNote ? (
+            <p
+              data-booth-tweezers-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have tweezers. {tweezersNote}
+            </p>
+          ) : (
+            <p data-booth-tweezers-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

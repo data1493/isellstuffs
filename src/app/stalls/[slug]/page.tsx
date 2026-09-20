@@ -455,6 +455,13 @@ import {
   stallBonePath,
 } from "@/lib/booth-bone";
 import {
+  BOOTH_TWEEZERS_COOKIE_NAME,
+  BOOTH_TWEEZERS_PAPER_LINE,
+  boothTweezersFor,
+  parseBoothTweezers,
+  stallTweezersPath,
+} from "@/lib/booth-tweezers";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -822,6 +829,10 @@ export default async function StallPage({
   const bone = boothBoneFor(
     stall.id,
     parseBoothBone(jar.get(BOOTH_BONE_COOKIE_NAME)?.value),
+  );
+  const tweezers = boothTweezersFor(
+    stall.id,
+    parseBoothTweezers(jar.get(BOOTH_TWEEZERS_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1982,6 +1993,23 @@ export default async function StallPage({
             <p data-booth-bone-empty={stall.id} hidden />
           )}
 
+          {tweezers ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have tweezers"
+              title="Still a driveway. Still a crack."
+              body={
+                <p data-booth-tweezers-note={stall.id}>
+                  {tweezers.note} {BOOTH_TWEEZERS_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-tweezers-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2518,6 +2546,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a bone
+          </Link>
+
+          <Link
+            href={stallTweezersPath(stall.slug)}
+            data-booth-tweezers-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have tweezers
           </Link>
 
           <Link

@@ -315,6 +315,11 @@ import {
   parseBoothBone,
 } from "@/lib/booth-bone";
 import {
+  BOOTH_TWEEZERS_COOKIE_NAME,
+  BOOTH_TWEEZERS_MIRROR_SCRIPT,
+  parseBoothTweezers,
+} from "@/lib/booth-tweezers";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -424,6 +429,9 @@ export default async function LotPage() {
   const stropMap = parseBoothStrop(jar.get(BOOTH_STROP_COOKIE_NAME)?.value);
   const driftMap = parseBoothDrift(jar.get(BOOTH_DRIFT_COOKIE_NAME)?.value);
   const boneMap = parseBoothBone(jar.get(BOOTH_BONE_COOKIE_NAME)?.value);
+  const tweezersMap = parseBoothTweezers(
+    jar.get(BOOTH_TWEEZERS_COOKIE_NAME)?.value,
+  );
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -498,6 +506,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STROP_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_BONE_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_TWEEZERS_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -573,6 +582,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STROP_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_BONE_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_TWEEZERS_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -699,6 +709,7 @@ export default async function LotPage() {
                     stropNote={stropMap[row.stall.id]?.note}
                     driftNote={driftMap[row.stall.id]?.note}
                     boneNote={boneMap[row.stall.id]?.note}
+                    tweezersNote={tweezersMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -790,6 +801,7 @@ export default async function LotPage() {
                     stropNote={stropMap[row.stall.id]?.note}
                     driftNote={driftMap[row.stall.id]?.note}
                     boneNote={boneMap[row.stall.id]?.note}
+                    tweezersNote={tweezersMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
