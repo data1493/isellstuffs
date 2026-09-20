@@ -915,6 +915,12 @@ import {
   subscribeGalley,
 } from "@/lib/listing-galley";
 import {
+  canTapeGang,
+  isListingGangOverlay,
+  readGangListingIds,
+  subscribeGang,
+} from "@/lib/listing-gang";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -1196,6 +1202,7 @@ import {
   listingBleedWritePath,
   listingMatWritePath,
   listingGalleyWritePath,
+  listingGangWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
@@ -1480,6 +1487,7 @@ export function DeskBoard({
   const [bleedIds, setBleedIds] = useState<string[]>([]);
   const [matIds, setMatIds] = useState<string[]>([]);
   const [galleyIds, setGalleyIds] = useState<string[]>([]);
+  const [gangIds, setGangIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
@@ -1673,6 +1681,7 @@ export function DeskBoard({
       setBleedIds(readBleedListingIds());
       setMatIds(readMatListingIds());
       setGalleyIds(readGalleyListingIds());
+      setGangIds(readGangListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
@@ -1855,6 +1864,7 @@ export function DeskBoard({
     const unsubBleed = subscribeBleed(apply);
     const unsubMat = subscribeMat(apply);
     const unsubGalley = subscribeGalley(apply);
+    const unsubGang = subscribeGang(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
@@ -2047,6 +2057,7 @@ export function DeskBoard({
       unsubBleed();
       unsubMat();
       unsubGalley();
+      unsubGang();
       unsubScale();
       unsubGate();
       unsubQuantize();
@@ -7479,6 +7490,37 @@ export function DeskBoard({
                             {isListingGalleyOverlay(listing.id, galleyIds)
                               ? "Leave the liner"
                               : "I will not galley it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGang(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGangWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGangOverlay(listing.id, gangIds)
+                                ? "open"
+                                : "gang"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGangOverlay(listing.id, gangIds)
+                              ? "Leave the cards"
+                              : "I will not gang them"}
                           </button>
                         </form>
                       ) : null}

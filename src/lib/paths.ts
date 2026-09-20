@@ -1746,6 +1746,14 @@ export function listingGalleyWritePath() {
   return "/listings/galley";
 }
 
+export function listingGangPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gang`;
+}
+
+export function listingGangWritePath() {
+  return "/listings/gang";
+}
+
 export function listingUpsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/upset`;
 }
