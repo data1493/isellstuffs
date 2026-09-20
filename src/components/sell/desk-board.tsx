@@ -897,6 +897,12 @@ import {
   subscribeMat,
 } from "@/lib/listing-mat";
 import {
+  canTapeGalley,
+  isListingGalleyOverlay,
+  readGalleyListingIds,
+  subscribeGalley,
+} from "@/lib/listing-galley";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -1175,6 +1181,7 @@ import {
   listingVarnishWritePath,
   listingBleedWritePath,
   listingMatWritePath,
+  listingGalleyWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
@@ -1456,6 +1463,7 @@ export function DeskBoard({
   const [varnishIds, setVarnishIds] = useState<string[]>([]);
   const [bleedIds, setBleedIds] = useState<string[]>([]);
   const [matIds, setMatIds] = useState<string[]>([]);
+  const [galleyIds, setGalleyIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
@@ -1646,6 +1654,7 @@ export function DeskBoard({
       setVarnishIds(readVarnishListingIds());
       setBleedIds(readBleedListingIds());
       setMatIds(readMatListingIds());
+      setGalleyIds(readGalleyListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
@@ -1825,6 +1834,7 @@ export function DeskBoard({
     const unsubVarnish = subscribeVarnish(apply);
     const unsubBleed = subscribeBleed(apply);
     const unsubMat = subscribeMat(apply);
+    const unsubGalley = subscribeGalley(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
@@ -2014,6 +2024,7 @@ export function DeskBoard({
       unsubVarnish();
       unsubBleed();
       unsubMat();
+      unsubGalley();
       unsubScale();
       unsubGate();
       unsubQuantize();
@@ -7353,6 +7364,37 @@ export function DeskBoard({
                             {isListingMatOverlay(listing.id, matIds)
                               ? "Leave the mount"
                               : "I will not mat it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGalley(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGalleyWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGalleyOverlay(listing.id, galleyIds)
+                                ? "open"
+                                : "galley"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGalleyOverlay(listing.id, galleyIds)
+                              ? "Leave the liner"
+                              : "I will not galley it"}
                           </button>
                         </form>
                       ) : null}

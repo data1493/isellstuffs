@@ -1730,6 +1730,14 @@ export function listingSprigWritePath() {
   return "/listings/sprig";
 }
 
+export function listingGalleyPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/galley`;
+}
+
+export function listingGalleyWritePath() {
+  return "/listings/galley";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

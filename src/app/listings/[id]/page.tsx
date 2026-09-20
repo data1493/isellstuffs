@@ -189,6 +189,7 @@ import { ListingTrapNotice } from "@/components/listing-trap-notice";
 import { ListingVarnishNotice } from "@/components/listing-varnish-notice";
 import { ListingBleedNotice } from "@/components/listing-bleed-notice";
 import { ListingMatNotice } from "@/components/listing-mat-notice";
+import { ListingGalleyNotice } from "@/components/listing-galley-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
@@ -413,6 +414,7 @@ import {
   listingBisquePath,
   listingBleedPath,
   listingMatPath,
+  listingGalleyPath,
   listingPuckPath,
   listingHonePath,
   listingRinsePath,
@@ -695,6 +697,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingVersoNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBleedNotice listingId={listing.id} /> : null}
               {!physical ? <ListingMatNotice listingId={listing.id} /> : null}
+              {listing.id === "dl-crate-side-a" ? (
+                <ListingGalleyNotice listingId={listing.id} />
+              ) : null}
               {!physical ? <ListingYearNotice listingId={listing.id} /> : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingVibeNotice listingId={listing.id} /> : null}
@@ -2012,6 +2017,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not mat it
                   </Link>
+                  {listing.id === "dl-crate-side-a" ? (
+                    <Link
+                      href={listingGalleyPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not galley it
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingYearPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
