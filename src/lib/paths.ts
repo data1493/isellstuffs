@@ -1394,6 +1394,14 @@ export function listingPcltWritePath() {
   return "/listings/pclt";
 }
 
+export function listingEbdtPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ebdt`;
+}
+
+export function listingEbdtWritePath() {
+  return "/listings/ebdt";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }

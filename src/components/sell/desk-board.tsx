@@ -1539,6 +1539,12 @@ import {
   subscribePclt,
 } from "@/lib/listing-pclt";
 import {
+  canTapeEbdt,
+  isListingEbdtOverlay,
+  readEbdtListingIds,
+  subscribeEbdt,
+} from "@/lib/listing-ebdt";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1827,6 +1833,7 @@ import {
   listingOpbdWritePath,
   listingLtshWritePath,
   listingPcltWritePath,
+  listingEbdtWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -2134,6 +2141,7 @@ export function DeskBoard({
   const [opbdIds, setOpbdIds] = useState<string[]>([]);
   const [ltshIds, setLtshIds] = useState<string[]>([]);
   const [pcltIds, setPcltIds] = useState<string[]>([]);
+  const [ebdtIds, setEbdtIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2411,6 +2419,7 @@ export function DeskBoard({
       setOpbdIds(readOpbdListingIds());
       setLtshIds(readLtshListingIds());
       setPcltIds(readPcltListingIds());
+      setEbdtIds(readEbdtListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2677,6 +2686,7 @@ export function DeskBoard({
     const unsubOpbd = subscribeOpbd(apply);
     const unsubLtsh = subscribeLtsh(apply);
     const unsubPclt = subscribePclt(apply);
+    const unsubEbdt = subscribeEbdt(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2953,6 +2963,7 @@ export function DeskBoard({
       unsubOpbd();
       unsubLtsh();
       unsubPclt();
+      unsubEbdt();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -10635,6 +10646,37 @@ export function DeskBoard({
                             {isListingPcltOverlay(listing.id, pcltIds)
                               ? "Leave the pcl"
                               : "I will not pclt it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeEbdt(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEbdtWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEbdtOverlay(listing.id, ebdtIds)
+                                ? "open"
+                                : "ebdt"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingEbdtOverlay(listing.id, ebdtIds)
+                              ? "Leave the ebd"
+                              : "I will not ebdt it"}
                           </button>
                         </form>
                       ) : null}
