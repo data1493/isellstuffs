@@ -513,6 +513,12 @@ import {
   subscribeShank,
 } from "@/lib/listing-shank";
 import {
+  canTapeChannel,
+  isListingChannelOverlay,
+  readChannelListingIds,
+  subscribeChannel,
+} from "@/lib/listing-channel";
+import {
   canTapeHickey,
   isListingHickeyOverlay,
   readHickeyListingIds,
@@ -1201,6 +1207,7 @@ import {
   listingSkiveWritePath,
   listingEdgeWritePath,
   listingShankWritePath,
+  listingChannelWritePath,
   listingHickeyWritePath,
   listingTrussWritePath,
   listingAnnealWritePath,
@@ -1471,6 +1478,7 @@ export function DeskBoard({
   const [skiveIds, setSkiveIds] = useState<string[]>([]);
   const [edgeIds, setEdgeIds] = useState<string[]>([]);
   const [shankIds, setShankIds] = useState<string[]>([]);
+  const [channelIds, setChannelIds] = useState<string[]>([]);
   const [hickeyIds, setHickeyIds] = useState<string[]>([]);
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
@@ -1675,6 +1683,7 @@ export function DeskBoard({
       setSkiveIds(readSkiveListingIds());
       setEdgeIds(readEdgeListingIds());
       setShankIds(readShankListingIds());
+      setChannelIds(readChannelListingIds());
       setHickeyIds(readHickeyListingIds());
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
@@ -1868,6 +1877,7 @@ export function DeskBoard({
     const unsubSkive = subscribeSkive(apply);
     const unsubEdge = subscribeEdge(apply);
     const unsubShank = subscribeShank(apply);
+    const unsubChannel = subscribeChannel(apply);
     const unsubHickey = subscribeHickey(apply);
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
@@ -2071,6 +2081,7 @@ export function DeskBoard({
       unsubSkive();
       unsubEdge();
       unsubShank();
+      unsubChannel();
       unsubHickey();
       unsubTruss();
       unsubAnneal();
@@ -5275,6 +5286,37 @@ export function DeskBoard({
                             {isListingShankOverlay(listing.id, shankIds)
                               ? "Leave the flex"
                               : "I will not shank them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeChannel(listing) ? (
+                        <form
+                          method="post"
+                          action={listingChannelWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingChannelOverlay(listing.id, channelIds)
+                                ? "open"
+                                : "channel"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingChannelOverlay(listing.id, channelIds)
+                              ? "Leave the flex"
+                              : "I will not channel them"}
                           </button>
                         </form>
                       ) : null}

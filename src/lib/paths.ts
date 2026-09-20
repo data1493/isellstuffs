@@ -1802,6 +1802,14 @@ export function listingBrazeWritePath() {
   return "/listings/braze";
 }
 
+export function listingChannelPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/channel`;
+}
+
+export function listingChannelWritePath() {
+  return "/listings/channel";
+}
+
 export function listingGalleyPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/galley`;
 }

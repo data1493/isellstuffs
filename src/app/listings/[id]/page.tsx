@@ -163,6 +163,7 @@ import { ListingPickleNotice } from "@/components/listing-pickle-notice";
 import { ListingSprigNotice } from "@/components/listing-sprig-notice";
 import { ListingJiggerNotice } from "@/components/listing-jigger-notice";
 import { ListingBrazeNotice } from "@/components/listing-braze-notice";
+import { ListingChannelNotice } from "@/components/listing-channel-notice";
 import { ListingFettleNotice } from "@/components/listing-fettle-notice";
 import { ListingBisqueNotice } from "@/components/listing-bisque-notice";
 import { ListingPuckNotice } from "@/components/listing-puck-notice";
@@ -448,6 +449,7 @@ import {
   listingSkivePath,
   listingEdgePath,
   listingShankPath,
+  listingChannelPath,
   listingHickeyPath,
   listingTrussPath,
   listingQuenchPath,
@@ -955,6 +957,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
               {physical ? <ListingEdgeNotice listingId={listing.id} /> : null}
               {physical ? <ListingShankNotice listingId={listing.id} /> : null}
+              {listing.id === "clo-split-soles" ? (
+                <ListingChannelNotice listingId={listing.id} />
+              ) : null}
               {physical ? <ListingHickeyNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
               {physical ? <ListingQuenchNotice listingId={listing.id} /> : null}
@@ -1873,6 +1878,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not shank them
                   </Link>
+                  {listing.id === "clo-split-soles" ? (
+                    <Link
+                      href={listingChannelPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not channel them
+                    </Link>
+                  ) : null}
                   {listing.id === "ysk-wobbly-lamp" ? (
                     <Link
                       href={listingHickeyPath(listing.id)}
