@@ -91,6 +91,7 @@ export function LotBoothCard({
   chalkNote,
   goboNote,
   feelerNote,
+  riserNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -164,6 +165,7 @@ export function LotBoothCard({
   chalkNote?: string;
   goboNote?: string;
   feelerNote?: string;
+  riserNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -886,6 +888,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-feeler-empty={stall.id} hidden />
+          )}
+          {riserNote ? (
+            <p
+              data-booth-riser-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a riser. {riserNote}
+            </p>
+          ) : (
+            <p data-booth-riser-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

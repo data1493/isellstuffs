@@ -2432,6 +2432,14 @@ export function stallFeelerWritePath() {
   return "/stalls/feeler";
 }
 
+export function stallRiserPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/riser`;
+}
+
+export function stallRiserWritePath() {
+  return "/stalls/riser";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

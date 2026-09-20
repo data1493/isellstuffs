@@ -335,6 +335,11 @@ import {
   parseBoothFeeler,
 } from "@/lib/booth-feeler";
 import {
+  BOOTH_RISER_COOKIE_NAME,
+  BOOTH_RISER_MIRROR_SCRIPT,
+  parseBoothRiser,
+} from "@/lib/booth-riser";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -450,6 +455,7 @@ export default async function LotPage() {
   const chalkMap = parseBoothChalk(jar.get(BOOTH_CHALK_COOKIE_NAME)?.value);
   const goboMap = parseBoothGobo(jar.get(BOOTH_GOBO_COOKIE_NAME)?.value);
   const feelerMap = parseBoothFeeler(jar.get(BOOTH_FEELER_COOKIE_NAME)?.value);
+  const riserMap = parseBoothRiser(jar.get(BOOTH_RISER_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -528,6 +534,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_CHALK_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_GOBO_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FEELER_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_RISER_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -607,6 +614,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_CHALK_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_GOBO_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FEELER_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_RISER_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -737,6 +745,7 @@ export default async function LotPage() {
                     chalkNote={chalkMap[row.stall.id]?.note}
                     goboNote={goboMap[row.stall.id]?.note}
                     feelerNote={feelerMap[row.stall.id]?.note}
+                    riserNote={riserMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -832,6 +841,7 @@ export default async function LotPage() {
                     chalkNote={chalkMap[row.stall.id]?.note}
                     goboNote={goboMap[row.stall.id]?.note}
                     feelerNote={feelerMap[row.stall.id]?.note}
+                    riserNote={riserMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

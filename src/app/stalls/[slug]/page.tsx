@@ -483,6 +483,13 @@ import {
   stallFeelerPath,
 } from "@/lib/booth-feeler";
 import {
+  BOOTH_RISER_COOKIE_NAME,
+  BOOTH_RISER_PAPER_LINE,
+  boothRiserFor,
+  parseBoothRiser,
+  stallRiserPath,
+} from "@/lib/booth-riser";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -866,6 +873,10 @@ export default async function StallPage({
   const feeler = boothFeelerFor(
     stall.id,
     parseBoothFeeler(jar.get(BOOTH_FEELER_COOKIE_NAME)?.value),
+  );
+  const riser = boothRiserFor(
+    stall.id,
+    parseBoothRiser(jar.get(BOOTH_RISER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2094,6 +2105,23 @@ export default async function StallPage({
             <p data-booth-feeler-empty={stall.id} hidden />
           )}
 
+          {riser ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a riser"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-riser-note={stall.id}>
+                  {riser.note} {BOOTH_RISER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-riser-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2662,6 +2690,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a feeler
+          </Link>
+
+          <Link
+            href={stallRiserPath(stall.slug)}
+            data-booth-riser-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a riser
           </Link>
 
           <Link
