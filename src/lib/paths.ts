@@ -1698,6 +1698,14 @@ export function listingPogoWritePath() {
   return "/listings/pogo";
 }
 
+export function listingReballPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/reball`;
+}
+
+export function listingReballWritePath() {
+  return "/listings/reball";
+}
+
 export function listingMatPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/mat`;
 }

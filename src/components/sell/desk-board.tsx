@@ -591,6 +591,12 @@ import {
   subscribePogo,
 } from "@/lib/listing-pogo";
 import {
+  canTapeReball,
+  isListingReballOverlay,
+  readReballListingIds,
+  subscribeReball,
+} from "@/lib/listing-reball";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1223,6 +1229,7 @@ import {
   listingShieldWritePath,
   listingMaskWritePath,
   listingPogoWritePath,
+  listingReballWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1421,6 +1428,7 @@ export function DeskBoard({
   const [shieldIds, setShieldIds] = useState<string[]>([]);
   const [maskIds, setMaskIds] = useState<string[]>([]);
   const [pogoIds, setPogoIds] = useState<string[]>([]);
+  const [reballIds, setReballIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1616,6 +1624,7 @@ export function DeskBoard({
       setShieldIds(readShieldListingIds());
       setMaskIds(readMaskListingIds());
       setPogoIds(readPogoListingIds());
+      setReballIds(readReballListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -1800,6 +1809,7 @@ export function DeskBoard({
     const unsubShield = subscribeShield(apply);
     const unsubMask = subscribeMask(apply);
     const unsubPogo = subscribePogo(apply);
+    const unsubReball = subscribeReball(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -1994,6 +2004,7 @@ export function DeskBoard({
       unsubShield();
       unsubMask();
       unsubPogo();
+      unsubReball();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -5641,6 +5652,37 @@ export function DeskBoard({
                             {isListingPogoOverlay(listing.id, pogoIds)
                               ? "Leave the cart"
                               : "I will not pogo it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeReball(listing) ? (
+                        <form
+                          method="post"
+                          action={listingReballWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingReballOverlay(listing.id, reballIds)
+                                ? "open"
+                                : "reball"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingReballOverlay(listing.id, reballIds)
+                              ? "Leave the spheres"
+                              : "I will not reball it"}
                           </button>
                         </form>
                       ) : null}
