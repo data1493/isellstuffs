@@ -1858,6 +1858,14 @@ export function listingCountersinkWritePath() {
   return "/listings/countersink";
 }
 
+export function listingZenithPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/zenith`;
+}
+
+export function listingZenithWritePath() {
+  return "/listings/zenith";
+}
+
 export function listingUpsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/upset`;
 }

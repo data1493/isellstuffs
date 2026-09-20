@@ -210,6 +210,7 @@ import { ListingPogoNotice } from "@/components/listing-pogo-notice";
 import { ListingReballNotice } from "@/components/listing-reball-notice";
 import { ListingUnderfillNotice } from "@/components/listing-underfill-notice";
 import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
+import { ListingZenithNotice } from "@/components/listing-zenith-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingCueNotice } from "@/components/listing-cue-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
@@ -331,6 +332,7 @@ import {
   listingReballPath,
   listingUnderfillPath,
   listingCountersinkPath,
+  listingZenithPath,
   listingLogPath,
   listingBpmPath,
   listingManualPath,
@@ -870,6 +872,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingVacuumNotice listingId={listing.id} /> : null}
               {listing.id === "mdb-scratched-lp" ? (
                 <ListingOverhangNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "mdb-scratched-lp" ? (
+                <ListingZenithNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingShimNotice listingId={listing.id} /> : null}
@@ -1526,6 +1531,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not overhang it
+                    </Link>
+                  ) : null}
+                  {listing.id === "mdb-scratched-lp" ? (
+                    <Link
+                      href={listingZenithPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not zenith it
                     </Link>
                   ) : null}
                   <Link

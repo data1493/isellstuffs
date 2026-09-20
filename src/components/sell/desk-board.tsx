@@ -807,6 +807,12 @@ import {
   subscribeOverhang,
 } from "@/lib/listing-overhang";
 import {
+  canTapeZenith,
+  isListingZenithOverlay,
+  readZenithListingIds,
+  subscribeZenith,
+} from "@/lib/listing-zenith";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -1272,6 +1278,7 @@ import {
   listingScrapeWritePath,
   listingVacuumWritePath,
   listingOverhangWritePath,
+  listingZenithWritePath,
   listingBevelWritePath,
   listingOverburnWritePath,
   listingCueWritePath,
@@ -1555,6 +1562,7 @@ export function DeskBoard({
   const [scrapeIds, setScrapeIds] = useState<string[]>([]);
   const [vacuumIds, setVacuumIds] = useState<string[]>([]);
   const [overhangIds, setOverhangIds] = useState<string[]>([]);
+  const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [cueIds, setCueIds] = useState<string[]>([]);
@@ -1764,6 +1772,7 @@ export function DeskBoard({
       setScrapeIds(readScrapeListingIds());
       setVacuumIds(readVacuumListingIds());
       setOverhangIds(readOverhangListingIds());
+      setZenithIds(readZenithListingIds());
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setCueIds(readCueListingIds());
@@ -1962,6 +1971,7 @@ export function DeskBoard({
     const unsubScrape = subscribeScrape(apply);
     const unsubVacuum = subscribeVacuum(apply);
     const unsubOverhang = subscribeOverhang(apply);
+    const unsubZenith = subscribeZenith(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubCue = subscribeCue(apply);
@@ -2170,6 +2180,7 @@ export function DeskBoard({
       unsubScrape();
       unsubVacuum();
       unsubOverhang();
+      unsubZenith();
       unsubBevel();
       unsubOverburn();
       unsubCue();
@@ -3935,6 +3946,37 @@ export function DeskBoard({
                             {isListingOverhangOverlay(listing.id, overhangIds)
                               ? "Leave the skip"
                               : "I will not overhang it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeZenith(listing) ? (
+                        <form
+                          method="post"
+                          action={listingZenithWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingZenithOverlay(listing.id, zenithIds)
+                                ? "open"
+                                : "zenith"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingZenithOverlay(listing.id, zenithIds)
+                              ? "Leave the skip"
+                              : "I will not zenith it"}
                           </button>
                         </form>
                       ) : null}
