@@ -204,6 +204,7 @@ import { ListingQuenchNotice } from "@/components/listing-quench-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
+import { ListingDetuneNotice } from "@/components/listing-detune-notice";
 import { ListingSubsetNotice } from "@/components/listing-subset-notice";
 import { ListingProofNotice } from "@/components/listing-proof-notice";
 import { ListingRegisterNotice } from "@/components/listing-register-notice";
@@ -445,6 +446,7 @@ import {
   listingGatePath,
   listingQuantizePath,
   listingSaturatePath,
+  listingDetunePath,
   listingSubsetPath,
   listingFlockPath,
   listingTrayPath,
@@ -725,6 +727,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingGateNotice listingId={listing.id} /> : null}
               {!physical ? <ListingQuantizeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSaturateNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingDetuneNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSubsetNotice listingId={listing.id} /> : null}
               {!physical ? <ListingRightsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingSlantNotice listingId={listing.id} /> : null}
@@ -2150,6 +2153,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not saturate them
                   </Link>
+                  {listing.id === "dl-sample-pack" ? (
+                    <Link
+                      href={listingDetunePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not detune them
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingRightsPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

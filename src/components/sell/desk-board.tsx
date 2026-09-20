@@ -903,6 +903,12 @@ import {
   subscribeSaturate,
 } from "@/lib/listing-saturate";
 import {
+  canTapeDetune,
+  isListingDetuneOverlay,
+  readDetuneListingIds,
+  subscribeDetune,
+} from "@/lib/listing-detune";
+import {
   canTapeSubset,
   isListingSubsetOverlay,
   readSubsetListingIds,
@@ -1152,6 +1158,7 @@ import {
   listingGateWritePath,
   listingQuantizeWritePath,
   listingSaturateWritePath,
+  listingDetuneWritePath,
   listingSubsetWritePath,
   listingProofWritePath,
   listingRegisterWritePath,
@@ -1429,6 +1436,7 @@ export function DeskBoard({
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
   const [saturateIds, setSaturateIds] = useState<string[]>([]);
+  const [detuneIds, setDetuneIds] = useState<string[]>([]);
   const [subsetIds, setSubsetIds] = useState<string[]>([]);
   const [proofIds, setProofIds] = useState<string[]>([]);
   const [registerIds, setRegisterIds] = useState<string[]>([]);
@@ -1615,6 +1623,7 @@ export function DeskBoard({
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
       setSaturateIds(readSaturateListingIds());
+      setDetuneIds(readDetuneListingIds());
       setSubsetIds(readSubsetListingIds());
       setProofIds(readProofListingIds());
       setRegisterIds(readRegisterListingIds());
@@ -1790,6 +1799,7 @@ export function DeskBoard({
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
     const unsubSaturate = subscribeSaturate(apply);
+    const unsubDetune = subscribeDetune(apply);
     const unsubSubset = subscribeSubset(apply);
     const unsubProof = subscribeProof(apply);
     const unsubRegister = subscribeRegister(apply);
@@ -1975,6 +1985,7 @@ export function DeskBoard({
       unsubGate();
       unsubQuantize();
       unsubSaturate();
+      unsubDetune();
       unsubSubset();
       unsubProof();
       unsubRegister();
@@ -6503,6 +6514,37 @@ export function DeskBoard({
                             {isListingSaturateOverlay(listing.id, saturateIds)
                               ? "Leave the kicks thin"
                               : "I will not saturate them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDetune(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDetuneWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDetuneOverlay(listing.id, detuneIds)
+                                ? "open"
+                                : "detune"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDetuneOverlay(listing.id, detuneIds)
+                              ? "Leave the shots"
+                              : "I will not detune them"}
                           </button>
                         </form>
                       ) : null}

@@ -1242,6 +1242,14 @@ export function listingSaturateWritePath() {
   return "/listings/saturate";
 }
 
+export function listingDetunePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/detune`;
+}
+
+export function listingDetuneWritePath() {
+  return "/listings/detune";
+}
+
 export function listingBurnishPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/burnish`;
 }
