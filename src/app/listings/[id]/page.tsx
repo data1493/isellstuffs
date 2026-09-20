@@ -185,6 +185,7 @@ import { ListingAntiskateNotice } from "@/components/listing-antiskate-notice";
 import { ListingGimbalNotice } from "@/components/listing-gimbal-notice";
 import { ListingDashpotNotice } from "@/components/listing-dashpot-notice";
 import { ListingPivotNotice } from "@/components/listing-pivot-notice";
+import { ListingResonanceNotice } from "@/components/listing-resonance-notice";
 import { ListingBevelNotice } from "@/components/listing-bevel-notice";
 import { ListingDolbyNotice } from "@/components/listing-dolby-notice";
 import { ListingPancakeNotice } from "@/components/listing-pancake-notice";
@@ -530,6 +531,7 @@ import {
   listingGimbalPath,
   listingDashpotPath,
   listingPivotPath,
+  listingResonancePath,
   listingBevelPath,
   listingOverburnPath,
   listingCuePath,
@@ -1043,6 +1045,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "mdb-scratched-lp" ? (
                 <ListingPivotNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "mdb-scratched-lp" ? (
+                <ListingResonanceNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingShimNotice listingId={listing.id} /> : null}
@@ -1858,6 +1863,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not pivot it
+                    </Link>
+                  ) : null}
+                  {listing.id === "mdb-scratched-lp" ? (
+                    <Link
+                      href={listingResonancePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not resonance it
                     </Link>
                   ) : null}
                   <Link

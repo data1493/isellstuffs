@@ -2042,6 +2042,14 @@ export function listingPivotWritePath() {
   return "/listings/pivot";
 }
 
+export function listingResonancePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/resonance`;
+}
+
+export function listingResonanceWritePath() {
+  return "/listings/resonance";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
