@@ -1173,6 +1173,12 @@ import {
   subscribeAces,
 } from "@/lib/listing-aces";
 import {
+  canTapeVamp,
+  isListingVampOverlay,
+  readVampListingIds,
+  subscribeVamp,
+} from "@/lib/listing-vamp";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -1448,6 +1454,7 @@ import {
   listingLatticeWritePath,
   listingGamutWritePath,
   listingAcesWritePath,
+  listingVampWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1764,6 +1771,7 @@ export function DeskBoard({
   const [latticeIds, setLatticeIds] = useState<string[]>([]);
   const [gamutIds, setGamutIds] = useState<string[]>([]);
   const [acesIds, setAcesIds] = useState<string[]>([]);
+  const [vampIds, setVampIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1991,6 +1999,7 @@ export function DeskBoard({
       setLatticeIds(readLatticeListingIds());
       setGamutIds(readGamutListingIds());
       setAcesIds(readAcesListingIds());
+      setVampIds(readVampListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -2207,6 +2216,7 @@ export function DeskBoard({
     const unsubLattice = subscribeLattice(apply);
     const unsubGamut = subscribeGamut(apply);
     const unsubAces = subscribeAces(apply);
+    const unsubVamp = subscribeVamp(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -2433,6 +2443,7 @@ export function DeskBoard({
       unsubLattice();
       unsubGamut();
       unsubAces();
+      unsubVamp();
     };
   }, [listings, stall.id]);
 
@@ -5900,6 +5911,37 @@ export function DeskBoard({
                             {isListingGemOverlay(listing.id, gemIds)
                               ? "Leave the flex"
                               : "I will not gem them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVamp(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVampWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVampOverlay(listing.id, vampIds)
+                                ? "open"
+                                : "vamp"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVampOverlay(listing.id, vampIds)
+                              ? "Leave the flex"
+                              : "I will not vamp them"}
                           </button>
                         </form>
                       ) : null}

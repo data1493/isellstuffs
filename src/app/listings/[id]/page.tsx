@@ -59,6 +59,7 @@ import { ListingPosterizeNotice } from "@/components/listing-posterize-notice";
 import { ListingLatticeNotice } from "@/components/listing-lattice-notice";
 import { ListingGamutNotice } from "@/components/listing-gamut-notice";
 import { ListingAcesNotice } from "@/components/listing-aces-notice";
+import { ListingVampNotice } from "@/components/listing-vamp-notice";
 import { ListingLogNotice } from "@/components/listing-log-notice";
 import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
@@ -346,6 +347,7 @@ import {
   listingLatticePath,
   listingGamutPath,
   listingAcesPath,
+  listingVampPath,
   listingMaskPath,
   listingPogoPath,
   listingReballPath,
@@ -1063,6 +1065,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "clo-split-soles" ? (
                 <ListingGemNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "clo-split-soles" ? (
+                <ListingVampNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingHickeyNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
@@ -2066,6 +2071,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not gem them
+                    </Link>
+                  ) : null}
+                  {listing.id === "clo-split-soles" ? (
+                    <Link
+                      href={listingVampPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not vamp them
                     </Link>
                   ) : null}
                   {listing.id === "ysk-wobbly-lamp" ? (

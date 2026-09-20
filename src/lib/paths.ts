@@ -1354,6 +1354,14 @@ export function listingAcesWritePath() {
   return "/listings/aces";
 }
 
+export function listingVampPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/vamp`;
+}
+
+export function listingVampWritePath() {
+  return "/listings/vamp";
+}
+
 export function listingAtipPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/atip`;
 }
