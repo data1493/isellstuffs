@@ -495,6 +495,12 @@ import {
   subscribeSkive,
 } from "@/lib/listing-skive";
 import {
+  canTapeTruss,
+  isListingTrussOverlay,
+  readTrussListingIds,
+  subscribeTruss,
+} from "@/lib/listing-truss";
+import {
   canTapeAnneal,
   isListingAnnealOverlay,
   readAnnealListingIds,
@@ -898,6 +904,7 @@ import {
   listingFlockWritePath,
   listingTumbleWritePath,
   listingSkiveWritePath,
+  listingTrussWritePath,
   listingAnnealWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
@@ -1118,6 +1125,7 @@ export function DeskBoard({
   const [flockIds, setFlockIds] = useState<string[]>([]);
   const [tumbleIds, setTumbleIds] = useState<string[]>([]);
   const [skiveIds, setSkiveIds] = useState<string[]>([]);
+  const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
@@ -1272,6 +1280,7 @@ export function DeskBoard({
       setFlockIds(readFlockListingIds());
       setTumbleIds(readTumbleListingIds());
       setSkiveIds(readSkiveListingIds());
+      setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
@@ -1415,6 +1424,7 @@ export function DeskBoard({
     const unsubFlock = subscribeFlock(apply);
     const unsubTumble = subscribeTumble(apply);
     const unsubSkive = subscribeSkive(apply);
+    const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
@@ -1568,6 +1578,7 @@ export function DeskBoard({
       unsubFlock();
       unsubTumble();
       unsubSkive();
+      unsubTruss();
       unsubAnneal();
       unsubGrommet();
       unsubDart();
@@ -3330,6 +3341,37 @@ export function DeskBoard({
                             {isListingTemperOverlay(listing.id, temperIds)
                               ? "Leave the splay"
                               : "I will not temper it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTruss(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTrussWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTrussOverlay(listing.id, trussIds)
+                                ? "open"
+                                : "truss"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTrussOverlay(listing.id, trussIds)
+                              ? "Leave the bend"
+                              : "I will not truss it"}
                           </button>
                         </form>
                       ) : null}

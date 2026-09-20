@@ -1330,6 +1330,14 @@ export function listingReamWritePath() {
   return "/listings/ream";
 }
 
+export function listingTrussPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/truss`;
+}
+
+export function listingTrussWritePath() {
+  return "/listings/truss";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }
