@@ -1642,6 +1642,14 @@ export function listingSpotfaceWritePath() {
   return "/listings/spotface";
 }
 
+export function listingOverhangPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/overhang`;
+}
+
+export function listingOverhangWritePath() {
+  return "/listings/overhang";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
