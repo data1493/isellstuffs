@@ -240,6 +240,7 @@ import { ListingAcfNotice } from "@/components/listing-acf-notice";
 import { ListingGlobtopNotice } from "@/components/listing-globtop-notice";
 import { ListingDamNotice } from "@/components/listing-dam-notice";
 import { ListingSqueegeeNotice } from "@/components/listing-squeegee-notice";
+import { ListingTombstoneNotice } from "@/components/listing-tombstone-notice";
 import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
 import { ListingZenithNotice } from "@/components/listing-zenith-notice";
 import { ListingRetipNotice } from "@/components/listing-retip-notice";
@@ -384,6 +385,7 @@ import {
   listingGlobtopPath,
   listingDamPath,
   listingSqueegeePath,
+  listingTombstonePath,
   listingCountersinkPath,
   listingZenithPath,
   listingRetipPath,
@@ -1097,6 +1099,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "gtk-game-boy" ? (
                 <ListingSqueegeeNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "gtk-game-boy" ? (
+                <ListingTombstoneNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
@@ -2160,6 +2165,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not squeegee it
+                    </Link>
+                  ) : null}
+                  {listing.id === "gtk-game-boy" ? (
+                    <Link
+                      href={listingTombstonePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not tombstone it
                     </Link>
                   ) : null}
                   <Link

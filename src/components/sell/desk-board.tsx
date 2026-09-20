@@ -669,6 +669,12 @@ import {
   subscribeSqueegee,
 } from "@/lib/listing-squeegee";
 import {
+  canTapeTombstone,
+  isListingTombstoneOverlay,
+  readTombstoneListingIds,
+  subscribeTombstone,
+} from "@/lib/listing-tombstone";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1617,6 +1623,7 @@ import {
   listingGlobtopWritePath,
   listingDamWritePath,
   listingSqueegeeWritePath,
+  listingTombstoneWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1840,6 +1847,7 @@ export function DeskBoard({
   const [globtopIds, setGlobtopIds] = useState<string[]>([]);
   const [damIds, setDamIds] = useState<string[]>([]);
   const [squeegeeIds, setSqueegeeIds] = useState<string[]>([]);
+  const [tombstoneIds, setTombstoneIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2093,6 +2101,7 @@ export function DeskBoard({
       setGlobtopIds(readGlobtopListingIds());
       setDamIds(readDamListingIds());
       setSqueegeeIds(readSqueegeeListingIds());
+      setTombstoneIds(readTombstoneListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2335,6 +2344,7 @@ export function DeskBoard({
     const unsubGlobtop = subscribeGlobtop(apply);
     const unsubDam = subscribeDam(apply);
     const unsubSqueegee = subscribeSqueegee(apply);
+    const unsubTombstone = subscribeTombstone(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2587,6 +2597,7 @@ export function DeskBoard({
       unsubGlobtop();
       unsubDam();
       unsubSqueegee();
+      unsubTombstone();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -7643,6 +7654,37 @@ export function DeskBoard({
                             {isListingSqueegeeOverlay(listing.id, squeegeeIds)
                               ? "Leave the paste"
                               : "I will not squeegee it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTombstone(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTombstoneWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTombstoneOverlay(listing.id, tombstoneIds)
+                                ? "open"
+                                : "tombstone"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingTombstoneOverlay(listing.id, tombstoneIds)
+                              ? "Leave the joint"
+                              : "I will not tombstone it"}
                           </button>
                         </form>
                       ) : null}
