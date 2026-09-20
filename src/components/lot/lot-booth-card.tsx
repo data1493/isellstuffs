@@ -104,6 +104,7 @@ export function LotBoothCard({
   preheaterNote,
   plinthNote,
   bearingNote,
+  footerNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -190,6 +191,7 @@ export function LotBoothCard({
   preheaterNote?: string;
   plinthNote?: string;
   bearingNote?: string;
+  footerNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -1042,6 +1044,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-bearing-empty={stall.id} hidden />
+          )}
+          {footerNote ? (
+            <p
+              data-booth-footer-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a footer. {footerNote}
+            </p>
+          ) : (
+            <p data-booth-footer-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

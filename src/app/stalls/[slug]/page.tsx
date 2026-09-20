@@ -574,6 +574,13 @@ import {
   stallBearingPath,
 } from "@/lib/booth-bearing";
 import {
+  BOOTH_FOOTER_COOKIE_NAME,
+  BOOTH_FOOTER_PAPER_LINE,
+  boothFooterFor,
+  parseBoothFooter,
+  stallFooterPath,
+} from "@/lib/booth-footer";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1009,6 +1016,10 @@ export default async function StallPage({
   const bearing = boothBearingFor(
     stall.id,
     parseBoothBearing(jar.get(BOOTH_BEARING_COOKIE_NAME)?.value),
+  );
+  const footer = boothFooterFor(
+    stall.id,
+    parseBoothFooter(jar.get(BOOTH_FOOTER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2441,6 +2452,23 @@ export default async function StallPage({
             <p data-booth-bearing-empty={stall.id} hidden />
           )}
 
+          {footer ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a footer"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-footer-note={stall.id}>
+                  {footer.note} {BOOTH_FOOTER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-footer-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3130,6 +3158,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a bearing
+          </Link>
+
+          <Link
+            href={stallFooterPath(stall.slug)}
+            data-booth-footer-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a footer
           </Link>
 
           <Link

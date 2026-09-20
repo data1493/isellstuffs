@@ -2992,6 +2992,14 @@ export function stallBearingWritePath() {
   return "/stalls/bearing";
 }
 
+export function stallFooterPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/footer`;
+}
+
+export function stallFooterWritePath() {
+  return "/stalls/footer";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
