@@ -705,6 +705,12 @@ import {
   subscribeBlowhole,
 } from "@/lib/listing-blowhole";
 import {
+  canTapeBlackpad,
+  isListingBlackpadOverlay,
+  readBlackpadListingIds,
+  subscribeBlackpad,
+} from "@/lib/listing-blackpad";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1792,6 +1798,7 @@ import {
   listingDewetWritePath,
   listingIcicleWritePath,
   listingBlowholeWritePath,
+  listingBlackpadWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -2028,6 +2035,7 @@ export function DeskBoard({
   const [dewetIds, setDewetIds] = useState<string[]>([]);
   const [icicleIds, setIcicleIds] = useState<string[]>([]);
   const [blowholeIds, setBlowholeIds] = useState<string[]>([]);
+  const [blackpadIds, setBlackpadIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2307,6 +2315,7 @@ export function DeskBoard({
       setDewetIds(readDewetListingIds());
       setIcicleIds(readIcicleListingIds());
       setBlowholeIds(readBlowholeListingIds());
+      setBlackpadIds(readBlackpadListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2575,6 +2584,7 @@ export function DeskBoard({
     const unsubDewet = subscribeDewet(apply);
     const unsubIcicle = subscribeIcicle(apply);
     const unsubBlowhole = subscribeBlowhole(apply);
+    const unsubBlackpad = subscribeBlackpad(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2853,6 +2863,7 @@ export function DeskBoard({
       unsubDewet();
       unsubIcicle();
       unsubBlowhole();
+      unsubBlackpad();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -8518,6 +8529,37 @@ export function DeskBoard({
                             {isListingBlowholeOverlay(listing.id, blowholeIds)
                               ? "Leave the blowhole"
                               : "I will not blowhole it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBlackpad(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBlackpadWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBlackpadOverlay(listing.id, blackpadIds)
+                                ? "open"
+                                : "blackpad"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingBlackpadOverlay(listing.id, blackpadIds)
+                              ? "Leave the blackpad"
+                              : "I will not blackpad it"}
                           </button>
                         </form>
                       ) : null}

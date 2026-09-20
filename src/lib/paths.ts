@@ -1866,6 +1866,14 @@ export function listingBlowholeWritePath() {
   return "/listings/blowhole";
 }
 
+export function listingBlackpadPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/blackpad`;
+}
+
+export function listingBlackpadWritePath() {
+  return "/listings/blackpad";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
