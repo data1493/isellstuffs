@@ -1401,6 +1401,12 @@ import {
   subscribeGdef,
 } from "@/lib/listing-gdef";
 import {
+  canTapeCvt,
+  isListingCvtOverlay,
+  readCvtListingIds,
+  subscribeCvt,
+} from "@/lib/listing-cvt";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1666,6 +1672,7 @@ import {
   listingGvarWritePath,
   listingGsubWritePath,
   listingGdefWritePath,
+  listingCvtWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1950,6 +1957,7 @@ export function DeskBoard({
   const [gvarIds, setGvarIds] = useState<string[]>([]);
   const [gsubIds, setGsubIds] = useState<string[]>([]);
   const [gdefIds, setGdefIds] = useState<string[]>([]);
+  const [cvtIds, setCvtIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2204,6 +2212,7 @@ export function DeskBoard({
       setGvarIds(readGvarListingIds());
       setGsubIds(readGsubListingIds());
       setGdefIds(readGdefListingIds());
+      setCvtIds(readCvtListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2447,6 +2456,7 @@ export function DeskBoard({
     const unsubGvar = subscribeGvar(apply);
     const unsubGsub = subscribeGsub(apply);
     const unsubGdef = subscribeGdef(apply);
+    const unsubCvt = subscribeCvt(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2700,6 +2710,7 @@ export function DeskBoard({
       unsubGvar();
       unsubGsub();
       unsubGdef();
+      unsubCvt();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -9669,6 +9680,37 @@ export function DeskBoard({
                             {isListingGdefOverlay(listing.id, gdefIds)
                               ? "Leave the class"
                               : "I will not gdef it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCvt(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCvtWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCvtOverlay(listing.id, cvtIds)
+                                ? "open"
+                                : "cvt"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCvtOverlay(listing.id, cvtIds)
+                              ? "Leave the values"
+                              : "I will not cvt it"}
                           </button>
                         </form>
                       ) : null}

@@ -1346,6 +1346,14 @@ export function listingGdefWritePath() {
   return "/listings/gdef";
 }
 
+export function listingCvtPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/cvt`;
+}
+
+export function listingCvtWritePath() {
+  return "/listings/cvt";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
