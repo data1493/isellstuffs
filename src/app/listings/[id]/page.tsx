@@ -367,6 +367,7 @@ import {
   listingRinsePath,
   listingBevelPath,
   listingOverburnPath,
+  listingTumblePath,
   listingDolbyPath,
   listingPancakePath,
   listingRecasePath,
@@ -1527,6 +1528,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not overburn it
+                  </Link>
+                  <Link
+                    href={listingTumblePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not tumble them
                   </Link>
                   <Link
                     href={listingDegaussPath(listing.id)}
