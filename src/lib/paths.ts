@@ -1298,6 +1298,14 @@ export function listingFettleWritePath() {
   return "/listings/fettle";
 }
 
+export function listingBleedPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bleed`;
+}
+
+export function listingBleedWritePath() {
+  return "/listings/bleed";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }
