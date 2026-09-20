@@ -1275,6 +1275,12 @@ import {
   subscribeBluezone,
 } from "@/lib/listing-bluezone";
 import {
+  canTapeOpsz,
+  isListingOpszOverlay,
+  readOpszListingIds,
+  subscribeOpsz,
+} from "@/lib/listing-opsz";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1519,6 +1525,7 @@ import {
   listingGridfitWritePath,
   listingGaspWritePath,
   listingBluezoneWritePath,
+  listingOpszWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1782,6 +1789,7 @@ export function DeskBoard({
   const [gridfitIds, setGridfitIds] = useState<string[]>([]);
   const [gaspIds, setGaspIds] = useState<string[]>([]);
   const [bluezoneIds, setBluezoneIds] = useState<string[]>([]);
+  const [opszIds, setOpszIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2015,6 +2023,7 @@ export function DeskBoard({
       setGridfitIds(readGridfitListingIds());
       setGaspIds(readGaspListingIds());
       setBluezoneIds(readBluezoneListingIds());
+      setOpszIds(readOpszListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2237,6 +2246,7 @@ export function DeskBoard({
     const unsubGridfit = subscribeGridfit(apply);
     const unsubGasp = subscribeGasp(apply);
     const unsubBluezone = subscribeBluezone(apply);
+    const unsubOpsz = subscribeOpsz(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2469,6 +2479,7 @@ export function DeskBoard({
       unsubGridfit();
       unsubGasp();
       unsubBluezone();
+      unsubOpsz();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -8787,6 +8798,37 @@ export function DeskBoard({
                             {isListingBluezoneOverlay(listing.id, bluezoneIds)
                               ? "Leave the map"
                               : "I will not bluezone it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeOpsz(listing) ? (
+                        <form
+                          method="post"
+                          action={listingOpszWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingOpszOverlay(listing.id, opszIds)
+                                ? "open"
+                                : "opsz"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingOpszOverlay(listing.id, opszIds)
+                              ? "Leave the map"
+                              : "I will not opsz it"}
                           </button>
                         </form>
                       ) : null}

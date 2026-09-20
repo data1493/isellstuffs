@@ -1306,6 +1306,14 @@ export function listingBluezoneWritePath() {
   return "/listings/bluezone";
 }
 
+export function listingOpszPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/opsz`;
+}
+
+export function listingOpszWritePath() {
+  return "/listings/opsz";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
