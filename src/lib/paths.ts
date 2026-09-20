@@ -1906,6 +1906,14 @@ export function listingRumbleWritePath() {
   return "/listings/rumble";
 }
 
+export function listingAntiskatePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/antiskate`;
+}
+
+export function listingAntiskateWritePath() {
+  return "/listings/antiskate";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
