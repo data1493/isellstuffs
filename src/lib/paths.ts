@@ -1842,6 +1842,14 @@ export function listingDressWritePath() {
   return "/listings/dress";
 }
 
+export function listingBlanchardPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/blanchard`;
+}
+
+export function listingBlanchardWritePath() {
+  return "/listings/blanchard";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }

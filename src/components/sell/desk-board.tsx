@@ -1017,6 +1017,12 @@ import {
   subscribeDress,
 } from "@/lib/listing-dress";
 import {
+  canTapeBlanchard,
+  isListingBlanchardOverlay,
+  readBlanchardListingIds,
+  subscribeBlanchard,
+} from "@/lib/listing-blanchard";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1490,6 +1496,7 @@ import {
   listingSpotfaceWritePath,
   listingFlycutWritePath,
   listingDressWritePath,
+  listingBlanchardWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1805,6 +1812,7 @@ export function DeskBoard({
   const [spotfaceIds, setSpotfaceIds] = useState<string[]>([]);
   const [flycutIds, setFlycutIds] = useState<string[]>([]);
   const [dressIds, setDressIds] = useState<string[]>([]);
+  const [blanchardIds, setBlanchardIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2044,6 +2052,7 @@ export function DeskBoard({
       setSpotfaceIds(readSpotfaceListingIds());
       setFlycutIds(readFlycutListingIds());
       setDressIds(readDressListingIds());
+      setBlanchardIds(readBlanchardListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2272,6 +2281,7 @@ export function DeskBoard({
     const unsubSpotface = subscribeSpotface(apply);
     const unsubFlycut = subscribeFlycut(apply);
     const unsubDress = subscribeDress(apply);
+    const unsubBlanchard = subscribeBlanchard(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2510,6 +2520,7 @@ export function DeskBoard({
       unsubSpotface();
       unsubFlycut();
       unsubDress();
+      unsubBlanchard();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5381,6 +5392,37 @@ export function DeskBoard({
                             {isListingDressOverlay(listing.id, dressIds)
                               ? "Leave the glass"
                               : "I will not dress it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBlanchard(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBlanchardWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBlanchardOverlay(listing.id, blanchardIds)
+                                ? "open"
+                                : "blanchard"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingBlanchardOverlay(listing.id, blanchardIds)
+                              ? "Leave the glass"
+                              : "I will not blanchard it"}
                           </button>
                         </form>
                       ) : null}
