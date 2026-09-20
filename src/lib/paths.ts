@@ -2640,6 +2640,14 @@ export function stallFumeWritePath() {
   return "/stalls/fume";
 }
 
+export function stallTorpedoPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/torpedo`;
+}
+
+export function stallTorpedoWritePath() {
+  return "/stalls/torpedo";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

@@ -360,6 +360,11 @@ import {
   parseBoothFume,
 } from "@/lib/booth-fume";
 import {
+  BOOTH_TORPEDO_COOKIE_NAME,
+  BOOTH_TORPEDO_MIRROR_SCRIPT,
+  parseBoothTorpedo,
+} from "@/lib/booth-torpedo";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -480,6 +485,9 @@ export default async function LotPage() {
   const plumbMap = parseBoothPlumb(jar.get(BOOTH_PLUMB_COOKIE_NAME)?.value);
   const wandMap = parseBoothWand(jar.get(BOOTH_WAND_COOKIE_NAME)?.value);
   const fumeMap = parseBoothFume(jar.get(BOOTH_FUME_COOKIE_NAME)?.value);
+  const torpedoMap = parseBoothTorpedo(
+    jar.get(BOOTH_TORPEDO_COOKIE_NAME)?.value,
+  );
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -563,6 +571,9 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PLUMB_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WAND_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_FUME_MIRROR_SCRIPT }} />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_TORPEDO_MIRROR_SCRIPT }}
+        />
         <LotEmpty />
       </>
     );
@@ -647,6 +658,9 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PLUMB_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WAND_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_FUME_MIRROR_SCRIPT }} />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_TORPEDO_MIRROR_SCRIPT }}
+      />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -782,6 +796,7 @@ export default async function LotPage() {
                     plumbNote={plumbMap[row.stall.id]?.note}
                     wandNote={wandMap[row.stall.id]?.note}
                     fumeNote={fumeMap[row.stall.id]?.note}
+                    torpedoNote={torpedoMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -882,6 +897,7 @@ export default async function LotPage() {
                     plumbNote={plumbMap[row.stall.id]?.note}
                     wandNote={wandMap[row.stall.id]?.note}
                     fumeNote={fumeMap[row.stall.id]?.note}
+                    torpedoNote={torpedoMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

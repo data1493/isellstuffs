@@ -518,6 +518,13 @@ import {
   stallFumePath,
 } from "@/lib/booth-fume";
 import {
+  BOOTH_TORPEDO_COOKIE_NAME,
+  BOOTH_TORPEDO_PAPER_LINE,
+  boothTorpedoFor,
+  parseBoothTorpedo,
+  stallTorpedoPath,
+} from "@/lib/booth-torpedo";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -921,6 +928,10 @@ export default async function StallPage({
   const fume = boothFumeFor(
     stall.id,
     parseBoothFume(jar.get(BOOTH_FUME_COOKIE_NAME)?.value),
+  );
+  const torpedo = boothTorpedoFor(
+    stall.id,
+    parseBoothTorpedo(jar.get(BOOTH_TORPEDO_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2234,6 +2245,23 @@ export default async function StallPage({
             <p data-booth-fume-empty={stall.id} hidden />
           )}
 
+          {torpedo ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a torpedo"
+              title="Still a crack. Still a stain."
+              body={
+                <p data-booth-torpedo-note={stall.id}>
+                  {torpedo.note} {BOOTH_TORPEDO_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-torpedo-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2842,6 +2870,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a fume
+          </Link>
+
+          <Link
+            href={stallTorpedoPath(stall.slug)}
+            data-booth-torpedo-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a torpedo
           </Link>
 
           <Link
