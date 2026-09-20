@@ -2128,6 +2128,14 @@ export function stallMalletWritePath() {
   return "/stalls/mallet";
 }
 
+export function stallSnipsPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/snips`;
+}
+
+export function stallSnipsWritePath() {
+  return "/stalls/snips";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
