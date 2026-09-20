@@ -1179,6 +1179,12 @@ import {
   subscribeHaidinger,
 } from "@/lib/listing-haidinger";
 import {
+  canTapeBrewster,
+  isListingBrewsterOverlay,
+  readBrewsterListingIds,
+  subscribeBrewster,
+} from "@/lib/listing-brewster";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1724,6 +1730,7 @@ import {
   listingFringeWritePath,
   listingFizeauWritePath,
   listingHaidingerWritePath,
+  listingBrewsterWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -2084,6 +2091,7 @@ export function DeskBoard({
   const [fringeIds, setFringeIds] = useState<string[]>([]);
   const [fizeauIds, setFizeauIds] = useState<string[]>([]);
   const [haidingerIds, setHaidingerIds] = useState<string[]>([]);
+  const [brewsterIds, setBrewsterIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2359,6 +2367,7 @@ export function DeskBoard({
       setFringeIds(readFringeListingIds());
       setFizeauIds(readFizeauListingIds());
       setHaidingerIds(readHaidingerListingIds());
+      setBrewsterIds(readBrewsterListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2623,6 +2632,7 @@ export function DeskBoard({
     const unsubFringe = subscribeFringe(apply);
     const unsubFizeau = subscribeFizeau(apply);
     const unsubHaidinger = subscribeHaidinger(apply);
+    const unsubBrewster = subscribeBrewster(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2897,6 +2907,7 @@ export function DeskBoard({
       unsubFringe();
       unsubFizeau();
       unsubHaidinger();
+      unsubBrewster();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -6335,6 +6346,37 @@ export function DeskBoard({
                             {isListingHaidingerOverlay(listing.id, haidingerIds)
                               ? "Leave the haidinger"
                               : "I will not haidinger it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBrewster(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBrewsterWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBrewsterOverlay(listing.id, brewsterIds)
+                                ? "open"
+                                : "brewster"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingBrewsterOverlay(listing.id, brewsterIds)
+                              ? "Leave the brewster"
+                              : "I will not brewster it"}
                           </button>
                         </form>
                       ) : null}

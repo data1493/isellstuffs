@@ -2058,6 +2058,14 @@ export function listingHaidingerWritePath() {
   return "/listings/haidinger";
 }
 
+export function listingBrewsterPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/brewster`;
+}
+
+export function listingBrewsterWritePath() {
+  return "/listings/brewster";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
