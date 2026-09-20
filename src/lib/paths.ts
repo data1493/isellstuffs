@@ -2010,6 +2010,14 @@ export function listingFringeWritePath() {
   return "/listings/fringe";
 }
 
+export function listingFizeauPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fizeau`;
+}
+
+export function listingFizeauWritePath() {
+  return "/listings/fizeau";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }

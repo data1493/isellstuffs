@@ -1143,6 +1143,12 @@ import {
   subscribeFringe,
 } from "@/lib/listing-fringe";
 import {
+  canTapeFizeau,
+  isListingFizeauOverlay,
+  readFizeauListingIds,
+  subscribeFizeau,
+} from "@/lib/listing-fizeau";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1672,6 +1678,7 @@ import {
   listingPrussianWritePath,
   listingFrostWritePath,
   listingFringeWritePath,
+  listingFizeauWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -2022,6 +2029,7 @@ export function DeskBoard({
   const [prussianIds, setPrussianIds] = useState<string[]>([]);
   const [frostIds, setFrostIds] = useState<string[]>([]);
   const [fringeIds, setFringeIds] = useState<string[]>([]);
+  const [fizeauIds, setFizeauIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2289,6 +2297,7 @@ export function DeskBoard({
       setPrussianIds(readPrussianListingIds());
       setFrostIds(readFrostListingIds());
       setFringeIds(readFringeListingIds());
+      setFizeauIds(readFizeauListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2545,6 +2554,7 @@ export function DeskBoard({
     const unsubPrussian = subscribePrussian(apply);
     const unsubFrost = subscribeFrost(apply);
     const unsubFringe = subscribeFringe(apply);
+    const unsubFizeau = subscribeFizeau(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2811,6 +2821,7 @@ export function DeskBoard({
       unsubPrussian();
       unsubFrost();
       unsubFringe();
+      unsubFizeau();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -6123,6 +6134,37 @@ export function DeskBoard({
                             {isListingFringeOverlay(listing.id, fringeIds)
                               ? "Leave the fringe"
                               : "I will not fringe it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFizeau(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFizeauWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFizeauOverlay(listing.id, fizeauIds)
+                                ? "open"
+                                : "fizeau"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingFizeauOverlay(listing.id, fizeauIds)
+                              ? "Leave the fizeau"
+                              : "I will not fizeau it"}
                           </button>
                         </form>
                       ) : null}
