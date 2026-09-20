@@ -543,6 +543,12 @@ import {
   subscribeUpset,
 } from "@/lib/listing-upset";
 import {
+  canTapeBraze,
+  isListingBrazeOverlay,
+  readBrazeListingIds,
+  subscribeBraze,
+} from "@/lib/listing-braze";
+import {
   canTapeGrommet,
   isListingGrommetOverlay,
   readGrommetListingIds,
@@ -1194,6 +1200,7 @@ import {
   listingAnnealWritePath,
   listingQuenchWritePath,
   listingUpsetWritePath,
+  listingBrazeWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
   listingTinWritePath,
@@ -1462,6 +1469,7 @@ export function DeskBoard({
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [quenchIds, setQuenchIds] = useState<string[]>([]);
   const [upsetIds, setUpsetIds] = useState<string[]>([]);
+  const [brazeIds, setBrazeIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
   const [contrastIds, setContrastIds] = useState<string[]>([]);
@@ -1664,6 +1672,7 @@ export function DeskBoard({
       setAnnealIds(readAnnealListingIds());
       setQuenchIds(readQuenchListingIds());
       setUpsetIds(readUpsetListingIds());
+      setBrazeIds(readBrazeListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
       setContrastIds(readContrastListingIds());
@@ -1855,6 +1864,7 @@ export function DeskBoard({
     const unsubAnneal = subscribeAnneal(apply);
     const unsubQuench = subscribeQuench(apply);
     const unsubUpset = subscribeUpset(apply);
+    const unsubBraze = subscribeBraze(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
     const unsubContrast = subscribeContrast(apply);
@@ -2056,6 +2066,7 @@ export function DeskBoard({
       unsubAnneal();
       unsubQuench();
       unsubUpset();
+      unsubBraze();
       unsubGrommet();
       unsubDart();
       unsubContrast();
@@ -5377,6 +5388,37 @@ export function DeskBoard({
                             {isListingUpsetOverlay(listing.id, upsetIds)
                               ? "Leave the splay"
                               : "I will not upset it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBraze(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBrazeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBrazeOverlay(listing.id, brazeIds)
+                                ? "open"
+                                : "braze"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingBrazeOverlay(listing.id, brazeIds)
+                              ? "Leave the splay"
+                              : "I will not braze it"}
                           </button>
                         </form>
                       ) : null}

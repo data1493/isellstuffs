@@ -161,6 +161,7 @@ import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
 import { ListingSprigNotice } from "@/components/listing-sprig-notice";
 import { ListingJiggerNotice } from "@/components/listing-jigger-notice";
+import { ListingBrazeNotice } from "@/components/listing-braze-notice";
 import { ListingFettleNotice } from "@/components/listing-fettle-notice";
 import { ListingBisqueNotice } from "@/components/listing-bisque-notice";
 import { ListingPuckNotice } from "@/components/listing-puck-notice";
@@ -954,6 +955,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingQuenchNotice listingId={listing.id} /> : null}
               {listing.id === "kdr-bent-whisk" ? (
                 <ListingUpsetNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-bent-whisk" ? (
+                <ListingBrazeNotice listingId={listing.id} />
               ) : null}
               {listing.id === "ysk-burned-cdr" ? (
                 <ListingPregapNotice listingId={listing.id} />

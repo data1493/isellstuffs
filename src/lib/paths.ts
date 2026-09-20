@@ -1786,6 +1786,14 @@ export function listingJiggerWritePath() {
   return "/listings/jigger";
 }
 
+export function listingBrazePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/braze`;
+}
+
+export function listingBrazeWritePath() {
+  return "/listings/braze";
+}
+
 export function listingGalleyPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/galley`;
 }
