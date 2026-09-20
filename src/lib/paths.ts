@@ -1938,6 +1938,14 @@ export function listingWedgeWritePath() {
   return "/listings/wedge";
 }
 
+export function listingPrussianPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/prussian`;
+}
+
+export function listingPrussianWritePath() {
+  return "/listings/prussian";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }

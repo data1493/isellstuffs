@@ -1089,6 +1089,12 @@ import {
   subscribeWedge,
 } from "@/lib/listing-wedge";
 import {
+  canTapePrussian,
+  isListingPrussianOverlay,
+  readPrussianListingIds,
+  subscribePrussian,
+} from "@/lib/listing-prussian";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1594,6 +1600,7 @@ import {
   listingWringWritePath,
   listingSineWritePath,
   listingWedgeWritePath,
+  listingPrussianWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1929,6 +1936,7 @@ export function DeskBoard({
   const [wringIds, setWringIds] = useState<string[]>([]);
   const [sineIds, setSineIds] = useState<string[]>([]);
   const [wedgeIds, setWedgeIds] = useState<string[]>([]);
+  const [prussianIds, setPrussianIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2184,6 +2192,7 @@ export function DeskBoard({
       setWringIds(readWringListingIds());
       setSineIds(readSineListingIds());
       setWedgeIds(readWedgeListingIds());
+      setPrussianIds(readPrussianListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2428,6 +2437,7 @@ export function DeskBoard({
     const unsubWring = subscribeWring(apply);
     const unsubSine = subscribeSine(apply);
     const unsubWedge = subscribeWedge(apply);
+    const unsubPrussian = subscribePrussian(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2682,6 +2692,7 @@ export function DeskBoard({
       unsubWring();
       unsubSine();
       unsubWedge();
+      unsubPrussian();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5805,6 +5816,37 @@ export function DeskBoard({
                             {isListingWedgeOverlay(listing.id, wedgeIds)
                               ? "Leave the rise"
                               : "I will not wedge it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePrussian(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPrussianWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPrussianOverlay(listing.id, prussianIds)
+                                ? "open"
+                                : "prussian"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingPrussianOverlay(listing.id, prussianIds)
+                              ? "Leave the blue"
+                              : "I will not prussian it"}
                           </button>
                         </form>
                       ) : null}
