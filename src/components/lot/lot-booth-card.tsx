@@ -109,6 +109,7 @@ export function LotBoothCard({
   thrustNote,
   raceNote,
   flywheelNote,
+  eddyNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -200,6 +201,7 @@ export function LotBoothCard({
   thrustNote?: string;
   raceNote?: string;
   flywheelNote?: string;
+  eddyNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -1102,6 +1104,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-flywheel-empty={stall.id} hidden />
+          )}
+          {eddyNote ? (
+            <p
+              data-booth-eddy-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have an eddy. {eddyNote}
+            </p>
+          ) : (
+            <p data-booth-eddy-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

@@ -609,6 +609,13 @@ import {
   stallFlywheelPath,
 } from "@/lib/booth-flywheel";
 import {
+  BOOTH_EDDY_COOKIE_NAME,
+  BOOTH_EDDY_PAPER_LINE,
+  boothEddyFor,
+  parseBoothEddy,
+  stallEddyPath,
+} from "@/lib/booth-eddy";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1064,6 +1071,10 @@ export default async function StallPage({
   const flywheel = boothFlywheelFor(
     stall.id,
     parseBoothFlywheel(jar.get(BOOTH_FLYWHEEL_COOKIE_NAME)?.value),
+  );
+  const eddy = boothEddyFor(
+    stall.id,
+    parseBoothEddy(jar.get(BOOTH_EDDY_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2581,6 +2592,23 @@ export default async function StallPage({
             <p data-booth-flywheel-empty={stall.id} hidden />
           )}
 
+          {eddy ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have an eddy"
+              title="Still a crate."
+              body={
+                <p data-booth-eddy-note={stall.id}>
+                  {eddy.note} {BOOTH_EDDY_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-eddy-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3310,6 +3338,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a flywheel
+          </Link>
+
+          <Link
+            href={stallEddyPath(stall.slug)}
+            data-booth-eddy-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have an eddy
           </Link>
 
           <Link
