@@ -1131,6 +1131,12 @@ import {
   subscribeFrost,
 } from "@/lib/listing-frost";
 import {
+  canTapeFringe,
+  isListingFringeOverlay,
+  readFringeListingIds,
+  subscribeFringe,
+} from "@/lib/listing-fringe";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1653,6 +1659,7 @@ import {
   listingWedgeWritePath,
   listingPrussianWritePath,
   listingFrostWritePath,
+  listingFringeWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1999,6 +2006,7 @@ export function DeskBoard({
   const [wedgeIds, setWedgeIds] = useState<string[]>([]);
   const [prussianIds, setPrussianIds] = useState<string[]>([]);
   const [frostIds, setFrostIds] = useState<string[]>([]);
+  const [fringeIds, setFringeIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2263,6 +2271,7 @@ export function DeskBoard({
       setWedgeIds(readWedgeListingIds());
       setPrussianIds(readPrussianListingIds());
       setFrostIds(readFrostListingIds());
+      setFringeIds(readFringeListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2516,6 +2525,7 @@ export function DeskBoard({
     const unsubWedge = subscribeWedge(apply);
     const unsubPrussian = subscribePrussian(apply);
     const unsubFrost = subscribeFrost(apply);
+    const unsubFringe = subscribeFringe(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2779,6 +2789,7 @@ export function DeskBoard({
       unsubWedge();
       unsubPrussian();
       unsubFrost();
+      unsubFringe();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -6059,6 +6070,37 @@ export function DeskBoard({
                             {isListingFrostOverlay(listing.id, frostIds)
                               ? "Leave the frost"
                               : "I will not frost it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFringe(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFringeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFringeOverlay(listing.id, fringeIds)
+                                ? "open"
+                                : "fringe"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingFringeOverlay(listing.id, fringeIds)
+                              ? "Leave the fringe"
+                              : "I will not fringe it"}
                           </button>
                         </form>
                       ) : null}

@@ -1986,6 +1986,14 @@ export function listingFrostWritePath() {
   return "/listings/frost";
 }
 
+export function listingFringePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/fringe`;
+}
+
+export function listingFringeWritePath() {
+  return "/listings/fringe";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
