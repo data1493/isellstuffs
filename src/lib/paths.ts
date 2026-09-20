@@ -1386,6 +1386,14 @@ export function listingLtshWritePath() {
   return "/listings/ltsh";
 }
 
+export function listingPcltPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pclt`;
+}
+
+export function listingPcltWritePath() {
+  return "/listings/pclt";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }

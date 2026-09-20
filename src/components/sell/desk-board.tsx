@@ -1515,6 +1515,12 @@ import {
   subscribeLtsh,
 } from "@/lib/listing-ltsh";
 import {
+  canTapePclt,
+  isListingPcltOverlay,
+  readPcltListingIds,
+  subscribePclt,
+} from "@/lib/listing-pclt";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1799,6 +1805,7 @@ import {
   listingBslnWritePath,
   listingOpbdWritePath,
   listingLtshWritePath,
+  listingPcltWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -2102,6 +2109,7 @@ export function DeskBoard({
   const [bslnIds, setBslnIds] = useState<string[]>([]);
   const [opbdIds, setOpbdIds] = useState<string[]>([]);
   const [ltshIds, setLtshIds] = useState<string[]>([]);
+  const [pcltIds, setPcltIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2375,6 +2383,7 @@ export function DeskBoard({
       setBslnIds(readBslnListingIds());
       setOpbdIds(readOpbdListingIds());
       setLtshIds(readLtshListingIds());
+      setPcltIds(readPcltListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2637,6 +2646,7 @@ export function DeskBoard({
     const unsubBsln = subscribeBsln(apply);
     const unsubOpbd = subscribeOpbd(apply);
     const unsubLtsh = subscribeLtsh(apply);
+    const unsubPclt = subscribePclt(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2909,6 +2919,7 @@ export function DeskBoard({
       unsubBsln();
       unsubOpbd();
       unsubLtsh();
+      unsubPclt();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -10467,6 +10478,37 @@ export function DeskBoard({
                             {isListingLtshOverlay(listing.id, ltshIds)
                               ? "Leave the threshold"
                               : "I will not ltsh it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePclt(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPcltWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPcltOverlay(listing.id, pcltIds)
+                                ? "open"
+                                : "pclt"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPcltOverlay(listing.id, pcltIds)
+                              ? "Leave the pcl"
+                              : "I will not pclt it"}
                           </button>
                         </form>
                       ) : null}
