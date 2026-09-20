@@ -1354,6 +1354,14 @@ export function listingCvtWritePath() {
   return "/listings/cvt";
 }
 
+export function listingHmtxPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hmtx`;
+}
+
+export function listingHmtxWritePath() {
+  return "/listings/hmtx";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
