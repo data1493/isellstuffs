@@ -1850,6 +1850,14 @@ export function listingUnderfillWritePath() {
   return "/listings/underfill";
 }
 
+export function listingCountersinkPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/countersink`;
+}
+
+export function listingCountersinkWritePath() {
+  return "/listings/countersink";
+}
+
 export function listingUpsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/upset`;
 }

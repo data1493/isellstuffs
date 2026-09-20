@@ -903,6 +903,12 @@ import {
   subscribeSpotface,
 } from "@/lib/listing-spotface";
 import {
+  canTapeCountersink,
+  isListingCountersinkOverlay,
+  readCountersinkListingIds,
+  subscribeCountersink,
+} from "@/lib/listing-countersink";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -1287,6 +1293,7 @@ import {
   listingTapWritePath,
   listingSnugWritePath,
   listingSpotfaceWritePath,
+  listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingPreflightWritePath,
@@ -1569,6 +1576,7 @@ export function DeskBoard({
   const [tapIds, setTapIds] = useState<string[]>([]);
   const [snugIds, setSnugIds] = useState<string[]>([]);
   const [spotfaceIds, setSpotfaceIds] = useState<string[]>([]);
+  const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1777,6 +1785,7 @@ export function DeskBoard({
       setTapIds(readTapListingIds());
       setSnugIds(readSnugListingIds());
       setSpotfaceIds(readSpotfaceListingIds());
+      setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1974,6 +1983,7 @@ export function DeskBoard({
     const unsubTap = subscribeTap(apply);
     const unsubSnug = subscribeSnug(apply);
     const unsubSpotface = subscribeSpotface(apply);
+    const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -2181,6 +2191,7 @@ export function DeskBoard({
       unsubTap();
       unsubSnug();
       unsubSpotface();
+      unsubCountersink();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -4668,6 +4679,37 @@ export function DeskBoard({
                             {isListingSpotfaceOverlay(listing.id, spotfaceIds)
                               ? "Leave the hole"
                               : "I will not spotface it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCountersink(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCountersinkWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCountersinkOverlay(listing.id, countersinkIds)
+                                ? "open"
+                                : "countersink"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCountersinkOverlay(listing.id, countersinkIds)
+                              ? "Leave the hole"
+                              : "I will not countersink it"}
                           </button>
                         </form>
                       ) : null}

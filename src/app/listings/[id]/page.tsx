@@ -209,6 +209,7 @@ import { ListingMaskNotice } from "@/components/listing-mask-notice";
 import { ListingPogoNotice } from "@/components/listing-pogo-notice";
 import { ListingReballNotice } from "@/components/listing-reball-notice";
 import { ListingUnderfillNotice } from "@/components/listing-underfill-notice";
+import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingCueNotice } from "@/components/listing-cue-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
@@ -329,6 +330,7 @@ import {
   listingPogoPath,
   listingReballPath,
   listingUnderfillPath,
+  listingCountersinkPath,
   listingLogPath,
   listingBpmPath,
   listingManualPath,
@@ -947,6 +949,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSnugNotice listingId={listing.id} /> : null}
               {listing.id === "kdr-lid-no-pot" ? (
                 <ListingSpotfaceNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-lid-no-pot" ? (
+                <ListingCountersinkNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingKnurlNotice listingId={listing.id} /> : null}
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
@@ -2057,6 +2062,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not spotface it
+                    </Link>
+                  ) : null}
+                  {listing.id === "kdr-lid-no-pot" ? (
+                    <Link
+                      href={listingCountersinkPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not countersink it
                     </Link>
                   ) : null}
                   <Link
