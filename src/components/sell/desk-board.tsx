@@ -765,6 +765,12 @@ import {
   subscribeProof,
 } from "@/lib/listing-proof";
 import {
+  canTapeRegister,
+  isListingRegisterOverlay,
+  readRegisterListingIds,
+  subscribeRegister,
+} from "@/lib/listing-register";
+import {
   canTapeGrain,
   isListingGrainOverlay,
   readGrainListingIds,
@@ -951,6 +957,7 @@ import {
   listingSaturateWritePath,
   listingSubsetWritePath,
   listingProofWritePath,
+  listingRegisterWritePath,
   listingReflowWritePath,
   listingDeoxWritePath,
   listingShieldWritePath,
@@ -1194,6 +1201,7 @@ export function DeskBoard({
   const [saturateIds, setSaturateIds] = useState<string[]>([]);
   const [subsetIds, setSubsetIds] = useState<string[]>([]);
   const [proofIds, setProofIds] = useState<string[]>([]);
+  const [registerIds, setRegisterIds] = useState<string[]>([]);
   const [grainIds, setGrainIds] = useState<string[]>([]);
   const [cubeIds, setCubeIds] = useState<string[]>([]);
   const [card, setCard] = useState({
@@ -1350,6 +1358,7 @@ export function DeskBoard({
       setSaturateIds(readSaturateListingIds());
       setSubsetIds(readSubsetListingIds());
       setProofIds(readProofListingIds());
+      setRegisterIds(readRegisterListingIds());
       setGrainIds(readGrainListingIds());
       setCubeIds(readCubeListingIds());
       const patch = stallCardById(stall.id);
@@ -1495,6 +1504,7 @@ export function DeskBoard({
     const unsubSaturate = subscribeSaturate(apply);
     const unsubSubset = subscribeSubset(apply);
     const unsubProof = subscribeProof(apply);
+    const unsubRegister = subscribeRegister(apply);
     const unsubGrain = subscribeGrain(apply);
     const unsubCube = subscribeCube(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
@@ -1650,6 +1660,7 @@ export function DeskBoard({
       unsubSaturate();
       unsubSubset();
       unsubProof();
+      unsubRegister();
       unsubGrain();
       unsubCube();
     };
@@ -4716,6 +4727,37 @@ export function DeskBoard({
                             {isListingProofOverlay(listing.id, proofIds)
                               ? "Leave the vibes"
                               : "I will not proof them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRegister(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRegisterWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRegisterOverlay(listing.id, registerIds)
+                                ? "open"
+                                : "register"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRegisterOverlay(listing.id, registerIds)
+                              ? "Leave the scan"
+                              : "I will not register it"}
                           </button>
                         </form>
                       ) : null}

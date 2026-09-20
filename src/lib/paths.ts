@@ -1370,6 +1370,14 @@ export function listingProofWritePath() {
   return "/listings/proof";
 }
 
+export function listingRegisterPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/register`;
+}
+
+export function listingRegisterWritePath() {
+  return "/listings/register";
+}
+
 export function listingWeltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/welt`;
 }

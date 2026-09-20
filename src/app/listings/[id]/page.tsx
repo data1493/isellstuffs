@@ -179,6 +179,7 @@ import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
 import { ListingSubsetNotice } from "@/components/listing-subset-notice";
 import { ListingProofNotice } from "@/components/listing-proof-notice";
+import { ListingRegisterNotice } from "@/components/listing-register-notice";
 import { ListingTrayNotice } from "@/components/listing-tray-notice";
 import { ListingMasterNotice } from "@/components/listing-master-notice";
 import { ListingGumNotice } from "@/components/listing-gum-notice";
@@ -375,6 +376,7 @@ import {
   listingTumblePath,
   listingSkivePath,
   listingTrussPath,
+  listingRegisterPath,
   listingDolbyPath,
   listingPancakePath,
   listingRecasePath,
@@ -628,6 +630,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingCardsNotice listingId={listing.id} /> : null}
               {!physical ? <ListingScaleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingProofNotice listingId={listing.id} /> : null}
+              {!physical ? (
+                <ListingRegisterNotice listingId={listing.id} />
+              ) : null}
               {!physical ? <ListingGreaseNotice listingId={listing.id} /> : null}
               {!physical ? <ListingDoubleNotice listingId={listing.id} /> : null}
               {!physical ? <ListingMinsNotice listingId={listing.id} /> : null}
@@ -1762,6 +1767,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not type the cards
+                  </Link>
+                  <Link
+                    href={listingRegisterPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not register it
                   </Link>
                   <Link
                     href={listingGreasePath(listing.id)}
