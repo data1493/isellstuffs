@@ -2776,6 +2776,14 @@ export function stallProtractorWritePath() {
   return "/stalls/protractor";
 }
 
+export function stallLifterPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/lifter`;
+}
+
+export function stallLifterWritePath() {
+  return "/stalls/lifter";
+}
+
 export function stallPreheaterPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/preheater`;
 }

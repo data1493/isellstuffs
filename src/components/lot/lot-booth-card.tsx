@@ -98,6 +98,7 @@ export function LotBoothCard({
   fumeNote,
   torpedoNote,
   protractorNote,
+  lifterNote,
   preheaterNote,
 }: {
   row: LotBooth;
@@ -179,6 +180,7 @@ export function LotBoothCard({
   fumeNote?: string;
   torpedoNote?: string;
   protractorNote?: string;
+  lifterNote?: string;
   preheaterNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
@@ -972,6 +974,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-protractor-empty={stall.id} hidden />
+          )}
+          {lifterNote ? (
+            <p
+              data-booth-lifter-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a lifter. {lifterNote}
+            </p>
+          ) : (
+            <p data-booth-lifter-empty={stall.id} hidden />
           )}
           {preheaterNote ? (
             <p

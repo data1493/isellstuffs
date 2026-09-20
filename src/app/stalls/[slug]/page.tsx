@@ -532,6 +532,13 @@ import {
   stallProtractorPath,
 } from "@/lib/booth-protractor";
 import {
+  BOOTH_LIFTER_COOKIE_NAME,
+  BOOTH_LIFTER_PAPER_LINE,
+  boothLifterFor,
+  parseBoothLifter,
+  stallLifterPath,
+} from "@/lib/booth-lifter";
+import {
   BOOTH_PREHEATER_COOKIE_NAME,
   BOOTH_PREHEATER_PAPER_LINE,
   boothPreheaterFor,
@@ -950,6 +957,10 @@ export default async function StallPage({
   const protractor = boothProtractorFor(
     stall.id,
     parseBoothProtractor(jar.get(BOOTH_PROTRACTOR_COOKIE_NAME)?.value),
+  );
+  const lifter = boothLifterFor(
+    stall.id,
+    parseBoothLifter(jar.get(BOOTH_LIFTER_COOKIE_NAME)?.value),
   );
   const preheater = boothPreheaterFor(
     stall.id,
@@ -2284,6 +2295,23 @@ export default async function StallPage({
             <p data-booth-protractor-empty={stall.id} hidden />
           )}
 
+          {lifter ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a lifter"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-lifter-note={stall.id}>
+                  {lifter.note} {BOOTH_LIFTER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-lifter-empty={stall.id} hidden />
+          )}
+
           {preheater ? (
             <MallNotice
               tone="empty"
@@ -2942,6 +2970,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a protractor
+          </Link>
+
+          <Link
+            href={stallLifterPath(stall.slug)}
+            data-booth-lifter-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a lifter
           </Link>
 
           <Link
