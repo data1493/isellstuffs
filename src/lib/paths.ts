@@ -1306,6 +1306,14 @@ export function listingStiltWritePath() {
   return "/listings/stilt";
 }
 
+export function listingTenterPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tenter`;
+}
+
+export function listingTenterWritePath() {
+  return "/listings/tenter";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

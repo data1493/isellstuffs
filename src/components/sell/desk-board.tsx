@@ -723,6 +723,12 @@ import {
   subscribeCalender,
 } from "@/lib/listing-calender";
 import {
+  canTapeTenter,
+  isListingTenterOverlay,
+  readTenterListingIds,
+  subscribeTenter,
+} from "@/lib/listing-tenter";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -1276,6 +1282,7 @@ import {
   listingNotchWritePath,
   listingSingeWritePath,
   listingCalenderWritePath,
+  listingTenterWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1621,6 +1628,7 @@ export function DeskBoard({
   const [rasterIds, setRasterIds] = useState<string[]>([]);
   const [gridfitIds, setGridfitIds] = useState<string[]>([]);
   const [gaspIds, setGaspIds] = useState<string[]>([]);
+  const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
@@ -1833,6 +1841,7 @@ export function DeskBoard({
       setRasterIds(readRasterListingIds());
       setGridfitIds(readGridfitListingIds());
       setGaspIds(readGaspListingIds());
+      setTenterIds(readTenterListingIds());
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
       setPreflightIds(readPreflightListingIds());
@@ -2034,6 +2043,7 @@ export function DeskBoard({
     const unsubRaster = subscribeRaster(apply);
     const unsubGridfit = subscribeGridfit(apply);
     const unsubGasp = subscribeGasp(apply);
+    const unsubTenter = subscribeTenter(apply);
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
     const unsubPreflight = subscribePreflight(apply);
@@ -2245,6 +2255,7 @@ export function DeskBoard({
       unsubRaster();
       unsubGridfit();
       unsubGasp();
+      unsubTenter();
       unsubPaginate();
       unsubCollate();
       unsubPreflight();
@@ -5983,6 +5994,37 @@ export function DeskBoard({
                             {isListingCalenderOverlay(listing.id, calenderIds)
                               ? "Leave the nylon"
                               : "I will not calender it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTenter(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTenterWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTenterOverlay(listing.id, tenterIds)
+                                ? "open"
+                                : "tenter"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTenterOverlay(listing.id, tenterIds)
+                              ? "Leave the nylon"
+                              : "I will not tenter it"}
                           </button>
                         </form>
                       ) : null}
