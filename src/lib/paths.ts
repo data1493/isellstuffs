@@ -1962,6 +1962,14 @@ export function listingPrussianWritePath() {
   return "/listings/prussian";
 }
 
+export function listingFrostPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/frost`;
+}
+
+export function listingFrostWritePath() {
+  return "/listings/frost";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
