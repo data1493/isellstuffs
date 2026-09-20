@@ -1770,6 +1770,14 @@ export function listingSprigWritePath() {
   return "/listings/sprig";
 }
 
+export function listingJiggerPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/jigger`;
+}
+
+export function listingJiggerWritePath() {
+  return "/listings/jigger";
+}
+
 export function listingGalleyPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/galley`;
 }

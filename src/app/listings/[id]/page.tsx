@@ -160,6 +160,7 @@ import { ListingPeenNotice } from "@/components/listing-peen-notice";
 import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
 import { ListingSprigNotice } from "@/components/listing-sprig-notice";
+import { ListingJiggerNotice } from "@/components/listing-jigger-notice";
 import { ListingFettleNotice } from "@/components/listing-fettle-notice";
 import { ListingBisqueNotice } from "@/components/listing-bisque-notice";
 import { ListingPuckNotice } from "@/components/listing-puck-notice";
@@ -420,6 +421,7 @@ import {
   listingGlazePath,
   listingPicklePath,
   listingSprigPath,
+  listingJiggerPath,
   listingFettlePath,
   listingBisquePath,
   listingBleedPath,
@@ -927,6 +929,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingPickleNotice listingId={listing.id} /> : null}
               {listing.id === "kdr-chipped-mug" ? (
                 <ListingSprigNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-chipped-mug" ? (
+                <ListingJiggerNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingFettleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBisqueNotice listingId={listing.id} /> : null}
@@ -1777,6 +1782,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not sprig it
+                    </Link>
+                  ) : null}
+                  {listing.id === "kdr-chipped-mug" ? (
+                    <Link
+                      href={listingJiggerPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not jigger it
                     </Link>
                   ) : null}
                   <Link

@@ -723,6 +723,12 @@ import {
   subscribeSprig,
 } from "@/lib/listing-sprig";
 import {
+  canTapeJigger,
+  isListingJiggerOverlay,
+  readJiggerListingIds,
+  subscribeJigger,
+} from "@/lib/listing-jigger";
+import {
   canTapeFettle,
   isListingFettleOverlay,
   readFettleListingIds,
@@ -1199,6 +1205,7 @@ import {
   listingGlazeWritePath,
   listingPickleWritePath,
   listingSprigWritePath,
+  listingJiggerWritePath,
   listingFettleWritePath,
   listingBisqueWritePath,
   listingPuckWritePath,
@@ -1471,6 +1478,7 @@ export function DeskBoard({
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
   const [sprigIds, setSprigIds] = useState<string[]>([]);
+  const [jiggerIds, setJiggerIds] = useState<string[]>([]);
   const [fettleIds, setFettleIds] = useState<string[]>([]);
   const [bisqueIds, setBisqueIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
@@ -1670,6 +1678,7 @@ export function DeskBoard({
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
       setSprigIds(readSprigListingIds());
+      setJiggerIds(readJiggerListingIds());
       setFettleIds(readFettleListingIds());
       setBisqueIds(readBisqueListingIds());
       setPuckIds(readPuckListingIds());
@@ -1858,6 +1867,7 @@ export function DeskBoard({
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
     const unsubSprig = subscribeSprig(apply);
+    const unsubJigger = subscribeJigger(apply);
     const unsubFettle = subscribeFettle(apply);
     const unsubBisque = subscribeBisque(apply);
     const unsubPuck = subscribePuck(apply);
@@ -2056,6 +2066,7 @@ export function DeskBoard({
       unsubGlaze();
       unsubPickle();
       unsubSprig();
+      unsubJigger();
       unsubFettle();
       unsubBisque();
       unsubPuck();
@@ -3515,6 +3526,37 @@ export function DeskBoard({
                             {isListingSprigOverlay(listing.id, sprigIds)
                               ? "Leave the chip"
                               : "I will not sprig it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeJigger(listing) ? (
+                        <form
+                          method="post"
+                          action={listingJiggerWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingJiggerOverlay(listing.id, jiggerIds)
+                                ? "open"
+                                : "jigger"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingJiggerOverlay(listing.id, jiggerIds)
+                              ? "Leave the rim"
+                              : "I will not jigger it"}
                           </button>
                         </form>
                       ) : null}
