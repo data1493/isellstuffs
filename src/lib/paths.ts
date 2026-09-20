@@ -1738,6 +1738,14 @@ export function listingGlobtopWritePath() {
   return "/listings/globtop";
 }
 
+export function listingDamPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dam`;
+}
+
+export function listingDamWritePath() {
+  return "/listings/dam";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
