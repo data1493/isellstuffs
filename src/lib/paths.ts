@@ -1962,6 +1962,14 @@ export function listingGimbalWritePath() {
   return "/listings/gimbal";
 }
 
+export function listingDashpotPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/dashpot`;
+}
+
+export function listingDashpotWritePath() {
+  return "/listings/dashpot";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
