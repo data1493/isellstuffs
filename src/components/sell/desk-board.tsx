@@ -699,6 +699,12 @@ import {
   subscribeSinge,
 } from "@/lib/listing-singe";
 import {
+  canTapeCalender,
+  isListingCalenderOverlay,
+  readCalenderListingIds,
+  subscribeCalender,
+} from "@/lib/listing-calender";
+import {
   canTapePeen,
   isListingPeenOverlay,
   readPeenListingIds,
@@ -1201,6 +1207,7 @@ import {
   listingPleatWritePath,
   listingNotchWritePath,
   listingSingeWritePath,
+  listingCalenderWritePath,
   listingPeenWritePath,
   listingGlazeWritePath,
   listingPickleWritePath,
@@ -1474,6 +1481,7 @@ export function DeskBoard({
   const [pleatIds, setPleatIds] = useState<string[]>([]);
   const [notchIds, setNotchIds] = useState<string[]>([]);
   const [singeIds, setSingeIds] = useState<string[]>([]);
+  const [calenderIds, setCalenderIds] = useState<string[]>([]);
   const [peenIds, setPeenIds] = useState<string[]>([]);
   const [glazeIds, setGlazeIds] = useState<string[]>([]);
   const [pickleIds, setPickleIds] = useState<string[]>([]);
@@ -1674,6 +1682,7 @@ export function DeskBoard({
       setPleatIds(readPleatListingIds());
       setNotchIds(readNotchListingIds());
       setSingeIds(readSingeListingIds());
+      setCalenderIds(readCalenderListingIds());
       setPeenIds(readPeenListingIds());
       setGlazeIds(readGlazeListingIds());
       setPickleIds(readPickleListingIds());
@@ -1863,6 +1872,7 @@ export function DeskBoard({
     const unsubPleat = subscribePleat(apply);
     const unsubNotch = subscribeNotch(apply);
     const unsubSinge = subscribeSinge(apply);
+    const unsubCalender = subscribeCalender(apply);
     const unsubPeen = subscribePeen(apply);
     const unsubGlaze = subscribeGlaze(apply);
     const unsubPickle = subscribePickle(apply);
@@ -2062,6 +2072,7 @@ export function DeskBoard({
       unsubPleat();
       unsubNotch();
       unsubSinge();
+      unsubCalender();
       unsubPeen();
       unsubGlaze();
       unsubPickle();
@@ -5603,6 +5614,37 @@ export function DeskBoard({
                             {isListingSingeOverlay(listing.id, singeIds)
                               ? "Leave the pills"
                               : "I will not singe it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeCalender(listing) ? (
+                        <form
+                          method="post"
+                          action={listingCalenderWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingCalenderOverlay(listing.id, calenderIds)
+                                ? "open"
+                                : "calender"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingCalenderOverlay(listing.id, calenderIds)
+                              ? "Leave the nylon"
+                              : "I will not calender it"}
                           </button>
                         </form>
                       ) : null}

@@ -186,6 +186,7 @@ import { ListingStakeNotice } from "@/components/listing-stake-notice";
 import { ListingTapNotice } from "@/components/listing-tap-notice";
 import { ListingSnugNotice } from "@/components/listing-snug-notice";
 import { ListingSpotfaceNotice } from "@/components/listing-spotface-notice";
+import { ListingCalenderNotice } from "@/components/listing-calender-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
@@ -417,6 +418,7 @@ import {
   listingPleatPath,
   listingNotchPath,
   listingSingePath,
+  listingCalenderPath,
   listingPeenPath,
   listingGlazePath,
   listingPicklePath,
@@ -887,6 +889,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingNotchNotice listingId={listing.id} /> : null}
               {listing.id === "clo-windbreaker" ? (
                 <ListingSingeNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "clo-windbreaker" ? (
+                <ListingCalenderNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingContrastNotice listingId={listing.id} /> : null}
               {physical ? <ListingReflowNotice listingId={listing.id} /> : null}
@@ -1712,6 +1717,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not singe it
+                    </Link>
+                  ) : null}
+                  {listing.id === "clo-windbreaker" ? (
+                    <Link
+                      href={listingCalenderPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not calender it
                     </Link>
                   ) : null}
                   <Link

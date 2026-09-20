@@ -1698,6 +1698,14 @@ export function listingSingeWritePath() {
   return "/listings/singe";
 }
 
+export function listingCalenderPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/calender`;
+}
+
+export function listingCalenderWritePath() {
+  return "/listings/calender";
+}
+
 export function listingTrapPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/trap`;
 }
