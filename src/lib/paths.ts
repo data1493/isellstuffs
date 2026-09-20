@@ -1298,6 +1298,14 @@ export function listingGaspWritePath() {
   return "/listings/gasp";
 }
 
+export function listingBluezonePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/bluezone`;
+}
+
+export function listingBluezoneWritePath() {
+  return "/listings/bluezone";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
