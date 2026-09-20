@@ -595,6 +595,13 @@ import {
   stallThrustPath,
 } from "@/lib/booth-thrust";
 import {
+  BOOTH_RACE_COOKIE_NAME,
+  BOOTH_RACE_PAPER_LINE,
+  boothRaceFor,
+  parseBoothRace,
+  stallRacePath,
+} from "@/lib/booth-race";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1042,6 +1049,10 @@ export default async function StallPage({
   const thrust = boothThrustFor(
     stall.id,
     parseBoothThrust(jar.get(BOOTH_THRUST_COOKIE_NAME)?.value),
+  );
+  const race = boothRaceFor(
+    stall.id,
+    parseBoothRace(jar.get(BOOTH_RACE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2525,6 +2536,23 @@ export default async function StallPage({
             <p data-booth-thrust-empty={stall.id} hidden />
           )}
 
+          {race ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a race"
+              title="Still a crate."
+              body={
+                <p data-booth-race-note={stall.id}>
+                  {race.note} {BOOTH_RACE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-race-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3238,6 +3266,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a thrust
+          </Link>
+
+          <Link
+            href={stallRacePath(stall.slug)}
+            data-booth-race-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a race
           </Link>
 
           <Link

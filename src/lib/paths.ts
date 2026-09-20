@@ -3104,6 +3104,14 @@ export function stallThrustWritePath() {
   return "/stalls/thrust";
 }
 
+export function stallRacePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/race`;
+}
+
+export function stallRaceWritePath() {
+  return "/stalls/race";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

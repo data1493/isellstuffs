@@ -107,6 +107,7 @@ export function LotBoothCard({
   footerNote,
   reflexNote,
   thrustNote,
+  raceNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -196,6 +197,7 @@ export function LotBoothCard({
   footerNote?: string;
   reflexNote?: string;
   thrustNote?: string;
+  raceNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -1078,6 +1080,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-thrust-empty={stall.id} hidden />
+          )}
+          {raceNote ? (
+            <p
+              data-booth-race-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a race. {raceNote}
+            </p>
+          ) : (
+            <p data-booth-race-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
