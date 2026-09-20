@@ -843,6 +843,12 @@ import {
   subscribeZenith,
 } from "@/lib/listing-zenith";
 import {
+  canTapeRetip,
+  isListingRetipOverlay,
+  readRetipListingIds,
+  subscribeRetip,
+} from "@/lib/listing-retip";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -1343,6 +1349,7 @@ import {
   listingVacuumWritePath,
   listingOverhangWritePath,
   listingZenithWritePath,
+  listingRetipWritePath,
   listingBevelWritePath,
   listingOverburnWritePath,
   listingCueWritePath,
@@ -1637,6 +1644,7 @@ export function DeskBoard({
   const [vacuumIds, setVacuumIds] = useState<string[]>([]);
   const [overhangIds, setOverhangIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
+  const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [cueIds, setCueIds] = useState<string[]>([]);
@@ -1857,6 +1865,7 @@ export function DeskBoard({
       setVacuumIds(readVacuumListingIds());
       setOverhangIds(readOverhangListingIds());
       setZenithIds(readZenithListingIds());
+      setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setCueIds(readCueListingIds());
@@ -2066,6 +2075,7 @@ export function DeskBoard({
     const unsubVacuum = subscribeVacuum(apply);
     const unsubOverhang = subscribeOverhang(apply);
     const unsubZenith = subscribeZenith(apply);
+    const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubCue = subscribeCue(apply);
@@ -2285,6 +2295,7 @@ export function DeskBoard({
       unsubVacuum();
       unsubOverhang();
       unsubZenith();
+      unsubRetip();
       unsubBevel();
       unsubOverburn();
       unsubCue();
@@ -4118,6 +4129,37 @@ export function DeskBoard({
                             {isListingZenithOverlay(listing.id, zenithIds)
                               ? "Leave the skip"
                               : "I will not zenith it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRetip(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRetipWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRetipOverlay(listing.id, retipIds)
+                                ? "open"
+                                : "retip"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRetipOverlay(listing.id, retipIds)
+                              ? "Leave the skip"
+                              : "I will not retip it"}
                           </button>
                         </form>
                       ) : null}

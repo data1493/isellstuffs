@@ -217,6 +217,7 @@ import { ListingUnderfillNotice } from "@/components/listing-underfill-notice";
 import { ListingFilletNotice } from "@/components/listing-fillet-notice";
 import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
 import { ListingZenithNotice } from "@/components/listing-zenith-notice";
+import { ListingRetipNotice } from "@/components/listing-retip-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingCueNotice } from "@/components/listing-cue-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
@@ -345,6 +346,7 @@ import {
   listingFilletPath,
   listingCountersinkPath,
   listingZenithPath,
+  listingRetipPath,
   listingLogPath,
   listingBpmPath,
   listingManualPath,
@@ -904,6 +906,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "mdb-scratched-lp" ? (
                 <ListingZenithNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "mdb-scratched-lp" ? (
+                <ListingRetipNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingShimNotice listingId={listing.id} /> : null}
@@ -1589,6 +1594,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not zenith it
+                    </Link>
+                  ) : null}
+                  {listing.id === "mdb-scratched-lp" ? (
+                    <Link
+                      href={listingRetipPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not retip it
                     </Link>
                   ) : null}
                   <Link

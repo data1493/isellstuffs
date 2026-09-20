@@ -1946,6 +1946,14 @@ export function listingZenithWritePath() {
   return "/listings/zenith";
 }
 
+export function listingRetipPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/retip`;
+}
+
+export function listingRetipWritePath() {
+  return "/listings/retip";
+}
+
 export function listingUpsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/upset`;
 }
