@@ -1866,6 +1866,14 @@ export function listingBlanchardWritePath() {
   return "/listings/blanchard";
 }
 
+export function listingWringPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/wring`;
+}
+
+export function listingWringWritePath() {
+  return "/listings/wring";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }

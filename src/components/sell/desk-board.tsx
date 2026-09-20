@@ -1035,6 +1035,12 @@ import {
   subscribeBlanchard,
 } from "@/lib/listing-blanchard";
 import {
+  canTapeWring,
+  isListingWringOverlay,
+  readWringListingIds,
+  subscribeWring,
+} from "@/lib/listing-wring";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1516,6 +1522,7 @@ import {
   listingFlycutWritePath,
   listingDressWritePath,
   listingBlanchardWritePath,
+  listingWringWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1836,6 +1843,7 @@ export function DeskBoard({
   const [flycutIds, setFlycutIds] = useState<string[]>([]);
   const [dressIds, setDressIds] = useState<string[]>([]);
   const [blanchardIds, setBlanchardIds] = useState<string[]>([]);
+  const [wringIds, setWringIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2079,6 +2087,7 @@ export function DeskBoard({
       setFlycutIds(readFlycutListingIds());
       setDressIds(readDressListingIds());
       setBlanchardIds(readBlanchardListingIds());
+      setWringIds(readWringListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2311,6 +2320,7 @@ export function DeskBoard({
     const unsubFlycut = subscribeFlycut(apply);
     const unsubDress = subscribeDress(apply);
     const unsubBlanchard = subscribeBlanchard(apply);
+    const unsubWring = subscribeWring(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2553,6 +2563,7 @@ export function DeskBoard({
       unsubFlycut();
       unsubDress();
       unsubBlanchard();
+      unsubWring();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5487,6 +5498,37 @@ export function DeskBoard({
                             {isListingBlanchardOverlay(listing.id, blanchardIds)
                               ? "Leave the glass"
                               : "I will not blanchard it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWring(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWringWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWringOverlay(listing.id, wringIds)
+                                ? "open"
+                                : "wring"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingWringOverlay(listing.id, wringIds)
+                              ? "Leave the blocks"
+                              : "I will not wring it"}
                           </button>
                         </form>
                       ) : null}
