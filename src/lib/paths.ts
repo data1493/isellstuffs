@@ -1626,6 +1626,14 @@ export function listingSnugWritePath() {
   return "/listings/snug";
 }
 
+export function listingSpotfacePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/spotface`;
+}
+
+export function listingSpotfaceWritePath() {
+  return "/listings/spotface";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
