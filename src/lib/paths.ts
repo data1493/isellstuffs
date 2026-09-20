@@ -1538,6 +1538,14 @@ export function listingLoomWritePath() {
   return "/listings/loom";
 }
 
+export function listingStrainPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/strain`;
+}
+
+export function listingStrainWritePath() {
+  return "/listings/strain";
+}
+
 export function listingShaperPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/shaper`;
 }

@@ -777,6 +777,12 @@ import {
   subscribeLoom,
 } from "@/lib/listing-loom";
 import {
+  canTapeStrain,
+  isListingStrainOverlay,
+  readStrainListingIds,
+  subscribeStrain,
+} from "@/lib/listing-strain";
+import {
   canTapeTemper,
   isListingTemperOverlay,
   readTemperListingIds,
@@ -1122,6 +1128,7 @@ import {
   listingEraseWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
+  listingStrainWritePath,
   listingTemperWritePath,
   listingScribeWritePath,
   listingStakeWritePath,
@@ -1378,6 +1385,7 @@ export function DeskBoard({
   const [eraseIds, setEraseIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
+  const [strainIds, setStrainIds] = useState<string[]>([]);
   const [temperIds, setTemperIds] = useState<string[]>([]);
   const [scribeIds, setScribeIds] = useState<string[]>([]);
   const [stakeIds, setStakeIds] = useState<string[]>([]);
@@ -1562,6 +1570,7 @@ export function DeskBoard({
       setEraseIds(readEraseListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
+      setStrainIds(readStrainListingIds());
       setTemperIds(readTemperListingIds());
       setScribeIds(readScribeListingIds());
       setStakeIds(readStakeListingIds());
@@ -1735,6 +1744,7 @@ export function DeskBoard({
     const unsubErase = subscribeErase(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
+    const unsubStrain = subscribeStrain(apply);
     const unsubTemper = subscribeTemper(apply);
     const unsubScribe = subscribeScribe(apply);
     const unsubStake = subscribeStake(apply);
@@ -1918,6 +1928,7 @@ export function DeskBoard({
       unsubErase();
       unsubFlux();
       unsubLoom();
+      unsubStrain();
       unsubTemper();
       unsubScribe();
       unsubStake();
@@ -3877,6 +3888,37 @@ export function DeskBoard({
                             {isListingLoomOverlay(listing.id, loomIds)
                               ? "Leave the sleeve"
                               : "I will not loom them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeStrain(listing) ? (
+                        <form
+                          method="post"
+                          action={listingStrainWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingStrainOverlay(listing.id, strainIds)
+                                ? "open"
+                                : "strain"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingStrainOverlay(listing.id, strainIds)
+                              ? "Leave the ends"
+                              : "I will not strain them"}
                           </button>
                         </form>
                       ) : null}

@@ -174,6 +174,7 @@ import { ListingPinchNotice } from "@/components/listing-pinch-notice";
 import { ListingEraseNotice } from "@/components/listing-erase-notice";
 import { ListingFluxNotice } from "@/components/listing-flux-notice";
 import { ListingLoomNotice } from "@/components/listing-loom-notice";
+import { ListingStrainNotice } from "@/components/listing-strain-notice";
 import { ListingTemperNotice } from "@/components/listing-temper-notice";
 import { ListingScribeNotice } from "@/components/listing-scribe-notice";
 import { ListingStakeNotice } from "@/components/listing-stake-notice";
@@ -428,6 +429,7 @@ import {
   listingErasePath,
   listingFluxPath,
   listingLoomPath,
+  listingStrainPath,
   listingTemperPath,
   listingScribePath,
   listingStakePath,
@@ -857,6 +859,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingEraseNotice listingId={listing.id} /> : null}
               {physical ? <ListingFluxNotice listingId={listing.id} /> : null}
               {physical ? <ListingLoomNotice listingId={listing.id} /> : null}
+              {physical ? <ListingStrainNotice listingId={listing.id} /> : null}
               {physical ? <ListingTemperNotice listingId={listing.id} /> : null}
               {physical ? <ListingScribeNotice listingId={listing.id} /> : null}
               {physical ? <ListingStakeNotice listingId={listing.id} /> : null}
@@ -1789,6 +1792,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not loom them
+                  </Link>
+                  <Link
+                    href={listingStrainPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not strain them
                   </Link>
                   <Link
                     href={listingTemperPath(listing.id)}
