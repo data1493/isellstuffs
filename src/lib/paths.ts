@@ -2002,6 +2002,14 @@ export function listingDashpotWritePath() {
   return "/listings/dashpot";
 }
 
+export function listingPivotPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pivot`;
+}
+
+export function listingPivotWritePath() {
+  return "/listings/pivot";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }

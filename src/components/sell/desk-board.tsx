@@ -927,6 +927,12 @@ import {
   subscribeDashpot,
 } from "@/lib/listing-dashpot";
 import {
+  canTapePivot,
+  isListingPivotOverlay,
+  readPivotListingIds,
+  subscribePivot,
+} from "@/lib/listing-pivot";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1566,6 +1572,7 @@ import {
   listingAntiskateWritePath,
   listingGimbalWritePath,
   listingDashpotWritePath,
+  listingPivotWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -1902,6 +1909,7 @@ export function DeskBoard({
   const [antiskateIds, setAntiskateIds] = useState<string[]>([]);
   const [gimbalIds, setGimbalIds] = useState<string[]>([]);
   const [dashpotIds, setDashpotIds] = useState<string[]>([]);
+  const [pivotIds, setPivotIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -2158,6 +2166,7 @@ export function DeskBoard({
       setAntiskateIds(readAntiskateListingIds());
       setGimbalIds(readGimbalListingIds());
       setDashpotIds(readDashpotListingIds());
+      setPivotIds(readPivotListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2403,6 +2412,7 @@ export function DeskBoard({
     const unsubAntiskate = subscribeAntiskate(apply);
     const unsubGimbal = subscribeGimbal(apply);
     const unsubDashpot = subscribeDashpot(apply);
+    const unsubPivot = subscribePivot(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2658,6 +2668,7 @@ export function DeskBoard({
       unsubAntiskate();
       unsubGimbal();
       unsubDashpot();
+      unsubPivot();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -4762,6 +4773,37 @@ export function DeskBoard({
                             {isListingDashpotOverlay(listing.id, dashpotIds)
                               ? "Leave the damper"
                               : "I will not dashpot it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePivot(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPivotWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPivotOverlay(listing.id, pivotIds)
+                                ? "open"
+                                : "pivot"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPivotOverlay(listing.id, pivotIds)
+                              ? "Leave the pivot"
+                              : "I will not pivot it"}
                           </button>
                         </form>
                       ) : null}
