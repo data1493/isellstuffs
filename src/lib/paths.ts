@@ -1538,6 +1538,14 @@ export function listingStakeWritePath() {
   return "/listings/stake";
 }
 
+export function listingTapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/tap`;
+}
+
+export function listingTapWritePath() {
+  return "/listings/tap";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }

@@ -172,6 +172,7 @@ import { ListingLoomNotice } from "@/components/listing-loom-notice";
 import { ListingTemperNotice } from "@/components/listing-temper-notice";
 import { ListingScribeNotice } from "@/components/listing-scribe-notice";
 import { ListingStakeNotice } from "@/components/listing-stake-notice";
+import { ListingTapNotice } from "@/components/listing-tap-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
@@ -823,6 +824,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingTemperNotice listingId={listing.id} /> : null}
               {physical ? <ListingScribeNotice listingId={listing.id} /> : null}
               {physical ? <ListingStakeNotice listingId={listing.id} /> : null}
+              {physical ? <ListingTapNotice listingId={listing.id} /> : null}
               {physical ? <ListingKnurlNotice listingId={listing.id} /> : null}
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
               {physical ? <ListingBushNotice listingId={listing.id} /> : null}
