@@ -395,6 +395,11 @@ import {
   parseBoothPlinth,
 } from "@/lib/booth-plinth";
 import {
+  BOOTH_BEARING_COOKIE_NAME,
+  BOOTH_BEARING_MIRROR_SCRIPT,
+  parseBoothBearing,
+} from "@/lib/booth-bearing";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -530,6 +535,9 @@ export default async function LotPage() {
     jar.get(BOOTH_PREHEATER_COOKIE_NAME)?.value,
   );
   const plinthMap = parseBoothPlinth(jar.get(BOOTH_PLINTH_COOKIE_NAME)?.value);
+  const bearingMap = parseBoothBearing(
+    jar.get(BOOTH_BEARING_COOKIE_NAME)?.value,
+  );
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -633,6 +641,9 @@ export default async function LotPage() {
         />
         <script
           dangerouslySetInnerHTML={{ __html: BOOTH_PLINTH_MIRROR_SCRIPT }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_BEARING_MIRROR_SCRIPT }}
         />
         <LotEmpty />
       </>
@@ -738,6 +749,9 @@ export default async function LotPage() {
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_PLINTH_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_BEARING_MIRROR_SCRIPT }}
       />
       <div>
         <MallHero>
@@ -881,6 +895,7 @@ export default async function LotPage() {
                     headshellNote={headshellMap[row.stall.id]?.note}
                     preheaterNote={preheaterMap[row.stall.id]?.note}
                     plinthNote={plinthMap[row.stall.id]?.note}
+                    bearingNote={bearingMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -988,6 +1003,7 @@ export default async function LotPage() {
                     headshellNote={headshellMap[row.stall.id]?.note}
                     preheaterNote={preheaterMap[row.stall.id]?.note}
                     plinthNote={plinthMap[row.stall.id]?.note}
+                    bearingNote={bearingMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

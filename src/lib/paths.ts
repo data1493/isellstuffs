@@ -2944,6 +2944,14 @@ export function stallPlinthWritePath() {
   return "/stalls/plinth";
 }
 
+export function stallBearingPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/bearing`;
+}
+
+export function stallBearingWritePath() {
+  return "/stalls/bearing";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

@@ -103,6 +103,7 @@ export function LotBoothCard({
   headshellNote,
   preheaterNote,
   plinthNote,
+  bearingNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -188,6 +189,7 @@ export function LotBoothCard({
   headshellNote?: string;
   preheaterNote?: string;
   plinthNote?: string;
+  bearingNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -1030,6 +1032,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-plinth-empty={stall.id} hidden />
+          )}
+          {bearingNote ? (
+            <p
+              data-booth-bearing-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a bearing. {bearingNote}
+            </p>
+          ) : (
+            <p data-booth-bearing-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

@@ -567,6 +567,13 @@ import {
   stallPlinthPath,
 } from "@/lib/booth-plinth";
 import {
+  BOOTH_BEARING_COOKIE_NAME,
+  BOOTH_BEARING_PAPER_LINE,
+  boothBearingFor,
+  parseBoothBearing,
+  stallBearingPath,
+} from "@/lib/booth-bearing";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -998,6 +1005,10 @@ export default async function StallPage({
   const plinth = boothPlinthFor(
     stall.id,
     parseBoothPlinth(jar.get(BOOTH_PLINTH_COOKIE_NAME)?.value),
+  );
+  const bearing = boothBearingFor(
+    stall.id,
+    parseBoothBearing(jar.get(BOOTH_BEARING_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2413,6 +2424,23 @@ export default async function StallPage({
             <p data-booth-plinth-empty={stall.id} hidden />
           )}
 
+          {bearing ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a bearing"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-bearing-note={stall.id}>
+                  {bearing.note} {BOOTH_BEARING_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-bearing-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3094,6 +3122,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a plinth
+          </Link>
+
+          <Link
+            href={stallBearingPath(stall.slug)}
+            data-booth-bearing-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a bearing
           </Link>
 
           <Link
