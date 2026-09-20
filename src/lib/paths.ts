@@ -2034,6 +2034,14 @@ export function listingFizeauWritePath() {
   return "/listings/fizeau";
 }
 
+export function listingHaidingerPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/haidinger`;
+}
+
+export function listingHaidingerWritePath() {
+  return "/listings/haidinger";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }

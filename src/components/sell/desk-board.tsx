@@ -1161,6 +1161,12 @@ import {
   subscribeFizeau,
 } from "@/lib/listing-fizeau";
 import {
+  canTapeHaidinger,
+  isListingHaidingerOverlay,
+  readHaidingerListingIds,
+  subscribeHaidinger,
+} from "@/lib/listing-haidinger";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1698,6 +1704,7 @@ import {
   listingFrostWritePath,
   listingFringeWritePath,
   listingFizeauWritePath,
+  listingHaidingerWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -2053,6 +2060,7 @@ export function DeskBoard({
   const [frostIds, setFrostIds] = useState<string[]>([]);
   const [fringeIds, setFringeIds] = useState<string[]>([]);
   const [fizeauIds, setFizeauIds] = useState<string[]>([]);
+  const [haidingerIds, setHaidingerIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2324,6 +2332,7 @@ export function DeskBoard({
       setFrostIds(readFrostListingIds());
       setFringeIds(readFringeListingIds());
       setFizeauIds(readFizeauListingIds());
+      setHaidingerIds(readHaidingerListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2584,6 +2593,7 @@ export function DeskBoard({
     const unsubFrost = subscribeFrost(apply);
     const unsubFringe = subscribeFringe(apply);
     const unsubFizeau = subscribeFizeau(apply);
+    const unsubHaidinger = subscribeHaidinger(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2854,6 +2864,7 @@ export function DeskBoard({
       unsubFrost();
       unsubFringe();
       unsubFizeau();
+      unsubHaidinger();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -6229,6 +6240,37 @@ export function DeskBoard({
                             {isListingFizeauOverlay(listing.id, fizeauIds)
                               ? "Leave the fizeau"
                               : "I will not fizeau it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHaidinger(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHaidingerWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHaidingerOverlay(listing.id, haidingerIds)
+                                ? "open"
+                                : "haidinger"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingHaidingerOverlay(listing.id, haidingerIds)
+                              ? "Leave the haidinger"
+                              : "I will not haidinger it"}
                           </button>
                         </form>
                       ) : null}
