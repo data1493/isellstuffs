@@ -1426,6 +1426,14 @@ export function listingRinseWritePath() {
   return "/listings/rinse";
 }
 
+export function listingAntistatPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/antistat`;
+}
+
+export function listingAntistatWritePath() {
+  return "/listings/antistat";
+}
+
 export function listingPicklePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/pickle`;
 }

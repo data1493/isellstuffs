@@ -681,6 +681,12 @@ import {
   subscribeRinse,
 } from "@/lib/listing-rinse";
 import {
+  canTapeAntistat,
+  isListingAntistatOverlay,
+  readAntistatListingIds,
+  subscribeAntistat,
+} from "@/lib/listing-antistat";
+import {
   canTapeDolby,
   isListingDolbyOverlay,
   readDolbyListingIds,
@@ -996,6 +1002,7 @@ import {
   listingPuckWritePath,
   listingHoneWritePath,
   listingRinseWritePath,
+  listingAntistatWritePath,
   listingBevelWritePath,
   listingOverburnWritePath,
   listingDolbyWritePath,
@@ -1233,6 +1240,7 @@ export function DeskBoard({
   const [puckIds, setPuckIds] = useState<string[]>([]);
   const [honeIds, setHoneIds] = useState<string[]>([]);
   const [rinseIds, setRinseIds] = useState<string[]>([]);
+  const [antistatIds, setAntistatIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
   const [overburnIds, setOverburnIds] = useState<string[]>([]);
   const [dolbyIds, setDolbyIds] = useState<string[]>([]);
@@ -1399,6 +1407,7 @@ export function DeskBoard({
       setPuckIds(readPuckListingIds());
       setHoneIds(readHoneListingIds());
       setRinseIds(readRinseListingIds());
+      setAntistatIds(readAntistatListingIds());
       setBevelIds(readBevelListingIds());
       setOverburnIds(readOverburnListingIds());
       setDolbyIds(readDolbyListingIds());
@@ -1554,6 +1563,7 @@ export function DeskBoard({
     const unsubPuck = subscribePuck(apply);
     const unsubHone = subscribeHone(apply);
     const unsubRinse = subscribeRinse(apply);
+    const unsubAntistat = subscribeAntistat(apply);
     const unsubBevel = subscribeBevel(apply);
     const unsubOverburn = subscribeOverburn(apply);
     const unsubDolby = subscribeDolby(apply);
@@ -1719,6 +1729,7 @@ export function DeskBoard({
       unsubPuck();
       unsubHone();
       unsubRinse();
+      unsubAntistat();
       unsubBevel();
       unsubOverburn();
       unsubDolby();
@@ -3276,6 +3287,37 @@ export function DeskBoard({
                             {isListingRinseOverlay(listing.id, rinseIds)
                               ? "Leave the smear"
                               : "I will not rinse it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeAntistat(listing) ? (
+                        <form
+                          method="post"
+                          action={listingAntistatWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingAntistatOverlay(listing.id, antistatIds)
+                                ? "open"
+                                : "antistat"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingAntistatOverlay(listing.id, antistatIds)
+                              ? "Leave the scratch"
+                              : "I will not antistat it"}
                           </button>
                         </form>
                       ) : null}
