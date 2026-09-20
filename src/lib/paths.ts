@@ -1586,6 +1586,14 @@ export function listingPosterizeWritePath() {
   return "/listings/posterize";
 }
 
+export function listingLatticePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/lattice`;
+}
+
+export function listingLatticeWritePath() {
+  return "/listings/lattice";
+}
+
 export function listingMaskPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/mask`;
 }

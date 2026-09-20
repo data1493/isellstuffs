@@ -56,6 +56,7 @@ import { ListingGrainNotice } from "@/components/listing-grain-notice";
 import { ListingCubeNotice } from "@/components/listing-cube-notice";
 import { ListingShaperNotice } from "@/components/listing-shaper-notice";
 import { ListingPosterizeNotice } from "@/components/listing-posterize-notice";
+import { ListingLatticeNotice } from "@/components/listing-lattice-notice";
 import { ListingLogNotice } from "@/components/listing-log-notice";
 import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
@@ -319,6 +320,7 @@ import {
   listingCubePath,
   listingShaperPath,
   listingPosterizePath,
+  listingLatticePath,
   listingMaskPath,
   listingPogoPath,
   listingReballPath,
@@ -754,6 +756,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingCubeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingShaperNotice listingId={listing.id} /> : null}
               {!physical ? <ListingPosterizeNotice listingId={listing.id} /> : null}
+              {listing.id === "dl-camera-luts" ? (
+                <ListingLatticeNotice listingId={listing.id} />
+              ) : null}
               {!physical ? <ListingLogNotice listingId={listing.id} /> : null}
               {!physical ? <ListingProfileNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
@@ -2278,6 +2283,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not posterize them
                   </Link>
+                  {listing.id === "dl-camera-luts" ? (
+                    <Link
+                      href={listingLatticePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not lattice them
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingLogPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

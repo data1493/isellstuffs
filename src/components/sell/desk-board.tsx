@@ -1041,6 +1041,12 @@ import {
   subscribePosterize,
 } from "@/lib/listing-posterize";
 import {
+  canTapeLattice,
+  isListingLatticeOverlay,
+  readLatticeListingIds,
+  subscribeLattice,
+} from "@/lib/listing-lattice";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -1282,6 +1288,7 @@ import {
   listingCubeWritePath,
   listingShaperWritePath,
   listingPosterizeWritePath,
+  listingLatticeWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1572,6 +1579,7 @@ export function DeskBoard({
   const [cubeIds, setCubeIds] = useState<string[]>([]);
   const [shaperIds, setShaperIds] = useState<string[]>([]);
   const [posterizeIds, setPosterizeIds] = useState<string[]>([]);
+  const [latticeIds, setLatticeIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1775,6 +1783,7 @@ export function DeskBoard({
       setCubeIds(readCubeListingIds());
       setShaperIds(readShaperListingIds());
       setPosterizeIds(readPosterizeListingIds());
+      setLatticeIds(readLatticeListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1967,6 +1976,7 @@ export function DeskBoard({
     const unsubCube = subscribeCube(apply);
     const unsubShaper = subscribeShaper(apply);
     const unsubPosterize = subscribePosterize(apply);
+    const unsubLattice = subscribeLattice(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -2169,6 +2179,7 @@ export function DeskBoard({
       unsubCube();
       unsubShaper();
       unsubPosterize();
+      unsubLattice();
     };
   }, [listings, stall.id]);
 
@@ -6628,6 +6639,37 @@ export function DeskBoard({
                             {isListingPosterizeOverlay(listing.id, posterizeIds)
                               ? "Leave the looks"
                               : "I will not posterize them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLattice(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLatticeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLatticeOverlay(listing.id, latticeIds)
+                                ? "open"
+                                : "lattice"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLatticeOverlay(listing.id, latticeIds)
+                              ? "Leave the looks"
+                              : "I will not lattice them"}
                           </button>
                         </form>
                       ) : null}
