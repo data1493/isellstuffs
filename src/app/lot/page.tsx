@@ -290,6 +290,11 @@ import {
   parseBoothPony,
 } from "@/lib/booth-pony";
 import {
+  BOOTH_MALLET_COOKIE_NAME,
+  BOOTH_MALLET_MIRROR_SCRIPT,
+  parseBoothMallet,
+} from "@/lib/booth-mallet";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -394,6 +399,7 @@ export default async function LotPage() {
   const ricerMap = parseBoothRicer(jar.get(BOOTH_RICER_COOKIE_NAME)?.value);
   const mandrelMap = parseBoothMandrel(jar.get(BOOTH_MANDREL_COOKIE_NAME)?.value);
   const ponyMap = parseBoothPony(jar.get(BOOTH_PONY_COOKIE_NAME)?.value);
+  const malletMap = parseBoothMallet(jar.get(BOOTH_MALLET_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -463,6 +469,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_RICER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_MANDREL_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_PONY_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_MALLET_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -533,6 +540,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_RICER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_MANDREL_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_PONY_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_MALLET_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -654,6 +662,7 @@ export default async function LotPage() {
                     ricerNote={ricerMap[row.stall.id]?.note}
                     mandrelNote={mandrelMap[row.stall.id]?.note}
                     ponyNote={ponyMap[row.stall.id]?.note}
+                    malletNote={malletMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -740,6 +749,7 @@ export default async function LotPage() {
                     ricerNote={ricerMap[row.stall.id]?.note}
                     mandrelNote={mandrelMap[row.stall.id]?.note}
                     ponyNote={ponyMap[row.stall.id]?.note}
+                    malletNote={malletMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

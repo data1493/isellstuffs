@@ -420,6 +420,13 @@ import {
   stallPonyPath,
 } from "@/lib/booth-pony";
 import {
+  BOOTH_MALLET_COOKIE_NAME,
+  BOOTH_MALLET_PAPER_LINE,
+  boothMalletFor,
+  parseBoothMallet,
+  stallMalletPath,
+} from "@/lib/booth-mallet";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -767,6 +774,10 @@ export default async function StallPage({
   const pony = boothPonyFor(
     stall.id,
     parseBoothPony(jar.get(BOOTH_PONY_COOKIE_NAME)?.value),
+  );
+  const mallet = boothMalletFor(
+    stall.id,
+    parseBoothMallet(jar.get(BOOTH_MALLET_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1842,6 +1853,23 @@ export default async function StallPage({
             <p data-booth-pony-empty={stall.id} hidden />
           )}
 
+          {mallet ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a mallet"
+              title="Still a driveway. Still a stain."
+              body={
+                <p data-booth-mallet-note={stall.id}>
+                  {mallet.note} {BOOTH_MALLET_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-mallet-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2338,6 +2366,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a pony
+          </Link>
+
+          <Link
+            href={stallMalletPath(stall.slug)}
+            data-booth-mallet-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a mallet
           </Link>
 
           <Link

@@ -2096,6 +2096,14 @@ export function stallPonyWritePath() {
   return "/stalls/pony";
 }
 
+export function stallMalletPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/mallet`;
+}
+
+export function stallMalletWritePath() {
+  return "/stalls/mallet";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
