@@ -1602,6 +1602,14 @@ export function listingMatWritePath() {
   return "/listings/mat";
 }
 
+export function listingEdgePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/edge`;
+}
+
+export function listingEdgeWritePath() {
+  return "/listings/edge";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

@@ -495,6 +495,12 @@ import {
   subscribeSkive,
 } from "@/lib/listing-skive";
 import {
+  canTapeEdge,
+  isListingEdgeOverlay,
+  readEdgeListingIds,
+  subscribeEdge,
+} from "@/lib/listing-edge";
+import {
   canTapeTruss,
   isListingTrussOverlay,
   readTrussListingIds,
@@ -1012,6 +1018,7 @@ import {
   listingFlockWritePath,
   listingTumbleWritePath,
   listingSkiveWritePath,
+  listingEdgeWritePath,
   listingTrussWritePath,
   listingAnnealWritePath,
   listingGrommetWritePath,
@@ -1251,6 +1258,7 @@ export function DeskBoard({
   const [flockIds, setFlockIds] = useState<string[]>([]);
   const [tumbleIds, setTumbleIds] = useState<string[]>([]);
   const [skiveIds, setSkiveIds] = useState<string[]>([]);
+  const [edgeIds, setEdgeIds] = useState<string[]>([]);
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
@@ -1424,6 +1432,7 @@ export function DeskBoard({
       setFlockIds(readFlockListingIds());
       setTumbleIds(readTumbleListingIds());
       setSkiveIds(readSkiveListingIds());
+      setEdgeIds(readEdgeListingIds());
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
       setGrommetIds(readGrommetListingIds());
@@ -1586,6 +1595,7 @@ export function DeskBoard({
     const unsubFlock = subscribeFlock(apply);
     const unsubTumble = subscribeTumble(apply);
     const unsubSkive = subscribeSkive(apply);
+    const unsubEdge = subscribeEdge(apply);
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubGrommet = subscribeGrommet(apply);
@@ -1758,6 +1768,7 @@ export function DeskBoard({
       unsubFlock();
       unsubTumble();
       unsubSkive();
+      unsubEdge();
       unsubTruss();
       unsubAnneal();
       unsubGrommet();
@@ -4500,6 +4511,37 @@ export function DeskBoard({
                             {isListingSkiveOverlay(listing.id, skiveIds)
                               ? "Leave the split"
                               : "I will not skive it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeEdge(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEdgeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEdgeOverlay(listing.id, edgeIds)
+                                ? "open"
+                                : "edge"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingEdgeOverlay(listing.id, edgeIds)
+                              ? "Leave the peel"
+                              : "I will not edge it"}
                           </button>
                         </form>
                       ) : null}

@@ -188,6 +188,7 @@ import { ListingMaskNotice } from "@/components/listing-mask-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingSkiveNotice } from "@/components/listing-skive-notice";
+import { ListingEdgeNotice } from "@/components/listing-edge-notice";
 import { ListingTrussNotice } from "@/components/listing-truss-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
@@ -400,6 +401,7 @@ import {
   listingOverburnPath,
   listingTumblePath,
   listingSkivePath,
+  listingEdgePath,
   listingTrussPath,
   listingRegisterPath,
   listingDolbyPath,
@@ -843,6 +845,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
               {physical ? <ListingTumbleNotice listingId={listing.id} /> : null}
               {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
+              {physical ? <ListingEdgeNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
 
               {physical ? (
@@ -1656,6 +1659,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not skive it
+                  </Link>
+                  <Link
+                    href={listingEdgePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not edge it
                   </Link>
                   <Link
                     href={listingTrussPath(listing.id)}
