@@ -1906,6 +1906,14 @@ export function listingDescreenWritePath() {
   return "/listings/descreen";
 }
 
+export function listingDespecklePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/despeckle`;
+}
+
+export function listingDespeckleWritePath() {
+  return "/listings/despeckle";
+}
+
 export function listingUnderfillPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/underfill`;
 }

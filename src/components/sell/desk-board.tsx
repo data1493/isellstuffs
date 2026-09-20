@@ -1041,6 +1041,12 @@ import {
   subscribeDescreen,
 } from "@/lib/listing-descreen";
 import {
+  canTapeDespeckle,
+  isListingDespeckleOverlay,
+  readDespeckleListingIds,
+  subscribeDespeckle,
+} from "@/lib/listing-despeckle";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -1365,6 +1371,7 @@ import {
   listingGalleyWritePath,
   listingGangWritePath,
   listingDescreenWritePath,
+  listingDespeckleWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
@@ -1678,6 +1685,7 @@ export function DeskBoard({
   const [galleyIds, setGalleyIds] = useState<string[]>([]);
   const [gangIds, setGangIds] = useState<string[]>([]);
   const [descreenIds, setDescreenIds] = useState<string[]>([]);
+  const [despeckleIds, setDespeckleIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
@@ -1896,6 +1904,7 @@ export function DeskBoard({
       setGalleyIds(readGalleyListingIds());
       setGangIds(readGangListingIds());
       setDescreenIds(readDescreenListingIds());
+      setDespeckleIds(readDespeckleListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
@@ -2103,6 +2112,7 @@ export function DeskBoard({
     const unsubGalley = subscribeGalley(apply);
     const unsubGang = subscribeGang(apply);
     const unsubDescreen = subscribeDescreen(apply);
+    const unsubDespeckle = subscribeDespeckle(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
@@ -2320,6 +2330,7 @@ export function DeskBoard({
       unsubGalley();
       unsubGang();
       unsubDescreen();
+      unsubDespeckle();
       unsubScale();
       unsubGate();
       unsubQuantize();
@@ -8529,6 +8540,37 @@ export function DeskBoard({
                             {isListingDescreenOverlay(listing.id, descreenIds)
                               ? "Leave the cards"
                               : "I will not descreen them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeDespeckle(listing) ? (
+                        <form
+                          method="post"
+                          action={listingDespeckleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingDespeckleOverlay(listing.id, despeckleIds)
+                                ? "open"
+                                : "despeckle"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingDespeckleOverlay(listing.id, despeckleIds)
+                              ? "Leave the cards"
+                              : "I will not despeckle them"}
                           </button>
                         </form>
                       ) : null}

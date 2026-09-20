@@ -205,6 +205,7 @@ import { ListingMatNotice } from "@/components/listing-mat-notice";
 import { ListingGalleyNotice } from "@/components/listing-galley-notice";
 import { ListingGangNotice } from "@/components/listing-gang-notice";
 import { ListingDescreenNotice } from "@/components/listing-descreen-notice";
+import { ListingDespeckleNotice } from "@/components/listing-despeckle-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
 import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
@@ -457,6 +458,7 @@ import {
   listingGalleyPath,
   listingGangPath,
   listingDescreenPath,
+  listingDespecklePath,
   listingPuckPath,
   listingHonePath,
   listingRinsePath,
@@ -758,6 +760,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "dl-drawer-recipes" ? (
                 <ListingDescreenNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "dl-drawer-recipes" ? (
+                <ListingDespeckleNotice listingId={listing.id} />
               ) : null}
               {!physical ? <ListingYearNotice listingId={listing.id} /> : null}
               {!physical ? <ListingStemsNotice listingId={listing.id} /> : null}
@@ -2333,6 +2338,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not descreen them
+                    </Link>
+                  ) : null}
+                  {listing.id === "dl-drawer-recipes" ? (
+                    <Link
+                      href={listingDespecklePath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not despeckle them
                     </Link>
                   ) : null}
                   <Link
