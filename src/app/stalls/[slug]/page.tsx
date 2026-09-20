@@ -406,6 +406,13 @@ import {
   stallRicerPath,
 } from "@/lib/booth-ricer";
 import {
+  BOOTH_MANDREL_COOKIE_NAME,
+  BOOTH_MANDREL_PAPER_LINE,
+  boothMandrelFor,
+  parseBoothMandrel,
+  stallMandrelPath,
+} from "@/lib/booth-mandrel";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -745,6 +752,10 @@ export default async function StallPage({
   const ricer = boothRicerFor(
     stall.id,
     parseBoothRicer(jar.get(BOOTH_RICER_COOKIE_NAME)?.value),
+  );
+  const mandrel = boothMandrelFor(
+    stall.id,
+    parseBoothMandrel(jar.get(BOOTH_MANDREL_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1786,6 +1797,23 @@ export default async function StallPage({
             <p data-booth-ricer-empty={stall.id} hidden />
           )}
 
+          {mandrel ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a mandrel"
+              title="Still a table."
+              body={
+                <p data-booth-mandrel-note={stall.id}>
+                  {mandrel.note} {BOOTH_MANDREL_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-mandrel-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2266,6 +2294,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a ricer
+          </Link>
+
+          <Link
+            href={stallMandrelPath(stall.slug)}
+            data-booth-mandrel-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a mandrel
           </Link>
 
           <Link

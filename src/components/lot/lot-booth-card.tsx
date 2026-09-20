@@ -80,6 +80,7 @@ export function LotBoothCard({
   lastNote,
   caliperNote,
   ricerNote,
+  mandrelNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -142,6 +143,7 @@ export function LotBoothCard({
   lastNote?: string;
   caliperNote?: string;
   ricerNote?: string;
+  mandrelNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -754,6 +756,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-ricer-empty={stall.id} hidden />
+          )}
+          {mandrelNote ? (
+            <p
+              data-booth-mandrel-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a mandrel. {mandrelNote}
+            </p>
+          ) : (
+            <p data-booth-mandrel-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

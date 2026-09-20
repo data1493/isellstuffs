@@ -280,6 +280,11 @@ import {
   parseBoothRicer,
 } from "@/lib/booth-ricer";
 import {
+  BOOTH_MANDREL_COOKIE_NAME,
+  BOOTH_MANDREL_MIRROR_SCRIPT,
+  parseBoothMandrel,
+} from "@/lib/booth-mandrel";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -382,6 +387,7 @@ export default async function LotPage() {
   const lastMap = parseBoothLast(jar.get(BOOTH_LAST_COOKIE_NAME)?.value);
   const caliperMap = parseBoothCaliper(jar.get(BOOTH_CALIPER_COOKIE_NAME)?.value);
   const ricerMap = parseBoothRicer(jar.get(BOOTH_RICER_COOKIE_NAME)?.value);
+  const mandrelMap = parseBoothMandrel(jar.get(BOOTH_MANDREL_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -449,6 +455,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_LAST_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_CALIPER_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_RICER_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_MANDREL_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -517,6 +524,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_LAST_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_CALIPER_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_RICER_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_MANDREL_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -636,6 +644,7 @@ export default async function LotPage() {
                     lastNote={lastMap[row.stall.id]?.note}
                     caliperNote={caliperMap[row.stall.id]?.note}
                     ricerNote={ricerMap[row.stall.id]?.note}
+                    mandrelNote={mandrelMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -720,6 +729,7 @@ export default async function LotPage() {
                     lastNote={lastMap[row.stall.id]?.note}
                     caliperNote={caliperMap[row.stall.id]?.note}
                     ricerNote={ricerMap[row.stall.id]?.note}
+                    mandrelNote={mandrelMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

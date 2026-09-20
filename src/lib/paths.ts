@@ -2008,6 +2008,14 @@ export function stallRicerWritePath() {
   return "/stalls/ricer";
 }
 
+export function stallMandrelPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/mandrel`;
+}
+
+export function stallMandrelWritePath() {
+  return "/stalls/mandrel";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
