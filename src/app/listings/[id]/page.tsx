@@ -55,6 +55,7 @@ import { ListingBalanceNotice } from "@/components/listing-balance-notice";
 import { ListingGrainNotice } from "@/components/listing-grain-notice";
 import { ListingCubeNotice } from "@/components/listing-cube-notice";
 import { ListingShaperNotice } from "@/components/listing-shaper-notice";
+import { ListingPosterizeNotice } from "@/components/listing-posterize-notice";
 import { ListingLogNotice } from "@/components/listing-log-notice";
 import { ListingBpmNotice } from "@/components/listing-bpm-notice";
 import { ListingManualNotice } from "@/components/listing-manual-notice";
@@ -297,6 +298,7 @@ import {
   listingGrainPath,
   listingCubePath,
   listingShaperPath,
+  listingPosterizePath,
   listingMaskPath,
   listingPogoPath,
   listingLogPath,
@@ -706,6 +708,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {!physical ? <ListingGrainNotice listingId={listing.id} /> : null}
               {!physical ? <ListingCubeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingShaperNotice listingId={listing.id} /> : null}
+              {!physical ? <ListingPosterizeNotice listingId={listing.id} /> : null}
               {!physical ? <ListingLogNotice listingId={listing.id} /> : null}
               {!physical ? <ListingProfileNotice listingId={listing.id} /> : null}
               {!physical ? <ListingBpmNotice listingId={listing.id} /> : null}
@@ -2053,6 +2056,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not shaper them
+                  </Link>
+                  <Link
+                    href={listingPosterizePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not posterize them
                   </Link>
                   <Link
                     href={listingLogPath(listing.id)}

@@ -1546,6 +1546,14 @@ export function listingShaperWritePath() {
   return "/listings/shaper";
 }
 
+export function listingPosterizePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/posterize`;
+}
+
+export function listingPosterizeWritePath() {
+  return "/listings/posterize";
+}
+
 export function listingMaskPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/mask`;
 }

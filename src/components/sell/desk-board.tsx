@@ -921,6 +921,12 @@ import {
   subscribeShaper,
 } from "@/lib/listing-shaper";
 import {
+  canTapePosterize,
+  isListingPosterizeOverlay,
+  readPosterizeListingIds,
+  subscribePosterize,
+} from "@/lib/listing-posterize";
+import {
   canTapeTune,
   isListingTuneOverlay,
   readTuneListingIds,
@@ -1136,6 +1142,7 @@ import {
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
+  listingPosterizeWritePath,
   listingContrastWritePath,
   listingEvenWritePath,
   listingCementWritePath,
@@ -1404,6 +1411,7 @@ export function DeskBoard({
   const [grainIds, setGrainIds] = useState<string[]>([]);
   const [cubeIds, setCubeIds] = useState<string[]>([]);
   const [shaperIds, setShaperIds] = useState<string[]>([]);
+  const [posterizeIds, setPosterizeIds] = useState<string[]>([]);
   const [card, setCard] = useState({
     boothName: stall.boothName,
     blurb: stall.blurb,
@@ -1586,6 +1594,7 @@ export function DeskBoard({
       setGrainIds(readGrainListingIds());
       setCubeIds(readCubeListingIds());
       setShaperIds(readShaperListingIds());
+      setPosterizeIds(readPosterizeListingIds());
       const patch = stallCardById(stall.id);
       if (patch) {
         setCard({ boothName: patch.boothName, blurb: patch.blurb });
@@ -1757,6 +1766,7 @@ export function DeskBoard({
     const unsubGrain = subscribeGrain(apply);
     const unsubCube = subscribeCube(apply);
     const unsubShaper = subscribeShaper(apply);
+    const unsubPosterize = subscribePosterize(apply);
     window.addEventListener(SELLER_LISTINGS_CHANGED, apply);
     window.addEventListener(SELLER_STALLS_CHANGED, apply);
     window.addEventListener(SOLD_CHANGED_EVENT, apply);
@@ -1938,6 +1948,7 @@ export function DeskBoard({
       unsubGrain();
       unsubCube();
       unsubShaper();
+      unsubPosterize();
     };
   }, [listings, stall.id]);
 
@@ -5870,6 +5881,37 @@ export function DeskBoard({
                             {isListingShaperOverlay(listing.id, shaperIds)
                               ? "Leave the looks"
                               : "I will not shaper them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapePosterize(listing) ? (
+                        <form
+                          method="post"
+                          action={listingPosterizeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingPosterizeOverlay(listing.id, posterizeIds)
+                                ? "open"
+                                : "posterize"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingPosterizeOverlay(listing.id, posterizeIds)
+                              ? "Leave the looks"
+                              : "I will not posterize them"}
                           </button>
                         </form>
                       ) : null}
