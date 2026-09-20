@@ -513,6 +513,12 @@ import {
   subscribeShank,
 } from "@/lib/listing-shank";
 import {
+  canTapeHickey,
+  isListingHickeyOverlay,
+  readHickeyListingIds,
+  subscribeHickey,
+} from "@/lib/listing-hickey";
+import {
   canTapeTruss,
   isListingTrussOverlay,
   readTrussListingIds,
@@ -1099,6 +1105,7 @@ import {
   listingSkiveWritePath,
   listingEdgeWritePath,
   listingShankWritePath,
+  listingHickeyWritePath,
   listingTrussWritePath,
   listingAnnealWritePath,
   listingQuenchWritePath,
@@ -1352,6 +1359,7 @@ export function DeskBoard({
   const [skiveIds, setSkiveIds] = useState<string[]>([]);
   const [edgeIds, setEdgeIds] = useState<string[]>([]);
   const [shankIds, setShankIds] = useState<string[]>([]);
+  const [hickeyIds, setHickeyIds] = useState<string[]>([]);
   const [trussIds, setTrussIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [quenchIds, setQuenchIds] = useState<string[]>([]);
@@ -1539,6 +1547,7 @@ export function DeskBoard({
       setSkiveIds(readSkiveListingIds());
       setEdgeIds(readEdgeListingIds());
       setShankIds(readShankListingIds());
+      setHickeyIds(readHickeyListingIds());
       setTrussIds(readTrussListingIds());
       setAnnealIds(readAnnealListingIds());
       setQuenchIds(readQuenchListingIds());
@@ -1715,6 +1724,7 @@ export function DeskBoard({
     const unsubSkive = subscribeSkive(apply);
     const unsubEdge = subscribeEdge(apply);
     const unsubShank = subscribeShank(apply);
+    const unsubHickey = subscribeHickey(apply);
     const unsubTruss = subscribeTruss(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubQuench = subscribeQuench(apply);
@@ -1901,6 +1911,7 @@ export function DeskBoard({
       unsubSkive();
       unsubEdge();
       unsubShank();
+      unsubHickey();
       unsubTruss();
       unsubAnneal();
       unsubQuench();
@@ -4871,6 +4882,37 @@ export function DeskBoard({
                             {isListingShankOverlay(listing.id, shankIds)
                               ? "Leave the flex"
                               : "I will not shank them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHickey(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHickeyWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHickeyOverlay(listing.id, hickeyIds)
+                                ? "open"
+                                : "hickey"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingHickeyOverlay(listing.id, hickeyIds)
+                              ? "Leave the pipe"
+                              : "I will not hickey it"}
                           </button>
                         </form>
                       ) : null}

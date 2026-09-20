@@ -199,6 +199,7 @@ import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
 import { ListingSkiveNotice } from "@/components/listing-skive-notice";
 import { ListingEdgeNotice } from "@/components/listing-edge-notice";
 import { ListingShankNotice } from "@/components/listing-shank-notice";
+import { ListingHickeyNotice } from "@/components/listing-hickey-notice";
 import { ListingTrussNotice } from "@/components/listing-truss-notice";
 import { ListingQuenchNotice } from "@/components/listing-quench-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
@@ -422,6 +423,7 @@ import {
   listingSkivePath,
   listingEdgePath,
   listingShankPath,
+  listingHickeyPath,
   listingTrussPath,
   listingQuenchPath,
   listingRegisterPath,
@@ -888,6 +890,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
               {physical ? <ListingEdgeNotice listingId={listing.id} /> : null}
               {physical ? <ListingShankNotice listingId={listing.id} /> : null}
+              {physical ? <ListingHickeyNotice listingId={listing.id} /> : null}
               {physical ? <ListingTrussNotice listingId={listing.id} /> : null}
               {physical ? <ListingQuenchNotice listingId={listing.id} /> : null}
 
@@ -1745,6 +1748,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   >
                     I will not shank them
                   </Link>
+                  {listing.id === "ysk-wobbly-lamp" ? (
+                    <Link
+                      href={listingHickeyPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not hickey it
+                    </Link>
+                  ) : null}
                   <Link
                     href={listingTrussPath(listing.id)}
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

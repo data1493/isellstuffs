@@ -1706,6 +1706,14 @@ export function listingShankWritePath() {
   return "/listings/shank";
 }
 
+export function listingHickeyPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hickey`;
+}
+
+export function listingHickeyWritePath() {
+  return "/listings/hickey";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }
