@@ -310,6 +310,11 @@ import {
   parseBoothDrift,
 } from "@/lib/booth-drift";
 import {
+  BOOTH_BONE_COOKIE_NAME,
+  BOOTH_BONE_MIRROR_SCRIPT,
+  parseBoothBone,
+} from "@/lib/booth-bone";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -418,6 +423,7 @@ export default async function LotPage() {
   const snipsMap = parseBoothSnips(jar.get(BOOTH_SNIPS_COOKIE_NAME)?.value);
   const stropMap = parseBoothStrop(jar.get(BOOTH_STROP_COOKIE_NAME)?.value);
   const driftMap = parseBoothDrift(jar.get(BOOTH_DRIFT_COOKIE_NAME)?.value);
+  const boneMap = parseBoothBone(jar.get(BOOTH_BONE_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -491,6 +497,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_SNIPS_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_STROP_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_BONE_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -565,6 +572,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_SNIPS_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_STROP_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_DRIFT_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_BONE_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -690,6 +698,7 @@ export default async function LotPage() {
                     snipsNote={snipsMap[row.stall.id]?.note}
                     stropNote={stropMap[row.stall.id]?.note}
                     driftNote={driftMap[row.stall.id]?.note}
+                    boneNote={boneMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -780,6 +789,7 @@ export default async function LotPage() {
                     snipsNote={snipsMap[row.stall.id]?.note}
                     stropNote={stropMap[row.stall.id]?.note}
                     driftNote={driftMap[row.stall.id]?.note}
+                    boneNote={boneMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

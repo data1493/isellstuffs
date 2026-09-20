@@ -448,6 +448,13 @@ import {
   stallDriftPath,
 } from "@/lib/booth-drift";
 import {
+  BOOTH_BONE_COOKIE_NAME,
+  BOOTH_BONE_PAPER_LINE,
+  boothBoneFor,
+  parseBoothBone,
+  stallBonePath,
+} from "@/lib/booth-bone";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -811,6 +818,10 @@ export default async function StallPage({
   const drift = boothDriftFor(
     stall.id,
     parseBoothDrift(jar.get(BOOTH_DRIFT_COOKIE_NAME)?.value),
+  );
+  const bone = boothBoneFor(
+    stall.id,
+    parseBoothBone(jar.get(BOOTH_BONE_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1954,6 +1965,23 @@ export default async function StallPage({
             <p data-booth-drift-empty={stall.id} hidden />
           )}
 
+          {bone ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a bone"
+              title="Still a driveway. Still a grocery bag."
+              body={
+                <p data-booth-bone-note={stall.id}>
+                  {bone.note} {BOOTH_BONE_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-bone-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2482,6 +2510,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a drift
+          </Link>
+
+          <Link
+            href={stallBonePath(stall.slug)}
+            data-booth-bone-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a bone
           </Link>
 
           <Link

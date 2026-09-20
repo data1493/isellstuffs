@@ -2240,6 +2240,14 @@ export function stallDriftWritePath() {
   return "/stalls/drift";
 }
 
+export function stallBonePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/bone`;
+}
+
+export function stallBoneWritePath() {
+  return "/stalls/bone";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

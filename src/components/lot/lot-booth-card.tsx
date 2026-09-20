@@ -86,6 +86,7 @@ export function LotBoothCard({
   snipsNote,
   stropNote,
   driftNote,
+  boneNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -154,6 +155,7 @@ export function LotBoothCard({
   snipsNote?: string;
   stropNote?: string;
   driftNote?: string;
+  boneNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -826,6 +828,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-drift-empty={stall.id} hidden />
+          )}
+          {boneNote ? (
+            <p
+              data-booth-bone-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a bone. {boneNote}
+            </p>
+          ) : (
+            <p data-booth-bone-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">
