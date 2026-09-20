@@ -84,6 +84,7 @@ export function LotBoothCard({
   ponyNote,
   malletNote,
   snipsNote,
+  stropNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -150,6 +151,7 @@ export function LotBoothCard({
   ponyNote?: string;
   malletNote?: string;
   snipsNote?: string;
+  stropNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -802,6 +804,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-snips-empty={stall.id} hidden />
+          )}
+          {stropNote ? (
+            <p
+              data-booth-strop-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a strop. {stropNote}
+            </p>
+          ) : (
+            <p data-booth-strop-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

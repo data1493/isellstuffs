@@ -434,6 +434,13 @@ import {
   stallSnipsPath,
 } from "@/lib/booth-snips";
 import {
+  BOOTH_STROP_COOKIE_NAME,
+  BOOTH_STROP_PAPER_LINE,
+  boothStropFor,
+  parseBoothStrop,
+  stallStropPath,
+} from "@/lib/booth-strop";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -789,6 +796,10 @@ export default async function StallPage({
   const snips = boothSnipsFor(
     stall.id,
     parseBoothSnips(jar.get(BOOTH_SNIPS_COOKIE_NAME)?.value),
+  );
+  const strop = boothStropFor(
+    stall.id,
+    parseBoothStrop(jar.get(BOOTH_STROP_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1898,6 +1909,23 @@ export default async function StallPage({
             <p data-booth-snips-empty={stall.id} hidden />
           )}
 
+          {strop ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a strop"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-strop-note={stall.id}>
+                  {strop.note} {BOOTH_STROP_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-strop-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2410,6 +2438,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have snips
+          </Link>
+
+          <Link
+            href={stallStropPath(stall.slug)}
+            data-booth-strop-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a strop
           </Link>
 
           <Link

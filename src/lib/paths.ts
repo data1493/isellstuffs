@@ -2160,6 +2160,14 @@ export function stallSnipsWritePath() {
   return "/stalls/snips";
 }
 
+export function stallStropPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/strop`;
+}
+
+export function stallStropWritePath() {
+  return "/stalls/strop";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
