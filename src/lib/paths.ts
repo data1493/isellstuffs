@@ -1650,6 +1650,14 @@ export function listingVarnishWritePath() {
   return "/listings/varnish";
 }
 
+export function listingPogoPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/pogo`;
+}
+
+export function listingPogoWritePath() {
+  return "/listings/pogo";
+}
+
 export function listingMatPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/mat`;
 }
