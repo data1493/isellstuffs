@@ -198,6 +198,7 @@ import { ListingProfileNotice } from "@/components/listing-profile-notice";
 import { ListingBoldNotice } from "@/components/listing-bold-notice";
 import { ListingVariableNotice } from "@/components/listing-variable-notice";
 import { ListingLigatureNotice } from "@/components/listing-ligature-notice";
+import { ListingKernNotice } from "@/components/listing-kern-notice";
 import { ListingOutlineNotice } from "@/components/listing-outline-notice";
 import { ListingScanNotice } from "@/components/listing-scan-notice";
 import { ListingVanNotice } from "@/components/listing-van-notice";
@@ -676,6 +677,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingLigatureNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingKernNotice listingId={listing.id} />
               ) : null}
               {!physical ? (
                 <ListingOutlineNotice listingId={listing.id} />

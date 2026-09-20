@@ -1514,6 +1514,14 @@ export function listingPinkWritePath() {
   return "/listings/pink";
 }
 
+export function listingKernPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/kern`;
+}
+
+export function listingKernWritePath() {
+  return "/listings/kern";
+}
+
 export function listingFoamPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/foam`;
 }
