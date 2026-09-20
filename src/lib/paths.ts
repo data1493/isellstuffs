@@ -2920,6 +2920,14 @@ export function stallPreheaterWritePath() {
   return "/stalls/preheater";
 }
 
+export function stallPlinthPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/plinth`;
+}
+
+export function stallPlinthWritePath() {
+  return "/stalls/plinth";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

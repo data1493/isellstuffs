@@ -102,6 +102,7 @@ export function LotBoothCard({
   cradleNote,
   headshellNote,
   preheaterNote,
+  plinthNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -186,6 +187,7 @@ export function LotBoothCard({
   cradleNote?: string;
   headshellNote?: string;
   preheaterNote?: string;
+  plinthNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -1018,6 +1020,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-preheater-empty={stall.id} hidden />
+          )}
+          {plinthNote ? (
+            <p
+              data-booth-plinth-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a plinth. {plinthNote}
+            </p>
+          ) : (
+            <p data-booth-plinth-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

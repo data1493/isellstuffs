@@ -560,6 +560,13 @@ import {
   stallPreheaterPath,
 } from "@/lib/booth-preheater";
 import {
+  BOOTH_PLINTH_COOKIE_NAME,
+  BOOTH_PLINTH_PAPER_LINE,
+  boothPlinthFor,
+  parseBoothPlinth,
+  stallPlinthPath,
+} from "@/lib/booth-plinth";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -987,6 +994,10 @@ export default async function StallPage({
   const preheater = boothPreheaterFor(
     stall.id,
     parseBoothPreheater(jar.get(BOOTH_PREHEATER_COOKIE_NAME)?.value),
+  );
+  const plinth = boothPlinthFor(
+    stall.id,
+    parseBoothPlinth(jar.get(BOOTH_PLINTH_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2385,6 +2396,23 @@ export default async function StallPage({
             <p data-booth-preheater-empty={stall.id} hidden />
           )}
 
+          {plinth ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a plinth"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-plinth-note={stall.id}>
+                  {plinth.note} {BOOTH_PLINTH_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-plinth-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3058,6 +3086,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a preheater
+          </Link>
+
+          <Link
+            href={stallPlinthPath(stall.slug)}
+            data-booth-plinth-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a plinth
           </Link>
 
           <Link
