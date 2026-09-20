@@ -504,6 +504,13 @@ import {
   stallPlumbPath,
 } from "@/lib/booth-plumb";
 import {
+  BOOTH_WAND_COOKIE_NAME,
+  BOOTH_WAND_PAPER_LINE,
+  boothWandFor,
+  parseBoothWand,
+  stallWandPath,
+} from "@/lib/booth-wand";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -899,6 +906,10 @@ export default async function StallPage({
   const plumb = boothPlumbFor(
     stall.id,
     parseBoothPlumb(jar.get(BOOTH_PLUMB_COOKIE_NAME)?.value),
+  );
+  const wand = boothWandFor(
+    stall.id,
+    parseBoothWand(jar.get(BOOTH_WAND_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2178,6 +2189,23 @@ export default async function StallPage({
             <p data-booth-plumb-empty={stall.id} hidden />
           )}
 
+          {wand ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a wand"
+              title="Still a crate. Still a skip."
+              body={
+                <p data-booth-wand-note={stall.id}>
+                  {wand.note} {BOOTH_WAND_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-wand-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2770,6 +2798,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a plumb
+          </Link>
+
+          <Link
+            href={stallWandPath(stall.slug)}
+            data-booth-wand-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a wand
           </Link>
 
           <Link

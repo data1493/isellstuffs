@@ -2568,6 +2568,14 @@ export function stallPlumbWritePath() {
   return "/stalls/plumb";
 }
 
+export function stallWandPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/wand`;
+}
+
+export function stallWandWritePath() {
+  return "/stalls/wand";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
