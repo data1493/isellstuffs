@@ -783,6 +783,12 @@ import {
   subscribeTap,
 } from "@/lib/listing-tap";
 import {
+  canTapeSnug,
+  isListingSnugOverlay,
+  readSnugListingIds,
+  subscribeSnug,
+} from "@/lib/listing-snug";
+import {
   canTapeBevel,
   isListingBevelOverlay,
   readBevelListingIds,
@@ -1094,6 +1100,7 @@ import {
   listingScribeWritePath,
   listingStakeWritePath,
   listingTapWritePath,
+  listingSnugWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
   listingPreflightWritePath,
@@ -1344,6 +1351,7 @@ export function DeskBoard({
   const [scribeIds, setScribeIds] = useState<string[]>([]);
   const [stakeIds, setStakeIds] = useState<string[]>([]);
   const [tapIds, setTapIds] = useState<string[]>([]);
+  const [snugIds, setSnugIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
   const [ventIds, setVentIds] = useState<string[]>([]);
@@ -1523,6 +1531,7 @@ export function DeskBoard({
       setScribeIds(readScribeListingIds());
       setStakeIds(readStakeListingIds());
       setTapIds(readTapListingIds());
+      setSnugIds(readSnugListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
       setVentIds(readVentListingIds());
@@ -1691,6 +1700,7 @@ export function DeskBoard({
     const unsubScribe = subscribeScribe(apply);
     const unsubStake = subscribeStake(apply);
     const unsubTap = subscribeTap(apply);
+    const unsubSnug = subscribeSnug(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
     const unsubVent = subscribeVent(apply);
@@ -1869,6 +1879,7 @@ export function DeskBoard({
       unsubScribe();
       unsubStake();
       unsubTap();
+      unsubSnug();
       unsubSplice();
       unsubRadio();
       unsubVent();
@@ -4008,6 +4019,37 @@ export function DeskBoard({
                             {isListingTapOverlay(listing.id, tapIds)
                               ? "Leave the hole"
                               : "I will not tap it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSnug(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSnugWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSnugOverlay(listing.id, snugIds)
+                                ? "open"
+                                : "snug"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSnugOverlay(listing.id, snugIds)
+                              ? "Leave the wiggle"
+                              : "I will not snug it"}
                           </button>
                         </form>
                       ) : null}

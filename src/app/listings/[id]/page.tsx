@@ -175,6 +175,7 @@ import { ListingTemperNotice } from "@/components/listing-temper-notice";
 import { ListingScribeNotice } from "@/components/listing-scribe-notice";
 import { ListingStakeNotice } from "@/components/listing-stake-notice";
 import { ListingTapNotice } from "@/components/listing-tap-notice";
+import { ListingSnugNotice } from "@/components/listing-snug-notice";
 import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
@@ -422,6 +423,7 @@ import {
   listingTemperPath,
   listingScribePath,
   listingStakePath,
+  listingSnugPath,
   listingPaginatePath,
   listingCollatePath,
   listingTrapPath,
@@ -847,6 +849,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingScribeNotice listingId={listing.id} /> : null}
               {physical ? <ListingStakeNotice listingId={listing.id} /> : null}
               {physical ? <ListingTapNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSnugNotice listingId={listing.id} /> : null}
               {physical ? <ListingKnurlNotice listingId={listing.id} /> : null}
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
               {physical ? <ListingBushNotice listingId={listing.id} /> : null}
@@ -1780,6 +1783,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not knurl it
+                  </Link>
+                  <Link
+                    href={listingSnugPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not snug it
                   </Link>
                   <Link
                     href={listingRivetPath(listing.id)}

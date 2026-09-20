@@ -1578,6 +1578,14 @@ export function listingTapWritePath() {
   return "/listings/tap";
 }
 
+export function listingSnugPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/snug`;
+}
+
+export function listingSnugWritePath() {
+  return "/listings/snug";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
