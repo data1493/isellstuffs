@@ -602,6 +602,13 @@ import {
   stallRacePath,
 } from "@/lib/booth-race";
 import {
+  BOOTH_FLYWHEEL_COOKIE_NAME,
+  BOOTH_FLYWHEEL_PAPER_LINE,
+  boothFlywheelFor,
+  parseBoothFlywheel,
+  stallFlywheelPath,
+} from "@/lib/booth-flywheel";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1053,6 +1060,10 @@ export default async function StallPage({
   const race = boothRaceFor(
     stall.id,
     parseBoothRace(jar.get(BOOTH_RACE_COOKIE_NAME)?.value),
+  );
+  const flywheel = boothFlywheelFor(
+    stall.id,
+    parseBoothFlywheel(jar.get(BOOTH_FLYWHEEL_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2553,6 +2564,23 @@ export default async function StallPage({
             <p data-booth-race-empty={stall.id} hidden />
           )}
 
+          {flywheel ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a flywheel"
+              title="Still a crate."
+              body={
+                <p data-booth-flywheel-note={stall.id}>
+                  {flywheel.note} {BOOTH_FLYWHEEL_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-flywheel-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3274,6 +3302,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a race
+          </Link>
+
+          <Link
+            href={stallFlywheelPath(stall.slug)}
+            data-booth-flywheel-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a flywheel
           </Link>
 
           <Link

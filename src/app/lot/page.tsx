@@ -420,6 +420,11 @@ import {
   parseBoothRace,
 } from "@/lib/booth-race";
 import {
+  BOOTH_FLYWHEEL_COOKIE_NAME,
+  BOOTH_FLYWHEEL_MIRROR_SCRIPT,
+  parseBoothFlywheel,
+} from "@/lib/booth-flywheel";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -562,6 +567,9 @@ export default async function LotPage() {
   const reflexMap = parseBoothReflex(jar.get(BOOTH_REFLEX_COOKIE_NAME)?.value);
   const thrustMap = parseBoothThrust(jar.get(BOOTH_THRUST_COOKIE_NAME)?.value);
   const raceMap = parseBoothRace(jar.get(BOOTH_RACE_COOKIE_NAME)?.value);
+  const flywheelMap = parseBoothFlywheel(
+    jar.get(BOOTH_FLYWHEEL_COOKIE_NAME)?.value,
+  );
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -680,6 +688,9 @@ export default async function LotPage() {
         />
         <script
           dangerouslySetInnerHTML={{ __html: BOOTH_RACE_MIRROR_SCRIPT }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_FLYWHEEL_MIRROR_SCRIPT }}
         />
         <LotEmpty />
       </>
@@ -800,6 +811,9 @@ export default async function LotPage() {
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_RACE_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_FLYWHEEL_MIRROR_SCRIPT }}
       />
       <div>
         <MallHero>
@@ -948,6 +962,7 @@ export default async function LotPage() {
                     reflexNote={reflexMap[row.stall.id]?.note}
                     thrustNote={thrustMap[row.stall.id]?.note}
                     raceNote={raceMap[row.stall.id]?.note}
+                    flywheelNote={flywheelMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -1060,6 +1075,7 @@ export default async function LotPage() {
                     reflexNote={reflexMap[row.stall.id]?.note}
                     thrustNote={thrustMap[row.stall.id]?.note}
                     raceNote={raceMap[row.stall.id]?.note}
+                    flywheelNote={flywheelMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

@@ -3144,6 +3144,14 @@ export function stallRaceWritePath() {
   return "/stalls/race";
 }
 
+export function stallFlywheelPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/flywheel`;
+}
+
+export function stallFlywheelWritePath() {
+  return "/stalls/flywheel";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
