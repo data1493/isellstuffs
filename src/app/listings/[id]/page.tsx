@@ -179,6 +179,7 @@ import { ListingPaginateNotice } from "@/components/listing-paginate-notice";
 import { ListingCollateNotice } from "@/components/listing-collate-notice";
 import { ListingPreflightNotice } from "@/components/listing-preflight-notice";
 import { ListingTrapNotice } from "@/components/listing-trap-notice";
+import { ListingVarnishNotice } from "@/components/listing-varnish-notice";
 import { ListingBleedNotice } from "@/components/listing-bleed-notice";
 import { ListingMatNotice } from "@/components/listing-mat-notice";
 import { ListingContrastNotice } from "@/components/listing-contrast-notice";
@@ -424,6 +425,7 @@ import {
   listingPaginatePath,
   listingCollatePath,
   listingTrapPath,
+  listingVarnishPath,
   listingContrastPath,
   listingShieldPath,
   listingGatePath,
@@ -658,6 +660,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {!physical ? (
                 <ListingTrapNotice listingId={listing.id} />
+              ) : null}
+              {!physical ? (
+                <ListingVarnishNotice listingId={listing.id} />
               ) : null}
               {!physical ? (
                 <ListingConsultNotice listingId={listing.id} />
@@ -1877,6 +1882,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not trap it
+                  </Link>
+                  <Link
+                    href={listingVarnishPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not varnish it
                   </Link>
                   <Link
                     href={listingConsultPath(listing.id)}

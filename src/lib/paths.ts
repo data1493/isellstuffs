@@ -1626,6 +1626,14 @@ export function listingTrapWritePath() {
   return "/listings/trap";
 }
 
+export function listingVarnishPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/varnish`;
+}
+
+export function listingVarnishWritePath() {
+  return "/listings/varnish";
+}
+
 export function listingMatPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/mat`;
 }

@@ -825,6 +825,12 @@ import {
   subscribeTrap,
 } from "@/lib/listing-trap";
 import {
+  canTapeVarnish,
+  isListingVarnishOverlay,
+  readVarnishListingIds,
+  subscribeVarnish,
+} from "@/lib/listing-varnish";
+import {
   canTapeBleed,
   isListingBleedOverlay,
   readBleedListingIds,
@@ -1092,6 +1098,7 @@ import {
   listingCollateWritePath,
   listingPreflightWritePath,
   listingTrapWritePath,
+  listingVarnishWritePath,
   listingBleedWritePath,
   listingMatWritePath,
   listingScaleWritePath,
@@ -1360,6 +1367,7 @@ export function DeskBoard({
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
   const [trapIds, setTrapIds] = useState<string[]>([]);
+  const [varnishIds, setVarnishIds] = useState<string[]>([]);
   const [bleedIds, setBleedIds] = useState<string[]>([]);
   const [matIds, setMatIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
@@ -1538,6 +1546,7 @@ export function DeskBoard({
       setCollateIds(readCollateListingIds());
       setPreflightIds(readPreflightListingIds());
       setTrapIds(readTrapListingIds());
+      setVarnishIds(readVarnishListingIds());
       setBleedIds(readBleedListingIds());
       setMatIds(readMatListingIds());
       setScaleIds(readScaleListingIds());
@@ -1705,6 +1714,7 @@ export function DeskBoard({
     const unsubCollate = subscribeCollate(apply);
     const unsubPreflight = subscribePreflight(apply);
     const unsubTrap = subscribeTrap(apply);
+    const unsubVarnish = subscribeVarnish(apply);
     const unsubBleed = subscribeBleed(apply);
     const unsubMat = subscribeMat(apply);
     const unsubScale = subscribeScale(apply);
@@ -1882,6 +1892,7 @@ export function DeskBoard({
       unsubCollate();
       unsubPreflight();
       unsubTrap();
+      unsubVarnish();
       unsubBleed();
       unsubMat();
       unsubScale();
@@ -6787,6 +6798,37 @@ export function DeskBoard({
                             {isListingTrapOverlay(listing.id, trapIds)
                               ? "Leave the knockout"
                               : "I will not trap it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeVarnish(listing) ? (
+                        <form
+                          method="post"
+                          action={listingVarnishWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingVarnishOverlay(listing.id, varnishIds)
+                                ? "open"
+                                : "varnish"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingVarnishOverlay(listing.id, varnishIds)
+                              ? "Leave the one-pager"
+                              : "I will not varnish it"}
                           </button>
                         </form>
                       ) : null}
