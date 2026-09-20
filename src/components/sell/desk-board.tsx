@@ -639,6 +639,12 @@ import {
   subscribeHotbar,
 } from "@/lib/listing-hotbar";
 import {
+  canTapeSoak,
+  isListingSoakOverlay,
+  readSoakListingIds,
+  subscribeSoak,
+} from "@/lib/listing-soak";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1488,6 +1494,7 @@ import {
   listingUnderfillWritePath,
   listingFilletWritePath,
   listingHotbarWritePath,
+  listingSoakWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1702,6 +1709,7 @@ export function DeskBoard({
   const [underfillIds, setUnderfillIds] = useState<string[]>([]);
   const [filletIds, setFilletIds] = useState<string[]>([]);
   const [hotbarIds, setHotbarIds] = useState<string[]>([]);
+  const [soakIds, setSoakIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1936,6 +1944,7 @@ export function DeskBoard({
       setUnderfillIds(readUnderfillListingIds());
       setFilletIds(readFilletListingIds());
       setHotbarIds(readHotbarListingIds());
+      setSoakIds(readSoakListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2159,6 +2168,7 @@ export function DeskBoard({
     const unsubUnderfill = subscribeUnderfill(apply);
     const unsubFillet = subscribeFillet(apply);
     const unsubHotbar = subscribeHotbar(apply);
+    const unsubSoak = subscribeSoak(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2392,6 +2402,7 @@ export function DeskBoard({
       unsubUnderfill();
       unsubFillet();
       unsubHotbar();
+      unsubSoak();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -6969,6 +6980,37 @@ export function DeskBoard({
                             {isListingHotbarOverlay(listing.id, hotbarIds)
                               ? "Leave the flex"
                               : "I will not hotbar it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSoak(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSoakWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSoakOverlay(listing.id, soakIds)
+                                ? "open"
+                                : "soak"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingSoakOverlay(listing.id, soakIds)
+                              ? "Leave the flex"
+                              : "I will not soak it"}
                           </button>
                         </form>
                       ) : null}

@@ -1690,6 +1690,14 @@ export function listingHotbarWritePath() {
   return "/listings/hotbar";
 }
 
+export function listingSoakPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/soak`;
+}
+
+export function listingSoakWritePath() {
+  return "/listings/soak";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
