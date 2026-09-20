@@ -909,6 +909,12 @@ import {
   subscribeRelap,
 } from "@/lib/listing-relap";
 import {
+  canTapeNabs,
+  isListingNabsOverlay,
+  readNabsListingIds,
+  subscribeNabs,
+} from "@/lib/listing-nabs";
+import {
   canTapeFlux,
   isListingFluxOverlay,
   readFluxListingIds,
@@ -1409,6 +1415,7 @@ import {
   listingFlutterWritePath,
   listingTorqueWritePath,
   listingRelapWritePath,
+  listingNabsWritePath,
   listingFluxWritePath,
   listingLoomWritePath,
   listingStrainWritePath,
@@ -1710,6 +1717,7 @@ export function DeskBoard({
   const [flutterIds, setFlutterIds] = useState<string[]>([]);
   const [torqueIds, setTorqueIds] = useState<string[]>([]);
   const [relapIds, setRelapIds] = useState<string[]>([]);
+  const [nabsIds, setNabsIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
   const [loomIds, setLoomIds] = useState<string[]>([]);
   const [strainIds, setStrainIds] = useState<string[]>([]);
@@ -1938,6 +1946,7 @@ export function DeskBoard({
       setFlutterIds(readFlutterListingIds());
       setTorqueIds(readTorqueListingIds());
       setRelapIds(readRelapListingIds());
+      setNabsIds(readNabsListingIds());
       setFluxIds(readFluxListingIds());
       setLoomIds(readLoomListingIds());
       setStrainIds(readStrainListingIds());
@@ -2155,6 +2164,7 @@ export function DeskBoard({
     const unsubFlutter = subscribeFlutter(apply);
     const unsubTorque = subscribeTorque(apply);
     const unsubRelap = subscribeRelap(apply);
+    const unsubNabs = subscribeNabs(apply);
     const unsubFlux = subscribeFlux(apply);
     const unsubLoom = subscribeLoom(apply);
     const unsubStrain = subscribeStrain(apply);
@@ -2382,6 +2392,7 @@ export function DeskBoard({
       unsubFlutter();
       unsubTorque();
       unsubRelap();
+      unsubNabs();
       unsubFlux();
       unsubLoom();
       unsubStrain();
@@ -4733,6 +4744,37 @@ export function DeskBoard({
                             {isListingRelapOverlay(listing.id, relapIds)
                               ? "Leave the hiss"
                               : "I will not relap it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeNabs(listing) ? (
+                        <form
+                          method="post"
+                          action={listingNabsWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingNabsOverlay(listing.id, nabsIds)
+                                ? "open"
+                                : "nabs"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingNabsOverlay(listing.id, nabsIds)
+                              ? "Leave the hiss"
+                              : "I will not nabs it"}
                           </button>
                         </form>
                       ) : null}

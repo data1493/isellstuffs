@@ -1666,6 +1666,14 @@ export function listingRelapWritePath() {
   return "/listings/relap";
 }
 
+export function listingNabsPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/nabs`;
+}
+
+export function listingNabsWritePath() {
+  return "/listings/nabs";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
