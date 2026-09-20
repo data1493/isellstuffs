@@ -753,6 +753,12 @@ import {
   subscribeJigger,
 } from "@/lib/listing-jigger";
 import {
+  canTapeStilt,
+  isListingStiltOverlay,
+  readStiltListingIds,
+  subscribeStilt,
+} from "@/lib/listing-stilt";
+import {
   canTapeFettle,
   isListingFettleOverlay,
   readFettleListingIds,
@@ -1275,6 +1281,7 @@ import {
   listingPickleWritePath,
   listingSprigWritePath,
   listingJiggerWritePath,
+  listingStiltWritePath,
   listingFettleWritePath,
   listingBisqueWritePath,
   listingPuckWritePath,
@@ -1560,6 +1567,7 @@ export function DeskBoard({
   const [pickleIds, setPickleIds] = useState<string[]>([]);
   const [sprigIds, setSprigIds] = useState<string[]>([]);
   const [jiggerIds, setJiggerIds] = useState<string[]>([]);
+  const [stiltIds, setStiltIds] = useState<string[]>([]);
   const [fettleIds, setFettleIds] = useState<string[]>([]);
   const [bisqueIds, setBisqueIds] = useState<string[]>([]);
   const [puckIds, setPuckIds] = useState<string[]>([]);
@@ -1771,6 +1779,7 @@ export function DeskBoard({
       setPickleIds(readPickleListingIds());
       setSprigIds(readSprigListingIds());
       setJiggerIds(readJiggerListingIds());
+      setStiltIds(readStiltListingIds());
       setFettleIds(readFettleListingIds());
       setBisqueIds(readBisqueListingIds());
       setPuckIds(readPuckListingIds());
@@ -1971,6 +1980,7 @@ export function DeskBoard({
     const unsubPickle = subscribePickle(apply);
     const unsubSprig = subscribeSprig(apply);
     const unsubJigger = subscribeJigger(apply);
+    const unsubStilt = subscribeStilt(apply);
     const unsubFettle = subscribeFettle(apply);
     const unsubBisque = subscribeBisque(apply);
     const unsubPuck = subscribePuck(apply);
@@ -2181,6 +2191,7 @@ export function DeskBoard({
       unsubPickle();
       unsubSprig();
       unsubJigger();
+      unsubStilt();
       unsubFettle();
       unsubBisque();
       unsubPuck();
@@ -3678,6 +3689,37 @@ export function DeskBoard({
                             {isListingJiggerOverlay(listing.id, jiggerIds)
                               ? "Leave the rim"
                               : "I will not jigger it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeStilt(listing) ? (
+                        <form
+                          method="post"
+                          action={listingStiltWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingStiltOverlay(listing.id, stiltIds)
+                                ? "open"
+                                : "stilt"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingStiltOverlay(listing.id, stiltIds)
+                              ? "Leave the rim"
+                              : "I will not stilt it"}
                           </button>
                         </form>
                       ) : null}

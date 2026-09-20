@@ -1298,6 +1298,14 @@ export function listingGaspWritePath() {
   return "/listings/gasp";
 }
 
+export function listingStiltPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/stilt`;
+}
+
+export function listingStiltWritePath() {
+  return "/listings/stilt";
+}
+
 export function listingQuenchPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/quench`;
 }

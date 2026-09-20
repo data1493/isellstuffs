@@ -162,6 +162,7 @@ import { ListingGlazeNotice } from "@/components/listing-glaze-notice";
 import { ListingPickleNotice } from "@/components/listing-pickle-notice";
 import { ListingSprigNotice } from "@/components/listing-sprig-notice";
 import { ListingJiggerNotice } from "@/components/listing-jigger-notice";
+import { ListingStiltNotice } from "@/components/listing-stilt-notice";
 import { ListingBrazeNotice } from "@/components/listing-braze-notice";
 import { ListingChannelNotice } from "@/components/listing-channel-notice";
 import { ListingFettleNotice } from "@/components/listing-fettle-notice";
@@ -438,6 +439,7 @@ import {
   listingPicklePath,
   listingSprigPath,
   listingJiggerPath,
+  listingStiltPath,
   listingFettlePath,
   listingBisquePath,
   listingBleedPath,
@@ -977,6 +979,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "kdr-chipped-mug" ? (
                 <ListingJiggerNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-chipped-mug" ? (
+                <ListingStiltNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingFettleNotice listingId={listing.id} /> : null}
               {physical ? <ListingBisqueNotice listingId={listing.id} /> : null}
@@ -1868,6 +1873,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not jigger it
+                    </Link>
+                  ) : null}
+                  {listing.id === "kdr-chipped-mug" ? (
+                    <Link
+                      href={listingStiltPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not stilt it
                     </Link>
                   ) : null}
                   <Link
