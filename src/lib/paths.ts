@@ -1874,6 +1874,14 @@ export function listingVtaWritePath() {
   return "/listings/vta";
 }
 
+export function listingRumblePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/rumble`;
+}
+
+export function listingRumbleWritePath() {
+  return "/listings/rumble";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }

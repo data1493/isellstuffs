@@ -879,6 +879,12 @@ import {
   subscribeVta,
 } from "@/lib/listing-vta";
 import {
+  canTapeRumble,
+  isListingRumbleOverlay,
+  readRumbleListingIds,
+  subscribeRumble,
+} from "@/lib/listing-rumble";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1466,6 +1472,7 @@ import {
   listingOverhangWritePath,
   listingRiaaWritePath,
   listingVtaWritePath,
+  listingRumbleWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -1782,6 +1789,7 @@ export function DeskBoard({
   const [overhangIds, setOverhangIds] = useState<string[]>([]);
   const [riaaIds, setRiaaIds] = useState<string[]>([]);
   const [vtaIds, setVtaIds] = useState<string[]>([]);
+  const [rumbleIds, setRumbleIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -2022,6 +2030,7 @@ export function DeskBoard({
       setOverhangIds(readOverhangListingIds());
       setRiaaIds(readRiaaListingIds());
       setVtaIds(readVtaListingIds());
+      setRumbleIds(readRumbleListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2251,6 +2260,7 @@ export function DeskBoard({
     const unsubOverhang = subscribeOverhang(apply);
     const unsubRiaa = subscribeRiaa(apply);
     const unsubVta = subscribeVta(apply);
+    const unsubRumble = subscribeRumble(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2490,6 +2500,7 @@ export function DeskBoard({
       unsubOverhang();
       unsubRiaa();
       unsubVta();
+      unsubRumble();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -4462,6 +4473,37 @@ export function DeskBoard({
                             {isListingVtaOverlay(listing.id, vtaIds)
                               ? "Leave the skip"
                               : "I will not vta it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeRumble(listing) ? (
+                        <form
+                          method="post"
+                          action={listingRumbleWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingRumbleOverlay(listing.id, rumbleIds)
+                                ? "open"
+                                : "rumble"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingRumbleOverlay(listing.id, rumbleIds)
+                              ? "Leave the skip"
+                              : "I will not rumble it"}
                           </button>
                         </form>
                       ) : null}
