@@ -92,6 +92,7 @@ export function LotBoothCard({
   goboNote,
   feelerNote,
   riserNote,
+  variacNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -166,6 +167,7 @@ export function LotBoothCard({
   goboNote?: string;
   feelerNote?: string;
   riserNote?: string;
+  variacNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -898,6 +900,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-riser-empty={stall.id} hidden />
+          )}
+          {variacNote ? (
+            <p
+              data-booth-variac-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a variac. {variacNote}
+            </p>
+          ) : (
+            <p data-booth-variac-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

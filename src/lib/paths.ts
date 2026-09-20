@@ -2480,6 +2480,14 @@ export function stallRiserWritePath() {
   return "/stalls/riser";
 }
 
+export function stallVariacPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/variac`;
+}
+
+export function stallVariacWritePath() {
+  return "/stalls/variac";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
