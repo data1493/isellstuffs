@@ -198,6 +198,7 @@ import { ListingTapNotice } from "@/components/listing-tap-notice";
 import { ListingSnugNotice } from "@/components/listing-snug-notice";
 import { ListingTrepanNotice } from "@/components/listing-trepan-notice";
 import { ListingSpotfaceNotice } from "@/components/listing-spotface-notice";
+import { ListingFlycutNotice } from "@/components/listing-flycut-notice";
 import { ListingCalenderNotice } from "@/components/listing-calender-notice";
 import { ListingTenterNotice } from "@/components/listing-tenter-notice";
 import { ListingShearNotice } from "@/components/listing-shear-notice";
@@ -519,6 +520,7 @@ import {
   listingSnugPath,
   listingTrepanPath,
   listingSpotfacePath,
+  listingFlycutPath,
   listingPaginatePath,
   listingCollatePath,
   listingTrapPath,
@@ -1033,6 +1035,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "kdr-lid-no-pot" ? (
                 <ListingSpotfaceNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "kdr-lid-no-pot" ? (
+                <ListingFlycutNotice listingId={listing.id} />
               ) : null}
               {listing.id === "kdr-lid-no-pot" ? (
                 <ListingCountersinkNotice listingId={listing.id} />
@@ -2287,6 +2292,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not spotface it
+                    </Link>
+                  ) : null}
+                  {listing.id === "kdr-lid-no-pot" ? (
+                    <Link
+                      href={listingFlycutPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not flycut it
                     </Link>
                   ) : null}
                   {listing.id === "kdr-lid-no-pot" ? (

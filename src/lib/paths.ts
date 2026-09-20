@@ -1786,6 +1786,14 @@ export function listingSpotfaceWritePath() {
   return "/listings/spotface";
 }
 
+export function listingFlycutPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/flycut`;
+}
+
+export function listingFlycutWritePath() {
+  return "/listings/flycut";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }

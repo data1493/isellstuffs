@@ -975,6 +975,12 @@ import {
   subscribeSpotface,
 } from "@/lib/listing-spotface";
 import {
+  canTapeFlycut,
+  isListingFlycutOverlay,
+  readFlycutListingIds,
+  subscribeFlycut,
+} from "@/lib/listing-flycut";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1432,6 +1438,7 @@ import {
   listingSnugWritePath,
   listingTrepanWritePath,
   listingSpotfaceWritePath,
+  listingFlycutWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -1735,6 +1742,7 @@ export function DeskBoard({
   const [snugIds, setSnugIds] = useState<string[]>([]);
   const [trepanIds, setTrepanIds] = useState<string[]>([]);
   const [spotfaceIds, setSpotfaceIds] = useState<string[]>([]);
+  const [flycutIds, setFlycutIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -1965,6 +1973,7 @@ export function DeskBoard({
       setSnugIds(readSnugListingIds());
       setTrepanIds(readTrepanListingIds());
       setSpotfaceIds(readSpotfaceListingIds());
+      setFlycutIds(readFlycutListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2184,6 +2193,7 @@ export function DeskBoard({
     const unsubSnug = subscribeSnug(apply);
     const unsubTrepan = subscribeTrepan(apply);
     const unsubSpotface = subscribeSpotface(apply);
+    const unsubFlycut = subscribeFlycut(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2413,6 +2423,7 @@ export function DeskBoard({
       unsubSnug();
       unsubTrepan();
       unsubSpotface();
+      unsubFlycut();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -5158,6 +5169,37 @@ export function DeskBoard({
                             {isListingSpotfaceOverlay(listing.id, spotfaceIds)
                               ? "Leave the hole"
                               : "I will not spotface it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeFlycut(listing) ? (
+                        <form
+                          method="post"
+                          action={listingFlycutWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingFlycutOverlay(listing.id, flycutIds)
+                                ? "open"
+                                : "flycut"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingFlycutOverlay(listing.id, flycutIds)
+                              ? "Leave the glass"
+                              : "I will not flycut it"}
                           </button>
                         </form>
                       ) : null}
