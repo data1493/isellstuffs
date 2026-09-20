@@ -1834,6 +1834,14 @@ export function listingGangWritePath() {
   return "/listings/gang";
 }
 
+export function listingDescreenPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/descreen`;
+}
+
+export function listingDescreenWritePath() {
+  return "/listings/descreen";
+}
+
 export function listingUpsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/upset`;
 }
