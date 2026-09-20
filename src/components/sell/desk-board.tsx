@@ -633,6 +633,12 @@ import {
   subscribeFillet,
 } from "@/lib/listing-fillet";
 import {
+  canTapeHotbar,
+  isListingHotbarOverlay,
+  readHotbarListingIds,
+  subscribeHotbar,
+} from "@/lib/listing-hotbar";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1475,6 +1481,7 @@ import {
   listingReballWritePath,
   listingUnderfillWritePath,
   listingFilletWritePath,
+  listingHotbarWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1687,6 +1694,7 @@ export function DeskBoard({
   const [reballIds, setReballIds] = useState<string[]>([]);
   const [underfillIds, setUnderfillIds] = useState<string[]>([]);
   const [filletIds, setFilletIds] = useState<string[]>([]);
+  const [hotbarIds, setHotbarIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -1919,6 +1927,7 @@ export function DeskBoard({
       setReballIds(readReballListingIds());
       setUnderfillIds(readUnderfillListingIds());
       setFilletIds(readFilletListingIds());
+      setHotbarIds(readHotbarListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2140,6 +2149,7 @@ export function DeskBoard({
     const unsubReball = subscribeReball(apply);
     const unsubUnderfill = subscribeUnderfill(apply);
     const unsubFillet = subscribeFillet(apply);
+    const unsubHotbar = subscribeHotbar(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2371,6 +2381,7 @@ export function DeskBoard({
       unsubReball();
       unsubUnderfill();
       unsubFillet();
+      unsubHotbar();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -6916,6 +6927,37 @@ export function DeskBoard({
                             {isListingFilletOverlay(listing.id, filletIds)
                               ? "Leave the crack"
                               : "I will not fillet it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeHotbar(listing) ? (
+                        <form
+                          method="post"
+                          action={listingHotbarWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingHotbarOverlay(listing.id, hotbarIds)
+                                ? "open"
+                                : "hotbar"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingHotbarOverlay(listing.id, hotbarIds)
+                              ? "Leave the flex"
+                              : "I will not hotbar it"}
                           </button>
                         </form>
                       ) : null}

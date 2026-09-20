@@ -1674,6 +1674,14 @@ export function listingNabsWritePath() {
   return "/listings/nabs";
 }
 
+export function listingHotbarPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/hotbar`;
+}
+
+export function listingHotbarWritePath() {
+  return "/listings/hotbar";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
