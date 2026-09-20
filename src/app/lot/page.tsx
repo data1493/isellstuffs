@@ -375,6 +375,11 @@ import {
   parseBoothLifter,
 } from "@/lib/booth-lifter";
 import {
+  BOOTH_CRADLE_COOKIE_NAME,
+  BOOTH_CRADLE_MIRROR_SCRIPT,
+  parseBoothCradle,
+} from "@/lib/booth-cradle";
+import {
   BOOTH_PREHEATER_COOKIE_NAME,
   BOOTH_PREHEATER_MIRROR_SCRIPT,
   parseBoothPreheater,
@@ -507,6 +512,7 @@ export default async function LotPage() {
     jar.get(BOOTH_PROTRACTOR_COOKIE_NAME)?.value,
   );
   const lifterMap = parseBoothLifter(jar.get(BOOTH_LIFTER_COOKIE_NAME)?.value);
+  const cradleMap = parseBoothCradle(jar.get(BOOTH_CRADLE_COOKIE_NAME)?.value);
   const preheaterMap = parseBoothPreheater(
     jar.get(BOOTH_PREHEATER_COOKIE_NAME)?.value,
   );
@@ -603,6 +609,9 @@ export default async function LotPage() {
           dangerouslySetInnerHTML={{ __html: BOOTH_LIFTER_MIRROR_SCRIPT }}
         />
         <script
+          dangerouslySetInnerHTML={{ __html: BOOTH_CRADLE_MIRROR_SCRIPT }}
+        />
+        <script
           dangerouslySetInnerHTML={{ __html: BOOTH_PREHEATER_MIRROR_SCRIPT }}
         />
         <LotEmpty />
@@ -697,6 +706,9 @@ export default async function LotPage() {
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_LIFTER_MIRROR_SCRIPT }}
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: BOOTH_CRADLE_MIRROR_SCRIPT }}
       />
       <script
         dangerouslySetInnerHTML={{ __html: BOOTH_PREHEATER_MIRROR_SCRIPT }}
@@ -839,6 +851,7 @@ export default async function LotPage() {
                     torpedoNote={torpedoMap[row.stall.id]?.note}
                     protractorNote={protractorMap[row.stall.id]?.note}
                     lifterNote={lifterMap[row.stall.id]?.note}
+                    cradleNote={cradleMap[row.stall.id]?.note}
                     preheaterNote={preheaterMap[row.stall.id]?.note}
                   />
                 </li>
@@ -943,6 +956,7 @@ export default async function LotPage() {
                     torpedoNote={torpedoMap[row.stall.id]?.note}
                     protractorNote={protractorMap[row.stall.id]?.note}
                     lifterNote={lifterMap[row.stall.id]?.note}
+                    cradleNote={cradleMap[row.stall.id]?.note}
                     preheaterNote={preheaterMap[row.stall.id]?.note}
                   />
                 </li>

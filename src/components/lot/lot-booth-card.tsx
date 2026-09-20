@@ -99,6 +99,7 @@ export function LotBoothCard({
   torpedoNote,
   protractorNote,
   lifterNote,
+  cradleNote,
   preheaterNote,
 }: {
   row: LotBooth;
@@ -181,6 +182,7 @@ export function LotBoothCard({
   torpedoNote?: string;
   protractorNote?: string;
   lifterNote?: string;
+  cradleNote?: string;
   preheaterNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
@@ -984,6 +986,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-lifter-empty={stall.id} hidden />
+          )}
+          {cradleNote ? (
+            <p
+              data-booth-cradle-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a cradle. {cradleNote}
+            </p>
+          ) : (
+            <p data-booth-cradle-empty={stall.id} hidden />
           )}
           {preheaterNote ? (
             <p

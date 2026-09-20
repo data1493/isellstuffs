@@ -2824,6 +2824,14 @@ export function stallLifterWritePath() {
   return "/stalls/lifter";
 }
 
+export function stallCradlePath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/cradle`;
+}
+
+export function stallCradleWritePath() {
+  return "/stalls/cradle";
+}
+
 export function stallPreheaterPath(slug: string) {
   return `/stalls/${encodeURIComponent(slug)}/preheater`;
 }
