@@ -1802,6 +1802,14 @@ export function listingOverhangWritePath() {
   return "/listings/overhang";
 }
 
+export function listingRiaaPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/riaa`;
+}
+
+export function listingRiaaWritePath() {
+  return "/listings/riaa";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }
