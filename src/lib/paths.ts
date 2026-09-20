@@ -3064,6 +3064,14 @@ export function stallReflexWritePath() {
   return "/stalls/reflex";
 }
 
+export function stallThrustPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/thrust`;
+}
+
+export function stallThrustWritePath() {
+  return "/stalls/thrust";
+}
+
 export function advertisePath() {
   return "/advertise";
 }

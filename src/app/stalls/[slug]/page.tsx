@@ -588,6 +588,13 @@ import {
   stallReflexPath,
 } from "@/lib/booth-reflex";
 import {
+  BOOTH_THRUST_COOKIE_NAME,
+  BOOTH_THRUST_PAPER_LINE,
+  boothThrustFor,
+  parseBoothThrust,
+  stallThrustPath,
+} from "@/lib/booth-thrust";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -1031,6 +1038,10 @@ export default async function StallPage({
   const reflex = boothReflexFor(
     stall.id,
     parseBoothReflex(jar.get(BOOTH_REFLEX_COOKIE_NAME)?.value),
+  );
+  const thrust = boothThrustFor(
+    stall.id,
+    parseBoothThrust(jar.get(BOOTH_THRUST_COOKIE_NAME)?.value),
   );
 
   return (
@@ -2497,6 +2508,23 @@ export default async function StallPage({
             <p data-booth-reflex-empty={stall.id} hidden />
           )}
 
+          {thrust ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a thrust"
+              title="Still a crate."
+              body={
+                <p data-booth-thrust-note={stall.id}>
+                  {thrust.note} {BOOTH_THRUST_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-thrust-empty={stall.id} hidden />
+          )}
+
           {torpedo ? (
             <MallNotice
               tone="empty"
@@ -3202,6 +3230,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a reflex
+          </Link>
+
+          <Link
+            href={stallThrustPath(stall.slug)}
+            data-booth-thrust-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a thrust
           </Link>
 
           <Link
