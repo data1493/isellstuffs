@@ -1322,6 +1322,14 @@ export function listingSkiveWritePath() {
   return "/listings/skive";
 }
 
+export function listingReamPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/ream`;
+}
+
+export function listingReamWritePath() {
+  return "/listings/ream";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

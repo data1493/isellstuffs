@@ -579,6 +579,12 @@ import {
   subscribeSwage,
 } from "@/lib/listing-swage";
 import {
+  canTapeReam,
+  isListingReamOverlay,
+  readReamListingIds,
+  subscribeReam,
+} from "@/lib/listing-ream";
+import {
   canTapeBraid,
   isListingBraidOverlay,
   readBraidListingIds,
@@ -903,6 +909,7 @@ import {
   listingRivetWritePath,
   listingBushWritePath,
   listingSwageWritePath,
+  listingReamWritePath,
   listingBraidWritePath,
   listingSergeWritePath,
   listingFellWritePath,
@@ -1125,6 +1132,7 @@ export function DeskBoard({
   const [rivetIds, setRivetIds] = useState<string[]>([]);
   const [bushIds, setBushIds] = useState<string[]>([]);
   const [swageIds, setSwageIds] = useState<string[]>([]);
+  const [reamIds, setReamIds] = useState<string[]>([]);
   const [braidIds, setBraidIds] = useState<string[]>([]);
   const [sergeIds, setSergeIds] = useState<string[]>([]);
   const [fellIds, setFellIds] = useState<string[]>([]);
@@ -1278,6 +1286,7 @@ export function DeskBoard({
       setRivetIds(readRivetListingIds());
       setBushIds(readBushListingIds());
       setSwageIds(readSwageListingIds());
+      setReamIds(readReamListingIds());
       setBraidIds(readBraidListingIds());
       setSergeIds(readSergeListingIds());
       setFellIds(readFellListingIds());
@@ -1420,6 +1429,7 @@ export function DeskBoard({
     const unsubRivet = subscribeRivet(apply);
     const unsubBush = subscribeBush(apply);
     const unsubSwage = subscribeSwage(apply);
+    const unsubReam = subscribeReam(apply);
     const unsubBraid = subscribeBraid(apply);
     const unsubSerge = subscribeSerge(apply);
     const unsubFell = subscribeFell(apply);
@@ -1572,6 +1582,7 @@ export function DeskBoard({
       unsubRivet();
       unsubBush();
       unsubSwage();
+      unsubReam();
       unsubBraid();
       unsubSerge();
       unsubFell();
@@ -3505,6 +3516,37 @@ export function DeskBoard({
                             {isListingSwageOverlay(listing.id, swageIds)
                               ? "Leave the neck"
                               : "I will not swage it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeReam(listing) ? (
+                        <form
+                          method="post"
+                          action={listingReamWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingReamOverlay(listing.id, reamIds)
+                                ? "open"
+                                : "ream"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingReamOverlay(listing.id, reamIds)
+                              ? "Leave the crack"
+                              : "I will not ream it"}
                           </button>
                         </form>
                       ) : null}

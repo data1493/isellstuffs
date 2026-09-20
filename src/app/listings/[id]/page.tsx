@@ -144,6 +144,7 @@ import { ListingScaleNotice } from "@/components/listing-scale-notice";
 import { ListingRivetNotice } from "@/components/listing-rivet-notice";
 import { ListingBushNotice } from "@/components/listing-bush-notice";
 import { ListingSwageNotice } from "@/components/listing-swage-notice";
+import { ListingReamNotice } from "@/components/listing-ream-notice";
 import { ListingBraidNotice } from "@/components/listing-braid-notice";
 import { ListingSergeNotice } from "@/components/listing-serge-notice";
 import { ListingFellNotice } from "@/components/listing-fell-notice";
@@ -355,6 +356,7 @@ import {
   listingRivetPath,
   listingBushPath,
   listingSwagePath,
+  listingReamPath,
   listingBraidPath,
   listingSergePath,
   listingFellPath,
@@ -770,6 +772,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingRivetNotice listingId={listing.id} /> : null}
               {physical ? <ListingBushNotice listingId={listing.id} /> : null}
               {physical ? <ListingSwageNotice listingId={listing.id} /> : null}
+              {physical ? <ListingReamNotice listingId={listing.id} /> : null}
               {physical ? <ListingBraidNotice listingId={listing.id} /> : null}
               {physical ? <ListingPeenNotice listingId={listing.id} /> : null}
               {physical ? <ListingGlazeNotice listingId={listing.id} /> : null}
@@ -1609,6 +1612,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not swage it
+                  </Link>
+                  <Link
+                    href={listingReamPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not ream it
                   </Link>
                   <Link
                     href={listingBraidPath(listing.id)}
