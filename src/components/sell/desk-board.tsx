@@ -687,6 +687,12 @@ import {
   subscribeFlux,
 } from "@/lib/listing-flux";
 import {
+  canTapeLoom,
+  isListingLoomOverlay,
+  readLoomListingIds,
+  subscribeLoom,
+} from "@/lib/listing-loom";
+import {
   canTapeTemper,
   isListingTemperOverlay,
   readTemperListingIds,
@@ -958,6 +964,7 @@ import {
   listingPancakeWritePath,
   listingRecaseWritePath,
   listingFluxWritePath,
+  listingLoomWritePath,
   listingTemperWritePath,
   listingScribeWritePath,
   listingStakeWritePath,
@@ -1187,6 +1194,7 @@ export function DeskBoard({
   const [pancakeIds, setPancakeIds] = useState<string[]>([]);
   const [recaseIds, setRecaseIds] = useState<string[]>([]);
   const [fluxIds, setFluxIds] = useState<string[]>([]);
+  const [loomIds, setLoomIds] = useState<string[]>([]);
   const [temperIds, setTemperIds] = useState<string[]>([]);
   const [scribeIds, setScribeIds] = useState<string[]>([]);
   const [stakeIds, setStakeIds] = useState<string[]>([]);
@@ -1346,6 +1354,7 @@ export function DeskBoard({
       setPancakeIds(readPancakeListingIds());
       setRecaseIds(readRecaseListingIds());
       setFluxIds(readFluxListingIds());
+      setLoomIds(readLoomListingIds());
       setTemperIds(readTemperListingIds());
       setScribeIds(readScribeListingIds());
       setStakeIds(readStakeListingIds());
@@ -1494,6 +1503,7 @@ export function DeskBoard({
     const unsubPancake = subscribePancake(apply);
     const unsubRecase = subscribeRecase(apply);
     const unsubFlux = subscribeFlux(apply);
+    const unsubLoom = subscribeLoom(apply);
     const unsubTemper = subscribeTemper(apply);
     const unsubScribe = subscribeScribe(apply);
     const unsubStake = subscribeStake(apply);
@@ -1652,6 +1662,7 @@ export function DeskBoard({
       unsubPancake();
       unsubRecase();
       unsubFlux();
+      unsubLoom();
       unsubTemper();
       unsubScribe();
       unsubStake();
@@ -3354,6 +3365,37 @@ export function DeskBoard({
                             {isListingFluxOverlay(listing.id, fluxIds)
                               ? "Leave the copper"
                               : "I will not flux them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeLoom(listing) ? (
+                        <form
+                          method="post"
+                          action={listingLoomWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingLoomOverlay(listing.id, loomIds)
+                                ? "open"
+                                : "loom"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingLoomOverlay(listing.id, loomIds)
+                              ? "Leave the sleeve"
+                              : "I will not loom them"}
                           </button>
                         </form>
                       ) : null}
