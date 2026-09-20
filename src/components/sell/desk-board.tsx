@@ -699,6 +699,12 @@ import {
   subscribeIcicle,
 } from "@/lib/listing-icicle";
 import {
+  canTapeBlowhole,
+  isListingBlowholeOverlay,
+  readBlowholeListingIds,
+  subscribeBlowhole,
+} from "@/lib/listing-blowhole";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1758,6 +1764,7 @@ import {
   listingPillowWritePath,
   listingDewetWritePath,
   listingIcicleWritePath,
+  listingBlowholeWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1992,6 +1999,7 @@ export function DeskBoard({
   const [pillowIds, setPillowIds] = useState<string[]>([]);
   const [dewetIds, setDewetIds] = useState<string[]>([]);
   const [icicleIds, setIcicleIds] = useState<string[]>([]);
+  const [blowholeIds, setBlowholeIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2266,6 +2274,7 @@ export function DeskBoard({
       setPillowIds(readPillowListingIds());
       setDewetIds(readDewetListingIds());
       setIcicleIds(readIcicleListingIds());
+      setBlowholeIds(readBlowholeListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2529,6 +2538,7 @@ export function DeskBoard({
     const unsubPillow = subscribePillow(apply);
     const unsubDewet = subscribeDewet(apply);
     const unsubIcicle = subscribeIcicle(apply);
+    const unsubBlowhole = subscribeBlowhole(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2802,6 +2812,7 @@ export function DeskBoard({
       unsubPillow();
       unsubDewet();
       unsubIcicle();
+      unsubBlowhole();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -8339,6 +8350,37 @@ export function DeskBoard({
                             {isListingIcicleOverlay(listing.id, icicleIds)
                               ? "Leave the icicle"
                               : "I will not icicle it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeBlowhole(listing) ? (
+                        <form
+                          method="post"
+                          action={listingBlowholeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingBlowholeOverlay(listing.id, blowholeIds)
+                                ? "open"
+                                : "blowhole"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingBlowholeOverlay(listing.id, blowholeIds)
+                              ? "Leave the blowhole"
+                              : "I will not blowhole it"}
                           </button>
                         </form>
                       ) : null}

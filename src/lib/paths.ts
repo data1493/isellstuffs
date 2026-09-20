@@ -1850,6 +1850,14 @@ export function listingIcicleWritePath() {
   return "/listings/icicle";
 }
 
+export function listingBlowholePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/blowhole`;
+}
+
+export function listingBlowholeWritePath() {
+  return "/listings/blowhole";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
