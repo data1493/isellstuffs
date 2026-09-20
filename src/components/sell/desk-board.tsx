@@ -1089,6 +1089,12 @@ import {
   subscribeDespeckle,
 } from "@/lib/listing-despeckle";
 import {
+  canTapeKnockout,
+  isListingKnockoutOverlay,
+  readKnockoutListingIds,
+  subscribeKnockout,
+} from "@/lib/listing-knockout";
+import {
   canTapeScale,
   isListingScaleOverlay,
   readScaleListingIds,
@@ -1438,6 +1444,7 @@ import {
   listingGangWritePath,
   listingDescreenWritePath,
   listingDespeckleWritePath,
+  listingKnockoutWritePath,
   listingScaleWritePath,
   listingGateWritePath,
   listingQuantizeWritePath,
@@ -1764,6 +1771,7 @@ export function DeskBoard({
   const [gangIds, setGangIds] = useState<string[]>([]);
   const [descreenIds, setDescreenIds] = useState<string[]>([]);
   const [despeckleIds, setDespeckleIds] = useState<string[]>([]);
+  const [knockoutIds, setKnockoutIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
   const [quantizeIds, setQuantizeIds] = useState<string[]>([]);
@@ -1993,6 +2001,7 @@ export function DeskBoard({
       setGangIds(readGangListingIds());
       setDescreenIds(readDescreenListingIds());
       setDespeckleIds(readDespeckleListingIds());
+      setKnockoutIds(readKnockoutListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
       setQuantizeIds(readQuantizeListingIds());
@@ -2211,6 +2220,7 @@ export function DeskBoard({
     const unsubGang = subscribeGang(apply);
     const unsubDescreen = subscribeDescreen(apply);
     const unsubDespeckle = subscribeDespeckle(apply);
+    const unsubKnockout = subscribeKnockout(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
     const unsubQuantize = subscribeQuantize(apply);
@@ -2439,6 +2449,7 @@ export function DeskBoard({
       unsubGang();
       unsubDescreen();
       unsubDespeckle();
+      unsubKnockout();
       unsubScale();
       unsubGate();
       unsubQuantize();
@@ -8991,6 +9002,37 @@ export function DeskBoard({
                             {isListingDespeckleOverlay(listing.id, despeckleIds)
                               ? "Leave the cards"
                               : "I will not despeckle them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeKnockout(listing) ? (
+                        <form
+                          method="post"
+                          action={listingKnockoutWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingKnockoutOverlay(listing.id, knockoutIds)
+                                ? "open"
+                                : "knockout"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingKnockoutOverlay(listing.id, knockoutIds)
+                              ? "Leave the cards"
+                              : "I will not knockout them"}
                           </button>
                         </form>
                       ) : null}

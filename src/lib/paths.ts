@@ -1986,6 +1986,14 @@ export function listingDespeckleWritePath() {
   return "/listings/despeckle";
 }
 
+export function listingKnockoutPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/knockout`;
+}
+
+export function listingKnockoutWritePath() {
+  return "/listings/knockout";
+}
+
 export function listingUnderfillPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/underfill`;
 }
