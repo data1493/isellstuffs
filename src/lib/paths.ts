@@ -1314,6 +1314,14 @@ export function listingStiltWritePath() {
   return "/listings/stilt";
 }
 
+export function listingCogglePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/coggle`;
+}
+
+export function listingCoggleWritePath() {
+  return "/listings/coggle";
+}
+
 export function listingTenterPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/tenter`;
 }
