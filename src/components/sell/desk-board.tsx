@@ -1323,6 +1323,12 @@ import {
   subscribeAvar,
 } from "@/lib/listing-avar";
 import {
+  canTapeGvar,
+  isListingGvarOverlay,
+  readGvarListingIds,
+  subscribeGvar,
+} from "@/lib/listing-gvar";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1575,6 +1581,7 @@ import {
   listingBluezoneWritePath,
   listingOpszWritePath,
   listingAvarWritePath,
+  listingGvarWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1846,6 +1853,7 @@ export function DeskBoard({
   const [bluezoneIds, setBluezoneIds] = useState<string[]>([]);
   const [opszIds, setOpszIds] = useState<string[]>([]);
   const [avarIds, setAvarIds] = useState<string[]>([]);
+  const [gvarIds, setGvarIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2087,6 +2095,7 @@ export function DeskBoard({
       setBluezoneIds(readBluezoneListingIds());
       setOpszIds(readOpszListingIds());
       setAvarIds(readAvarListingIds());
+      setGvarIds(readGvarListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2317,6 +2326,7 @@ export function DeskBoard({
     const unsubBluezone = subscribeBluezone(apply);
     const unsubOpsz = subscribeOpsz(apply);
     const unsubAvar = subscribeAvar(apply);
+    const unsubGvar = subscribeGvar(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2557,6 +2567,7 @@ export function DeskBoard({
       unsubBluezone();
       unsubOpsz();
       unsubAvar();
+      unsubGvar();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -9123,6 +9134,37 @@ export function DeskBoard({
                             {isListingAvarOverlay(listing.id, avarIds)
                               ? "Leave the map"
                               : "I will not avar it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGvar(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGvarWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGvarOverlay(listing.id, gvarIds)
+                                ? "open"
+                                : "gvar"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGvarOverlay(listing.id, gvarIds)
+                              ? "Leave the glyphs"
+                              : "I will not gvar it"}
                           </button>
                         </form>
                       ) : null}

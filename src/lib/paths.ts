@@ -1322,6 +1322,14 @@ export function listingAvarWritePath() {
   return "/listings/avar";
 }
 
+export function listingGvarPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gvar`;
+}
+
+export function listingGvarWritePath() {
+  return "/listings/gvar";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
