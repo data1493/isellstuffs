@@ -663,6 +663,12 @@ import {
   subscribeDam,
 } from "@/lib/listing-dam";
 import {
+  canTapeSqueegee,
+  isListingSqueegeeOverlay,
+  readSqueegeeListingIds,
+  subscribeSqueegee,
+} from "@/lib/listing-squeegee";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1596,6 +1602,7 @@ import {
   listingAcfWritePath,
   listingGlobtopWritePath,
   listingDamWritePath,
+  listingSqueegeeWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1818,6 +1825,7 @@ export function DeskBoard({
   const [acfIds, setAcfIds] = useState<string[]>([]);
   const [globtopIds, setGlobtopIds] = useState<string[]>([]);
   const [damIds, setDamIds] = useState<string[]>([]);
+  const [squeegeeIds, setSqueegeeIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2068,6 +2076,7 @@ export function DeskBoard({
       setAcfIds(readAcfListingIds());
       setGlobtopIds(readGlobtopListingIds());
       setDamIds(readDamListingIds());
+      setSqueegeeIds(readSqueegeeListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2307,6 +2316,7 @@ export function DeskBoard({
     const unsubAcf = subscribeAcf(apply);
     const unsubGlobtop = subscribeGlobtop(apply);
     const unsubDam = subscribeDam(apply);
+    const unsubSqueegee = subscribeSqueegee(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2556,6 +2566,7 @@ export function DeskBoard({
       unsubAcf();
       unsubGlobtop();
       unsubDam();
+      unsubSqueegee();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -7517,6 +7528,37 @@ export function DeskBoard({
                             {isListingDamOverlay(listing.id, damIds)
                               ? "Leave the wall"
                               : "I will not dam it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSqueegee(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSqueegeeWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSqueegeeOverlay(listing.id, squeegeeIds)
+                                ? "open"
+                                : "squeegee"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingSqueegeeOverlay(listing.id, squeegeeIds)
+                              ? "Leave the paste"
+                              : "I will not squeegee it"}
                           </button>
                         </form>
                       ) : null}

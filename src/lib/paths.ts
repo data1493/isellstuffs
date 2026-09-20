@@ -1754,6 +1754,14 @@ export function listingDamWritePath() {
   return "/listings/dam";
 }
 
+export function listingSqueegeePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/squeegee`;
+}
+
+export function listingSqueegeeWritePath() {
+  return "/listings/squeegee";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }
