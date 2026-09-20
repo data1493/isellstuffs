@@ -1347,6 +1347,12 @@ import {
   subscribeGvar,
 } from "@/lib/listing-gvar";
 import {
+  canTapeGsub,
+  isListingGsubOverlay,
+  readGsubListingIds,
+  subscribeGsub,
+} from "@/lib/listing-gsub";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1603,6 +1609,7 @@ import {
   listingOpszWritePath,
   listingAvarWritePath,
   listingGvarWritePath,
+  listingGsubWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1878,6 +1885,7 @@ export function DeskBoard({
   const [opszIds, setOpszIds] = useState<string[]>([]);
   const [avarIds, setAvarIds] = useState<string[]>([]);
   const [gvarIds, setGvarIds] = useState<string[]>([]);
+  const [gsubIds, setGsubIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2123,6 +2131,7 @@ export function DeskBoard({
       setOpszIds(readOpszListingIds());
       setAvarIds(readAvarListingIds());
       setGvarIds(readGvarListingIds());
+      setGsubIds(readGsubListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2357,6 +2366,7 @@ export function DeskBoard({
     const unsubOpsz = subscribeOpsz(apply);
     const unsubAvar = subscribeAvar(apply);
     const unsubGvar = subscribeGvar(apply);
+    const unsubGsub = subscribeGsub(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2601,6 +2611,7 @@ export function DeskBoard({
       unsubOpsz();
       unsubAvar();
       unsubGvar();
+      unsubGsub();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -9291,6 +9302,37 @@ export function DeskBoard({
                             {isListingGvarOverlay(listing.id, gvarIds)
                               ? "Leave the glyphs"
                               : "I will not gvar it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGsub(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGsubWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGsubOverlay(listing.id, gsubIds)
+                                ? "open"
+                                : "gsub"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGsubOverlay(listing.id, gsubIds)
+                              ? "Leave the otf"
+                              : "I will not gsub it"}
                           </button>
                         </form>
                       ) : null}

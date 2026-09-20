@@ -1330,6 +1330,14 @@ export function listingGvarWritePath() {
   return "/listings/gvar";
 }
 
+export function listingGsubPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gsub`;
+}
+
+export function listingGsubWritePath() {
+  return "/listings/gsub";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
