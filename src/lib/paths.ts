@@ -1314,6 +1314,14 @@ export function listingTumbleWritePath() {
   return "/listings/tumble";
 }
 
+export function listingSkivePath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/skive`;
+}
+
+export function listingSkiveWritePath() {
+  return "/listings/skive";
+}
+
 export function listingSubsetPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/subset`;
 }

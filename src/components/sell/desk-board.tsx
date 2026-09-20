@@ -489,6 +489,12 @@ import {
   subscribeTumble,
 } from "@/lib/listing-tumble";
 import {
+  canTapeSkive,
+  isListingSkiveOverlay,
+  readSkiveListingIds,
+  subscribeSkive,
+} from "@/lib/listing-skive";
+import {
   canTapeAnneal,
   isListingAnnealOverlay,
   readAnnealListingIds,
@@ -885,6 +891,7 @@ import {
   listingFoamWritePath,
   listingFlockWritePath,
   listingTumbleWritePath,
+  listingSkiveWritePath,
   listingAnnealWritePath,
   listingGrommetWritePath,
   listingDartWritePath,
@@ -1103,6 +1110,7 @@ export function DeskBoard({
   const [foamIds, setFoamIds] = useState<string[]>([]);
   const [flockIds, setFlockIds] = useState<string[]>([]);
   const [tumbleIds, setTumbleIds] = useState<string[]>([]);
+  const [skiveIds, setSkiveIds] = useState<string[]>([]);
   const [annealIds, setAnnealIds] = useState<string[]>([]);
   const [grommetIds, setGrommetIds] = useState<string[]>([]);
   const [dartIds, setDartIds] = useState<string[]>([]);
@@ -1255,6 +1263,7 @@ export function DeskBoard({
       setFoamIds(readFoamListingIds());
       setFlockIds(readFlockListingIds());
       setTumbleIds(readTumbleListingIds());
+      setSkiveIds(readSkiveListingIds());
       setAnnealIds(readAnnealListingIds());
       setGrommetIds(readGrommetListingIds());
       setDartIds(readDartListingIds());
@@ -1396,6 +1405,7 @@ export function DeskBoard({
     const unsubFoam = subscribeFoam(apply);
     const unsubFlock = subscribeFlock(apply);
     const unsubTumble = subscribeTumble(apply);
+    const unsubSkive = subscribeSkive(apply);
     const unsubAnneal = subscribeAnneal(apply);
     const unsubGrommet = subscribeGrommet(apply);
     const unsubDart = subscribeDart(apply);
@@ -1547,6 +1557,7 @@ export function DeskBoard({
       unsubFoam();
       unsubFlock();
       unsubTumble();
+      unsubSkive();
       unsubAnneal();
       unsubGrommet();
       unsubDart();
@@ -3928,6 +3939,37 @@ export function DeskBoard({
                             {isListingTumbleOverlay(listing.id, tumbleIds)
                               ? "Leave the pile"
                               : "I will not tumble them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeSkive(listing) ? (
+                        <form
+                          method="post"
+                          action={listingSkiveWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingSkiveOverlay(listing.id, skiveIds)
+                                ? "open"
+                                : "skive"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingSkiveOverlay(listing.id, skiveIds)
+                              ? "Leave the split"
+                              : "I will not skive it"}
                           </button>
                         </form>
                       ) : null}

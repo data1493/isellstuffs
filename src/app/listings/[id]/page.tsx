@@ -170,6 +170,7 @@ import { ListingReflowNotice } from "@/components/listing-reflow-notice";
 import { ListingDeoxNotice } from "@/components/listing-deox-notice";
 import { ListingOverburnNotice } from "@/components/listing-overburn-notice";
 import { ListingTumbleNotice } from "@/components/listing-tumble-notice";
+import { ListingSkiveNotice } from "@/components/listing-skive-notice";
 import { ListingGateNotice } from "@/components/listing-gate-notice";
 import { ListingQuantizeNotice } from "@/components/listing-quantize-notice";
 import { ListingSaturateNotice } from "@/components/listing-saturate-notice";
@@ -368,6 +369,7 @@ import {
   listingBevelPath,
   listingOverburnPath,
   listingTumblePath,
+  listingSkivePath,
   listingDolbyPath,
   listingPancakePath,
   listingRecasePath,
@@ -776,6 +778,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingBevelNotice listingId={listing.id} /> : null}
               {physical ? <ListingOverburnNotice listingId={listing.id} /> : null}
               {physical ? <ListingTumbleNotice listingId={listing.id} /> : null}
+              {physical ? <ListingSkiveNotice listingId={listing.id} /> : null}
 
               {physical ? (
                 <p className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4">
@@ -1534,6 +1537,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not tumble them
+                  </Link>
+                  <Link
+                    href={listingSkivePath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not skive it
                   </Link>
                   <Link
                     href={listingDegaussPath(listing.id)}
