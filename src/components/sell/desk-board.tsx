@@ -477,6 +477,12 @@ import {
   subscribeFoam,
 } from "@/lib/listing-foam";
 import {
+  canTapeWeld,
+  isListingWeldOverlay,
+  readWeldListingIds,
+  subscribeWeld,
+} from "@/lib/listing-weld";
+import {
   canTapeFlock,
   isListingFlockOverlay,
   readFlockListingIds,
@@ -1069,6 +1075,7 @@ import {
   listingAzimuthWritePath,
   listingNestWritePath,
   listingFoamWritePath,
+  listingWeldWritePath,
   listingFlockWritePath,
   listingTumbleWritePath,
   listingSkiveWritePath,
@@ -1318,6 +1325,7 @@ export function DeskBoard({
   const [azimuthIds, setAzimuthIds] = useState<string[]>([]);
   const [nestIds, setNestIds] = useState<string[]>([]);
   const [foamIds, setFoamIds] = useState<string[]>([]);
+  const [weldIds, setWeldIds] = useState<string[]>([]);
   const [flockIds, setFlockIds] = useState<string[]>([]);
   const [tumbleIds, setTumbleIds] = useState<string[]>([]);
   const [skiveIds, setSkiveIds] = useState<string[]>([]);
@@ -1501,6 +1509,7 @@ export function DeskBoard({
       setAzimuthIds(readAzimuthListingIds());
       setNestIds(readNestListingIds());
       setFoamIds(readFoamListingIds());
+      setWeldIds(readWeldListingIds());
       setFlockIds(readFlockListingIds());
       setTumbleIds(readTumbleListingIds());
       setSkiveIds(readSkiveListingIds());
@@ -1673,6 +1682,7 @@ export function DeskBoard({
     const unsubAzimuth = subscribeAzimuth(apply);
     const unsubNest = subscribeNest(apply);
     const unsubFoam = subscribeFoam(apply);
+    const unsubWeld = subscribeWeld(apply);
     const unsubFlock = subscribeFlock(apply);
     const unsubTumble = subscribeTumble(apply);
     const unsubSkive = subscribeSkive(apply);
@@ -1855,6 +1865,7 @@ export function DeskBoard({
       unsubAzimuth();
       unsubNest();
       unsubFoam();
+      unsubWeld();
       unsubFlock();
       unsubTumble();
       unsubSkive();
@@ -4610,6 +4621,37 @@ export function DeskBoard({
                             {isListingFoamOverlay(listing.id, foamIds)
                               ? "Leave the pile"
                               : "I will not foam them"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeWeld(listing) ? (
+                        <form
+                          method="post"
+                          action={listingWeldWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingWeldOverlay(listing.id, weldIds)
+                                ? "open"
+                                : "weld"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingWeldOverlay(listing.id, weldIds)
+                              ? "Leave the empties"
+                              : "I will not weld them"}
                           </button>
                         </form>
                       ) : null}

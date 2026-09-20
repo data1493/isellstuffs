@@ -1706,6 +1706,14 @@ export function listingFoamWritePath() {
   return "/listings/foam";
 }
 
+export function listingWeldPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/weld`;
+}
+
+export function listingWeldWritePath() {
+  return "/listings/weld";
+}
+
 export function listingLigaturePath(id: string) {
   return `/listings/${encodeURIComponent(id)}/ligature`;
 }

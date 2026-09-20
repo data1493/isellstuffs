@@ -133,6 +133,7 @@ import { ListingFinalizeNotice } from "@/components/listing-finalize-notice";
 import { ListingAzimuthNotice } from "@/components/listing-azimuth-notice";
 import { ListingNestNotice } from "@/components/listing-nest-notice";
 import { ListingFoamNotice } from "@/components/listing-foam-notice";
+import { ListingWeldNotice } from "@/components/listing-weld-notice";
 import { ListingFlockNotice } from "@/components/listing-flock-notice";
 import { ListingAnnealNotice } from "@/components/listing-anneal-notice";
 import { ListingGrommetNotice } from "@/components/listing-grommet-notice";
@@ -378,6 +379,7 @@ import {
   listingAzimuthPath,
   listingNestPath,
   listingFoamPath,
+  listingWeldPath,
   listingAnnealPath,
   listingGrommetPath,
   listingDartPath,
@@ -827,6 +829,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               {physical ? <ListingAzimuthNotice listingId={listing.id} /> : null}
               {physical ? <ListingNestNotice listingId={listing.id} /> : null}
               {physical ? <ListingFoamNotice listingId={listing.id} /> : null}
+              {physical ? <ListingWeldNotice listingId={listing.id} /> : null}
               {physical ? <ListingFlockNotice listingId={listing.id} /> : null}
               {physical ? <ListingAnnealNotice listingId={listing.id} /> : null}
               {physical ? <ListingGrommetNotice listingId={listing.id} /> : null}
@@ -1558,6 +1561,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
                     I will not foam them
+                  </Link>
+                  <Link
+                    href={listingWeldPath(listing.id)}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    I will not weld them
                   </Link>
                   <Link
                     href={listingFlockPath(listing.id)}
