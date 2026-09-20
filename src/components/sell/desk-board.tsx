@@ -1371,6 +1371,12 @@ import {
   subscribeGsub,
 } from "@/lib/listing-gsub";
 import {
+  canTapeGdef,
+  isListingGdefOverlay,
+  readGdefListingIds,
+  subscribeGdef,
+} from "@/lib/listing-gdef";
+import {
   canTapeRights,
   isListingRightsOverlay,
   readRightsListingIds,
@@ -1631,6 +1637,7 @@ import {
   listingAvarWritePath,
   listingGvarWritePath,
   listingGsubWritePath,
+  listingGdefWritePath,
   listingSlantWritePath,
   listingStretchWritePath,
   listingPhoneWritePath,
@@ -1910,6 +1917,7 @@ export function DeskBoard({
   const [avarIds, setAvarIds] = useState<string[]>([]);
   const [gvarIds, setGvarIds] = useState<string[]>([]);
   const [gsubIds, setGsubIds] = useState<string[]>([]);
+  const [gdefIds, setGdefIds] = useState<string[]>([]);
   const [tenterIds, setTenterIds] = useState<string[]>([]);
   const [shearIds, setShearIds] = useState<string[]>([]);
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
@@ -2159,6 +2167,7 @@ export function DeskBoard({
       setAvarIds(readAvarListingIds());
       setGvarIds(readGvarListingIds());
       setGsubIds(readGsubListingIds());
+      setGdefIds(readGdefListingIds());
       setTenterIds(readTenterListingIds());
       setShearIds(readShearListingIds());
       setPaginateIds(readPaginateListingIds());
@@ -2397,6 +2406,7 @@ export function DeskBoard({
     const unsubAvar = subscribeAvar(apply);
     const unsubGvar = subscribeGvar(apply);
     const unsubGsub = subscribeGsub(apply);
+    const unsubGdef = subscribeGdef(apply);
     const unsubTenter = subscribeTenter(apply);
     const unsubShear = subscribeShear(apply);
     const unsubPaginate = subscribePaginate(apply);
@@ -2645,6 +2655,7 @@ export function DeskBoard({
       unsubAvar();
       unsubGvar();
       unsubGsub();
+      unsubGdef();
       unsubTenter();
       unsubShear();
       unsubPaginate();
@@ -9459,6 +9470,37 @@ export function DeskBoard({
                             {isListingGsubOverlay(listing.id, gsubIds)
                               ? "Leave the otf"
                               : "I will not gsub it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGdef(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGdefWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGdefOverlay(listing.id, gdefIds)
+                                ? "open"
+                                : "gdef"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingGdefOverlay(listing.id, gdefIds)
+                              ? "Leave the class"
+                              : "I will not gdef it"}
                           </button>
                         </form>
                       ) : null}

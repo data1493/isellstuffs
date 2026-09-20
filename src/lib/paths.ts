@@ -1338,6 +1338,14 @@ export function listingGsubWritePath() {
   return "/listings/gsub";
 }
 
+export function listingGdefPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/gdef`;
+}
+
+export function listingGdefWritePath() {
+  return "/listings/gdef";
+}
+
 export function listingStiltPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/stilt`;
 }
