@@ -78,6 +78,7 @@ export function LotBoothCard({
   jigNote,
   wickNote,
   lastNote,
+  caliperNote,
 }: {
   row: LotBooth;
   lunchNote?: string;
@@ -138,6 +139,7 @@ export function LotBoothCard({
   jigNote?: string;
   wickNote?: string;
   lastNote?: string;
+  caliperNote?: string;
 }) {
   const { stall, packed, presence, stillHerePhysical, aisle, giftDesk } = row;
 
@@ -730,6 +732,16 @@ export function LotBoothCard({
             </p>
           ) : (
             <p data-booth-last-empty={stall.id} hidden />
+          )}
+          {caliperNote ? (
+            <p
+              data-booth-caliper-note={stall.id}
+              className="text-sm leading-6 text-foreground"
+            >
+              I don&apos;t have a caliper. {caliperNote}
+            </p>
+          ) : (
+            <p data-booth-caliper-empty={stall.id} hidden />
           )}
           {packed ? (
             <p className="text-sm leading-6 text-muted-foreground">

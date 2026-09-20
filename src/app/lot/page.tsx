@@ -270,6 +270,11 @@ import {
   parseBoothLast,
 } from "@/lib/booth-last";
 import {
+  BOOTH_CALIPER_COOKIE_NAME,
+  BOOTH_CALIPER_MIRROR_SCRIPT,
+  parseBoothCaliper,
+} from "@/lib/booth-caliper";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_MIRROR_SCRIPT,
   parseBoothShade,
@@ -370,6 +375,7 @@ export default async function LotPage() {
   const jigMap = parseBoothJig(jar.get(BOOTH_JIG_COOKIE_NAME)?.value);
   const wickMap = parseBoothWick(jar.get(BOOTH_WICK_COOKIE_NAME)?.value);
   const lastMap = parseBoothLast(jar.get(BOOTH_LAST_COOKIE_NAME)?.value);
+  const caliperMap = parseBoothCaliper(jar.get(BOOTH_CALIPER_COOKIE_NAME)?.value);
   const on = lotOn(rows);
   const off = lotOff(rows);
 
@@ -435,6 +441,7 @@ export default async function LotPage() {
         <script dangerouslySetInnerHTML={{ __html: BOOTH_JIG_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_WICK_MIRROR_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BOOTH_LAST_MIRROR_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOTH_CALIPER_MIRROR_SCRIPT }} />
         <LotEmpty />
       </>
     );
@@ -501,6 +508,7 @@ export default async function LotPage() {
       <script dangerouslySetInnerHTML={{ __html: BOOTH_JIG_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_WICK_MIRROR_SCRIPT }} />
       <script dangerouslySetInnerHTML={{ __html: BOOTH_LAST_MIRROR_SCRIPT }} />
+      <script dangerouslySetInnerHTML={{ __html: BOOTH_CALIPER_MIRROR_SCRIPT }} />
       <div>
         <MallHero>
           <MallCrumb label="Lot location">
@@ -618,6 +626,7 @@ export default async function LotPage() {
                     jigNote={jigMap[row.stall.id]?.note}
                     wickNote={wickMap[row.stall.id]?.note}
                     lastNote={lastMap[row.stall.id]?.note}
+                    caliperNote={caliperMap[row.stall.id]?.note}
                   />
                 </li>
               ))}
@@ -700,6 +709,7 @@ export default async function LotPage() {
                     jigNote={jigMap[row.stall.id]?.note}
                     wickNote={wickMap[row.stall.id]?.note}
                     lastNote={lastMap[row.stall.id]?.note}
+                    caliperNote={caliperMap[row.stall.id]?.note}
                   />
                 </li>
               ))}

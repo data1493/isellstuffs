@@ -392,6 +392,13 @@ import {
   stallLastPath,
 } from "@/lib/booth-last";
 import {
+  BOOTH_CALIPER_COOKIE_NAME,
+  BOOTH_CALIPER_PAPER_LINE,
+  boothCaliperFor,
+  parseBoothCaliper,
+  stallCaliperPath,
+} from "@/lib/booth-caliper";
+import {
   BOOTH_SHADE_COOKIE_NAME,
   BOOTH_SHADE_PAPER_LINE,
   boothShadeFor,
@@ -723,6 +730,10 @@ export default async function StallPage({
   const last = boothLastFor(
     stall.id,
     parseBoothLast(jar.get(BOOTH_LAST_COOKIE_NAME)?.value),
+  );
+  const caliper = boothCaliperFor(
+    stall.id,
+    parseBoothCaliper(jar.get(BOOTH_CALIPER_COOKIE_NAME)?.value),
   );
 
   return (
@@ -1730,6 +1741,23 @@ export default async function StallPage({
             <p data-booth-last-empty={stall.id} hidden />
           )}
 
+          {caliper ? (
+            <MallNotice
+              tone="empty"
+              padded={false}
+              titleAs="h2"
+              eyebrow="I don't have a caliper"
+              title="Still a table."
+              body={
+                <p data-booth-caliper-note={stall.id}>
+                  {caliper.note} {BOOTH_CALIPER_PAPER_LINE}
+                </p>
+              }
+            />
+          ) : (
+            <p data-booth-caliper-empty={stall.id} hidden />
+          )}
+
           <WatchStallButton stallId={stall.id} returnTo={stallPath(stall.slug)} />
 
           <Link
@@ -2194,6 +2222,14 @@ export default async function StallPage({
             className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             I don&apos;t have a last
+          </Link>
+
+          <Link
+            href={stallCaliperPath(stall.slug)}
+            data-booth-caliper-link={stall.slug}
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            I don&apos;t have a caliper
           </Link>
 
           <Link

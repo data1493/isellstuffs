@@ -1936,6 +1936,14 @@ export function stallLastWritePath() {
   return "/stalls/last";
 }
 
+export function stallCaliperPath(slug: string) {
+  return `/stalls/${encodeURIComponent(slug)}/caliper`;
+}
+
+export function stallCaliperWritePath() {
+  return "/stalls/caliper";
+}
+
 export function advertisePath() {
   return "/advertise";
 }
