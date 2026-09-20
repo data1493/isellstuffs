@@ -188,6 +188,7 @@ import { ListingPivotNotice } from "@/components/listing-pivot-notice";
 import { ListingResonanceNotice } from "@/components/listing-resonance-notice";
 import { ListingRakeNotice } from "@/components/listing-rake-notice";
 import { ListingMistrackNotice } from "@/components/listing-mistrack-notice";
+import { ListingEccentricNotice } from "@/components/listing-eccentric-notice";
 import { ListingBevelNotice } from "@/components/listing-bevel-notice";
 import { ListingDolbyNotice } from "@/components/listing-dolby-notice";
 import { ListingPancakeNotice } from "@/components/listing-pancake-notice";
@@ -1078,6 +1079,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "mdb-scratched-lp" ? (
                 <ListingMistrackNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "mdb-scratched-lp" ? (
+                <ListingEccentricNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingEtchNotice listingId={listing.id} /> : null}
               {physical ? <ListingShimNotice listingId={listing.id} /> : null}

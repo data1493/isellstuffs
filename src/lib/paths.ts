@@ -2130,6 +2130,14 @@ export function listingMistrackWritePath() {
   return "/listings/mistrack";
 }
 
+export function listingEccentricPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/eccentric`;
+}
+
+export function listingEccentricWritePath() {
+  return "/listings/eccentric";
+}
+
 export function listingFellPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/fell`;
 }

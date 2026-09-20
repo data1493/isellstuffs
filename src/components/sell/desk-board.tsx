@@ -975,6 +975,12 @@ import {
   subscribeMistrack,
 } from "@/lib/listing-mistrack";
 import {
+  canTapeEccentric,
+  isListingEccentricOverlay,
+  readEccentricListingIds,
+  subscribeEccentric,
+} from "@/lib/listing-eccentric";
+import {
   canTapeZenith,
   isListingZenithOverlay,
   readZenithListingIds,
@@ -1666,6 +1672,7 @@ import {
   listingResonanceWritePath,
   listingRakeWritePath,
   listingMistrackWritePath,
+  listingEccentricWritePath,
   listingZenithWritePath,
   listingRetipWritePath,
   listingBevelWritePath,
@@ -2022,6 +2029,7 @@ export function DeskBoard({
   const [resonanceIds, setResonanceIds] = useState<string[]>([]);
   const [rakeIds, setRakeIds] = useState<string[]>([]);
   const [mistrackIds, setMistrackIds] = useState<string[]>([]);
+  const [eccentricIds, setEccentricIds] = useState<string[]>([]);
   const [zenithIds, setZenithIds] = useState<string[]>([]);
   const [retipIds, setRetipIds] = useState<string[]>([]);
   const [bevelIds, setBevelIds] = useState<string[]>([]);
@@ -2294,6 +2302,7 @@ export function DeskBoard({
       setResonanceIds(readResonanceListingIds());
       setRakeIds(readRakeListingIds());
       setMistrackIds(readMistrackListingIds());
+      setEccentricIds(readEccentricListingIds());
       setZenithIds(readZenithListingIds());
       setRetipIds(readRetipListingIds());
       setBevelIds(readBevelListingIds());
@@ -2555,6 +2564,7 @@ export function DeskBoard({
     const unsubResonance = subscribeResonance(apply);
     const unsubRake = subscribeRake(apply);
     const unsubMistrack = subscribeMistrack(apply);
+    const unsubEccentric = subscribeEccentric(apply);
     const unsubZenith = subscribeZenith(apply);
     const unsubRetip = subscribeRetip(apply);
     const unsubBevel = subscribeBevel(apply);
@@ -2826,6 +2836,7 @@ export function DeskBoard({
       unsubResonance();
       unsubRake();
       unsubMistrack();
+      unsubEccentric();
       unsubZenith();
       unsubRetip();
       unsubBevel();
@@ -5062,6 +5073,37 @@ export function DeskBoard({
                             {isListingMistrackOverlay(listing.id, mistrackIds)
                               ? "Leave the mistrack"
                               : "I will not mistrack it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeEccentric(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEccentricWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEccentricOverlay(listing.id, eccentricIds)
+                                ? "open"
+                                : "eccentric"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingEccentricOverlay(listing.id, eccentricIds)
+                              ? "Leave the eccentric"
+                              : "I will not eccentric it"}
                           </button>
                         </form>
                       ) : null}
