@@ -1562,6 +1562,14 @@ export function listingPleatWritePath() {
   return "/listings/pleat";
 }
 
+export function listingTrapPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/trap`;
+}
+
+export function listingTrapWritePath() {
+  return "/listings/trap";
+}
+
 export function listingKernPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/kern`;
 }

@@ -777,6 +777,12 @@ import {
   subscribePreflight,
 } from "@/lib/listing-preflight";
 import {
+  canTapeTrap,
+  isListingTrapOverlay,
+  readTrapListingIds,
+  subscribeTrap,
+} from "@/lib/listing-trap";
+import {
   canTapeBleed,
   isListingBleedOverlay,
   readBleedListingIds,
@@ -1024,6 +1030,7 @@ import {
   listingPaginateWritePath,
   listingCollateWritePath,
   listingPreflightWritePath,
+  listingTrapWritePath,
   listingBleedWritePath,
   listingScaleWritePath,
   listingGateWritePath,
@@ -1281,6 +1288,7 @@ export function DeskBoard({
   const [paginateIds, setPaginateIds] = useState<string[]>([]);
   const [collateIds, setCollateIds] = useState<string[]>([]);
   const [preflightIds, setPreflightIds] = useState<string[]>([]);
+  const [trapIds, setTrapIds] = useState<string[]>([]);
   const [bleedIds, setBleedIds] = useState<string[]>([]);
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [gateIds, setGateIds] = useState<string[]>([]);
@@ -1449,6 +1457,7 @@ export function DeskBoard({
       setPaginateIds(readPaginateListingIds());
       setCollateIds(readCollateListingIds());
       setPreflightIds(readPreflightListingIds());
+      setTrapIds(readTrapListingIds());
       setBleedIds(readBleedListingIds());
       setScaleIds(readScaleListingIds());
       setGateIds(readGateListingIds());
@@ -1606,6 +1615,7 @@ export function DeskBoard({
     const unsubPaginate = subscribePaginate(apply);
     const unsubCollate = subscribeCollate(apply);
     const unsubPreflight = subscribePreflight(apply);
+    const unsubTrap = subscribeTrap(apply);
     const unsubBleed = subscribeBleed(apply);
     const unsubScale = subscribeScale(apply);
     const unsubGate = subscribeGate(apply);
@@ -1773,6 +1783,7 @@ export function DeskBoard({
       unsubPaginate();
       unsubCollate();
       unsubPreflight();
+      unsubTrap();
       unsubBleed();
       unsubScale();
       unsubGate();
@@ -6398,6 +6409,37 @@ export function DeskBoard({
                             {isListingPreflightOverlay(listing.id, preflightIds)
                               ? "Leave the page"
                               : "I will not preflight it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeTrap(listing) ? (
+                        <form
+                          method="post"
+                          action={listingTrapWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingTrapOverlay(listing.id, trapIds)
+                                ? "open"
+                                : "trap"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:underline sm:w-auto"
+                          >
+                            {isListingTrapOverlay(listing.id, trapIds)
+                              ? "Leave the knockout"
+                              : "I will not trap it"}
                           </button>
                         </form>
                       ) : null}
