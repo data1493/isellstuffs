@@ -231,6 +231,7 @@ import { ListingFilletNotice } from "@/components/listing-fillet-notice";
 import { ListingHotbarNotice } from "@/components/listing-hotbar-notice";
 import { ListingSoakNotice } from "@/components/listing-soak-notice";
 import { ListingAcfNotice } from "@/components/listing-acf-notice";
+import { ListingGlobtopNotice } from "@/components/listing-globtop-notice";
 import { ListingCountersinkNotice } from "@/components/listing-countersink-notice";
 import { ListingZenithNotice } from "@/components/listing-zenith-notice";
 import { ListingRetipNotice } from "@/components/listing-retip-notice";
@@ -370,6 +371,7 @@ import {
   listingHotbarPath,
   listingSoakPath,
   listingAcfPath,
+  listingGlobtopPath,
   listingCountersinkPath,
   listingZenithPath,
   listingRetipPath,
@@ -1051,6 +1053,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
               ) : null}
               {listing.id === "gtk-game-boy" ? (
                 <ListingAcfNotice listingId={listing.id} />
+              ) : null}
+              {listing.id === "gtk-game-boy" ? (
+                <ListingGlobtopNotice listingId={listing.id} />
               ) : null}
               {physical ? <ListingTinNotice listingId={listing.id} /> : null}
               {physical ? <ListingLatheNotice listingId={listing.id} /> : null}
@@ -2057,6 +2062,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                     >
                       I will not acf it
+                    </Link>
+                  ) : null}
+                  {listing.id === "gtk-game-boy" ? (
+                    <Link
+                      href={listingGlobtopPath(listing.id)}
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      I will not globtop it
                     </Link>
                   ) : null}
                   <Link

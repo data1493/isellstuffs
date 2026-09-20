@@ -1722,6 +1722,14 @@ export function listingAcfWritePath() {
   return "/listings/acf";
 }
 
+export function listingGlobtopPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/globtop`;
+}
+
+export function listingGlobtopWritePath() {
+  return "/listings/globtop";
+}
+
 export function listingFluxPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/flux`;
 }

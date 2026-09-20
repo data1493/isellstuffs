@@ -651,6 +651,12 @@ import {
   subscribeAcf,
 } from "@/lib/listing-acf";
 import {
+  canTapeGlobtop,
+  isListingGlobtopOverlay,
+  readGlobtopListingIds,
+  subscribeGlobtop,
+} from "@/lib/listing-globtop";
+import {
   canTapeTin,
   isListingTinOverlay,
   readTinListingIds,
@@ -1542,6 +1548,7 @@ import {
   listingHotbarWritePath,
   listingSoakWritePath,
   listingAcfWritePath,
+  listingGlobtopWritePath,
   listingGrainWritePath,
   listingCubeWritePath,
   listingShaperWritePath,
@@ -1760,6 +1767,7 @@ export function DeskBoard({
   const [hotbarIds, setHotbarIds] = useState<string[]>([]);
   const [soakIds, setSoakIds] = useState<string[]>([]);
   const [acfIds, setAcfIds] = useState<string[]>([]);
+  const [globtopIds, setGlobtopIds] = useState<string[]>([]);
   const [tinIds, setTinIds] = useState<string[]>([]);
   const [latheIds, setLatheIds] = useState<string[]>([]);
   const [handleIds, setHandleIds] = useState<string[]>([]);
@@ -2002,6 +2010,7 @@ export function DeskBoard({
       setHotbarIds(readHotbarListingIds());
       setSoakIds(readSoakListingIds());
       setAcfIds(readAcfListingIds());
+      setGlobtopIds(readGlobtopListingIds());
       setTinIds(readTinListingIds());
       setLatheIds(readLatheListingIds());
       setHandleIds(readHandleListingIds());
@@ -2233,6 +2242,7 @@ export function DeskBoard({
     const unsubHotbar = subscribeHotbar(apply);
     const unsubSoak = subscribeSoak(apply);
     const unsubAcf = subscribeAcf(apply);
+    const unsubGlobtop = subscribeGlobtop(apply);
     const unsubTin = subscribeTin(apply);
     const unsubLathe = subscribeLathe(apply);
     const unsubHandle = subscribeHandle(apply);
@@ -2474,6 +2484,7 @@ export function DeskBoard({
       unsubHotbar();
       unsubSoak();
       unsubAcf();
+      unsubGlobtop();
       unsubTin();
       unsubLathe();
       unsubHandle();
@@ -7243,6 +7254,37 @@ export function DeskBoard({
                             {isListingAcfOverlay(listing.id, acfIds)
                               ? "Leave the film"
                               : "I will not acf it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeGlobtop(listing) ? (
+                        <form
+                          method="post"
+                          action={listingGlobtopWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingGlobtopOverlay(listing.id, globtopIds)
+                                ? "open"
+                                : "globtop"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingGlobtopOverlay(listing.id, globtopIds)
+                              ? "Leave the blob"
+                              : "I will not globtop it"}
                           </button>
                         </form>
                       ) : null}
