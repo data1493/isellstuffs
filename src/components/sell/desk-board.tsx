@@ -1191,6 +1191,12 @@ import {
   subscribeBrewster,
 } from "@/lib/listing-brewster";
 import {
+  canTapeEtalon,
+  isListingEtalonOverlay,
+  readEtalonListingIds,
+  subscribeEtalon,
+} from "@/lib/listing-etalon";
+import {
   canTapeCountersink,
   isListingCountersinkOverlay,
   readCountersinkListingIds,
@@ -1744,6 +1750,7 @@ import {
   listingFizeauWritePath,
   listingHaidingerWritePath,
   listingBrewsterWritePath,
+  listingEtalonWritePath,
   listingCountersinkWritePath,
   listingPaginateWritePath,
   listingCollateWritePath,
@@ -2107,6 +2114,7 @@ export function DeskBoard({
   const [fizeauIds, setFizeauIds] = useState<string[]>([]);
   const [haidingerIds, setHaidingerIds] = useState<string[]>([]);
   const [brewsterIds, setBrewsterIds] = useState<string[]>([]);
+  const [etalonIds, setEtalonIds] = useState<string[]>([]);
   const [countersinkIds, setCountersinkIds] = useState<string[]>([]);
   const [spliceIds, setSpliceIds] = useState<string[]>([]);
   const [radioIds, setRadioIds] = useState<string[]>([]);
@@ -2385,6 +2393,7 @@ export function DeskBoard({
       setFizeauIds(readFizeauListingIds());
       setHaidingerIds(readHaidingerListingIds());
       setBrewsterIds(readBrewsterListingIds());
+      setEtalonIds(readEtalonListingIds());
       setCountersinkIds(readCountersinkListingIds());
       setSpliceIds(readSpliceListingIds());
       setRadioIds(readRadioListingIds());
@@ -2652,6 +2661,7 @@ export function DeskBoard({
     const unsubFizeau = subscribeFizeau(apply);
     const unsubHaidinger = subscribeHaidinger(apply);
     const unsubBrewster = subscribeBrewster(apply);
+    const unsubEtalon = subscribeEtalon(apply);
     const unsubCountersink = subscribeCountersink(apply);
     const unsubSplice = subscribeSplice(apply);
     const unsubRadio = subscribeRadio(apply);
@@ -2929,6 +2939,7 @@ export function DeskBoard({
       unsubFizeau();
       unsubHaidinger();
       unsubBrewster();
+      unsubEtalon();
       unsubCountersink();
       unsubSplice();
       unsubRadio();
@@ -6430,6 +6441,37 @@ export function DeskBoard({
                             {isListingBrewsterOverlay(listing.id, brewsterIds)
                               ? "Leave the brewster"
                               : "I will not brewster it"}
+                          </button>
+                        </form>
+                      ) : null}
+                      {canTapeEtalon(listing) ? (
+                        <form
+                          method="post"
+                          action={listingEtalonWritePath()}
+                          className="block"
+                        >
+                          <input type="hidden" name="listingId" value={listing.id} />
+                          <input
+                            type="hidden"
+                            name="intent"
+                            value={
+                              isListingEtalonOverlay(listing.id, etalonIds)
+                                ? "open"
+                                : "etalon"
+                            }
+                          />
+                          <input
+                            type="hidden"
+                            name="returnTo"
+                            value={sellDeskStallPath(stall.slug)}
+                          />
+                          <button
+                            type="submit"
+                            className="inline-flex h-11 w-full items-center justify-center text-sm font-medium text-foreground underline-offset-4 hover:text-foreground hover:underline sm:w-auto"
+                          >
+                            {isListingEtalonOverlay(listing.id, etalonIds)
+                              ? "Leave the etalon"
+                              : "I will not etalon it"}
                           </button>
                         </form>
                       ) : null}

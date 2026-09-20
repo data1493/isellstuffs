@@ -2074,6 +2074,14 @@ export function listingBrewsterWritePath() {
   return "/listings/brewster";
 }
 
+export function listingEtalonPath(id: string) {
+  return `/listings/${encodeURIComponent(id)}/etalon`;
+}
+
+export function listingEtalonWritePath() {
+  return "/listings/etalon";
+}
+
 export function listingOverhangPath(id: string) {
   return `/listings/${encodeURIComponent(id)}/overhang`;
 }
