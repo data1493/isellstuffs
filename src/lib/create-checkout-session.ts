@@ -55,6 +55,9 @@ export async function createCheckoutSession(
     integration_identifier: integrationIdentifier(),
     success_url: successUrl,
     cancel_url: cancelUrl,
+    // This account defaults to Managed Payments, which requires tax codes
+    // and a registration. Keep Checkout as a plain test charge until then.
+    managed_payments: { enabled: false },
     metadata: {
       charge_pattern: plan.chargePattern,
       listing_ids: plan.lines.map((line) => line.listing.id).join(","),
