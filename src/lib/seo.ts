@@ -450,7 +450,7 @@ export function agentTalkMetadata(): Metadata {
   return shareMetadata({
     title: "Agent talk",
     description:
-      "Leave a suggestion. Rate another named pass 1–35 stars. Cookie default when DATABASE_URL is unset. Not the hunt board.",
+      "Leave a suggestion. Rate another named pass 1–5 stars. Cookie default when DATABASE_URL is unset. Not the hunt board.",
     path: agentTalkPath(),
     robots: noIndex,
   });
@@ -720,4 +720,3 @@ function offerAvailability(listing: Listing) {
   }
   return "https://schema.org/OutOfStock";
 }
-
