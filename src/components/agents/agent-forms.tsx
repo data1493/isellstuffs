@@ -55,19 +55,21 @@ function StarRadios({
 
 export function WearPassForm({
   current,
-  returnTo = "/agents",
+  returnTo = "/chat",
+  idPrefix = "agent",
 }: {
   current: AgentPass | null;
   returnTo?: string;
+  idPrefix?: string;
 }) {
   return (
     <form method="post" action={agentsWritePath()} className="space-y-4">
       <input type="hidden" name="intent" value="wear" />
       <input type="hidden" name="returnTo" value={returnTo} />
       <div className="space-y-1.5">
-        <Label htmlFor="agent-handle">Named pass</Label>
+        <Label htmlFor={`${idPrefix}-handle`}>Named pass</Label>
         <Input
-          id="agent-handle"
+          id={`${idPrefix}-handle`}
           name="handle"
           required
           autoComplete="off"
@@ -76,9 +78,9 @@ export function WearPassForm({
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="agent-address">Public address</Label>
+        <Label htmlFor={`${idPrefix}-address`}>Public address</Label>
         <Input
-          id="agent-address"
+          id={`${idPrefix}-address`}
           name="publicAddress"
           required
           autoComplete="off"
@@ -93,7 +95,8 @@ export function WearPassForm({
         Wear this pass
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        Public address only. No private key. No seed. Not a stall.
+        Public address only. No private key. No seed. Wearing this makes you an
+        agent.
       </p>
     </form>
   );
@@ -134,12 +137,15 @@ export function RateAgentForm({
   lockedHandle,
   returnTo,
   action = agentTalkWritePath(),
+  idPrefix,
 }: {
   defaultHandle?: string;
   lockedHandle?: string;
   returnTo: string;
   action?: string;
+  idPrefix?: string;
 }) {
+  const starsId = idPrefix ?? (lockedHandle ? `slip-${lockedHandle}` : "talk-pass");
   return (
     <form method="post" action={action} className="space-y-4">
       <input type="hidden" name="intent" value="rate" />
@@ -168,14 +174,14 @@ export function RateAgentForm({
         </div>
       )}
 
-      <StarRadios idPrefix={lockedHandle ? `slip-${lockedHandle}` : "talk-pass"} />
+      <StarRadios idPrefix={starsId} />
 
       <div className="space-y-1.5">
-        <Label htmlFor={`rate-body-${lockedHandle ?? "talk"}`}>
+        <Label htmlFor={`rate-body-${starsId}`}>
           Note (optional)
         </Label>
         <Textarea
-          id={`rate-body-${lockedHandle ?? "talk"}`}
+          id={`rate-body-${starsId}`}
           name="body"
           rows={3}
           maxLength={280}
@@ -195,38 +201,46 @@ export function RateAgentForm({
   );
 }
 
-export function SuggestionForm() {
+export function SuggestionForm({ returnTo = "/chat" }: { returnTo?: string }) {
   return (
     <form method="post" action={agentTalkWritePath()} className="space-y-4">
       <input type="hidden" name="intent" value="suggest" />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <div className="space-y-1.5">
-        <Label htmlFor="talk-body">The line</Label>
+        <Label htmlFor="talk-body">Message</Label>
         <Textarea
           id="talk-body"
           name="body"
           rows={3}
           required
           maxLength={280}
-          placeholder="Print the cut on the slip."
+          placeholder="Say it on the floor."
         />
       </div>
       <button
         type="submit"
         className={cn(buttonVariants({ size: "lg" }), "h-11 w-full rounded-full")}
       >
-        Leave the line
+        Send
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        A suggestion on the talk board. Not a listing. Not the hunt board.
+        Named pass required. Lands on the talk store.
       </p>
     </form>
   );
 }
 
-export function InsertLotForm({ hasPass }: { hasPass: boolean }) {
+export function InsertLotForm({
+  hasPass,
+  returnTo = "/trade",
+}: {
+  hasPass: boolean;
+  returnTo?: string;
+}) {
   return (
     <form method="post" action={agentsWritePath()} className="space-y-4">
       <input type="hidden" name="intent" value="lot" />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <div className="space-y-1.5">
         <Label htmlFor="lot-title">Digital lot</Label>
         <Input
@@ -280,10 +294,19 @@ export function InsertLotForm({ hasPass }: { hasPass: boolean }) {
   );
 }
 
-export function TakeLotForm({ lots, hasPass }: { lots: AgentLot[]; hasPass: boolean }) {
+export function TakeLotForm({
+  lots,
+  hasPass,
+  returnTo = "/trade",
+}: {
+  lots: AgentLot[];
+  hasPass: boolean;
+  returnTo?: string;
+}) {
   return (
     <form method="post" action={agentsTradePath()} className="space-y-4">
       <input type="hidden" name="intent" value="take" />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <div className="space-y-1.5">
         <Label htmlFor="take-lot">Open lot</Label>
         <select
@@ -311,16 +334,23 @@ export function TakeLotForm({ lots, hasPass }: { lots: AgentLot[]; hasPass: bool
         Take this lot
       </button>
       <p className="text-center text-xs leading-5 text-muted-foreground">
-        Take writes the 10% cut. Confirm pulls the lot. Not Stripe. Not the tote.
+        Take writes the 10% floor cut. Confirm is the second POST.
       </p>
     </form>
   );
 }
 
-export function ConfirmTradeForm({ tradeId }: { tradeId: string }) {
+export function ConfirmTradeForm({
+  tradeId,
+  returnTo = "/trade",
+}: {
+  tradeId: string;
+  returnTo?: string;
+}) {
   return (
     <form method="post" action={agentsTradePath()} className="grid gap-2 sm:grid-cols-2">
       <input type="hidden" name="tradeId" value={tradeId} />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <button
         type="submit"
         name="intent"

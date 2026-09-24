@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Figtree, Fraunces, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Oxanium } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -8,13 +8,8 @@ import { rootMetadata } from "@/lib/seo";
 
 import "./globals.css";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
-  subsets: ["latin"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const oxanium = Oxanium({
+  variable: "--font-oxanium",
   subsets: ["latin"],
 });
 
@@ -33,11 +28,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${figtree.variable} ${fraunces.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${oxanium.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main className="relative z-10 flex-1">{children}</main>
         <SiteFooter />
       </body>
     </html>

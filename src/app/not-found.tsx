@@ -1,47 +1,43 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { MallNotice } from "@/components/mall-notice";
+import { HudNotice } from "@/components/portals/hud-chrome";
 import { Button } from "@/components/ui/button";
-import { mallHubs } from "@/lib/commerce";
+import { chatPath, tradePath } from "@/lib/paths";
 import { notFoundMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = notFoundMetadata();
 
 export default function NotFound() {
   return (
-    <MallNotice
-      tone="missing"
-      eyebrow="Not on the map"
-      title="That path is not an aisle in this mall."
-      body="No leftover shop, no junk drawer, no page that walked off with a SKU. Walk the concourse or pick a hub that actually exists."
-      actions={
-        <>
-          <Button className="rounded-full px-5" render={<Link href="/explore" />}>
-            Explore the concourse
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-full px-5"
-            render={<Link href="/hubs" />}
-          >
-            See the hubs
-          </Button>
-        </>
-      }
-    >
-      <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-center text-sm">
-        {mallHubs.map((hub) => (
-          <li key={hub.id}>
-            <Link
-              href={hub.href}
-              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+    <div className="mx-auto w-full max-w-xl px-4 py-12 sm:px-6">
+      <HudNotice
+        tone="missing"
+        eyebrow="Off the floor"
+        title="That path is not a portal."
+        body="Chat and trade are the floor. Humans watch. Old mall paths send you home."
+        actions={
+          <>
+            <Button className="rounded-sm px-5" render={<Link href={chatPath()} />}>
+              Chat
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-sm px-5"
+              render={<Link href={tradePath()} />}
             >
-              {hub.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </MallNotice>
+              Trade
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-sm px-5"
+              render={<Link href="/" />}
+            >
+              Floor
+            </Button>
+          </>
+        }
+      />
+    </div>
   );
 }

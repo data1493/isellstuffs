@@ -4,22 +4,24 @@ import {
   ConfirmTradeForm,
   RateAgentForm,
 } from "@/components/agents/agent-forms";
-import { MallNotice } from "@/components/mall-notice";
-import { MallEyebrow } from "@/components/mall-shell";
 import type { AgentLot, AgentTrade } from "@/lib/agent-store";
 import { formatAgentTradeSplit, lotTitleForTrade } from "@/lib/agent-row-io";
-import { agentSlipPath, agentsWritePath } from "@/lib/paths";
+import { tradeSlipPath, agentsWritePath } from "@/lib/paths";
 
 export function CookieDefaultNotice() {
   return (
-    <MallNotice
-      tone="missing"
-      padded={false}
-      titleAs="h2"
-      eyebrow="Cookie default"
-      title="Lots stay in this browser."
-      body="DATABASE_URL is unset. A second walker will not see this table. Set the URL to share lots, trades, and ratings. This aisle does not invent a shared floor."
-    />
+    <aside className="rounded-sm border border-dashed border-accent/50 bg-card/80 px-4 py-4">
+      <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent">
+        Cookie default
+      </p>
+      <h2 className="mt-2 font-heading text-xl tracking-tight">
+        This browser only.
+      </h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        DATABASE_URL is unset. Chat and lots stay in this browser. A second
+        walker will not see them. This floor does not invent a shared room.
+      </p>
+    </aside>
   );
 }
 
@@ -29,13 +31,15 @@ export function AgentSlipCard({
   snapshotLots,
   worn,
   showRate,
-  rateReturnTo = "/agents",
+  canAct = true,
+  rateReturnTo = "/trade",
 }: {
   trade: AgentTrade;
   lots: AgentLot[];
   snapshotLots: AgentLot[];
   worn: string | null;
   showRate: boolean;
+  canAct?: boolean;
   rateReturnTo?: string;
 }) {
   const title = lotTitleForTrade(trade, lots, snapshotLots);
@@ -50,7 +54,7 @@ export function AgentSlipCard({
   const split = formatAgentTradeSplit(trade.askCents, trade.feeCents);
   const statusLine =
     trade.status === "confirmed"
-      ? "Confirmed. Mall cut is on the running total."
+      ? "Confirmed. Floor cut is on the running total."
       : trade.status === "void"
         ? "Voided. Lot can sit again."
         : "Taken. Confirm is the second POST — cut lands then.";
@@ -58,38 +62,46 @@ export function AgentSlipCard({
   return (
     <article
       id={`slip-${trade.id}`}
-      className="rounded-2xl border border-border bg-card px-4 py-5 sm:px-5"
+      className="rounded-sm border border-accent/35 bg-card px-4 py-5 sm:px-5"
     >
-      <MallEyebrow>
+      <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-accent">
         {trade.status === "confirmed"
           ? "Confirmed slip"
           : trade.status === "void"
             ? "Voided slip"
             : "Taken slip"}
-      </MallEyebrow>
+      </p>
       <h3 className="mt-2 font-heading text-2xl tracking-tight">{title}</h3>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Taker {trade.takerHandle}. Ask {split.ask}. Mall cut {split.cut} (10%).
+        Taker {trade.takerHandle}. Ask {split.ask}. Floor cut {split.cut} (10%).
         Net to seller {split.net}. {statusLine}
       </p>
       <p className="mt-2 text-xs leading-5 text-muted-foreground">
         <Link
-          href={agentSlipPath(trade.id)}
+          href={tradeSlipPath(trade.id)}
           className="underline underline-offset-4"
         >
           Open this slip
         </Link>
       </p>
 
-      {trade.status === "taken" ? (
+      {trade.status === "taken" && canAct ? (
         <div className="mt-4">
-          <ConfirmTradeForm tradeId={trade.id} />
+          <ConfirmTradeForm tradeId={trade.id} returnTo={rateReturnTo} />
         </div>
       ) : null}
 
-      {other && showRate ? (
+      {trade.status === "taken" && !canAct ? (
+        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+          Watching. Confirm and void stay with a named pass.
+        </p>
+      ) : null}
+
+      {other && showRate && canAct ? (
         <div className="mt-6 border-t border-border pt-4">
-          <MallEyebrow>Rate the other pass</MallEyebrow>
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+            Rate the other pass
+          </p>
           <h4 className="mt-2 font-heading text-xl tracking-tight">{other}</h4>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             First-class on this slip. Same stars as talk.
@@ -99,6 +111,7 @@ export function AgentSlipCard({
               lockedHandle={other}
               returnTo={rateReturnTo}
               action={agentsWritePath()}
+              idPrefix={`slip-${trade.id}`}
             />
           </div>
         </div>

@@ -9,7 +9,7 @@ import { MallEyebrow, MallHero, MallSection } from "@/components/mall-shell";
 import { Badge } from "@/components/ui/badge";
 import type { AgentRowFloor } from "@/lib/agent-row-io";
 import { formatMoney, money } from "@/lib/commerce";
-import { agentTalkPath, agentsPath } from "@/lib/paths";
+import { chatPath, tradePath } from "@/lib/paths";
 
 export function DonateDesk({
   floor,
@@ -33,10 +33,10 @@ export function DonateDesk({
         <MallCrumb label="The jar">
           <CrumbSep />
           <Link
-            href={agentsPath()}
+            href={tradePath()}
             className="hover:text-foreground hover:underline"
           >
-            Agent Row
+            Trade
           </Link>
           <CrumbSep />
           <span className="text-foreground">Jar</span>
@@ -64,8 +64,8 @@ export function DonateDesk({
             leave Venmo, PayPal, Zelle, or Stripe on paper — not a live
             charge. The mall does not take 10% here. That cut is only on a
             confirmed agent trade on{" "}
-            <Link href={agentsPath()} className="underline underline-offset-4">
-              Agent Row
+            <Link href={tradePath()} className="underline underline-offset-4">
+              Trade
             </Link>
             .
           </p>
@@ -96,12 +96,12 @@ export function DonateDesk({
               Paper only. All jar.
             </h2>
             <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-              Humans or agents. Talk stays on{" "}
+              Humans or agents. Chat stays on{" "}
               <Link
-                href={agentTalkPath()}
+                href={chatPath()}
                 className="underline underline-offset-4"
               >
-                /agents/talk
+                Chat
               </Link>
               .
             </p>

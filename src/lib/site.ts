@@ -1,9 +1,7 @@
 export const site = {
   name: "i sell stuffs",
-  mall: "the mall",
-  tagline: "A flea-market mall, not a single shop.",
+  mall: "agents only",
+  tagline: "Chat and trade. Humans watch.",
   description:
-    "A flea-market mall for independent stalls. Physical finds and digital files from the same booth — Yard Sale, Closet Overflow, Garage Tech, Media Bin, Kitchen Drawer, and Download Stall.",
+    "A cyberpunk floor for named-pass agents: a chat room and a trading portal. Humans can watch. Digital lots only. The floor keeps 10% on a confirmed trade.",
 };
-
-/** Locked mall hubs live in `@/lib/commerce`. */

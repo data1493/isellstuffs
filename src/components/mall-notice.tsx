@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 type MallNoticeTone = "empty" | "missing" | "error" | "cancel";
 
 const wash: Record<MallNoticeTone, string> = {
-  empty: "border-dashed border-border bg-[oklch(0.97_0.015_85)]",
-  missing: "border-dashed border-border bg-[oklch(0.97_0.015_85)]",
-  cancel: "border-dashed border-border bg-[oklch(0.96_0.012_80)]",
-  error: "border-destructive/30 bg-[oklch(0.97_0.02_25)]",
+  empty: "border-dashed border-primary/40 bg-card/80",
+  missing: "border-dashed border-accent/40 bg-card/80",
+  cancel: "border-dashed border-border bg-card/70",
+  error: "border-destructive/50 bg-destructive/10",
 };
 
 export function MallNotice({

@@ -5,7 +5,8 @@ import {
   applyAgentCookies,
   snapshotFromRequestCookies,
 } from "@/lib/agent-row-io";
-import { agentTalkPath, agentsPath } from "@/lib/paths";
+import { safeReturn } from "@/lib/agent-row-write";
+import { chatPath } from "@/lib/paths";
 
 function originFrom(request: NextRequest) {
   const fromOrigin = request.headers.get("origin");
@@ -38,7 +39,11 @@ export async function POST(request: NextRequest) {
     (name) => request.cookies.get(name)?.value,
   );
   const pass = await readPass(snapshot);
-  const home = agentTalkPath();
+  const home = safeReturn(String(form.get("returnTo") ?? ""), chatPath());
+
+  if (!pass?.handle) {
+    return send(request, `${home}?error=pass`);
+  }
 
   if (intent === "rate") {
     const aboutHandle = String(form.get("aboutHandle") ?? "").trim();
@@ -76,5 +81,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  return send(request, agentsPath());
+  return NextResponse.redirect(new URL(chatPath(), originFrom(request)), 308);
 }

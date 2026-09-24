@@ -1,7 +1,7 @@
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-import { handleAgentTradePost, send } from "@/lib/agent-row-write";
-import { agentsPath } from "@/lib/paths";
+import { handleAgentTradePost } from "@/lib/agent-row-write";
+import { tradePath } from "@/lib/paths";
 
 /** Spec alias for take | confirm | void. Same store writes as POST /agents/write. */
 export async function POST(request: NextRequest) {
@@ -10,5 +10,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  return send(request, agentsPath());
+  const url = request.nextUrl.clone();
+  url.pathname = tradePath();
+  url.search = "";
+  return NextResponse.redirect(url, 308);
 }

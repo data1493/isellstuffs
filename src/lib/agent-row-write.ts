@@ -21,10 +21,12 @@ import {
   snapshotFromRequestCookies,
 } from "@/lib/agent-row-io";
 import {
-  agentSlipPath,
   agentTalkPath,
   agentsPath,
+  chatPath,
   donatePath,
+  tradePath,
+  tradeSlipPath,
 } from "@/lib/paths";
 
 const ASSETS = new Set(["usdc", "eth"]);
@@ -43,25 +45,32 @@ function originFrom(request: NextRequest) {
   return request.nextUrl.origin;
 }
 
+function pathOnly(path: string) {
+  return path.split("?")[0] ?? path;
+}
+
 export function safeReturn(raw: string, fallback: string) {
   const path = raw.trim();
+  const bare = pathOnly(path);
   if (
-    path === agentsPath() ||
-    path === agentTalkPath() ||
-    path === donatePath()
+    bare === "/" ||
+    bare === chatPath() ||
+    bare === tradePath() ||
+    bare === agentsPath() ||
+    bare === agentTalkPath() ||
+    bare === donatePath()
   ) {
     return path;
   }
-  if (
-    path.startsWith(`${agentsPath()}?`) ||
-    path.startsWith(`${agentTalkPath()}?`)
-  ) {
-    return path;
+  if (bare.startsWith(`${tradePath()}/`)) {
+    const id = bare.slice(tradePath().length + 1);
+    if (id && !id.includes("/")) {
+      return path;
+    }
   }
-  if (path.startsWith(`${agentsPath()}/`)) {
-    const rest = path.slice(agentsPath().length + 1);
-    const id = rest.split("?")[0] ?? "";
-    if (id && !id.includes("/") && !["write", "talk", "trade"].includes(id)) {
+  if (bare.startsWith(`${agentsPath()}/`)) {
+    const rest = bare.slice(agentsPath().length + 1);
+    if (rest && !rest.includes("/") && !["write", "talk", "trade"].includes(rest)) {
       return path;
     }
   }
@@ -100,9 +109,11 @@ export async function handleAgentTradePost(
   const pass = await readPass(snapshot);
   const intent = String(form.get("intent") ?? "");
 
+  const home = safeReturn(String(form.get("returnTo") ?? ""), tradePath());
+
   if (intent === "take") {
     if (!pass) {
-      return fail(request, agentsPath(), "pass");
+      return fail(request, home, "pass");
     }
     const result = await insertTrade(
       {
@@ -112,9 +123,9 @@ export async function handleAgentTradePost(
       snapshot,
     );
     if (!result.ok) {
-      return fail(request, agentsPath(), result.reason, result.cookies);
+      return fail(request, home, result.reason, result.cookies);
     }
-    return send(request, agentSlipPath(result.value.id), result.cookies);
+    return send(request, tradeSlipPath(result.value.id), result.cookies);
   }
 
   if (intent === "confirm" || intent === "void") {
@@ -124,12 +135,12 @@ export async function handleAgentTradePost(
         ? await confirmTrade(tradeId, snapshot)
         : await voidTrade(tradeId, snapshot);
     if (!result.ok) {
-      return fail(request, agentsPath(), result.reason, result.cookies);
+      return fail(request, home, result.reason, result.cookies);
     }
-    return send(request, agentSlipPath(tradeId), result.cookies);
+    return send(request, tradeSlipPath(tradeId), result.cookies);
   }
 
-  return send(request, agentsPath());
+  return send(request, home);
 }
 
 export async function handleAgentWritePost(
@@ -145,7 +156,7 @@ export async function handleAgentWritePost(
     (name) => request.cookies.get(name)?.value,
   );
   const pass = await readPass(snapshot);
-  const home = safeReturn(String(form.get("returnTo") ?? ""), agentsPath());
+  const home = safeReturn(String(form.get("returnTo") ?? ""), tradePath());
 
   if (intent === "wear") {
     const result = await writePass(
@@ -186,12 +197,12 @@ export async function handleAgentWritePost(
 
   if (intent === "lot") {
     if (!pass) {
-      return fail(request, agentsPath(), "pass");
+      return fail(request, home, "pass");
     }
     const askCents = parseAskCents(String(form.get("ask") ?? ""));
     const asset = String(form.get("asset") ?? "") as AgentAsset;
     if (askCents === null || !ASSETS.has(asset)) {
-      return fail(request, `${agentsPath()}`, "ask");
+      return fail(request, home, "ask");
     }
     const result = await insertLot(
       {
@@ -203,10 +214,10 @@ export async function handleAgentWritePost(
       snapshot,
     );
     if (!result.ok) {
-      return fail(request, agentsPath(), result.reason, result.cookies);
+      return fail(request, home, result.reason, result.cookies);
     }
-    return send(request, agentsPath(), result.cookies);
+    return send(request, home, result.cookies);
   }
 
-  return send(request, agentsPath());
+  return send(request, home);
 }

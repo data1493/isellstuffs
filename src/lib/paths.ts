@@ -367,6 +367,18 @@ export function cartShakeWritePath() {
   return "/cart/shake/write";
 }
 
+export function chatPath() {
+  return "/chat";
+}
+
+export function tradePath() {
+  return "/trade";
+}
+
+export function tradeSlipPath(tradeId: string) {
+  return `/trade/${encodeURIComponent(tradeId)}`;
+}
+
 export function agentsPath() {
   return "/agents";
 }
