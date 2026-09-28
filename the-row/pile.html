@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pile — The Row</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070806;
+      --lime: #d8ff3e;
+      --ink: #e7f0d4;
+      --muted: #9aa58a;
+      --line: rgba(216, 255, 62, 0.28);
+      --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      overflow: hidden;
+    }
+    button, a { font: inherit; color: inherit; }
+    a { text-decoration: none; }
+    .top {
+      position: absolute;
+      z-index: 2;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+    }
+    .mark {
+      font-family: var(--display);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--lime);
+      font-size: 1.3rem;
+    }
+    .rule {
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .top .spacer { flex: 1; }
+    .back {
+      border: 1px solid var(--lime);
+      color: var(--lime);
+      padding: 0.45rem 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .board {
+      height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr minmax(240px, 340px) 1fr;
+    }
+    .side {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 5.5rem 1rem 4.5rem;
+      min-width: 0;
+    }
+    .side:hover, .side:focus-visible { background: rgba(216, 255, 62, 0.05); outline: none; }
+    .side.hot { background: rgba(216, 255, 62, 0.12); }
+    .side.winner { background: rgba(216, 255, 62, 0.16); }
+    .count {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(5rem, 14vw, 9rem);
+      line-height: 0.8;
+      color: #f4ffe0;
+    }
+    .who {
+      font-family: var(--display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--lime);
+    }
+    .stack {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 0.35rem;
+      width: min(180px, 80%);
+      min-height: 8rem;
+    }
+    .chip {
+      border: 1px solid var(--lime);
+      color: var(--lime);
+      text-align: center;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      padding: 0.35rem 0.4rem;
+    }
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 4.5rem 0.6rem 4rem;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+    .prize {
+      width: min(220px, 100%);
+      background: #efe6c8;
+      color: #1b1d14;
+      padding: 0.9rem 0.8rem 1rem;
+      text-align: center;
+      transition: transform 0.35s ease;
+    }
+    .prize b {
+      display: block;
+      font-family: var(--display);
+      font-size: 2.1rem;
+      line-height: 0.9;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+    .prize span {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+    }
+    .prize.to-left { transform: translateX(-28px) rotate(-2deg); }
+    .prize.to-right { transform: translateX(28px) rotate(2deg); }
+    .tally {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.45rem;
+      align-items: center;
+      width: 100%;
+    }
+    .pips { display: flex; gap: 0.28rem; }
+    .pips.right { justify-content: flex-end; }
+    .pip {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--lime);
+    }
+    .pip.on { background: var(--lime); }
+    .vs {
+      font-family: var(--display);
+      color: var(--lime);
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+    }
+    .status {
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      min-height: 2.6rem;
+    }
+    .status.won { color: var(--lime); }
+    .again {
+      border: 0;
+      background: var(--lime);
+      color: #111408;
+      padding: 0.6rem 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .again[hidden] { display: none; }
+    .hint {
+      position: absolute;
+      left: 0; right: 0; bottom: 0.8rem;
+      text-align: center;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+    }
+    @media (max-width: 720px) {
+      body { overflow: auto; }
+      .board {
+        height: auto;
+        min-height: 100svh;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "center center"
+          "left right";
+      }
+      .center { grid-area: center; border: 0; border-bottom: 1px solid var(--line); padding-top: 4.2rem; }
+      #left { grid-area: left; }
+      #right { grid-area: right; }
+      .hint { position: static; padding: 0.8rem 1rem 1.2rem; }
+      .count { font-size: 4.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="mark" href="/">The Row</a>
+    <span class="rule">Pile · first to 5</span>
+    <span class="spacer"></span>
+    <a class="back" href="/">The room</a>
+  </header>
+
+  <main class="board">
+    <button class="side" id="left" type="button" aria-label="Pile onto Nova">
+      <div class="stack" id="leftStack"></div>
+      <div class="count" id="leftCount">0</div>
+      <div class="who">Nova</div>
+    </button>
+    <div class="center">
+      <div class="prize" id="prize">
+        <span>Tonight’s drop</span>
+        <b>Bold Condensed</b>
+      </div>
+      <div class="tally" aria-hidden="true">
+        <div class="pips" id="leftPips"></div>
+        <div class="vs">VS</div>
+        <div class="pips right" id="rightPips"></div>
+      </div>
+      <p class="status" id="status">Tap a side. First to five keeps the font.</p>
+      <button class="again" id="again" type="button" hidden>Run it again</button>
+    </div>
+    <button class="side" id="right" type="button" aria-label="Pile onto Jun">
+      <div class="stack" id="rightStack"></div>
+      <div class="count" id="rightCount">0</div>
+      <div class="who">Jun</div>
+    </button>
+  </main>
+  <p class="hint">F nova · J jun</p>
+
+  <script type="module">
+    import { SIDES, pileOn, resetPile, pileLine } from "./js/room.mjs";
+    import { readRoom, writeRoom } from "./js/persist.mjs";
+
+    const leftBtn = document.querySelector("#left");
+    const rightBtn = document.querySelector("#right");
+    const leftStack = document.querySelector("#leftStack");
+    const rightStack = document.querySelector("#rightStack");
+    const leftCount = document.querySelector("#leftCount");
+    const rightCount = document.querySelector("#rightCount");
+    const leftPips = document.querySelector("#leftPips");
+    const rightPips = document.querySelector("#rightPips");
+    const status = document.querySelector("#status");
+    const prize = document.querySelector("#prize");
+    const again = document.querySelector("#again");
+    const storage = localStorage;
+    let room = readRoom(storage);
+
+    for (let i = 0; i < room.pile.goal; i += 1) {
+      leftPips.appendChild(Object.assign(document.createElement("i"), { className: "pip" }));
+      rightPips.appendChild(Object.assign(document.createElement("i"), { className: "pip" }));
+    }
+
+    function paint() {
+      const { pile, drop } = room;
+      leftCount.textContent = String(pile.leftScore);
+      rightCount.textContent = String(pile.rightScore);
+      document.querySelector("#left .who").textContent = SIDES.left.name;
+      document.querySelector("#right .who").textContent = SIDES.right.name;
+      prize.querySelector("b").textContent = drop.name;
+      [...leftPips.children].forEach((pip, i) => pip.classList.toggle("on", i < pile.leftScore));
+      [...rightPips.children].forEach((pip, i) => pip.classList.toggle("on", i < pile.rightScore));
+      leftStack.replaceChildren();
+      rightStack.replaceChildren();
+      SIDES.left.crew.slice(0, pile.leftScore).forEach((name) => leftStack.append(chip(name)));
+      SIDES.right.crew.slice(0, pile.rightScore).forEach((name) => rightStack.append(chip(name)));
+      status.textContent = pile.status === "open"
+        ? `Tap a side. First to five keeps ${drop.name}.`
+        : pileLine(room);
+      status.classList.toggle("won", pile.status !== "open");
+      prize.classList.toggle("to-left", pile.winner === "left");
+      prize.classList.toggle("to-right", pile.winner === "right");
+      leftBtn.classList.toggle("winner", pile.winner === "left");
+      rightBtn.classList.toggle("winner", pile.winner === "right");
+      again.hidden = pile.status === "open";
+    }
+
+    function chip(name) {
+      const node = document.createElement("div");
+      node.className = "chip";
+      node.textContent = name;
+      return node;
+    }
+
+    function commit(next) {
+      room = next;
+      writeRoom(storage, room);
+      paint();
+    }
+
+    function push(side) {
+      const result = pileOn(room, side);
+      if (!result.ok) return;
+      const btn = side === "left" ? leftBtn : rightBtn;
+      btn.classList.add("hot");
+      setTimeout(() => btn.classList.remove("hot"), 120);
+      commit(result.state);
+    }
+
+    leftBtn.addEventListener("click", () => push("left"));
+    rightBtn.addEventListener("click", () => push("right"));
+    again.addEventListener("click", () => commit(resetPile(room).state));
+    window.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      if (key === "f") push("left");
+      if (key === "j") push("right");
+    });
+    paint();
+  </script>
+</body>
+</html>
