@@ -1,4 +1,4 @@
-export const VERSION = 1;
+export const VERSION = 2;
 export const GOAL = 5;
 export const VIBE_CAP = 8;
 export const WALL_SHOW = 4;
@@ -53,7 +53,15 @@ function dropFrom(id) {
 }
 
 function openPile() {
-  return { goal: GOAL, leftScore: 0, rightScore: 0, status: "open", winner: null };
+  return { goal: GOAL, leftScore: 0, rightScore: 0, status: "open", winner: null, game: null };
+}
+
+function freshLine() {
+  return { leftText: "", rightText: "", leftVotes: 0, rightVotes: 0 };
+}
+
+function freshLane() {
+  return { mark: 64, leftTap: null, rightTap: null };
 }
 
 export function seedRoom() {
@@ -69,6 +77,8 @@ export function seedRoom() {
     ],
     drop: dropFrom("bold"),
     pile: openPile(),
+    line: freshLine(),
+    lane: freshLane(),
     vibes: [
       { handle: "nova", text: "This room is mean in a good way." },
       { handle: "kit", text: "Need a drum bus that isn’t polite." },
@@ -102,6 +112,20 @@ function inRoom(state, key) {
   return state.people.some((person) => person.handle === key);
 }
 
+function sideOf(side) {
+  return side === "left" || side === "right" ? side : null;
+}
+
+function otherGame(state, game) {
+  return state.pile.game && state.pile.game !== game;
+}
+
+function roundOpen(state, game) {
+  if (state.pile.status !== "open") return "This round is already called.";
+  if (otherGame(state, game)) return "Another game is already on.";
+  return null;
+}
+
 export function join(state, input) {
   const handle = handleKey(input?.handle);
   const link = String(input?.link ?? "").trim().slice(0, 64);
@@ -133,6 +157,8 @@ export function focusDrop(state, id) {
   const next = clone(state);
   next.drop = { ...item, holder: null };
   next.pile = openPile();
+  next.line = freshLine();
+  next.lane = freshLane();
   return ok(next);
 }
 
@@ -140,7 +166,7 @@ export function lockDrop(state, handle) {
   const key = handleKey(handle);
   if (!key || !inRoom(state, key)) return fail(state, "Get in first.");
   if (state.pile.status !== "open") return fail(state, "This round is already called.");
-  if (state.pile.leftScore + state.pile.rightScore > 0) return fail(state, "Versus already started.");
+  if (state.pile.game) return fail(state, "Versus already started.");
   const next = clone(state);
   next.drop = { ...next.drop, holder: key };
   next.pile = { ...next.pile, status: "locked", winner: null };
@@ -148,9 +174,11 @@ export function lockDrop(state, handle) {
 }
 
 export function pileOn(state, side) {
-  if (side !== "left" && side !== "right") return fail(state, "Pick a side.");
-  if (state.pile.status !== "open") return fail(state, "This round is already called.");
+  if (!sideOf(side)) return fail(state, "Pick a side.");
+  const blocked = roundOpen(state, "pile");
+  if (blocked) return fail(state, blocked);
   const next = clone(state);
+  next.pile.game = "pile";
   const scoreKey = side === "left" ? "leftScore" : "rightScore";
   next.pile[scoreKey] += 1;
   if (next.pile[scoreKey] >= next.pile.goal) {
@@ -165,7 +193,77 @@ export function pileOn(state, side) {
 export function resetPile(state) {
   const next = clone(state);
   next.pile = openPile();
+  next.line = freshLine();
+  next.lane = freshLane();
   next.drop = { ...next.drop, holder: null };
+  return ok(next);
+}
+
+export function enterLine(state, side, text) {
+  if (!sideOf(side)) return fail(state, "Pick a side.");
+  const blocked = roundOpen(state, "line");
+  if (blocked) return fail(state, blocked);
+  if (state.line.leftVotes + state.line.rightVotes > 0) return fail(state, "Voting already started.");
+  const line = String(text ?? "").trim().replace(/\s+/g, " ");
+  if (!line) return fail(state, "Say something.");
+  if (line.length > 80) return fail(state, "Keep it to one line.");
+  const next = clone(state);
+  next.pile.game = "line";
+  next.line[side === "left" ? "leftText" : "rightText"] = line;
+  return ok(next);
+}
+
+export function voteLine(state, side) {
+  if (!sideOf(side)) return fail(state, "Pick a side.");
+  const blocked = roundOpen(state, "line");
+  if (blocked) return fail(state, blocked);
+  if (!state.line.leftText || !state.line.rightText) return fail(state, "Both lines have to be up.");
+  const next = clone(state);
+  const voteKey = side === "left" ? "leftVotes" : "rightVotes";
+  next.line[voteKey] += 1;
+  if (next.line[voteKey] >= GOAL) {
+    next.line[voteKey] = GOAL;
+    next.pile.status = "won";
+    next.pile.winner = side;
+    next.drop = { ...next.drop, holder: SIDES[side].id };
+  }
+  return ok(next);
+}
+
+export function armLane(state, mark) {
+  const blocked = roundOpen(state, "lane");
+  if (blocked) return fail(state, blocked);
+  if (state.lane.leftTap != null || state.lane.rightTap != null) return fail(state, "The lane already moved.");
+  const spot = Number(mark);
+  if (!Number.isFinite(spot) || spot < 0 || spot > 100) return fail(state, "The mark has to sit on the lane.");
+  const next = clone(state);
+  next.lane.mark = spot;
+  return ok(next);
+}
+
+export function tapLane(state, side, position) {
+  if (!sideOf(side)) return fail(state, "Pick a side.");
+  const blocked = roundOpen(state, "lane");
+  if (blocked) return fail(state, blocked);
+  const spot = Number(position);
+  if (!Number.isFinite(spot) || spot < 0 || spot > 100) return fail(state, "That tap missed the lane.");
+  const tapKey = side === "left" ? "leftTap" : "rightTap";
+  if (state.lane[tapKey] != null) return fail(state, "Already tapped.");
+  const next = clone(state);
+  next.pile.game = "lane";
+  next.lane[tapKey] = spot;
+  if (next.lane.leftTap == null || next.lane.rightTap == null) return ok(next);
+  const leftDistance = Math.abs(next.lane.leftTap - next.lane.mark);
+  const rightDistance = Math.abs(next.lane.rightTap - next.lane.mark);
+  if (leftDistance === rightDistance) {
+    next.lane.leftTap = null;
+    next.lane.rightTap = null;
+    return ok(next);
+  }
+  const winner = leftDistance < rightDistance ? "left" : "right";
+  next.pile.status = "won";
+  next.pile.winner = winner;
+  next.drop = { ...next.drop, holder: SIDES[winner].id };
   return ok(next);
 }
 
@@ -176,12 +274,25 @@ export function pileLine(state) {
   return `${drop.name} is up.`;
 }
 
+export function roundLine(state) {
+  const { pile, drop, line } = state;
+  if (pile.status !== "open") return pileLine(state);
+  if (pile.game === "pile") return `Pile ${pile.leftScore}–${pile.rightScore}. ${drop.name} is up.`;
+  if (pile.game === "line") {
+    return line.leftText && line.rightText
+      ? `Best line ${line.leftVotes}–${line.rightVotes}. ${drop.name} is up.`
+      : `Best line is open. ${drop.name} is up.`;
+  }
+  if (pile.game === "lane") return `The lane is live. ${drop.name} is up.`;
+  return `${drop.name} is up.`;
+}
+
 export function wall(state) {
   return state.vibes.slice(0, WALL_SHOW);
 }
 
 export function revive(raw) {
-  if (!raw || raw.version !== VERSION || !Array.isArray(raw.people) || !raw.pile || !raw.drop) return seedRoom();
+  if (!raw || (raw.version !== 1 && raw.version !== VERSION) || !Array.isArray(raw.people) || !raw.pile || !raw.drop) return seedRoom();
   const drop = CATALOG.find((item) => item.id === raw.drop.id);
   if (!drop) return seedRoom();
   const goal = GOAL;
@@ -192,6 +303,10 @@ export function revive(raw) {
   let winner = raw.pile.winner === "left" || raw.pile.winner === "right" ? raw.pile.winner : null;
   if (status === "won" && !winner) status = "open";
   if (status !== "won") winner = null;
+  let game = raw.pile.game;
+  if (game !== "pile" && game !== "line" && game !== "lane") game = null;
+  if (status === "open" && game == null && leftScore + rightScore > 0) game = "pile";
+  if (status !== "open" && game == null && winner) game = "pile";
   const people = raw.people
     .map((person) => ({ handle: handleKey(person?.handle), link: String(person?.link ?? "").slice(0, 64) }))
     .filter((person) => person.handle)
@@ -217,9 +332,38 @@ export function revive(raw) {
     you,
     people,
     drop: { ...drop, holder },
-    pile: { goal, leftScore, rightScore, status, winner },
+    pile: { goal, leftScore, rightScore, status, winner, game },
+    line: reviveLine(raw.line),
+    lane: reviveLane(raw.lane),
     vibes: vibes.length ? vibes : seedRoom().vibes,
   };
+}
+
+function reviveLine(raw) {
+  const line = freshLine();
+  if (!raw) return line;
+  line.leftText = String(raw.leftText ?? "").trim().slice(0, 80);
+  line.rightText = String(raw.rightText ?? "").trim().slice(0, 80);
+  line.leftVotes = clamp(raw.leftVotes, 0, GOAL);
+  line.rightVotes = clamp(raw.rightVotes, 0, GOAL);
+  return line;
+}
+
+function reviveLane(raw) {
+  const lane = freshLane();
+  if (!raw) return lane;
+  const mark = Number(raw.mark);
+  if (Number.isFinite(mark)) lane.mark = clamp(mark, 0, 100);
+  lane.leftTap = tapOrNull(raw.leftTap);
+  lane.rightTap = tapOrNull(raw.rightTap);
+  return lane;
+}
+
+function tapOrNull(value) {
+  if (value == null || value === "") return null;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return clamp(number, 0, 100);
 }
 
 function clamp(value, min, max) {

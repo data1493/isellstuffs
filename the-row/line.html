@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Best line — The Row</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070806;
+      --lime: #d8ff3e;
+      --ink: #e7f0d4;
+      --muted: #9aa58a;
+      --line: rgba(216, 255, 62, 0.28);
+      --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--mono); }
+    button, a, textarea { font: inherit; color: inherit; }
+    a { text-decoration: none; }
+    .top { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; }
+    .mark { font-family: var(--display); font-weight: 800; letter-spacing: 0.08em; color: var(--lime); font-size: 1.3rem; }
+    .rule { color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; }
+    .spacer { flex: 1; }
+    .back, .again, .primary { border: 1px solid var(--lime); background: transparent; color: var(--lime); padding: 0.5rem 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.72rem; cursor: pointer; }
+    .primary, .again { background: var(--lime); color: #111408; }
+    .board { min-height: calc(100svh - 3.4rem); display: grid; grid-template-columns: 1fr minmax(220px, 300px) 1fr; }
+    .side { display: flex; flex-direction: column; justify-content: flex-end; gap: 0.8rem; padding: 1.2rem 1rem 2rem; min-width: 0; }
+    .who { font-family: var(--display); font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.06em; text-transform: uppercase; color: var(--lime); }
+    .count { font-family: var(--display); font-weight: 800; font-size: clamp(4rem, 10vw, 7rem); line-height: 0.8; }
+    textarea { width: 100%; min-height: 7rem; background: #0c100b; border: 1px solid var(--line); padding: 0.7rem; resize: vertical; }
+    textarea:focus { outline: 1px solid var(--lime); }
+    .quote { border: 1px solid var(--line); padding: 1rem; min-height: 7rem; text-align: left; cursor: pointer; background: transparent; }
+    .quote:hover, .quote:focus-visible, .side.hot .quote { border-color: var(--lime); outline: none; }
+    .side.winner .quote { background: rgba(216, 255, 62, 0.12); }
+    .center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem 0.8rem 2rem; border-left: 1px solid var(--line); border-right: 1px solid var(--line); text-align: center; }
+    .prize { width: min(220px, 100%); background: #efe6c8; color: #1b1d14; padding: 0.9rem 0.8rem; }
+    .prize b { display: block; font-family: var(--display); font-size: 2rem; line-height: 0.9; text-transform: uppercase; margin-top: 0.25rem; }
+    .prize span, .hint { letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.68rem; }
+    .status { color: var(--muted); min-height: 2.8rem; }
+    .status.won { color: var(--lime); }
+    .again[hidden], .vote[hidden], .draft[hidden] { display: none; }
+    .hint { color: var(--muted); margin: 0; }
+    @media (max-width: 800px) {
+      .board { grid-template-columns: 1fr; }
+      .center { border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="mark" href="/">The Row</a>
+    <span class="rule">Best line · first to 5</span>
+    <span class="spacer"></span>
+    <a class="back" href="/">The room</a>
+  </header>
+  <main class="board">
+    <section class="side" id="left">
+      <form class="draft" id="leftForm">
+        <textarea id="leftText" maxlength="80" placeholder="Nova’s line" required></textarea>
+        <button class="primary" type="submit">Drop it</button>
+      </form>
+      <button class="quote vote" id="leftVote" type="button" hidden></button>
+      <div class="count" id="leftCount">0</div>
+      <div class="who">Nova</div>
+    </section>
+    <div class="center">
+      <div class="prize"><span>Tonight’s drop</span><b id="prizeName">Bold Condensed</b></div>
+      <p class="status" id="status">Two lines. The room taps the one that hits.</p>
+      <button class="again" id="again" type="button" hidden>Run it again</button>
+      <p class="hint">F nova · J jun, once both lines are up</p>
+    </div>
+    <section class="side" id="right">
+      <form class="draft" id="rightForm">
+        <textarea id="rightText" maxlength="80" placeholder="Jun’s line" required></textarea>
+        <button class="primary" type="submit">Drop it</button>
+      </form>
+      <button class="quote vote" id="rightVote" type="button" hidden></button>
+      <div class="count" id="rightCount">0</div>
+      <div class="who">Jun</div>
+    </section>
+  </main>
+  <script type="module">
+    import { enterLine, voteLine, resetPile, roundLine } from "./js/room.mjs";
+    import { readRoom, writeRoom } from "./js/persist.mjs";
+
+    const storage = localStorage;
+    let room = readRoom(storage);
+    const status = document.querySelector("#status");
+    const again = document.querySelector("#again");
+
+    function commit(next) {
+      room = next;
+      writeRoom(storage, room);
+      paint();
+    }
+
+    function paint() {
+      const ready = room.line.leftText && room.line.rightText;
+      const called = room.pile.status !== "open";
+      const blocked = room.pile.game && room.pile.game !== "line";
+      document.querySelector("#prizeName").textContent = room.drop.name;
+      document.querySelector("#leftCount").textContent = String(room.line.leftVotes);
+      document.querySelector("#rightCount").textContent = String(room.line.rightVotes);
+      document.querySelector("#leftForm").hidden = ready || called || blocked;
+      document.querySelector("#rightForm").hidden = ready || called || blocked;
+      const leftVote = document.querySelector("#leftVote");
+      const rightVote = document.querySelector("#rightVote");
+      leftVote.hidden = !ready;
+      rightVote.hidden = !ready;
+      leftVote.textContent = room.line.leftText;
+      rightVote.textContent = room.line.rightText;
+      document.querySelector("#left").classList.toggle("winner", room.pile.winner === "left");
+      document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
+      status.textContent = blocked ? roundLine(room) : called ? roundLine(room) : ready ? "Tap the line that hits." : "Drop a line for each side.";
+      status.classList.toggle("won", called);
+      again.hidden = room.pile.status === "open";
+    }
+
+    function flash(side) {
+      const node = document.querySelector(side === "left" ? "#left" : "#right");
+      node.classList.add("hot");
+      setTimeout(() => node.classList.remove("hot"), 120);
+    }
+
+    document.querySelector("#leftForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const result = enterLine(room, "left", document.querySelector("#leftText").value);
+      if (!result.ok) { status.textContent = result.error; return; }
+      commit(result.state);
+    });
+    document.querySelector("#rightForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const result = enterLine(room, "right", document.querySelector("#rightText").value);
+      if (!result.ok) { status.textContent = result.error; return; }
+      commit(result.state);
+    });
+    document.querySelector("#leftVote").addEventListener("click", () => vote("left"));
+    document.querySelector("#rightVote").addEventListener("click", () => vote("right"));
+    again.addEventListener("click", () => commit(resetPile(room).state));
+    window.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      if (event.target.matches("textarea")) return;
+      if (key === "f") vote("left");
+      if (key === "j") vote("right");
+    });
+
+    function vote(side) {
+      const result = voteLine(room, side);
+      if (!result.ok) { status.textContent = result.error; return; }
+      flash(side);
+      commit(result.state);
+    }
+
+    paint();
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The lane — The Row</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070806;
+      --lime: #d8ff3e;
+      --ink: #e7f0d4;
+      --muted: #9aa58a;
+      --line: rgba(216, 255, 62, 0.28);
+      --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--mono); }
+    button, a { font: inherit; color: inherit; }
+    a { text-decoration: none; }
+    .top { position: absolute; z-index: 2; inset: 0 0 auto 0; display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; }
+    .mark { font-family: var(--display); font-weight: 800; letter-spacing: 0.08em; color: var(--lime); font-size: 1.3rem; }
+    .rule { color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; }
+    .spacer { flex: 1; }
+    .back, .again { border: 1px solid var(--lime); color: var(--lime); padding: 0.45rem 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.72rem; }
+    .again { background: var(--lime); color: #111408; cursor: pointer; }
+    .again[hidden] { display: none; }
+    .board { height: 100svh; display: grid; grid-template-columns: 1fr minmax(280px, 520px) 1fr; }
+    .side { border: 0; background: transparent; color: inherit; cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 0.45rem; padding: 5rem 1rem 2.4rem; }
+    .side:hover, .side:focus-visible, .side.hot { background: rgba(216, 255, 62, 0.08); outline: none; }
+    .side.winner { background: rgba(216, 255, 62, 0.16); }
+    .who { font-family: var(--display); font-size: clamp(2rem, 4vw, 3.2rem); color: var(--lime); letter-spacing: 0.06em; text-transform: uppercase; }
+    .off { color: var(--muted); min-height: 1.2rem; font-size: 0.78rem; }
+    .center { display: flex; flex-direction: column; justify-content: center; gap: 1.2rem; padding: 5rem 1rem 2rem; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+    .prize { background: #efe6c8; color: #1b1d14; padding: 0.8rem; text-align: center; }
+    .prize b { display: block; font-family: var(--display); font-size: 1.8rem; line-height: 0.9; text-transform: uppercase; }
+    .prize span, .hint { letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.68rem; }
+    .track { position: relative; height: 18px; background: #1c2414; }
+    .tick, .pip { position: absolute; top: -8px; width: 4px; height: 34px; background: var(--lime); }
+    .pip { width: 14px; margin-left: -7px; }
+    .status { margin: 0; text-align: center; color: var(--muted); }
+    .status.won { color: var(--lime); }
+    .hint { position: absolute; left: 0; right: 0; bottom: 0.8rem; text-align: center; color: var(--muted); }
+    @media (max-width: 800px) {
+      body { overflow: auto; }
+      .board { height: auto; min-height: 100svh; grid-template-columns: 1fr 1fr; grid-template-areas: "center center" "left right"; }
+      .center { grid-area: center; border: 0; border-bottom: 1px solid var(--line); }
+      #left { grid-area: left; }
+      #right { grid-area: right; }
+      .hint { position: static; padding: 1rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pip { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="mark" href="/">The Row</a>
+    <span class="rule">The lane · closest tap</span>
+    <span class="spacer"></span>
+    <a class="back" href="/">The room</a>
+  </header>
+  <main class="board">
+    <button class="side" id="left" type="button"><div class="off" id="leftOff"></div><div class="who">Nova</div></button>
+    <div class="center">
+      <div class="prize"><span>Tonight’s drop</span><b id="prizeName">Bold Condensed</b></div>
+      <div class="track" id="track"><i class="tick" id="tick"></i><i class="pip" id="pip"></i></div>
+      <p class="status" id="status">Tap when the pip hits the mark.</p>
+      <button class="again" id="again" type="button" hidden>Run it again</button>
+    </div>
+    <button class="side" id="right" type="button"><div class="off" id="rightOff"></div><div class="who">Jun</div></button>
+  </main>
+  <p class="hint">F nova · J jun</p>
+  <script type="module">
+    import { armLane, tapLane, resetPile, roundLine } from "./js/room.mjs";
+    import { readRoom, writeRoom } from "./js/persist.mjs";
+
+    const storage = localStorage;
+    let room = readRoom(storage);
+    let spot = 0;
+    let frame = 0;
+    const status = document.querySelector("#status");
+    const pip = document.querySelector("#pip");
+    const tick = document.querySelector("#tick");
+    const again = document.querySelector("#again");
+
+    function commit(next) {
+      room = next;
+      writeRoom(storage, room);
+      paint();
+    }
+
+    function distance(tap) {
+      if (tap == null) return "waiting";
+      const off = Math.abs(tap - room.lane.mark);
+      return `${Math.round(off)} off`;
+    }
+
+    function paint() {
+      const blocked = room.pile.game && room.pile.game !== "lane";
+      const called = room.pile.status !== "open";
+      document.querySelector("#prizeName").textContent = room.drop.name;
+      tick.style.left = `${room.lane.mark}%`;
+      document.querySelector("#leftOff").textContent = distance(room.lane.leftTap);
+      document.querySelector("#rightOff").textContent = distance(room.lane.rightTap);
+      document.querySelector("#left").classList.toggle("winner", room.pile.winner === "left");
+      document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
+      status.textContent = blocked ? roundLine(room) : called ? roundLine(room) : "Tap when the pip hits the mark.";
+      status.classList.toggle("won", called);
+      again.hidden = !called;
+      if (called || blocked) stop();
+      else run();
+    }
+
+    function run() {
+      if (frame) return;
+      const loop = (now) => {
+        const swing = (now % 2800) / 2800;
+        const ping = swing < 0.5 ? swing * 2 : 2 - swing * 2;
+        spot = ping * 100;
+        pip.style.left = `${spot}%`;
+        frame = requestAnimationFrame(loop);
+      };
+      frame = requestAnimationFrame(loop);
+    }
+
+    function stop() {
+      if (!frame) return;
+      cancelAnimationFrame(frame);
+      frame = 0;
+    }
+
+    function tap(side) {
+      const result = tapLane(room, side, Math.round(spot));
+      if (!result.ok) { status.textContent = result.error; return; }
+      document.querySelector(side === "left" ? "#left" : "#right").classList.add("hot");
+      commit(result.state);
+    }
+
+    document.querySelector("#left").addEventListener("click", () => tap("left"));
+    document.querySelector("#right").addEventListener("click", () => tap("right"));
+    again.addEventListener("click", () => {
+      stop();
+      const reset = resetPile(room).state;
+      const armed = armLane(reset, 20 + Math.floor(Math.random() * 61));
+      commit(armed.ok ? armed.state : reset);
+      run();
+    });
+    window.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      if (key === "f") tap("left");
+      if (key === "j") tap("right");
+    });
+
+    if (room.pile.status === "open" && (!room.pile.game || room.pile.game === "lane") && room.lane.leftTap == null && room.lane.rightTap == null) {
+      const armed = armLane(room, 20 + Math.floor(Math.random() * 61));
+      if (armed.ok) room = writeRoom(storage, armed.state);
+    }
+    paint();
+  </script>
+</body>
+</html>

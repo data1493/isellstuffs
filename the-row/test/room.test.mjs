@@ -8,7 +8,12 @@ import {
   lockDrop,
   pileOn,
   resetPile,
+  enterLine,
+  voteLine,
+  armLane,
+  tapLane,
   pileLine,
+  roundLine,
   wall,
   revive,
   VIBE_CAP,
@@ -115,6 +120,65 @@ test("revive drops a broken save and keeps a real round", () => {
   assert.equal(back.pile.rightScore, 1);
   assert.equal(back.pile.status, "open");
   assert.equal(back.drop.holder, null);
+});
+
+test("best line needs both lines, then first to five keeps the drop", () => {
+  let state = enterLine(seedRoom(), "left", "  mean in a good way ").state;
+  assert.equal(voteLine(state, "left").ok, false);
+  state = enterLine(state, "right", "too polite").state;
+  assert.equal(pileOn(state, "left").ok, false);
+  for (let i = 0; i < 6; i += 1) state = voteLine(state, "left").state;
+  assert.equal(state.line.leftVotes, 5);
+  assert.equal(state.pile.status, "won");
+  assert.equal(state.drop.holder, "nova");
+  assert.equal(enterLine(state, "right", "too late").ok, false);
+});
+
+test("a started line blocks a lock, and a started pile blocks a line", () => {
+  const lined = enterLine(seedRoom(), "left", "one line").state;
+  assert.equal(lockDrop(lined, "nova").ok, false);
+  const piled = pileOn(seedRoom(), "right").state;
+  assert.equal(enterLine(piled, "left", "nope").ok, false);
+  assert.equal(enterLine(seedRoom(), "left", "   ").ok, false);
+});
+
+test("the closer tap keeps the drop, and a tie runs the lane again", () => {
+  let state = armLane(seedRoom(), 40).state;
+  state = tapLane(state, "left", 44).state;
+  assert.equal(state.pile.status, "open");
+  assert.equal(tapLane(state, "left", 10).ok, false);
+  state = tapLane(state, "right", 90).state;
+  assert.equal(state.pile.winner, "left");
+  assert.equal(state.drop.holder, "nova");
+  assert.equal(roundLine(state), "Nova keeps Bold Condensed.");
+
+  let tie = armLane(seedRoom(), 50).state;
+  tie = tapLane(tie, "left", 40).state;
+  tie = tapLane(tie, "right", 60).state;
+  assert.equal(tie.pile.status, "open");
+  assert.equal(tie.lane.leftTap, null);
+  assert.equal(tie.lane.rightTap, null);
+  assert.equal(tie.pile.game, "lane");
+});
+
+test("reset clears every game, and an old save still revives", () => {
+  let state = enterLine(enterLine(seedRoom(), "left", "a").state, "right", "b").state;
+  state = resetPile(state).state;
+  assert.equal(state.pile.game, null);
+  assert.equal(state.line.leftText, "");
+  assert.equal(state.lane.leftTap, null);
+  const legacy = {
+    version: 1,
+    people: [{ handle: "nova", link: "" }],
+    drop: { id: "bold", holder: null },
+    pile: { leftScore: 2, rightScore: 0, status: "open", winner: null },
+    vibes: [{ handle: "nova", text: "still here" }],
+  };
+  const back = revive(legacy);
+  assert.equal(back.version, 2);
+  assert.equal(back.pile.leftScore, 2);
+  assert.equal(back.pile.game, "pile");
+  assert.equal(back.line.leftText, "");
 });
 
 test("the save adapter roundtrips through a storage object", () => {

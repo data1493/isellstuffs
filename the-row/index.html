@@ -365,7 +365,7 @@
       <a href="#live">Live</a>
       <a href="#drop">Drop</a>
       <a href="#vibes">Vibes</a>
-      <a href="/pile.html">Versus</a>
+      <a href="#versus">Versus</a>
     </nav>
     <div class="bar-spacer"></div>
     <button class="pass-btn" id="passBtn" type="button">Get in</button>
@@ -466,9 +466,13 @@
         <div class="still pit" role="img" aria-label="Two people facing off under a lime line"></div>
         <div class="panel">
           <p class="section-kicker">Versus</p>
-          <h2>Pile.</h2>
-          <p class="fine">Nova and Jun. First to five keeps Bold Condensed. Tap a side, or use F and J.</p>
-          <a class="primary" href="/pile.html">Play Pile</a>
+          <h2 id="versusName">Three ways.</h2>
+          <p class="fine">Same prize. One round. Nova and Jun.</p>
+          <div class="hero-actions">
+            <a class="primary" href="/pile.html">Pile</a>
+            <a class="ghost" href="/line.html">Best line</a>
+            <a class="ghost" href="/lane.html">The lane</a>
+          </div>
         </div>
       </div>
     </section>
@@ -494,7 +498,7 @@
   </footer>
 
   <script type="module">
-    import { CATALOG, SIDES, join, say, focusDrop, lockDrop, pileLine, wall } from "./js/room.mjs";
+    import { CATALOG, SIDES, join, say, focusDrop, lockDrop, roundLine, wall } from "./js/room.mjs";
     import { readRoom, writeRoom } from "./js/persist.mjs";
 
     const lane = document.querySelector("#lane");
@@ -533,13 +537,17 @@
       document.querySelector("#vibeTitle").textContent = latest?.text ?? "Late and a little mean.";
       document.querySelector("#vibeBy").textContent = latest ? latest.handle : "";
 
-      const score = `${room.pile.leftScore}–${room.pile.rightScore}`;
+      const score = room.pile.game === "line" && room.line.leftText && room.line.rightText
+        ? `${room.line.leftVotes}–${room.line.rightVotes}`
+        : `${room.pile.leftScore}–${room.pile.rightScore}`;
       document.querySelector("#versusTitle").textContent = room.pile.status === "won"
         ? SIDES[room.pile.winner].name
         : room.pile.status === "locked"
           ? "Locked"
-          : score;
-      document.querySelector("#versusFine").innerHTML = `${pileLine(room)} <a href="/pile.html" style="color:var(--lime)">Play Pile.</a>`;
+          : room.pile.game === "lane"
+            ? "Lane"
+            : score;
+      document.querySelector("#versusFine").textContent = roundLine(room);
 
       const notes = document.querySelector("#notes");
       notes.replaceChildren();
@@ -554,7 +562,7 @@
 
       const drop = room.drop;
       const held = drop.holder;
-      const canLock = room.pile.status === "open" && room.pile.leftScore + room.pile.rightScore === 0;
+      const canLock = room.pile.status === "open" && !room.pile.game;
       const lockLabel = held ? `${held} has it` : canLock ? "Lock it" : "Versus is on";
       slip.innerHTML = `
         <p class="section-kicker" style="color:#3d4a12">${drop.kicker}</p>

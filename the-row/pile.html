@@ -246,7 +246,7 @@
   <p class="hint">F nova · J jun</p>
 
   <script type="module">
-    import { SIDES, pileOn, resetPile, pileLine } from "./js/room.mjs";
+    import { SIDES, pileOn, resetPile, pileLine, roundLine } from "./js/room.mjs";
     import { readRoom, writeRoom } from "./js/persist.mjs";
 
     const leftBtn = document.querySelector("#left");
@@ -281,8 +281,11 @@
       rightStack.replaceChildren();
       SIDES.left.crew.slice(0, pile.leftScore).forEach((name) => leftStack.append(chip(name)));
       SIDES.right.crew.slice(0, pile.rightScore).forEach((name) => rightStack.append(chip(name)));
+      const other = pile.game && pile.game !== "pile";
       status.textContent = pile.status === "open"
-        ? `Tap a side. First to five keeps ${drop.name}.`
+        ? other
+          ? roundLine(room)
+          : `Tap a side. First to five keeps ${drop.name}.`
         : pileLine(room);
       status.classList.toggle("won", pile.status !== "open");
       prize.classList.toggle("to-left", pile.winner === "left");
@@ -306,6 +309,7 @@
     }
 
     function push(side) {
+      if (room.pile.game && room.pile.game !== "pile") return;
       const result = pileOn(room, side);
       if (!result.ok) return;
       const btn = side === "left" ? leftBtn : rightBtn;
