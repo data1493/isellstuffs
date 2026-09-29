@@ -76,24 +76,30 @@
       <div class="track" id="track"><i class="tick" id="tick"></i><i class="pip" id="pip"></i></div>
       <p class="status" id="status">Tap when the pip hits the mark.</p>
       <button class="again" id="again" type="button" hidden>Run it again</button>
+      <button class="again" id="stepOut" type="button" hidden>Step out</button>
+      <button class="again" id="lockSeat" type="button" hidden>Lock in</button>
     </div>
     <button class="side" id="right" type="button"><div class="off" id="rightOff"></div><div class="who">Jun</div></button>
   </main>
   <p class="hint">F nova · J jun</p>
   <script type="module">
-    import { armLane, tapLane, resetPile, roundLine } from "./js/room.mjs";
-    import { readRoom, writeRoom } from "./js/persist.mjs";
-    import { crowdOn, watchCrowd } from "./js/live.mjs";
-    import { followMatch, stampYou } from "./js/gate.mjs";
+    import { armLane, tapLane, resetPile, roundLine, linePlace } from "./js/room.mjs?v=3";
+    import { readRoom, writeRoom } from "./js/persist.mjs?v=3";
+    import { crowdOn, watchCrowd } from "./js/live.mjs?v=3";
+    import { stampYou, watchCall } from "./js/gate.mjs?v=3";
+    import { ensureTagStyle, flashSides, mineSide, paintWho, postRow } from "./js/watch.mjs?v=3";
 
     const storage = localStorage;
     let room = readRoom(storage);
+    let seen = null;
     let spot = 0;
     let frame = 0;
     const status = document.querySelector("#status");
     const pip = document.querySelector("#pip");
     const tick = document.querySelector("#tick");
     const again = document.querySelector("#again");
+    const stepOut = document.querySelector("#stepOut");
+    const lockSeat = document.querySelector("#lockSeat");
 
     function commit(next) {
       room = next;
@@ -108,24 +114,41 @@
     }
 
     function paint() {
+      ensureTagStyle();
       const blocked = room.pile.game && room.pile.game !== "lane";
       const called = room.pile.status !== "open";
+      const mine = mineSide(room, room.you);
       document.querySelector("#prizeName").textContent = room.drop.name;
+      paintWho("left", room);
+      paintWho("right", room);
       tick.style.left = `${room.lane.mark}%`;
       document.querySelector("#leftOff").textContent = blocked ? "–" : distance(room.lane.leftTap);
       document.querySelector("#rightOff").textContent = blocked ? "–" : distance(room.lane.rightTap);
       document.querySelector(".board").classList.toggle("blocked", blocked);
       document.querySelector("#left").classList.toggle("winner", room.pile.winner === "left");
       document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
-      document.querySelector(".hint").textContent = crowdOn() ? "Watching the room" : "F nova · J jun";
+      document.querySelector(".hint").textContent = crowdOn() ? (mine ? "You're in. Tap your side." : "Watching the room") : "F nova · J jun";
       status.textContent = blocked || called
         ? roundLine(room)
-        : crowdOn()
+        : crowdOn() && !mine
           ? "Watching this round."
-          : "Tap when the pip hits the mark.";
+          : crowdOn()
+            ? "Your seat. Tap when the pip hits the mark."
+            : "Tap when the pip hits the mark.";
       status.classList.toggle("won", called);
       status.classList.toggle("live", blocked);
-      again.hidden = !called;
+      const wonIt = room.pile.status === "won" && mine && room.pile.winner === mine;
+      if (crowdOn()) {
+        again.hidden = !wonIt;
+        again.textContent = "Run it back";
+        stepOut.hidden = !wonIt;
+        lockSeat.hidden = !room.you || Boolean(mine) || linePlace(room, room.you.handle) > 0;
+      } else {
+        again.hidden = !called;
+        again.textContent = "Run it again";
+        stepOut.hidden = true;
+        lockSeat.hidden = true;
+      }
       if (called || blocked) stop();
       else run();
     }
@@ -148,8 +171,15 @@
       frame = 0;
     }
 
-    function tap(side) {
-      if (crowdOn()) return;
+    async function tap(side) {
+      const you = readRoom(storage).you;
+      if (crowdOn()) {
+        if (mineSide(room, you) !== side) return;
+        document.querySelector(side === "left" ? "#left" : "#right").classList.add("hot");
+        const result = await postRow("/act", { handle: you.handle, kind: "tap", side, spot: Math.round(spot) });
+        if (!result.ok) status.textContent = result.error || "That tap missed.";
+        return;
+      }
       const result = tapLane(room, side, Math.round(spot));
       if (!result.ok) { status.textContent = result.error; return; }
       document.querySelector(side === "left" ? "#left" : "#right").classList.add("hot");
@@ -158,13 +188,28 @@
 
     document.querySelector("#left").addEventListener("click", () => tap("left"));
     document.querySelector("#right").addEventListener("click", () => tap("right"));
-    again.addEventListener("click", () => {
-      if (crowdOn()) return;
+    again.addEventListener("click", async () => {
+      const you = readRoom(storage).you;
+      if (crowdOn()) {
+        if (!you) return;
+        await postRow("/again", { handle: you.handle, stay: true });
+        return;
+      }
       stop();
       const reset = resetPile(room).state;
       const armed = armLane(reset, 20 + Math.floor(Math.random() * 61));
       commit(armed.ok ? armed.state : reset);
       run();
+    });
+    stepOut.addEventListener("click", async () => {
+      const you = readRoom(storage).you;
+      if (!you) return;
+      await postRow("/again", { handle: you.handle, stay: false });
+    });
+    lockSeat.addEventListener("click", async () => {
+      const you = readRoom(storage).you;
+      if (!you) return;
+      await postRow("/queue", { handle: you.handle, link: you.link, game: "lane" });
     });
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
@@ -173,7 +218,7 @@
     });
 
     function showYou() {
-      stampYou(readRoom(storage).you);
+      stampYou(readRoom(storage).you, room);
     }
 
     if (!crowdOn() && !readRoom(storage).you) {
@@ -181,10 +226,13 @@
     } else if (crowdOn()) {
       watchCrowd((next) => {
         const you = readRoom(storage).you;
-        room = you ? { ...next, you } : next;
+        const merged = you ? { ...next, you } : next;
+        flashSides(seen, merged);
+        seen = merged;
+        room = merged;
         showYou();
         paint();
-        followMatch({ room, here: "lane", crowd: true, you });
+        watchCall({ room, here: "lane", crowd: true, you });
       });
     } else {
       if (room.pile.status === "open" && (!room.pile.game || room.pile.game === "lane") && room.lane.leftTap == null && room.lane.rightTap == null) {
@@ -193,7 +241,7 @@
       }
       showYou();
       paint();
-      followMatch({ room, here: "lane", crowd: false, you: room.you });
+      watchCall({ room, here: "lane", crowd: false, you: room.you });
       window.addEventListener("pageshow", () => {
         if (!readRoom(storage).you) { location.replace("/#in"); return; }
         room = readRoom(storage);

@@ -1,4 +1,4 @@
-import { revive } from "./room.mjs";
+import { revive } from "./room.mjs?v=3";
 
 export function crowdOn() {
   return new URLSearchParams(location.search).get("crowd") === "1";

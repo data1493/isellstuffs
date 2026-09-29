@@ -241,6 +241,8 @@
       </div>
       <p class="status" id="status">Tap a side. First to five keeps the font.</p>
       <button class="again" id="again" type="button" hidden>Run it again</button>
+      <button class="again" id="stepOut" type="button" hidden>Step out</button>
+      <button class="again" id="lockSeat" type="button" hidden>Lock in</button>
     </div>
     <button class="side" id="right" type="button" aria-label="Pile onto Jun">
       <div class="stack" id="rightStack"></div>
@@ -251,10 +253,11 @@
   <p class="hint">F nova · J jun</p>
 
   <script type="module">
-    import { SIDES, pileOn, resetPile, pileLine, roundLine } from "./js/room.mjs";
-    import { readRoom, writeRoom } from "./js/persist.mjs";
-    import { crowdOn, watchCrowd } from "./js/live.mjs";
-    import { followMatch, stampYou } from "./js/gate.mjs";
+    import { pileOn, resetPile, pileLine, roundLine, linePlace } from "./js/room.mjs?v=3";
+    import { readRoom, writeRoom } from "./js/persist.mjs?v=3";
+    import { crowdOn, watchCrowd } from "./js/live.mjs?v=3";
+    import { stampYou, watchCall } from "./js/gate.mjs?v=3";
+    import { ensureTagStyle, flashSides, mineSide, paintWho, postRow } from "./js/watch.mjs?v=3";
 
     const leftBtn = document.querySelector("#left");
     const rightBtn = document.querySelector("#right");
@@ -267,27 +270,50 @@
     const status = document.querySelector("#status");
     const prize = document.querySelector("#prize");
     const again = document.querySelector("#again");
+    const stepOut = document.querySelector("#stepOut");
+    const lockSeat = document.querySelector("#lockSeat");
     const storage = localStorage;
     let room = readRoom(storage);
+    let seen = null;
 
     for (let i = 0; i < room.pile.goal; i += 1) {
       leftPips.appendChild(Object.assign(document.createElement("i"), { className: "pip" }));
       rightPips.appendChild(Object.assign(document.createElement("i"), { className: "pip" }));
     }
 
+    function paintSeats() {
+      const you = room.you;
+      const mine = mineSide(room, you);
+      const wonIt = room.pile.status === "won" && mine && room.pile.winner === mine;
+      if (crowdOn()) {
+        again.hidden = !wonIt;
+        again.textContent = "Run it back";
+        stepOut.hidden = !wonIt;
+        lockSeat.hidden = !you || Boolean(mine) || linePlace(room, you.handle) > 0;
+      } else {
+        again.hidden = room.pile.status === "open";
+        again.textContent = "Run it again";
+        stepOut.hidden = true;
+        lockSeat.hidden = true;
+      }
+    }
+
     function paint() {
+      ensureTagStyle();
       const { pile, drop } = room;
       leftCount.textContent = String(pile.leftScore);
       rightCount.textContent = String(pile.rightScore);
-      document.querySelector("#left .who").textContent = SIDES.left.name;
-      document.querySelector("#right .who").textContent = SIDES.right.name;
+      paintWho("left", room);
+      paintWho("right", room);
       prize.querySelector("b").textContent = drop.name;
       [...leftPips.children].forEach((pip, i) => pip.classList.toggle("on", i < pile.leftScore));
       [...rightPips.children].forEach((pip, i) => pip.classList.toggle("on", i < pile.rightScore));
       leftStack.replaceChildren();
       rightStack.replaceChildren();
-      SIDES.left.crew.slice(0, pile.leftScore).forEach((name) => leftStack.append(chip(name)));
-      SIDES.right.crew.slice(0, pile.rightScore).forEach((name) => rightStack.append(chip(name)));
+      const leftName = room.seats?.left || "nova";
+      const rightName = room.seats?.right || "jun";
+      for (let i = 0; i < pile.leftScore; i += 1) leftStack.append(chip(leftName));
+      for (let i = 0; i < pile.rightScore; i += 1) rightStack.append(chip(rightName));
       const other = Boolean(pile.game && pile.game !== "pile");
       document.querySelector(".board").classList.toggle("blocked", other);
       if (other) {
@@ -302,17 +328,19 @@
         ? roundLine(room)
         : pile.status !== "open"
           ? pileLine(room)
-          : crowdOn()
+          : crowdOn() && !mineSide(room, room.you)
             ? "Watching this round."
-            : `Tap a side. First to five keeps ${drop.name}.`;
+            : crowdOn()
+              ? "Your seat. First to five."
+              : `Tap a side. First to five keeps ${drop.name}.`;
       status.classList.toggle("won", pile.status !== "open");
       status.classList.toggle("live", other);
-      document.querySelector(".hint").textContent = crowdOn() ? "Watching the room" : "F nova · J jun";
+      document.querySelector(".hint").textContent = crowdOn() ? (mineSide(room, room.you) ? "You're in. Tap your side." : "Watching the room") : "F nova · J jun";
       prize.classList.toggle("to-left", pile.winner === "left");
       prize.classList.toggle("to-right", pile.winner === "right");
       leftBtn.classList.toggle("winner", pile.winner === "left");
       rightBtn.classList.toggle("winner", pile.winner === "right");
-      again.hidden = pile.status === "open";
+      paintSeats();
     }
 
     function chip(name) {
@@ -328,26 +356,49 @@
       paint();
     }
 
-    function push(side) {
-      if (crowdOn()) return;
+    async function push(side) {
       if (room.pile.game && room.pile.game !== "pile") {
         status.textContent = roundLine(room);
         status.classList.add("live");
+        return;
+      }
+      const you = readRoom(storage).you;
+      if (crowdOn()) {
+        if (mineSide(room, you) !== side) return;
+        const btn = side === "left" ? leftBtn : rightBtn;
+        btn.classList.add("hot");
+        setTimeout(() => btn.classList.remove("hot"), 460);
+        await postRow("/act", { handle: you.handle, kind: "pile", side });
         return;
       }
       const result = pileOn(room, side);
       if (!result.ok) return;
       const btn = side === "left" ? leftBtn : rightBtn;
       btn.classList.add("hot");
-      setTimeout(() => btn.classList.remove("hot"), 120);
+      setTimeout(() => btn.classList.remove("hot"), 460);
       commit(result.state);
     }
 
     leftBtn.addEventListener("click", () => push("left"));
     rightBtn.addEventListener("click", () => push("right"));
-    again.addEventListener("click", () => {
-      if (crowdOn()) return;
+    again.addEventListener("click", async () => {
+      const you = readRoom(storage).you;
+      if (crowdOn()) {
+        if (!you) return;
+        await postRow("/again", { handle: you.handle, stay: true });
+        return;
+      }
       commit(resetPile(room).state);
+    });
+    stepOut.addEventListener("click", async () => {
+      const you = readRoom(storage).you;
+      if (!you) return;
+      await postRow("/again", { handle: you.handle, stay: false });
+    });
+    lockSeat.addEventListener("click", async () => {
+      const you = readRoom(storage).you;
+      if (!you) return;
+      await postRow("/queue", { handle: you.handle, link: you.link, game: "pile" });
     });
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
@@ -355,7 +406,7 @@
       if (key === "j") push("right");
     });
     function showYou() {
-      stampYou(readRoom(storage).you);
+      stampYou(readRoom(storage).you, room);
     }
 
     if (!crowdOn() && !readRoom(storage).you) {
@@ -363,15 +414,18 @@
     } else if (crowdOn()) {
       watchCrowd((next) => {
         const you = readRoom(storage).you;
-        room = you ? { ...next, you } : next;
+        const merged = you ? { ...next, you } : next;
+        flashSides(seen, merged);
+        seen = merged;
+        room = merged;
         showYou();
         paint();
-        followMatch({ room, here: "pile", crowd: true, you });
+        watchCall({ room, here: "pile", crowd: true, you });
       });
     } else {
       showYou();
       paint();
-      followMatch({ room, here: "pile", crowd: false, you: room.you });
+      watchCall({ room, here: "pile", crowd: false, you: room.you });
       window.addEventListener("pageshow", () => {
         if (!readRoom(storage).you) { location.replace("/#in"); return; }
         room = readRoom(storage);

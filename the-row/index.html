@@ -524,10 +524,11 @@
   </footer>
 
   <script type="module">
-    import { CATALOG, SIDES, join, say, focusDrop, roundLine, wall } from "./js/room.mjs";
-    import { readRoom, writeRoom } from "./js/persist.mjs";
-    import { crowdOn, watchCrowd } from "./js/live.mjs";
-    import { enterMatch, followMatch } from "./js/gate.mjs";
+    import { CATALOG, SIDES, enqueue, join, linePlace, placeWord, say, focusDrop, roundLine, seatLabel, wall } from "./js/room.mjs?v=3";
+    import { readRoom, writeRoom } from "./js/persist.mjs?v=3";
+    import { crowdOn, watchCrowd } from "./js/live.mjs?v=3";
+    import { watchCall } from "./js/gate.mjs?v=3";
+    import { ensureTagStyle, fillTag, postRow } from "./js/watch.mjs?v=3";
 
     const lane = document.querySelector("#lane");
     const slip = document.querySelector("#slip");
@@ -545,7 +546,7 @@
 
     function headLine() {
       const { pile, line, drop } = room;
-      if (pile.status === "won") return SIDES[pile.winner].name;
+      if (pile.status === "won") return seatLabel(room, pile.winner);
       if (pile.status === "locked") return drop.holder || "Locked";
       if (pile.game === "line") return `${line.leftVotes}–${line.rightVotes}`;
       if (pile.game === "lane") return "Lane";
@@ -555,12 +556,14 @@
 
     function playLine() {
       const { pile, line } = room;
+      const left = seatLabel(room, "left");
+      const right = seatLabel(room, "right");
       if (pile.game === "line" && (line.leftText || line.rightText)) {
-        return `Nova  ${line.leftText || "…"}\nJun  ${line.rightText || "…"}`;
+        return `${left}  ${line.leftText || "…"}\n${right}  ${line.rightText || "…"}`;
       }
       if (pile.game === "lane") {
         const off = (tap) => (tap == null ? "waiting" : `${Math.round(Math.abs(tap - room.lane.mark))} off`);
-        return `Nova  ${off(room.lane.leftTap)}\nJun  ${off(room.lane.rightTap)}`;
+        return `${left}  ${off(room.lane.leftTap)}\n${right}  ${off(room.lane.rightTap)}`;
       }
       return "";
     }
@@ -580,6 +583,7 @@
     }
 
     function paint() {
+      ensureTagStyle();
       const crowd = crowdOn();
       const people = document.querySelector("#room");
       people.replaceChildren();
@@ -588,7 +592,7 @@
         const linked = person.link.startsWith("https://") || person.link.startsWith("http://");
         const chip = linked ? document.createElement("a") : document.createElement("span");
         chip.className = "chip";
-        chip.textContent = person.handle;
+        fillTag(chip, room, person.handle);
         if (linked) {
           chip.href = person.link;
           chip.target = "_blank";
@@ -611,7 +615,13 @@
       document.querySelector("#vibeTitle").textContent = latest?.text ?? "Late and a little mean.";
       document.querySelector("#vibeBy").textContent = latest ? latest.handle : "";
 
-      document.querySelector("#versusTitle").textContent = headLine();
+      const versusTitle = document.querySelector("#versusTitle");
+      if (room.pile.status === "won" && room.pile.winner) {
+        const champ = room.seats?.[room.pile.winner] || SIDES[room.pile.winner].id;
+        fillTag(versusTitle, room, champ);
+      } else {
+        versusTitle.textContent = headLine();
+      }
       document.querySelector("#versusFine").textContent = roundLine(room);
       const play = document.querySelector("#versusPlay");
       const playText = playLine();
@@ -640,24 +650,24 @@
         const note = document.createElement("article");
         note.className = "note";
         const who = document.createElement("b");
-        who.textContent = vibe.handle;
-        note.append(who, document.createTextNode(vibe.text));
+        fillTag(who, room, vibe.handle);
+        note.append(who, document.createTextNode(` ${vibe.text}`));
         notes.appendChild(note);
       }
 
       const drop = room.drop;
       const held = drop.holder;
-      const canLock = room.pile.status === "open" && !room.pile.game;
-      const live = room.pile.status === "open" && room.pile.game;
-      const lockLabel = room.you && canLock
-        ? "Lock in"
-        : canLock
-          ? "Get in to lock"
-          : room.you && live
-            ? "Into the match"
-            : held
-              ? `${held} has it`
-              : "Versus is on";
+      const mine = room.you?.handle;
+      const seated = mine && (room.seats?.left === mine || room.seats?.right === mine);
+      const place = mine ? linePlace(room, mine) : 0;
+      const lockLabel = !mine
+        ? "Get in to lock"
+        : seated
+          ? "You're in"
+          : place
+            ? `${placeWord(place)} in line`
+            : "Lock in";
+      const lineNames = (room.queue || []).map((item) => item.handle).join(", ");
       slip.innerHTML = `
         <p class="section-kicker" style="color:#3d4a12">${drop.kicker}</p>
         <h3>${drop.name}</h3>
@@ -668,17 +678,28 @@
           <div><span>Held by</span><span>${held ?? "open"}</span></div>
         </div>
         <button class="primary" id="takeBtn" type="button" style="width:100%">${lockLabel}</button>
+        <p class="fine" id="lineNote">${lineNames ? `In line: ${lineNames}` : "Lock in. The next open seat is yours."}</p>
       `;
       blurb.textContent = drop.blurb;
       const takeBtn = document.querySelector("#takeBtn");
-      takeBtn.disabled = room.pile.status !== "open" || (!room.you && !canLock);
+      takeBtn.disabled = Boolean(mine) && (Boolean(seated) || Boolean(place));
       takeBtn.addEventListener("click", () => {
         if (!room.you) {
           revealIn();
           return;
         }
-        if (room.pile.status !== "open") return;
-        enterMatch({ room, game: room.pile.game || "pile", crowd: watching });
+        if (seated || place) return;
+        const game = room.pile.game || "pile";
+        if (watching) {
+          postRow("/queue", { handle: room.you.handle, link: room.you.link, game });
+          return;
+        }
+        const result = enqueue(room, { handle: room.you.handle, link: room.you.link, game });
+        if (!result.ok) {
+          blurb.textContent = result.error;
+          return;
+        }
+        commit(result.state);
       });
 
       document.body.classList.toggle("is-in", Boolean(room.you));
@@ -688,7 +709,7 @@
       const vibeAs = document.querySelector("#vibeAs");
       const vibeFields = document.querySelectorAll("#vibeForm input, #vibeForm button");
       if (room.you) {
-        passBtn.textContent = room.you.handle;
+        fillTag(passBtn, room, room.you.handle);
         passBtn.classList.add("stamped");
         passMsg.textContent = `${room.you.handle} is in. ${room.you.link} is up. Keys stayed with you.`;
         vibeAs.hidden = false;
@@ -696,7 +717,7 @@
       } else {
         passBtn.textContent = "Get in";
         passBtn.classList.remove("stamped");
-        passMsg.textContent = watching ? "Check in. You’ll be pulled in when the match starts." : "You’re not in yet.";
+        passMsg.textContent = watching ? "Check in, then lock a seat. You’ll be pulled in." : "You’re not in yet.";
         vibeAs.hidden = true;
       }
       if (watching) {
@@ -706,7 +727,7 @@
       } else {
         vibeFields.forEach((field) => { field.disabled = false; });
       }
-      followMatch({ room, crowd: watching, you: room.you });
+      watchCall({ room, crowd: watching, you: room.you });
     }
 
     function revealIn() {
@@ -741,15 +762,11 @@
 
     document.querySelectorAll("[data-game]").forEach((link) => {
       link.addEventListener("click", (event) => {
-        const game = link.dataset.game || room.pile.game || "pile";
+        if (watching) return;
         if (!room.you) {
-          if (watching) return;
           event.preventDefault();
           revealIn();
-          return;
         }
-        event.preventDefault();
-        enterMatch({ room, game, crowd: watching });
       });
     });
 

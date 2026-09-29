@@ -1,6 +1,7 @@
 import {
   CATALOG,
   armLane,
+  crownOf,
   enterLine,
   focusDrop,
   join,
@@ -11,6 +12,8 @@ import {
   tapLane,
   voteLine,
 } from "./room.mjs";
+
+export const PULL_AFTER_MS = 20000;
 
 export const CROWD_SIZE = 22;
 const SPAN = 36;
@@ -135,7 +138,7 @@ export function fillRoom(state = seedRoom()) {
   return clearYou(next);
 }
 
-export function crowdBeat(state, beat) {
+function scriptedBeat(state, beat) {
   const phase = beat % SPAN;
   const round = Math.floor(beat / SPAN);
   const game = ["pile", "line", "lane"][round % 3];
@@ -156,6 +159,191 @@ export function crowdBeat(state, beat) {
   const played = play(next, game, phase, beat);
   next = played == null ? idle(next, phase, beat) : played;
   return { state: clearYou(next), beat: beat + 1 };
+}
+
+function isCast(handle) {
+  return Boolean(handle) && CAST.includes(handle);
+}
+
+function humanSeated(state) {
+  return [state.seats?.left, state.seats?.right].some((handle) => handle && !isCast(handle));
+}
+
+function waitingGuest(state) {
+  return (state.queue || []).find((item) => item.handle !== state.seats?.left && item.handle !== state.seats?.right) || null;
+}
+
+function holdingForHuman(state) {
+  if (state.pile.status !== "won" || !state.pile.winner) return false;
+  const handle = state.seats?.[state.pile.winner];
+  if (!handle || isCast(handle)) return false;
+  const choice = state.rematch?.[handle];
+  return choice !== "back" && choice !== "out";
+}
+
+function champSide(state) {
+  const crown = crownOf(state);
+  if (crown && state.seats?.left === crown) return "left";
+  if (crown && state.seats?.right === crown) return "right";
+  const left = state.streaks?.[state.seats?.left] || 0;
+  const right = state.streaks?.[state.seats?.right] || 0;
+  if (left === 0 && right === 0) return (state.pile.leftScore || 0) >= (state.pile.rightScore || 0) ? "left" : "right";
+  return left >= right ? "left" : "right";
+}
+
+function forceFinish(state) {
+  let next = state;
+  const game = next.pile.game || "pile";
+  let guard = 0;
+  while (next.pile.status === "open" && guard < 8) {
+    guard += 1;
+    const side = champSide(next);
+    if (game === "line") {
+      if (!next.line.leftText) next = apply(next, enterLine(next, "left", LEFT_LINES[0]));
+      if (!next.line.rightText) next = apply(next, enterLine(next, "right", RIGHT_LINES[0]));
+      const voted = apply(next, voteLine(next, side));
+      if (voted === next) break;
+      next = voted;
+      continue;
+    }
+    if (game === "lane") {
+      const mark = next.lane.mark;
+      if (next.lane.leftTap == null) next = apply(next, tapLane(next, "left", clampTap(mark - 7)));
+      if (next.pile.status === "open" && next.lane.rightTap == null) next = apply(next, tapLane(next, "right", clampTap(mark + 2)));
+      if (next.pile.status === "open") break;
+      continue;
+    }
+    const piled = apply(next, pileOn(next, side));
+    if (piled === next) break;
+    next = piled;
+  }
+  return next;
+}
+
+function fillBotSeats(state) {
+  const next = structuredClone(state);
+  next.seats = { left: next.seats?.left || null, right: next.seats?.right || null };
+  for (const side of ["left", "right"]) {
+    if (next.seats[side]) continue;
+    const handle = CAST.find((name) => name !== next.seats.left && name !== next.seats.right);
+    if (handle) next.seats[side] = handle;
+  }
+  return next;
+}
+
+function startRound(state, game, call) {
+  let next = resetPile(state).state;
+  next.pile.game = game || "pile";
+  next.rematch = {};
+  next.call = call || null;
+  if (next.pile.game === "lane") {
+    const armed = armLane(next, 36);
+    if (armed.ok) next = armed.state;
+  }
+  return next;
+}
+
+export function pullQueue(state, now = Date.now()) {
+  const waiting = waitingGuest(state);
+  if (!waiting) return state;
+  let next = state;
+  if (next.pile.status === "open") {
+    if (now - (waiting.at || 0) < PULL_AFTER_MS) return state;
+    next = forceFinish(next);
+    if (next.pile.status === "open") return state;
+  }
+  next = structuredClone(next);
+  const winSide = next.pile.winner === "left" || next.pile.winner === "right" ? next.pile.winner : champSide(next);
+  const loseSide = winSide === "left" ? "right" : "left";
+  if (next.rematch?.[next.seats?.[winSide]] === "out") next.seats[winSide] = null;
+  next.seats[loseSide] = null;
+  const seat = next.seats[loseSide] == null ? loseSide : next.seats.left == null ? "left" : "right";
+  next.seats[seat] = waiting.handle;
+  next.queue = (next.queue || []).filter((item) => item.handle !== waiting.handle);
+  next = fillBotSeats(next);
+  const game = waiting.game || "pile";
+  next = startRound(next, game, { handle: waiting.handle, game, at: now });
+  return next;
+}
+
+function boardIsFresh(state) {
+  return state.pile.leftScore + state.pile.rightScore === 0
+    && !state.line.leftText
+    && !state.line.rightText
+    && state.line.leftVotes + state.line.rightVotes === 0
+    && state.lane.leftTap == null
+    && state.lane.rightTap == null;
+}
+
+function botSide(state) {
+  if (isCast(state.seats?.left) && !isCast(state.seats?.right)) return "left";
+  if (isCast(state.seats?.right) && !isCast(state.seats?.left)) return "right";
+  if (isCast(state.seats?.left)) return "left";
+  if (isCast(state.seats?.right)) return "right";
+  return null;
+}
+
+function guestPlay(state, beat) {
+  const side = botSide(state);
+  if (!side) return state;
+  const game = state.pile.game || "pile";
+  if (game === "pile") return apply(state, pileOn(state, side));
+  if (game === "line") {
+    const key = side === "left" ? "leftText" : "rightText";
+    if (!state.line[key]) {
+      const lines = side === "left" ? LEFT_LINES : RIGHT_LINES;
+      return apply(state, enterLine(state, side, lines[beat % lines.length]));
+    }
+    if (state.line.leftText && state.line.rightText) return apply(state, voteLine(state, side));
+    return state;
+  }
+  const tapKey = side === "left" ? "leftTap" : "rightTap";
+  if (state.lane[tapKey] != null) return state;
+  const mark = state.lane.mark;
+  const spot = side === "left" ? mark - 6 : mark + 3;
+  return apply(state, tapLane(state, side, clampTap(spot)));
+}
+
+function guestBeat(state, beat, now) {
+  const guest = waitingGuest(state);
+  if (holdingForHuman(state)) {
+    if (guest && now - (guest.at || 0) >= PULL_AFTER_MS) return pullQueue(state, now);
+    return idle(state, beat % SPAN, beat);
+  }
+  if (state.pile.status !== "open") {
+    if (guest) return pullQueue(state, now);
+    if (state.pile.status === "won") {
+      const game = state.call?.game || state.pile.game || "pile";
+      return startRound(fillBotSeats(state), game, null);
+    }
+    return idle(state, beat % SPAN, beat);
+  }
+  let next = state;
+  if (next.call && now - next.call.at >= 4500) {
+    next = structuredClone(next);
+    next.call = null;
+  }
+  if (state.call && now - state.call.at < 4500 && boardIsFresh(state)) return next;
+  if (beat % 3 !== 0) return next;
+  return guestPlay(next, beat);
+}
+
+export function crowdBeat(state, beat, now = Date.now()) {
+  if (humanSeated(state) && holdingForHuman(state)) {
+    return { state: clearYou(guestBeat(state, beat, now)), beat: beat + 1 };
+  }
+  const guest = waitingGuest(state);
+  if (guest) {
+    const age = now - (guest.at || 0);
+    if (state.pile.status !== "open" || age >= PULL_AFTER_MS) {
+      const pulled = pullQueue(state, now);
+      if (pulled !== state) return { state: clearYou(pulled), beat: beat + 1 };
+    }
+  }
+  let next = state;
+  if (!humanSeated(next) && (!next.seats?.left || !next.seats?.right)) next = fillBotSeats(next);
+  if (humanSeated(next)) return { state: clearYou(guestBeat(next, beat, now)), beat: beat + 1 };
+  return scriptedBeat(next, beat);
 }
 
 function idle(state, phase, beat) {
