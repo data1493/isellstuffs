@@ -43,7 +43,10 @@
     .tick, .pip { position: absolute; top: -8px; width: 4px; height: 34px; background: var(--lime); }
     .pip { width: 14px; margin-left: -7px; }
     .status { margin: 0; text-align: center; color: var(--muted); }
-    .status.won { color: var(--lime); }
+    .status.won, .status.live { color: var(--lime); }
+    .you-stamp { color: var(--lime); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; }
+    .you-stamp[hidden] { display: none; }
+    .board.blocked .side { opacity: 0.38; pointer-events: none; }
     .hint { position: absolute; left: 0; right: 0; bottom: 0.8rem; text-align: center; color: var(--muted); }
     @media (max-width: 800px) {
       body { overflow: auto; }
@@ -63,6 +66,7 @@
     <a class="mark" href="/">The Row</a>
     <span class="rule">The lane · closest tap</span>
     <span class="spacer"></span>
+    <span class="you-stamp" id="youStamp" hidden></span>
     <a class="back" href="/">The room</a>
   </header>
   <main class="board">
@@ -79,6 +83,8 @@
   <script type="module">
     import { armLane, tapLane, resetPile, roundLine } from "./js/room.mjs";
     import { readRoom, writeRoom } from "./js/persist.mjs";
+    import { crowdOn, watchCrowd } from "./js/live.mjs";
+    import { followMatch, stampYou } from "./js/gate.mjs";
 
     const storage = localStorage;
     let room = readRoom(storage);
@@ -91,7 +97,7 @@
 
     function commit(next) {
       room = next;
-      writeRoom(storage, room);
+      if (!crowdOn()) writeRoom(storage, room);
       paint();
     }
 
@@ -106,12 +112,19 @@
       const called = room.pile.status !== "open";
       document.querySelector("#prizeName").textContent = room.drop.name;
       tick.style.left = `${room.lane.mark}%`;
-      document.querySelector("#leftOff").textContent = distance(room.lane.leftTap);
-      document.querySelector("#rightOff").textContent = distance(room.lane.rightTap);
+      document.querySelector("#leftOff").textContent = blocked ? "–" : distance(room.lane.leftTap);
+      document.querySelector("#rightOff").textContent = blocked ? "–" : distance(room.lane.rightTap);
+      document.querySelector(".board").classList.toggle("blocked", blocked);
       document.querySelector("#left").classList.toggle("winner", room.pile.winner === "left");
       document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
-      status.textContent = blocked ? roundLine(room) : called ? roundLine(room) : "Tap when the pip hits the mark.";
+      document.querySelector(".hint").textContent = crowdOn() ? "Watching the room" : "F nova · J jun";
+      status.textContent = blocked || called
+        ? roundLine(room)
+        : crowdOn()
+          ? "Watching this round."
+          : "Tap when the pip hits the mark.";
       status.classList.toggle("won", called);
+      status.classList.toggle("live", blocked);
       again.hidden = !called;
       if (called || blocked) stop();
       else run();
@@ -136,6 +149,7 @@
     }
 
     function tap(side) {
+      if (crowdOn()) return;
       const result = tapLane(room, side, Math.round(spot));
       if (!result.ok) { status.textContent = result.error; return; }
       document.querySelector(side === "left" ? "#left" : "#right").classList.add("hot");
@@ -145,6 +159,7 @@
     document.querySelector("#left").addEventListener("click", () => tap("left"));
     document.querySelector("#right").addEventListener("click", () => tap("right"));
     again.addEventListener("click", () => {
+      if (crowdOn()) return;
       stop();
       const reset = resetPile(room).state;
       const armed = armLane(reset, 20 + Math.floor(Math.random() * 61));
@@ -157,11 +172,35 @@
       if (key === "j") tap("right");
     });
 
-    if (room.pile.status === "open" && (!room.pile.game || room.pile.game === "lane") && room.lane.leftTap == null && room.lane.rightTap == null) {
-      const armed = armLane(room, 20 + Math.floor(Math.random() * 61));
-      if (armed.ok) room = writeRoom(storage, armed.state);
+    function showYou() {
+      stampYou(readRoom(storage).you);
     }
-    paint();
+
+    if (!crowdOn() && !readRoom(storage).you) {
+      location.replace("/#in");
+    } else if (crowdOn()) {
+      watchCrowd((next) => {
+        const you = readRoom(storage).you;
+        room = you ? { ...next, you } : next;
+        showYou();
+        paint();
+        followMatch({ room, here: "lane", crowd: true, you });
+      });
+    } else {
+      if (room.pile.status === "open" && (!room.pile.game || room.pile.game === "lane") && room.lane.leftTap == null && room.lane.rightTap == null) {
+        const armed = armLane(room, 20 + Math.floor(Math.random() * 61));
+        if (armed.ok) room = writeRoom(storage, armed.state);
+      }
+      showYou();
+      paint();
+      followMatch({ room, here: "lane", crowd: false, you: room.you });
+      window.addEventListener("pageshow", () => {
+        if (!readRoom(storage).you) { location.replace("/#in"); return; }
+        room = readRoom(storage);
+        showYou();
+        paint();
+      });
+    }
   </script>
 </body>
 </html>

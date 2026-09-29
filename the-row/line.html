@@ -43,6 +43,10 @@
     .status { color: var(--muted); min-height: 2.8rem; }
     .status.won { color: var(--lime); }
     .again[hidden], .vote[hidden], .draft[hidden] { display: none; }
+    .you-stamp { color: var(--lime); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; }
+    .you-stamp[hidden] { display: none; }
+    .board.blocked .side { opacity: 0.38; pointer-events: none; }
+    .status.live { color: var(--lime); }
     .hint { color: var(--muted); margin: 0; }
     @media (max-width: 800px) {
       .board { grid-template-columns: 1fr; }
@@ -55,6 +59,7 @@
     <a class="mark" href="/">The Row</a>
     <span class="rule">Best line · first to 5</span>
     <span class="spacer"></span>
+    <span class="you-stamp" id="youStamp" hidden></span>
     <a class="back" href="/">The room</a>
   </header>
   <main class="board">
@@ -86,6 +91,8 @@
   <script type="module">
     import { enterLine, voteLine, resetPile, roundLine } from "./js/room.mjs";
     import { readRoom, writeRoom } from "./js/persist.mjs";
+    import { crowdOn, watchCrowd } from "./js/live.mjs";
+    import { followMatch, stampYou } from "./js/gate.mjs";
 
     const storage = localStorage;
     let room = readRoom(storage);
@@ -94,7 +101,7 @@
 
     function commit(next) {
       room = next;
-      writeRoom(storage, room);
+      if (!crowdOn()) writeRoom(storage, room);
       paint();
     }
 
@@ -103,20 +110,29 @@
       const called = room.pile.status !== "open";
       const blocked = room.pile.game && room.pile.game !== "line";
       document.querySelector("#prizeName").textContent = room.drop.name;
-      document.querySelector("#leftCount").textContent = String(room.line.leftVotes);
-      document.querySelector("#rightCount").textContent = String(room.line.rightVotes);
+      document.querySelector("#leftCount").textContent = blocked ? "–" : String(room.line.leftVotes);
+      document.querySelector("#rightCount").textContent = blocked ? "–" : String(room.line.rightVotes);
       document.querySelector("#leftForm").hidden = ready || called || blocked;
       document.querySelector("#rightForm").hidden = ready || called || blocked;
       const leftVote = document.querySelector("#leftVote");
       const rightVote = document.querySelector("#rightVote");
-      leftVote.hidden = !ready;
-      rightVote.hidden = !ready;
+      leftVote.hidden = blocked || !ready;
+      rightVote.hidden = blocked || !ready;
       leftVote.textContent = room.line.leftText;
       rightVote.textContent = room.line.rightText;
+      document.querySelector(".board").classList.toggle("blocked", blocked);
       document.querySelector("#left").classList.toggle("winner", room.pile.winner === "left");
       document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
-      status.textContent = blocked ? roundLine(room) : called ? roundLine(room) : ready ? "Tap the line that hits." : "Drop a line for each side.";
+      const hint = document.querySelector(".hint");
+      hint.hidden = blocked;
+      if (crowdOn()) hint.textContent = "Watching the room";
+      status.textContent = blocked || called
+        ? roundLine(room)
+        : crowdOn()
+          ? "Watching this round."
+          : ready ? "Tap the line that hits." : "Drop a line for each side.";
       status.classList.toggle("won", called);
+      status.classList.toggle("live", blocked);
       again.hidden = room.pile.status === "open";
     }
 
@@ -128,19 +144,24 @@
 
     document.querySelector("#leftForm").addEventListener("submit", (event) => {
       event.preventDefault();
+      if (crowdOn()) return;
       const result = enterLine(room, "left", document.querySelector("#leftText").value);
       if (!result.ok) { status.textContent = result.error; return; }
       commit(result.state);
     });
     document.querySelector("#rightForm").addEventListener("submit", (event) => {
       event.preventDefault();
+      if (crowdOn()) return;
       const result = enterLine(room, "right", document.querySelector("#rightText").value);
       if (!result.ok) { status.textContent = result.error; return; }
       commit(result.state);
     });
     document.querySelector("#leftVote").addEventListener("click", () => vote("left"));
     document.querySelector("#rightVote").addEventListener("click", () => vote("right"));
-    again.addEventListener("click", () => commit(resetPile(room).state));
+    again.addEventListener("click", () => {
+      if (crowdOn()) return;
+      commit(resetPile(room).state);
+    });
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
       if (event.target.matches("textarea")) return;
@@ -149,13 +170,38 @@
     });
 
     function vote(side) {
+      if (crowdOn()) return;
       const result = voteLine(room, side);
       if (!result.ok) { status.textContent = result.error; return; }
       flash(side);
       commit(result.state);
     }
 
-    paint();
+    function showYou() {
+      stampYou(readRoom(storage).you);
+    }
+
+    if (!crowdOn() && !readRoom(storage).you) {
+      location.replace("/#in");
+    } else if (crowdOn()) {
+      watchCrowd((next) => {
+        const you = readRoom(storage).you;
+        room = you ? { ...next, you } : next;
+        showYou();
+        paint();
+        followMatch({ room, here: "line", crowd: true, you });
+      });
+    } else {
+      showYou();
+      paint();
+      followMatch({ room, here: "line", crowd: false, you: room.you });
+      window.addEventListener("pageshow", () => {
+        if (!readRoom(storage).you) { location.replace("/#in"); return; }
+        room = readRoom(storage);
+        showYou();
+        paint();
+      });
+    }
   </script>
 </body>
 </html>

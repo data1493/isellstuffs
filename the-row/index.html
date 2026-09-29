@@ -91,6 +91,11 @@
     button:disabled { opacity: 0.45; cursor: default; }
     .ghost:hover { background: rgba(216, 255, 62, 0.1); }
 
+    body.crowd .hero {
+      min-height: 0;
+      padding: 5.2rem 1.25rem 1.1rem;
+    }
+    body.crowd h1 { font-size: clamp(3.1rem, 7vw, 4.8rem); }
     .hero {
       min-height: min(100svh, 880px);
       display: flex;
@@ -189,9 +194,12 @@
       cursor: pointer;
       text-align: left;
     }
-    .card:hover, .card:focus-visible {
+    .card:hover, .card:focus-visible, .card.is-live {
       border-color: var(--lime);
       outline: none;
+    }
+    .card.is-live {
+      background: linear-gradient(180deg, rgba(216,255,62,0.22), rgba(216,255,62,0.05));
     }
     .wave { height: 92px; margin: 0.4rem 0 0.8rem; }
     .card .name {
@@ -324,6 +332,20 @@
     }
     input:focus { outline: 1px solid var(--lime); border-color: var(--lime); }
     .fine { color: var(--muted); font-size: 0.78rem; }
+    #in { max-height: 48rem; overflow: hidden; transition: opacity 0.45s ease, max-height 0.5s ease, padding 0.5s ease; }
+    #heroIn { transition: opacity 0.45s ease, visibility 0.45s linear; }
+    body.is-in #in {
+      opacity: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      pointer-events: none;
+    }
+    body.is-in #heroIn { opacity: 0; visibility: hidden; pointer-events: none; }
+    body.is-in .pass-btn { cursor: default; }
+    #roomCount { color: var(--lime); letter-spacing: 0.14em; text-transform: uppercase; }
+    #versusPlay { white-space: pre-line; color: var(--ink); margin: 0.55rem 0 0; }
+    #versusGo { display: inline-block; margin-top: 0.55rem; color: var(--lime); letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.72rem; }
 
     footer {
       padding: 1.2rem 1.25rem 2rem;
@@ -379,7 +401,7 @@
         <p class="lede">People are already in. Grab a drop, leave a vibe, or pick a side in versus. The room keeps ten. You keep the rest.</p>
         <div class="hero-actions">
           <a class="primary" href="#live">See what’s live</a>
-          <a class="ghost" href="#in">Get in</a>
+          <a class="ghost" id="heroIn" href="#in">Get in</a>
         </div>
       </div>
     </section>
@@ -396,6 +418,7 @@
             <span class="chip">jun</span>
             <span class="chip">row</span>
           </div>
+          <p class="fine" id="roomCount" hidden></p>
         </article>
         <article>
           <p class="section-kicker">Tonight’s vibe</p>
@@ -405,7 +428,9 @@
         <article>
           <p class="section-kicker">Versus</p>
           <h2 id="versusTitle">0–0</h2>
-          <p class="fine" id="versusFine">Bold Condensed is up. <a href="/pile.html" style="color:var(--lime)">Play Pile.</a></p>
+          <p class="fine" id="versusFine">Bold Condensed is up.</p>
+          <p class="play" id="versusPlay" hidden></p>
+          <a id="versusGo" data-game="pile" href="/pile.html">Open pile</a>
         </article>
       </div>
     </section>
@@ -438,7 +463,7 @@
               <div><span>Room</span><span>10%</span></div>
               <div><span>You keep</span><span>0.0038</span></div>
             </div>
-            <button class="primary" id="takeBtn" type="button" style="width:100%">Lock it</button>
+            <button class="primary" id="takeBtn" type="button" style="width:100%">Get in to lock</button>
           </div>
         </div>
       </div>
@@ -451,6 +476,7 @@
           <h2>Say it short.</h2>
           <p class="fine">A handle and one line. This is why people stay. Drops are over on live.</p>
           <div class="notes" id="notes"></div>
+          <p class="fine" id="vibeAs" hidden></p>
           <form class="vibe-form" id="vibeForm">
             <input id="vibeText" maxlength="80" placeholder="One line" required>
             <button class="primary" type="submit">Drop it</button>
@@ -467,11 +493,11 @@
         <div class="panel">
           <p class="section-kicker">Versus</p>
           <h2 id="versusName">Three ways.</h2>
-          <p class="fine">Same prize. One round. Nova and Jun.</p>
+          <p class="fine" id="versusWhich">Same prize. One round. Nova and Jun.</p>
           <div class="hero-actions">
-            <a class="primary" href="/pile.html">Pile</a>
-            <a class="ghost" href="/line.html">Best line</a>
-            <a class="ghost" href="/lane.html">The lane</a>
+            <a class="primary" data-game="pile" href="/pile.html">Pile</a>
+            <a class="ghost" data-game="line" href="/line.html">Best line</a>
+            <a class="ghost" data-game="lane" href="/lane.html">The lane</a>
           </div>
         </div>
       </div>
@@ -498,8 +524,10 @@
   </footer>
 
   <script type="module">
-    import { CATALOG, SIDES, join, say, focusDrop, lockDrop, roundLine, wall } from "./js/room.mjs";
+    import { CATALOG, SIDES, join, say, focusDrop, roundLine, wall } from "./js/room.mjs";
     import { readRoom, writeRoom } from "./js/persist.mjs";
+    import { crowdOn, watchCrowd } from "./js/live.mjs";
+    import { enterMatch, followMatch } from "./js/gate.mjs";
 
     const lane = document.querySelector("#lane");
     const slip = document.querySelector("#slip");
@@ -507,7 +535,35 @@
     const passBtn = document.querySelector("#passBtn");
     const passMsg = document.querySelector("#passMsg");
     const storage = localStorage;
+    const watching = crowdOn();
+    if (watching) document.body.classList.add("crowd");
     let room = readRoom(storage);
+
+    const gamePage = { pile: "/pile.html", line: "/line.html", lane: "/lane.html" };
+    const gameLabel = { pile: "Open pile", line: "Open best line", lane: "Open the lane" };
+    const gameWhich = { pile: "Pile is the round.", line: "Best line is the round.", lane: "The lane is the round." };
+
+    function headLine() {
+      const { pile, line, drop } = room;
+      if (pile.status === "won") return SIDES[pile.winner].name;
+      if (pile.status === "locked") return drop.holder || "Locked";
+      if (pile.game === "line") return `${line.leftVotes}–${line.rightVotes}`;
+      if (pile.game === "lane") return "Lane";
+      if (pile.game === "pile") return `${pile.leftScore}–${pile.rightScore}`;
+      return "Open";
+    }
+
+    function playLine() {
+      const { pile, line } = room;
+      if (pile.game === "line" && (line.leftText || line.rightText)) {
+        return `Nova  ${line.leftText || "…"}\nJun  ${line.rightText || "…"}`;
+      }
+      if (pile.game === "lane") {
+        const off = (tap) => (tap == null ? "waiting" : `${Math.round(Math.abs(tap - room.lane.mark))} off`);
+        return `Nova  ${off(room.lane.leftTap)}\nJun  ${off(room.lane.rightTap)}`;
+      }
+      return "";
+    }
 
     function wave(seed) {
       const bars = Array.from({ length: 28 }, (_, i) => {
@@ -519,35 +575,64 @@
 
     function commit(next) {
       room = next;
-      writeRoom(storage, room);
+      if (!crowdOn()) writeRoom(storage, room);
       paint();
     }
 
     function paint() {
+      const crowd = crowdOn();
       const people = document.querySelector("#room");
       people.replaceChildren();
-      for (const person of room.people.slice(0, 8)) {
-        const chip = document.createElement("span");
+      const visible = crowd ? room.people : room.people.slice(0, 8);
+      for (const person of visible) {
+        const linked = person.link.startsWith("https://") || person.link.startsWith("http://");
+        const chip = linked ? document.createElement("a") : document.createElement("span");
         chip.className = "chip";
         chip.textContent = person.handle;
+        if (linked) {
+          chip.href = person.link;
+          chip.target = "_blank";
+          chip.rel = "noopener";
+        }
         people.appendChild(chip);
       }
+      if (!crowd && room.people.length > visible.length) {
+        const more = document.createElement("span");
+        more.className = "chip";
+        more.textContent = `+${room.people.length - visible.length}`;
+        people.appendChild(more);
+      }
+      const count = document.querySelector("#roomCount");
+      count.hidden = !crowd;
+      count.textContent = `${room.people.length} in`;
+      if (crowd) document.querySelector(".eyebrow").textContent = `${room.people.length} in the room`;
 
       const latest = room.vibes[0];
       document.querySelector("#vibeTitle").textContent = latest?.text ?? "Late and a little mean.";
       document.querySelector("#vibeBy").textContent = latest ? latest.handle : "";
 
-      const score = room.pile.game === "line" && room.line.leftText && room.line.rightText
-        ? `${room.line.leftVotes}–${room.line.rightVotes}`
-        : `${room.pile.leftScore}–${room.pile.rightScore}`;
-      document.querySelector("#versusTitle").textContent = room.pile.status === "won"
-        ? SIDES[room.pile.winner].name
-        : room.pile.status === "locked"
-          ? "Locked"
-          : room.pile.game === "lane"
-            ? "Lane"
-            : score;
+      document.querySelector("#versusTitle").textContent = headLine();
       document.querySelector("#versusFine").textContent = roundLine(room);
+      const play = document.querySelector("#versusPlay");
+      const playText = playLine();
+      play.hidden = !playText;
+      play.textContent = playText;
+      const liveGame = room.pile.game || "pile";
+      const go = document.querySelector("#versusGo");
+      go.textContent = gameLabel[liveGame];
+      go.dataset.game = liveGame;
+      go.href = watching ? `${gamePage[liveGame]}?crowd=1` : gamePage[liveGame];
+      document.querySelectorAll("[data-game]").forEach((link) => {
+        const on = link.dataset.game === liveGame;
+        link.classList.toggle("primary", on);
+        link.classList.toggle("ghost", !on);
+      });
+      document.querySelector("#versusWhich").textContent = room.pile.game
+        ? gameWhich[room.pile.game]
+        : "Same prize. One round. Nova and Jun.";
+      lane.querySelectorAll(".card").forEach((card, i) => {
+        card.classList.toggle("is-live", CATALOG[i].id === room.drop.id);
+      });
 
       const notes = document.querySelector("#notes");
       notes.replaceChildren();
@@ -563,7 +648,16 @@
       const drop = room.drop;
       const held = drop.holder;
       const canLock = room.pile.status === "open" && !room.pile.game;
-      const lockLabel = held ? `${held} has it` : canLock ? "Lock it" : "Versus is on";
+      const live = room.pile.status === "open" && room.pile.game;
+      const lockLabel = room.you && canLock
+        ? "Lock in"
+        : canLock
+          ? "Get in to lock"
+          : room.you && live
+            ? "Into the match"
+            : held
+              ? `${held} has it`
+              : "Versus is on";
       slip.innerHTML = `
         <p class="section-kicker" style="color:#3d4a12">${drop.kicker}</p>
         <h3>${drop.name}</h3>
@@ -577,27 +671,49 @@
       `;
       blurb.textContent = drop.blurb;
       const takeBtn = document.querySelector("#takeBtn");
-      takeBtn.disabled = !canLock;
+      takeBtn.disabled = room.pile.status !== "open" || (!room.you && !canLock);
       takeBtn.addEventListener("click", () => {
         if (!room.you) {
-          passMsg.textContent = "Get in first. The room needs a handle.";
-          document.querySelector("#in").scrollIntoView({ behavior: "smooth", block: "start" });
-          document.querySelector("#handle").focus();
+          revealIn();
           return;
         }
-        const result = lockDrop(room, room.you.handle);
-        if (!result.ok) {
-          blurb.textContent = result.error;
-          return;
-        }
-        commit(result.state);
+        if (room.pile.status !== "open") return;
+        enterMatch({ room, game: room.pile.game || "pile", crowd: watching });
       });
 
+      document.body.classList.toggle("is-in", Boolean(room.you));
+      const door = document.querySelector("#in");
+      door.inert = Boolean(room.you);
+      door.setAttribute("aria-hidden", room.you ? "true" : "false");
+      const vibeAs = document.querySelector("#vibeAs");
+      const vibeFields = document.querySelectorAll("#vibeForm input, #vibeForm button");
       if (room.you) {
         passBtn.textContent = room.you.handle;
         passBtn.classList.add("stamped");
         passMsg.textContent = `${room.you.handle} is in. ${room.you.link} is up. Keys stayed with you.`;
+        vibeAs.hidden = false;
+        vibeAs.textContent = watching ? `In as ${room.you.handle}. The wall is the room’s.` : `Posting as ${room.you.handle}`;
+      } else {
+        passBtn.textContent = "Get in";
+        passBtn.classList.remove("stamped");
+        passMsg.textContent = watching ? "Check in. You’ll be pulled in when the match starts." : "You’re not in yet.";
+        vibeAs.hidden = true;
       }
+      if (watching) {
+        document.querySelector(".hero .lede").textContent = "The round is live. Watch the drop, the wall, and versus.";
+        document.querySelector("#vibeMsg").textContent = room.you ? `The wall knows ${room.you.handle}.` : "The wall is moving.";
+        vibeFields.forEach((field) => { field.disabled = true; });
+      } else {
+        vibeFields.forEach((field) => { field.disabled = false; });
+      }
+      followMatch({ room, crowd: watching, you: room.you });
+    }
+
+    function revealIn() {
+      const door = document.querySelector("#in");
+      door.setAttribute("aria-hidden", "false");
+      door.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.querySelector("#handle").focus();
     }
 
     CATALOG.forEach((drop, i) => {
@@ -606,6 +722,7 @@
       btn.type = "button";
       btn.innerHTML = `${wave(i + 1)}<span class="meta">${drop.kicker}</span><span class="name">${drop.name}</span><span class="meta">${drop.detail}</span><span class="price">${drop.price}</span>`;
       btn.addEventListener("click", () => {
+        if (watching) return;
         const result = focusDrop(room, drop.id);
         if (!result.ok) {
           blurb.textContent = result.error;
@@ -618,18 +735,39 @@
     });
 
     passBtn.addEventListener("click", () => {
-      document.querySelector("#in").scrollIntoView({ behavior: "smooth", block: "start" });
-      document.querySelector("#handle").focus();
+      if (room.you) return;
+      revealIn();
+    });
+
+    document.querySelectorAll("[data-game]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const game = link.dataset.game || room.pile.game || "pile";
+        if (!room.you) {
+          if (watching) return;
+          event.preventDefault();
+          revealIn();
+          return;
+        }
+        event.preventDefault();
+        enterMatch({ room, game, crowd: watching });
+      });
     });
 
     document.querySelector("#passForm").addEventListener("submit", (event) => {
       event.preventDefault();
-      const result = join(room, {
+      const saved = watching ? readRoom(storage) : room;
+      const result = join(saved, {
         handle: document.querySelector("#handle").value,
         link: document.querySelector("#address").value,
       });
       if (!result.ok) {
         passMsg.textContent = result.error;
+        return;
+      }
+      if (watching) {
+        writeRoom(storage, result.state);
+        room = { ...room, you: result.state.you };
+        paint();
         return;
       }
       commit(result.state);
@@ -638,6 +776,10 @@
     document.querySelector("#vibeForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const msg = document.querySelector("#vibeMsg");
+      if (watching) {
+        msg.textContent = "The wall is moving.";
+        return;
+      }
       if (!room.you) {
         msg.textContent = "Get in first. The wall needs a handle.";
         return;
@@ -652,11 +794,19 @@
       commit(result.state);
     });
 
-    window.addEventListener("pageshow", () => {
-      room = readRoom(storage);
+    if (crowdOn()) {
+      watchCrowd((next) => {
+        const you = readRoom(storage).you;
+        room = you ? { ...next, you } : next;
+        paint();
+      });
+    } else {
+      window.addEventListener("pageshow", () => {
+        room = readRoom(storage);
+        paint();
+      });
       paint();
-    });
-    paint();
+    }
   </script>
 </body>
 </html>

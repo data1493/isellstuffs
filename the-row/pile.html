@@ -183,6 +183,10 @@
       cursor: pointer;
     }
     .again[hidden] { display: none; }
+    .you-stamp { color: var(--lime); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; }
+    .you-stamp[hidden] { display: none; }
+    .board.blocked .side { opacity: 0.38; pointer-events: none; }
+    .status.live { color: var(--lime); }
     .hint {
       position: absolute;
       left: 0; right: 0; bottom: 0.8rem;
@@ -215,6 +219,7 @@
     <a class="mark" href="/">The Row</a>
     <span class="rule">Pile · first to 5</span>
     <span class="spacer"></span>
+    <span class="you-stamp" id="youStamp" hidden></span>
     <a class="back" href="/">The room</a>
   </header>
 
@@ -248,6 +253,8 @@
   <script type="module">
     import { SIDES, pileOn, resetPile, pileLine, roundLine } from "./js/room.mjs";
     import { readRoom, writeRoom } from "./js/persist.mjs";
+    import { crowdOn, watchCrowd } from "./js/live.mjs";
+    import { followMatch, stampYou } from "./js/gate.mjs";
 
     const leftBtn = document.querySelector("#left");
     const rightBtn = document.querySelector("#right");
@@ -281,13 +288,26 @@
       rightStack.replaceChildren();
       SIDES.left.crew.slice(0, pile.leftScore).forEach((name) => leftStack.append(chip(name)));
       SIDES.right.crew.slice(0, pile.rightScore).forEach((name) => rightStack.append(chip(name)));
-      const other = pile.game && pile.game !== "pile";
-      status.textContent = pile.status === "open"
-        ? other
-          ? roundLine(room)
-          : `Tap a side. First to five keeps ${drop.name}.`
-        : pileLine(room);
+      const other = Boolean(pile.game && pile.game !== "pile");
+      document.querySelector(".board").classList.toggle("blocked", other);
+      if (other) {
+        leftCount.textContent = "–";
+        rightCount.textContent = "–";
+        [...leftPips.children].forEach((pip) => pip.classList.remove("on"));
+        [...rightPips.children].forEach((pip) => pip.classList.remove("on"));
+        leftStack.replaceChildren();
+        rightStack.replaceChildren();
+      }
+      status.textContent = other
+        ? roundLine(room)
+        : pile.status !== "open"
+          ? pileLine(room)
+          : crowdOn()
+            ? "Watching this round."
+            : `Tap a side. First to five keeps ${drop.name}.`;
       status.classList.toggle("won", pile.status !== "open");
+      status.classList.toggle("live", other);
+      document.querySelector(".hint").textContent = crowdOn() ? "Watching the room" : "F nova · J jun";
       prize.classList.toggle("to-left", pile.winner === "left");
       prize.classList.toggle("to-right", pile.winner === "right");
       leftBtn.classList.toggle("winner", pile.winner === "left");
@@ -304,12 +324,17 @@
 
     function commit(next) {
       room = next;
-      writeRoom(storage, room);
+      if (!crowdOn()) writeRoom(storage, room);
       paint();
     }
 
     function push(side) {
-      if (room.pile.game && room.pile.game !== "pile") return;
+      if (crowdOn()) return;
+      if (room.pile.game && room.pile.game !== "pile") {
+        status.textContent = roundLine(room);
+        status.classList.add("live");
+        return;
+      }
       const result = pileOn(room, side);
       if (!result.ok) return;
       const btn = side === "left" ? leftBtn : rightBtn;
@@ -320,13 +345,40 @@
 
     leftBtn.addEventListener("click", () => push("left"));
     rightBtn.addEventListener("click", () => push("right"));
-    again.addEventListener("click", () => commit(resetPile(room).state));
+    again.addEventListener("click", () => {
+      if (crowdOn()) return;
+      commit(resetPile(room).state);
+    });
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
       if (key === "f") push("left");
       if (key === "j") push("right");
     });
-    paint();
+    function showYou() {
+      stampYou(readRoom(storage).you);
+    }
+
+    if (!crowdOn() && !readRoom(storage).you) {
+      location.replace("/#in");
+    } else if (crowdOn()) {
+      watchCrowd((next) => {
+        const you = readRoom(storage).you;
+        room = you ? { ...next, you } : next;
+        showYou();
+        paint();
+        followMatch({ room, here: "pile", crowd: true, you });
+      });
+    } else {
+      showYou();
+      paint();
+      followMatch({ room, here: "pile", crowd: false, you: room.you });
+      window.addEventListener("pageshow", () => {
+        if (!readRoom(storage).you) { location.replace("/#in"); return; }
+        room = readRoom(storage);
+        showYou();
+        paint();
+      });
+    }
   </script>
 </body>
 </html>
