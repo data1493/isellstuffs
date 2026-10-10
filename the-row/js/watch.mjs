@@ -1,4 +1,4 @@
-import { tagMark } from "./room.mjs?v=3";
+import { CATALOG, tagMark } from "./room.mjs?v=6";
 
 export function mineSide(room, you) {
   if (!you?.handle) return null;
@@ -61,6 +61,44 @@ export function flashSides(prev, next) {
     node.classList.add("hot");
     window.setTimeout(() => node.classList.remove("hot"), 460);
   }
+}
+
+const bars = new Map();
+
+export function playBar(id) {
+  const item = CATALOG.find((drop) => drop.id === id);
+  if (!item?.bar) return;
+  let audio = bars.get(id);
+  if (!audio) {
+    audio = new Audio(item.bar);
+    audio.preload = "auto";
+    audio.hidden = true;
+    document.body.append(audio);
+    bars.set(id, audio);
+  }
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+}
+
+export function awardBar(before, after) {
+  if (!before || !after || before.pile?.status === "won" || after.pile?.status !== "won" || !after.pile?.winner) return;
+  const you = after.you?.handle;
+  const winner = after.seats?.[after.pile.winner];
+  if (!you || you !== winner) return;
+  playBar(after.drop?.id);
+}
+
+let moveChain = Promise.resolve();
+
+export function reportMove(body) {
+  moveChain = moveChain.then(async () => {
+    try {
+      return await postRow("/round", body);
+    } catch {
+      return null;
+    }
+  });
+  return moveChain;
 }
 
 export async function postRow(path, body) {

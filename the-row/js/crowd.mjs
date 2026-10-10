@@ -18,7 +18,7 @@ export const PULL_AFTER_MS = 20000;
 export const CROWD_SIZE = 22;
 const SPAN = 36;
 
-const CAST = [
+export const CAST = [
   "nova", "kit", "04", "jun", "row", "ace", "flux", "vex", "loom", "byte",
   "nyx", "pico", "reed", "sola", "mink", "grim", "hex", "wren", "oz", "juno",
   "drift", "quay",

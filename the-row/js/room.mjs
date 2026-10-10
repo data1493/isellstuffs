@@ -12,6 +12,7 @@ export const CATALOG = [
     price: "0.0042",
     keep: "0.0038",
     blurb: "One bar. Night. It sits here until someone locks it.",
+    bar: "/audio/j190.wav",
   },
   {
     id: "bold",
@@ -21,6 +22,7 @@ export const CATALOG = [
     price: "17",
     keep: "15.3",
     blurb: "A loud display face. Twelve cuts. Also the prize in versus.",
+    bar: "/audio/bold.wav",
   },
   {
     id: "list",
@@ -30,6 +32,7 @@ export const CATALOG = [
     price: "19.3",
     keep: "17.37",
     blurb: "Titles and prices. Nothing extra. Lock the page.",
+    bar: "/audio/list.wav",
   },
   {
     id: "stub",
@@ -39,6 +42,7 @@ export const CATALOG = [
     price: "Open",
     keep: "—",
     blurb: "A seat in versus. Winner keeps the font.",
+    bar: "/audio/stub.wav",
   },
 ];
 
@@ -132,6 +136,17 @@ function roundOpen(state, game) {
   return null;
 }
 
+export function seatYou(state) {
+  const handle = handleKey(state?.you?.handle);
+  if (!handle) return state;
+  if (state.seats?.left === handle || state.seats?.right === handle) return state;
+  if (state.pile?.status !== "open" || state.pile?.game) return state;
+  if ((state.pile?.leftScore || 0) + (state.pile?.rightScore || 0) > 0) return state;
+  const next = clone(state);
+  next.seats = { ...(next.seats || {}), left: handle };
+  return next;
+}
+
 export function seatHandle(state, side) {
   return state.seats?.[side] || SIDES[side].id;
 }
@@ -158,6 +173,7 @@ function award(next, side) {
   next.streakAt = { ...(next.streakAt || {}) };
   next.streaks[winner] = (next.streaks[winner] || 0) + 1;
   next.streakAt[winner] = Date.now();
+  next.dealt = (next.dealt || 0) + 1;
   if (loser !== winner) {
     delete next.streaks[loser];
     delete next.streakAt[loser];
@@ -466,6 +482,7 @@ export function revive(raw) {
     streakAt,
     call: reviveCall(raw.call, people),
     rematch: reviveRematch(raw.rematch, people),
+    dealt: Number.isFinite(raw.dealt) && raw.dealt > 0 ? Math.floor(raw.dealt) : 0,
   };
 }
 

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Row</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -375,8 +376,296 @@
       .hero { padding: 6rem 1rem 2.2rem; }
       footer { flex-direction: column; }
     }
+    #keep { scroll-margin-top: 4.2rem; }
+    #keep .keep-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    #keep .keep-mock {
+      margin-left: 0.55rem;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+    }
+    #keep .keep-reset {
+      border: 1px solid var(--lime);
+      background: transparent;
+      color: var(--lime);
+      padding: 0.5rem 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    #keep .keep-reset:hover { background: rgba(216, 255, 62, 0.1); }
+    #keep .keep-stage {
+      margin-top: 1.5rem;
+      max-width: 22rem;
+    }
+    #keep .keep-plate {
+      container-type: inline-size;
+      min-height: 34rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding: 1.05rem 1.05rem 0.85rem;
+      overflow: hidden;
+      background: #0c0e0b;
+    }
+    #keep .keep-plate.eth {
+      border: 1px solid rgba(213, 222, 234, 0.42);
+      background:
+        radial-gradient(90% 55% at 10% 0%, rgba(213, 222, 234, 0.16), transparent 52%),
+        #0c0e0b;
+    }
+    #keep .keep-plate.doge {
+      border: 1px solid rgba(243, 193, 91, 0.5);
+      background:
+        radial-gradient(110% 70% at 90% 110%, rgba(243, 193, 91, 0.22), transparent 56%),
+        #0c0e0b;
+    }
+    #keep .keep-plate header { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; }
+    #keep .keep-kicker, #keep .keep-asset {
+      margin: 0;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+    }
+    #keep .keep-plate.eth .keep-kicker, #keep .keep-plate.eth .keep-asset { color: #8ea0b8; }
+    #keep .keep-plate.doge .keep-kicker, #keep .keep-plate.doge .keep-asset { color: #f3c15b; }
+    #keep .keep-mark { width: 72px; height: 72px; margin: 0.8rem 0 0.2rem; }
+    #keep .keep-plate.eth .keep-mark { color: #d5deea; }
+    #keep .keep-plate.doge .keep-mark { color: #f3c15b; }
+    #keep .keep-line { margin: 0; color: var(--muted); font-size: 0.78rem; max-width: 16rem; }
+    #keep .keep-sign, #keep .keep-go, #keep .keep-not {
+      border: 1px solid var(--lime);
+      background: transparent;
+      color: var(--lime);
+      padding: 0.7rem 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    #keep .keep-sign { align-self: flex-start; margin-top: 0.35rem; }
+    #keep .keep-plate.eth .keep-sign { border-color: #d5deea; color: #d5deea; }
+    #keep .keep-plate.doge .keep-sign { border-color: #f3c15b; color: #f3c15b; }
+    #keep .keep-plate.eth .keep-sign:hover:not(:disabled) { background: rgba(213, 222, 234, 0.08); }
+    #keep .keep-plate.doge .keep-sign:hover:not(:disabled) { background: rgba(243, 193, 91, 0.08); }
+    #keep .keep-plate.worn .keep-sign {
+      border-color: var(--lime);
+      color: var(--lime);
+      text-transform: none;
+      letter-spacing: 0.04em;
+    }
+    #keep .keep-plate.worn .keep-line { color: var(--lime); }
+    #keep .keep-sign:disabled { opacity: 1; cursor: default; }
+    #keep .keep-word {
+      margin: auto 0 0;
+      font-family: var(--display);
+      font-weight: 800;
+      line-height: 0.86;
+      letter-spacing: -0.045em;
+      text-transform: uppercase;
+    }
+    #keep .keep-plate.eth .keep-word { color: #d5deea; font-size: 40cqw; }
+    #keep .keep-plate.doge .keep-word { color: #f3c15b; font-size: 26cqw; }
+    #keep .keep-plate.flash { animation: keep-flash 0.55s ease; }
+    @keyframes keep-flash {
+      0% { box-shadow: inset 0 0 0 rgba(216, 255, 62, 0); }
+      35% { box-shadow: inset 0 0 90px rgba(216, 255, 62, 0.32); }
+      100% { box-shadow: inset 0 0 0 rgba(216, 255, 62, 0); }
+    }
+    #keep .keep-core {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      text-align: center;
+      gap: 0.75rem;
+      padding: 0;
+    }
+    #keep .keep-core .keep-kicker { color: var(--lime); }
+    #keep .keep-title, #keep #keepName {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(3.2rem, 5vw, 4.6rem);
+      line-height: 0.84;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: #f4ffe0;
+      background: transparent;
+      border: none;
+      padding: 0;
+      width: 100%;
+      text-align: center;
+    }
+    #keep .keep-title { cursor: pointer; }
+    #keep #keepName:focus { outline: none; }
+    #keep .keep-status { margin: 0; color: #d5dec0; font-size: 0.86rem; }
+    #keep .keep-ticket {
+      background: var(--paper);
+      color: var(--paper-ink);
+      padding: 0.75rem 0.7rem 0.65rem;
+      transform: rotate(-0.6deg);
+    }
+    #keep .keep-ticket .keep-kicker { color: #5c6b2a; }
+    #keep .keep-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.2rem; }
+    #keep .keep-stat b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.85rem;
+      line-height: 0.85;
+      color: var(--paper-ink);
+    }
+    #keep .keep-stat span {
+      display: block;
+      margin-top: 0.2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.62rem;
+      color: #5a5342;
+    }
+    #keep .keep-where { margin: 0.55rem 0 0; font-size: 0.75rem; color: #3d4a12; }
+    #keep .keep-prizes { display: grid; gap: 0.35rem; margin-top: 0.7rem; }
+    #keep .keep-prizes[hidden] { display: none; }
+    #keep .keep-prize {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      text-align: left;
+    }
+    #keep .keep-prize span {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 0.9;
+    }
+    #keep .keep-prize button {
+      background: #111408;
+      color: var(--paper);
+      border: none;
+      padding: 0.35rem 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.62rem;
+      cursor: pointer;
+    }
+    #keep .keep-keyline {
+      margin: 0;
+      color: var(--lime);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+    #keep .keep-back {
+      border: 1px solid var(--lime);
+      background: transparent;
+      color: var(--lime);
+      padding: 0.55rem 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      cursor: pointer;
+      width: 100%;
+    }
+    #keep .keep-login { display: grid; gap: 0.45rem; }
+    #keep .keep-login[hidden] { display: none; }
+    #keep #keepKeyInput {
+      width: 100%;
+      background: #0c100b;
+      border: 1px solid var(--line);
+      padding: 0.7rem 0.75rem;
+      text-align: center;
+      letter-spacing: 0.16em;
+      text-transform: lowercase;
+    }
+    #keep .keep-go {
+      background: var(--lime);
+      color: #111408;
+      width: 100%;
+    }
+    #keep .keep-go:hover:not(:disabled) { background: var(--lime-2); }
+    #keep .keep-go:disabled { opacity: 0.45; }
+    #keep .keep-go.kept { opacity: 1; cursor: default; }
+    #keep .keep-veil {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(5, 6, 4, 0.78);
+    }
+    #keep .keep-veil[hidden] { display: none; }
+    #keep .keep-sheet {
+      position: relative;
+      width: min(440px, 100%);
+      display: grid;
+      gap: 0.75rem;
+      padding: 1.25rem 1.2rem 1.15rem;
+      background: #0c100b;
+      overflow: hidden;
+      text-align: left;
+    }
+    #keep .keep-sheet.eth { border: 1px solid rgba(213, 222, 234, 0.7); }
+    #keep .keep-sheet.doge { border: 1px solid rgba(243, 193, 91, 0.75); }
+    #keep .keep-sheet-title {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 4.4rem;
+      line-height: 0.8;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    #keep .keep-sheet.eth .keep-sheet-title { color: #d5deea; }
+    #keep .keep-sheet.doge .keep-sheet-title { color: #f3c15b; }
+    #keep .keep-sheet .keep-kicker { color: var(--lime); }
+    #keep .keep-sheet .keep-status { color: #d5dec0; }
+    #keep .keep-nonce {
+      margin: 0;
+      background: var(--paper);
+      color: var(--paper-ink);
+      padding: 0.75rem 0.7rem;
+      word-break: break-all;
+      font-size: 0.82rem;
+    }
+    #keep .keep-sheet-actions { display: grid; grid-template-columns: 1fr auto; gap: 0.55rem; }
+    #keep .keep-not { padding: 0.5rem 0.7rem; }
+    #keep .keep-ghost {
+      position: absolute;
+      right: -0.4rem;
+      bottom: -1.4rem;
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 8rem;
+      line-height: 0.8;
+      letter-spacing: -0.04em;
+      opacity: 0.14;
+      pointer-events: none;
+    }
+    #keep .keep-sheet.eth .keep-ghost { color: #d5deea; }
+    #keep .keep-sheet.doge .keep-ghost { color: #f3c15b; }
+
+    @media (max-width: 800px) {
+      #keep .keep-stage { max-width: none; }
+      #keep .keep-core { padding: 0.2rem 0 0.4rem; }
+      #keep .keep-plate { min-height: 22rem; }
+      #keep .keep-ticket { transform: none; }
+      #keep .keep-head { flex-direction: column; align-items: flex-start; }
+      #keep .keep-veil { place-items: end center; }
+    }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
+      #keep .keep-plate.flash { animation: none; }
+      #keep .keep-ticket { transform: none; }
     }
   </style>
 </head>
@@ -516,6 +805,47 @@
         <p class="fine" id="passMsg">You’re not in yet.</p>
       </div>
     </section>
+
+    <section id="keep">
+      <div class="wrap">
+        <div class="keep-head">
+          <div>
+            <p class="section-kicker">Keep</p>
+            <h2>Keep it.</h2>
+          </div>
+          <button class="keep-reset" id="keepReset" type="button">Run it back</button>
+        </div>
+        <p class="lede">A name you keep. The key brings it back.</p>
+        <div class="keep-stage">
+          <div class="keep-core">
+            <p class="keep-kicker" id="keepEyebrow">One name</p>
+            <button class="keep-title" id="keepTitle" type="button">mint</button>
+            <input class="keep-name" id="keepName" maxlength="16" hidden autocomplete="nickname" aria-label="Name">
+            <p class="keep-status" id="keepStatus">The name is yours once you keep it.</p>
+            <div class="keep-ticket">
+              <p class="keep-kicker">Stats</p>
+              <div class="keep-stats">
+                <div class="keep-stat"><b id="keepStreak">—</b><span>streak</span></div>
+                <div class="keep-stat"><b id="keepWins">—</b><span>wins</span></div>
+                <div class="keep-stat"><b id="keepLosses">—</b><span>losses</span></div>
+                <div class="keep-stat"><b id="keepDrops">—</b><span>kept</span></div>
+              </div>
+              <p class="keep-where" id="keepWhere">Starts when you pull up.</p>
+              <div class="keep-prizes" id="keepPrizes" hidden></div>
+            </div>
+            <button class="keep-go" id="keepGo" type="button">Pull up</button>
+            <p class="keep-keyline" id="keepKey" hidden></p>
+            <button class="keep-back" id="keepBack" type="button">I'm back</button>
+            <form class="keep-login" id="keepLogin" hidden>
+              <input id="keepKeyInput" maxlength="16" placeholder="Key" autocomplete="one-time-code" aria-label="Key">
+              <button class="keep-go" type="submit">I'm back</button>
+            </form>
+            <button class="keep-back" id="keepOut" type="button" hidden>Step out</button>
+            <p class="fine">Keys stay with you.</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -524,11 +854,11 @@
   </footer>
 
   <script type="module">
-    import { CATALOG, SIDES, enqueue, join, linePlace, placeWord, say, focusDrop, roundLine, seatLabel, wall } from "./js/room.mjs?v=3";
-    import { readRoom, writeRoom } from "./js/persist.mjs?v=3";
-    import { crowdOn, watchCrowd } from "./js/live.mjs?v=3";
-    import { watchCall } from "./js/gate.mjs?v=3";
-    import { ensureTagStyle, fillTag, postRow } from "./js/watch.mjs?v=3";
+    import { CATALOG, SIDES, enqueue, join, linePlace, placeWord, say, focusDrop, roundLine, seatLabel, wall } from "./js/room.mjs?v=6";
+    import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
+    import { crowdOn, watchCrowd } from "./js/live.mjs?v=6";
+    import { watchCall } from "./js/gate.mjs?v=6";
+    import { ensureTagStyle, fillTag, postRow } from "./js/watch.mjs?v=6";
 
     const lane = document.querySelector("#lane");
     const slip = document.querySelector("#slip");
@@ -536,8 +866,9 @@
     const passBtn = document.querySelector("#passBtn");
     const passMsg = document.querySelector("#passMsg");
     const storage = localStorage;
-    const watching = crowdOn();
-    if (watching) document.body.classList.add("crowd");
+    const heroLede = document.querySelector(".hero .lede");
+    const quietLede = heroLede.textContent;
+    if (crowdOn()) document.body.classList.add("crowd");
     let room = readRoom(storage);
 
     const gamePage = { pile: "/pile.html", line: "/line.html", lane: "/lane.html" };
@@ -631,7 +962,7 @@
       const go = document.querySelector("#versusGo");
       go.textContent = gameLabel[liveGame];
       go.dataset.game = liveGame;
-      go.href = watching ? `${gamePage[liveGame]}?crowd=1` : gamePage[liveGame];
+      go.href = crowdOn() ? `${gamePage[liveGame]}?crowd=1` : gamePage[liveGame];
       document.querySelectorAll("[data-game]").forEach((link) => {
         const on = link.dataset.game === liveGame;
         link.classList.toggle("primary", on);
@@ -656,7 +987,6 @@
       }
 
       const drop = room.drop;
-      const held = drop.holder;
       const mine = room.you?.handle;
       const seated = mine && (room.seats?.left === mine || room.seats?.right === mine);
       const place = mine ? linePlace(room, mine) : 0;
@@ -668,20 +998,40 @@
             ? `${placeWord(place)} in line`
             : "Lock in";
       const lineNames = (room.queue || []).map((item) => item.handle).join(", ");
-      slip.innerHTML = `
-        <p class="section-kicker" style="color:#3d4a12">${drop.kicker}</p>
-        <h3>${drop.name}</h3>
-        <div class="rows">
-          <div><span>Price</span><span>${drop.price}</span></div>
-          <div><span>Room</span><span>10%</span></div>
-          <div><span>You keep</span><span>${drop.keep}</span></div>
-          <div><span>Held by</span><span>${held ?? "open"}</span></div>
-        </div>
-        <button class="primary" id="takeBtn" type="button" style="width:100%">${lockLabel}</button>
-        <p class="fine" id="lineNote">${lineNames ? `In line: ${lineNames}` : "Lock in. The next open seat is yours."}</p>
-      `;
+      const kicker = document.createElement("p");
+      kicker.className = "section-kicker";
+      kicker.style.color = "#3d4a12";
+      kicker.textContent = drop.kicker;
+      const title = document.createElement("h3");
+      title.textContent = drop.name;
+      const rows = document.createElement("div");
+      rows.className = "rows";
+      for (const [label, value] of [
+        ["Price", drop.price],
+        ["Room", "10%"],
+        ["You keep", drop.keep],
+        ["Held by", drop.holder ?? "open"],
+      ]) {
+        const row = document.createElement("div");
+        const name = document.createElement("span");
+        name.textContent = label;
+        const shown = document.createElement("span");
+        shown.textContent = String(value);
+        row.append(name, shown);
+        rows.append(row);
+      }
+      const takeBtn = document.createElement("button");
+      takeBtn.className = "primary";
+      takeBtn.id = "takeBtn";
+      takeBtn.type = "button";
+      takeBtn.style.width = "100%";
+      takeBtn.textContent = lockLabel;
+      const lineNote = document.createElement("p");
+      lineNote.className = "fine";
+      lineNote.id = "lineNote";
+      lineNote.textContent = lineNames ? `In line: ${lineNames}` : "Lock in. The next open seat is yours.";
+      slip.replaceChildren(kicker, title, rows, takeBtn, lineNote);
       blurb.textContent = drop.blurb;
-      const takeBtn = document.querySelector("#takeBtn");
       takeBtn.disabled = Boolean(mine) && (Boolean(seated) || Boolean(place));
       takeBtn.addEventListener("click", () => {
         if (!room.you) {
@@ -690,7 +1040,7 @@
         }
         if (seated || place) return;
         const game = room.pile.game || "pile";
-        if (watching) {
+        if (crowdOn()) {
           postRow("/queue", { handle: room.you.handle, link: room.you.link, game });
           return;
         }
@@ -713,21 +1063,22 @@
         passBtn.classList.add("stamped");
         passMsg.textContent = `${room.you.handle} is in. ${room.you.link} is up. Keys stayed with you.`;
         vibeAs.hidden = false;
-        vibeAs.textContent = watching ? `In as ${room.you.handle}. The wall is the room’s.` : `Posting as ${room.you.handle}`;
+        vibeAs.textContent = crowdOn() ? `In as ${room.you.handle}. The wall is the room’s.` : `Posting as ${room.you.handle}`;
       } else {
         passBtn.textContent = "Get in";
         passBtn.classList.remove("stamped");
-        passMsg.textContent = watching ? "Check in, then lock a seat. You’ll be pulled in." : "You’re not in yet.";
+        passMsg.textContent = crowdOn() ? "Check in, then lock a seat. You’ll be pulled in." : "You’re not in yet.";
         vibeAs.hidden = true;
       }
-      if (watching) {
-        document.querySelector(".hero .lede").textContent = "The round is live. Watch the drop, the wall, and versus.";
+      if (crowdOn()) {
+        heroLede.textContent = "The round is live. Watch the drop, the wall, and versus.";
         document.querySelector("#vibeMsg").textContent = room.you ? `The wall knows ${room.you.handle}.` : "The wall is moving.";
         vibeFields.forEach((field) => { field.disabled = true; });
       } else {
+        heroLede.textContent = quietLede;
         vibeFields.forEach((field) => { field.disabled = false; });
       }
-      watchCall({ room, crowd: watching, you: room.you });
+      watchCall({ room, crowd: crowdOn(), you: room.you });
     }
 
     function revealIn() {
@@ -743,7 +1094,7 @@
       btn.type = "button";
       btn.innerHTML = `${wave(i + 1)}<span class="meta">${drop.kicker}</span><span class="name">${drop.name}</span><span class="meta">${drop.detail}</span><span class="price">${drop.price}</span>`;
       btn.addEventListener("click", () => {
-        if (watching) return;
+        if (crowdOn()) return;
         const result = focusDrop(room, drop.id);
         if (!result.ok) {
           blurb.textContent = result.error;
@@ -762,7 +1113,7 @@
 
     document.querySelectorAll("[data-game]").forEach((link) => {
       link.addEventListener("click", (event) => {
-        if (watching) return;
+        if (crowdOn()) return;
         if (!room.you) {
           event.preventDefault();
           revealIn();
@@ -772,7 +1123,7 @@
 
     document.querySelector("#passForm").addEventListener("submit", (event) => {
       event.preventDefault();
-      const saved = watching ? readRoom(storage) : room;
+      const saved = crowdOn() ? readRoom(storage) : room;
       const result = join(saved, {
         handle: document.querySelector("#handle").value,
         link: document.querySelector("#address").value,
@@ -781,7 +1132,7 @@
         passMsg.textContent = result.error;
         return;
       }
-      if (watching) {
+      if (crowdOn()) {
         writeRoom(storage, result.state);
         room = { ...room, you: result.state.you };
         paint();
@@ -793,7 +1144,7 @@
     document.querySelector("#vibeForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const msg = document.querySelector("#vibeMsg");
-      if (watching) {
+      if (crowdOn()) {
         msg.textContent = "The wall is moving.";
         return;
       }
@@ -811,8 +1162,43 @@
       commit(result.state);
     });
 
+    window.addEventListener("row-you", (event) => {
+      const detail = event.detail;
+      if (!detail?.handle) {
+        if (crowdOn()) {
+          const saved = readRoom(storage);
+          saved.you = null;
+          writeRoom(storage, saved);
+          room = { ...room, you: null };
+          paint();
+          return;
+        }
+        room = { ...room, you: null };
+        commit(room);
+        return;
+      }
+      if (crowdOn()) {
+        const saved = readRoom(storage);
+        const result = join(saved, detail);
+        if (!result.ok) return;
+        writeRoom(storage, result.state);
+        room = { ...room, you: result.state.you };
+        paint();
+        return;
+      }
+      const result = join(room, detail);
+      if (!result.ok) return;
+      commit(result.state);
+    });
+
     if (crowdOn()) {
       watchCrowd((next) => {
+        if (!next) {
+          document.body.classList.remove("crowd");
+          room = readRoom(storage);
+          paint();
+          return;
+        }
         const you = readRoom(storage).you;
         room = you ? { ...next, you } : next;
         paint();
@@ -824,6 +1210,230 @@
       });
       paint();
     }
+  </script>
+  <script type="module">
+    import { CATALOG } from "./js/room.mjs?v=6";
+    import { playBar } from "./js/watch.mjs?v=6";
+
+    const keepState = { in: false, kept: false, loggingIn: false, handle: "mint", key: "", error: "", prizes: [] };
+    let keepEditing = false;
+    const keepEl = (id) => document.getElementById(id);
+
+    function keepClean(raw) {
+      return String(raw ?? "").trim().replace(/\s+/g, " ").slice(0, 16).toLowerCase();
+    }
+
+    function keepStatus() {
+      if (keepState.kept) return "On the account.";
+      if (keepState.in) return "On this phone. Keep it and it follows you.";
+      return "The name is yours once you keep it.";
+    }
+
+    function keepWhere() {
+      if (keepState.error) return keepState.error;
+      if (!keepState.handle) return "The room needs a name.";
+      if (keepState.kept) return "This name stays. The key brings it back.";
+      if (keepState.in) return "On this phone until you keep it.";
+      return "Keep it and the name stays yours.";
+    }
+
+    async function keepPost(path, body) {
+      try {
+        const res = await fetch(path, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(body || {}),
+        });
+        return await res.json();
+      } catch {
+        return { ok: false, error: "The room can't keep a name right now." };
+      }
+    }
+
+    function stamp(handle) {
+      window.dispatchEvent(new CustomEvent("row-you", {
+        detail: handle ? { handle, link: `https://${handle}.room` } : null,
+      }));
+    }
+
+    function applyAccount(user) {
+      keepState.handle = user.handle;
+      if (typeof user.key === "string" && user.key) keepState.key = user.key;
+      keepState.streak = user.streak || 0;
+      keepState.wins = user.wins || 0;
+      keepState.losses = user.losses || 0;
+      keepState.dropsKept = user.dropsKept || 0;
+      keepState.prizes = Array.isArray(user.prizes) ? user.prizes.filter((id) => CATALOG.some((item) => item.id === id)) : [];
+      keepState.kept = true;
+      keepState.in = true;
+      keepState.error = "";
+      keepState.loggingIn = false;
+      renderKeep();
+      stamp(user.handle);
+    }
+
+    function renderKeep() {
+      const named = keepState.handle || "";
+      keepEl("keepTitle").textContent = named || "name";
+      keepEl("keepTitle").hidden = keepEditing;
+      keepEl("keepName").hidden = !keepEditing;
+      keepEl("keepEyebrow").textContent = keepState.kept ? "On the account" : keepState.in ? "On this phone" : "One name";
+      keepEl("keepStatus").textContent = keepStatus();
+      keepEl("keepWhere").textContent = keepWhere();
+      const onBook = keepState.kept;
+      keepEl("keepStreak").textContent = onBook ? String(keepState.streak || 0) : "—";
+      keepEl("keepWins").textContent = onBook ? String(keepState.wins || 0) : "—";
+      keepEl("keepLosses").textContent = onBook ? String(keepState.losses || 0) : "—";
+      keepEl("keepDrops").textContent = onBook ? String(keepState.dropsKept || 0) : "—";
+      const prizeBox = keepEl("keepPrizes");
+      prizeBox.replaceChildren();
+      const prizes = onBook ? keepState.prizes.map((id) => CATALOG.find((item) => item.id === id)).filter(Boolean) : [];
+      prizeBox.hidden = prizes.length === 0;
+      if (prizes.length) {
+        const kicker = document.createElement("p");
+        kicker.className = "keep-kicker";
+        kicker.textContent = "Your bars";
+        prizeBox.append(kicker);
+        for (const item of prizes) {
+          const row = document.createElement("div");
+          row.className = "keep-prize";
+          const name = document.createElement("span");
+          name.textContent = item.name;
+          const play = document.createElement("button");
+          play.type = "button";
+          play.textContent = "Play";
+          play.addEventListener("click", () => playBar(item.id));
+          row.append(name, play);
+          prizeBox.append(row);
+        }
+      }
+      keepEl("keepGo").textContent = keepState.kept ? "Kept" : keepState.in ? "Keep" : "Pull up";
+      keepEl("keepGo").disabled = keepState.kept || keepState.busy || !named;
+      keepEl("keepGo").classList.toggle("kept", keepState.kept);
+      keepEl("keepKey").hidden = !keepState.key;
+      keepEl("keepKey").textContent = keepState.key ? `Key ${keepState.key}` : "";
+      keepEl("keepBack").hidden = keepState.kept || keepState.loggingIn;
+      keepEl("keepLogin").hidden = keepState.kept || !keepState.loggingIn;
+      keepEl("keepOut").hidden = !keepState.kept;
+    }
+
+    keepEl("keepGo").addEventListener("click", async () => {
+      if (!keepState.handle || keepState.kept || keepState.busy) return;
+      if (!keepState.in) {
+        keepState.in = true;
+        keepState.error = "";
+        renderKeep();
+        return;
+      }
+      keepState.busy = true;
+      keepState.error = "";
+      renderKeep();
+      const data = await keepPost("/keep", { handle: keepState.handle });
+      keepState.busy = false;
+      if (!data.ok || !data.user) {
+        keepState.error = data.error || "The room can't keep a name right now.";
+        renderKeep();
+        return;
+      }
+      applyAccount(data.user);
+    });
+    keepEl("keepBack").addEventListener("click", () => {
+      keepState.loggingIn = true;
+      keepState.error = "";
+      renderKeep();
+      keepEl("keepKeyInput").focus();
+    });
+    keepEl("keepLogin").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (keepState.busy) return;
+      keepState.busy = true;
+      keepState.error = "";
+      renderKeep();
+      const data = await keepPost("/login", {
+        handle: keepState.handle,
+        key: keepEl("keepKeyInput").value,
+      });
+      keepState.busy = false;
+      if (!data.ok || !data.user) {
+        keepState.error = data.error || "That key does not match.";
+        renderKeep();
+        return;
+      }
+      keepEl("keepKeyInput").value = "";
+      applyAccount(data.user);
+    });
+    keepEl("keepOut").addEventListener("click", async () => {
+      if (keepState.busy) return;
+      keepState.busy = true;
+      await keepPost("/out");
+      keepState.busy = false;
+      keepState.kept = false;
+      keepState.in = false;
+      keepState.key = "";
+      keepState.prizes = [];
+      keepState.error = "";
+      keepState.loggingIn = false;
+      renderKeep();
+      stamp("");
+    });
+
+    function startKeepEdit() {
+      keepEditing = true;
+      keepEl("keepName").value = keepState.handle;
+      renderKeep();
+      keepEl("keepName").focus();
+      keepEl("keepName").select();
+    }
+    async function commitKeepName() {
+      if (!keepEditing) return;
+      const next = keepClean(keepEl("keepName").value);
+      const previous = keepState.handle;
+      keepEditing = false;
+      if (!next) {
+        renderKeep();
+        return;
+      }
+      keepState.handle = next;
+      keepState.error = "";
+      if (keepState.kept && next !== previous) {
+        const data = await keepPost("/keep", { handle: next });
+        if (!data.ok || !data.user) {
+          keepState.handle = previous;
+          keepState.error = data.error || "That name is kept.";
+          renderKeep();
+          return;
+        }
+        applyAccount(data.user);
+        return;
+      }
+      renderKeep();
+    }
+    keepEl("keepTitle").addEventListener("click", startKeepEdit);
+    keepEl("keepName").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        commitKeepName();
+      }
+    });
+    keepEl("keepName").addEventListener("blur", commitKeepName);
+    keepEl("keepReset").addEventListener("click", () => {
+      keepState.error = "";
+      keepState.loggingIn = false;
+      if (!keepState.kept) {
+        keepState.in = false;
+        keepState.handle = "mint";
+      }
+      keepEditing = false;
+      renderKeep();
+    });
+
+    async function loadAccount() {
+      const me = await fetch("/me").then((res) => res.json()).catch(() => null);
+      if (me?.user) applyAccount(me.user);
+      else renderKeep();
+    }
+    window.addEventListener("pageshow", () => { loadAccount(); });
+    await loadAccount();
   </script>
 </body>
 </html>

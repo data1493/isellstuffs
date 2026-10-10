@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Best line — The Row</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -92,11 +93,11 @@
     </section>
   </main>
   <script type="module">
-    import { enterLine, voteLine, resetPile, roundLine, linePlace } from "./js/room.mjs?v=3";
-    import { readRoom, writeRoom } from "./js/persist.mjs?v=3";
-    import { crowdOn, watchCrowd } from "./js/live.mjs?v=3";
-    import { stampYou, watchCall } from "./js/gate.mjs?v=3";
-    import { ensureTagStyle, flashSides, mineSide, paintWho, postRow } from "./js/watch.mjs?v=3";
+    import { enterLine, voteLine, resetPile, roundLine, linePlace, seatYou } from "./js/room.mjs?v=6";
+    import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
+    import { crowdOn, watchCrowd } from "./js/live.mjs?v=6";
+    import { stampYou, watchCall } from "./js/gate.mjs?v=6";
+    import { awardBar, ensureTagStyle, flashSides, mineSide, paintWho, postRow, reportMove } from "./js/watch.mjs?v=6";
 
     const storage = localStorage;
     let room = readRoom(storage);
@@ -106,9 +107,23 @@
     const stepOut = document.querySelector("#stepOut");
     const lockSeat = document.querySelector("#lockSeat");
 
-    function commit(next) {
+    function sit() {
+      if (crowdOn()) return;
+      const next = seatYou(room);
+      if (next === room) return;
       room = next;
-      if (!crowdOn()) writeRoom(storage, room);
+      writeRoom(storage, room);
+    }
+
+    function commit(next, move) {
+      const before = room;
+      room = next;
+      if (!crowdOn()) {
+        sit();
+        writeRoom(storage, room);
+        if (move) reportMove({ ...move, drop: room.drop?.id });
+        awardBar(before, room);
+      }
       paint();
     }
 
@@ -136,7 +151,11 @@
       document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
       const hint = document.querySelector(".hint");
       hint.hidden = blocked;
-      if (crowdOn()) hint.textContent = mine ? "You're in. Drop your line." : "Watching the room";
+      const leftName = room.seats?.left || "nova";
+      const rightName = room.seats?.right || "jun";
+      hint.textContent = crowdOn()
+        ? (mine ? "You're in. Drop your line." : "Watching the room")
+        : `F ${leftName} · J ${rightName}, once both lines are up`;
       status.textContent = blocked || called
         ? roundLine(room)
         : crowdOn() && !mine
@@ -176,7 +195,7 @@
       }
       const result = enterLine(room, side, value);
       if (!result.ok) { status.textContent = result.error; return; }
-      commit(result.state);
+      commit(result.state, { kind: "line", side, text: value });
     }
 
     document.querySelector("#leftForm").addEventListener("submit", (event) => {
@@ -196,7 +215,7 @@
         await postRow("/again", { handle: you.handle, stay: true });
         return;
       }
-      commit(resetPile(room).state);
+      commit(resetPile(room).state, { kind: "reset" });
     });
     stepOut.addEventListener("click", async () => {
       const you = readRoom(storage).you;
@@ -227,7 +246,7 @@
       const result = voteLine(room, side);
       if (!result.ok) { status.textContent = result.error; return; }
       flash(side);
-      commit(result.state);
+      commit(result.state, { kind: "vote", side });
     }
 
     function showYou() {
@@ -238,8 +257,29 @@
       location.replace("/#in");
     } else if (crowdOn()) {
       watchCrowd((next) => {
+        if (!next) {
+          document.body.classList.remove("crowd");
+          if (!readRoom(storage).you) {
+            location.replace("/#in");
+            return;
+          }
+          room = readRoom(storage);
+          sit();
+          showYou();
+          paint();
+          watchCall({ room, here: "line", crowd: false, you: room.you });
+          window.addEventListener("pageshow", () => {
+            if (!readRoom(storage).you) { location.replace("/#in"); return; }
+            room = readRoom(storage);
+            sit();
+            showYou();
+            paint();
+          });
+          return;
+        }
         const you = readRoom(storage).you;
         const merged = you ? { ...next, you } : next;
+        awardBar(seen, merged);
         flashSides(seen, merged);
         seen = merged;
         room = merged;
@@ -248,12 +288,14 @@
         watchCall({ room, here: "line", crowd: true, you });
       });
     } else {
+      sit();
       showYou();
       paint();
       watchCall({ room, here: "line", crowd: false, you: room.you });
       window.addEventListener("pageshow", () => {
         if (!readRoom(storage).you) { location.replace("/#in"); return; }
         room = readRoom(storage);
+        sit();
         showYou();
         paint();
       });

@@ -8,6 +8,7 @@ import {
   lockDrop,
   pileOn,
   resetPile,
+  seatYou,
   enterLine,
   voteLine,
   armLane,
@@ -196,4 +197,49 @@ test("the save adapter roundtrips through a storage object", () => {
   assert.equal(loaded.people[0].link, "https://ace.example");
   memory.set(STORAGE_KEY, "{");
   assert.equal(readRoom(storage).drop.id, "bold");
+});
+
+test("an open round seats you on the left and each award keeps its dealt mark", () => {
+  const joined = join(seedRoom(), { handle: "mint", link: "https://mint.room" }).state;
+  const seated = seatYou(joined);
+  assert.equal(seated.seats.left, "mint");
+  assert.equal(seated.seats.right, "jun");
+  assert.equal(seatYou(seated), seated);
+  const fresh = seedRoom();
+  assert.equal(seatYou(fresh), fresh);
+
+  let playing = seated;
+  for (let i = 0; i < 5; i += 1) playing = pileOn(playing, "left").state;
+  assert.equal(playing.pile.status, "won");
+  assert.equal(playing.pile.game, "pile");
+  assert.equal(playing.drop.holder, "mint");
+  assert.equal(playing.dealt, 1);
+  assert.equal(seatYou(playing).seats.left, "mint");
+
+  const mid = pileOn(seedRoom(), "left").state;
+  mid.you = { handle: "mint", link: "https://mint.room" };
+  assert.equal(seatYou(mid).seats.left, "nova");
+
+  let reset = resetPile(playing).state;
+  assert.equal(reset.dealt, 1);
+  assert.equal(reset.pile.status, "open");
+  assert.equal(reset.seats.left, "mint");
+  reset = enterLine(reset, "left", "mine").state;
+  reset = enterLine(reset, "right", "theirs").state;
+  for (let i = 0; i < 5; i += 1) reset = voteLine(reset, "right").state;
+  assert.equal(reset.pile.winner, "right");
+  assert.equal(reset.pile.game, "line");
+  assert.equal(reset.drop.holder, "jun");
+  assert.equal(reset.dealt, 2);
+
+  let lane = resetPile(reset).state;
+  lane = armLane(lane, 40).state;
+  lane = tapLane(lane, "left", 40).state;
+  lane = tapLane(lane, "right", 10).state;
+  assert.equal(lane.pile.winner, "left");
+  assert.equal(lane.pile.game, "lane");
+  assert.equal(lane.drop.holder, "mint");
+  assert.equal(lane.dealt, 3);
+  assert.equal(revive(lane).dealt, 3);
+  assert.equal(revive(lane).seats.left, "mint");
 });

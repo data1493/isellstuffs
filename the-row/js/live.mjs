@@ -1,7 +1,10 @@
-import { revive } from "./room.mjs?v=3";
+import { revive } from "./room.mjs?v=6";
+
+let crowdLive = true;
+let crowdTimer = 0;
 
 export function crowdOn() {
-  return new URLSearchParams(location.search).get("crowd") === "1";
+  return new URLSearchParams(location.search).get("crowd") === "1" && crowdLive;
 }
 
 export function keepCrowdLinks() {
@@ -15,21 +18,31 @@ export function keepCrowdLinks() {
 }
 
 export function watchCrowd(apply) {
-  if (!crowdOn()) return;
+  if (new URLSearchParams(location.search).get("crowd") !== "1") return;
   keepCrowdLinks();
   let last = "";
+  let stopped = false;
   const pull = async () => {
+    if (stopped) return;
     try {
       const res = await fetch(`/live.json?t=${Date.now()}`, { cache: "no-store" });
-      if (!res.ok) return;
+      if (!res.ok || stopped) return;
       const text = await res.text();
-      if (!text || text === last) return;
+      const raw = JSON.parse(text);
+      if (raw && raw.beating === false) {
+        stopped = true;
+        crowdLive = false;
+        clearInterval(crowdTimer);
+        apply(null);
+        return;
+      }
+      if (!text || text === last || stopped) return;
       last = text;
-      apply(revive(JSON.parse(text)));
+      apply(revive(raw));
     } catch {
       // The next pull tries again. The room stays on the last good frame.
     }
   };
   pull();
-  setInterval(pull, 800);
+  crowdTimer = setInterval(pull, 800);
 }

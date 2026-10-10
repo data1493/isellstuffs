@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The lane — The Row</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -83,11 +84,11 @@
   </main>
   <p class="hint">F nova · J jun</p>
   <script type="module">
-    import { armLane, tapLane, resetPile, roundLine, linePlace } from "./js/room.mjs?v=3";
-    import { readRoom, writeRoom } from "./js/persist.mjs?v=3";
-    import { crowdOn, watchCrowd } from "./js/live.mjs?v=3";
-    import { stampYou, watchCall } from "./js/gate.mjs?v=3";
-    import { ensureTagStyle, flashSides, mineSide, paintWho, postRow } from "./js/watch.mjs?v=3";
+    import { armLane, tapLane, resetPile, roundLine, linePlace, seatYou } from "./js/room.mjs?v=6";
+    import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
+    import { crowdOn, watchCrowd } from "./js/live.mjs?v=6";
+    import { stampYou, watchCall } from "./js/gate.mjs?v=6";
+    import { awardBar, ensureTagStyle, flashSides, mineSide, paintWho, postRow, reportMove } from "./js/watch.mjs?v=6";
 
     const storage = localStorage;
     let room = readRoom(storage);
@@ -101,9 +102,23 @@
     const stepOut = document.querySelector("#stepOut");
     const lockSeat = document.querySelector("#lockSeat");
 
-    function commit(next) {
+    function sit() {
+      if (crowdOn()) return;
+      const next = seatYou(room);
+      if (next === room) return;
       room = next;
-      if (!crowdOn()) writeRoom(storage, room);
+      writeRoom(storage, room);
+    }
+
+    function commit(next, move) {
+      const before = room;
+      room = next;
+      if (!crowdOn()) {
+        sit();
+        writeRoom(storage, room);
+        if (move) reportMove({ ...move, drop: room.drop?.id });
+        awardBar(before, room);
+      }
       paint();
     }
 
@@ -127,7 +142,9 @@
       document.querySelector(".board").classList.toggle("blocked", blocked);
       document.querySelector("#left").classList.toggle("winner", room.pile.winner === "left");
       document.querySelector("#right").classList.toggle("winner", room.pile.winner === "right");
-      document.querySelector(".hint").textContent = crowdOn() ? (mine ? "You're in. Tap your side." : "Watching the room") : "F nova · J jun";
+      const leftName = room.seats?.left || "nova";
+      const rightName = room.seats?.right || "jun";
+      document.querySelector(".hint").textContent = crowdOn() ? (mine ? "You're in. Tap your side." : "Watching the room") : `F ${leftName} · J ${rightName}`;
       status.textContent = blocked || called
         ? roundLine(room)
         : crowdOn() && !mine
@@ -180,10 +197,11 @@
         if (!result.ok) status.textContent = result.error || "That tap missed.";
         return;
       }
-      const result = tapLane(room, side, Math.round(spot));
+      const at = Math.round(spot);
+      const result = tapLane(room, side, at);
       if (!result.ok) { status.textContent = result.error; return; }
       document.querySelector(side === "left" ? "#left" : "#right").classList.add("hot");
-      commit(result.state);
+      commit(result.state, { kind: "tap", side, spot: at });
     }
 
     document.querySelector("#left").addEventListener("click", () => tap("left"));
@@ -196,9 +214,16 @@
         return;
       }
       stop();
+      const mark = 20 + Math.floor(Math.random() * 61);
       const reset = resetPile(room).state;
-      const armed = armLane(reset, 20 + Math.floor(Math.random() * 61));
-      commit(armed.ok ? armed.state : reset);
+      commit(reset, { kind: "reset" });
+      const armed = armLane(room, mark);
+      if (armed.ok) {
+        room = armed.state;
+        writeRoom(storage, room);
+        reportMove({ kind: "arm", mark });
+        paint();
+      }
       run();
     });
     stepOut.addEventListener("click", async () => {
@@ -225,8 +250,29 @@
       location.replace("/#in");
     } else if (crowdOn()) {
       watchCrowd((next) => {
+        if (!next) {
+          document.body.classList.remove("crowd");
+          if (!readRoom(storage).you) {
+            location.replace("/#in");
+            return;
+          }
+          room = readRoom(storage);
+          sit();
+          showYou();
+          paint();
+          watchCall({ room, here: "lane", crowd: false, you: room.you });
+          window.addEventListener("pageshow", () => {
+            if (!readRoom(storage).you) { location.replace("/#in"); return; }
+            room = readRoom(storage);
+            sit();
+            showYou();
+            paint();
+          });
+          return;
+        }
         const you = readRoom(storage).you;
         const merged = you ? { ...next, you } : next;
+        awardBar(seen, merged);
         flashSides(seen, merged);
         seen = merged;
         room = merged;
@@ -235,9 +281,14 @@
         watchCall({ room, here: "lane", crowd: true, you });
       });
     } else {
+      sit();
       if (room.pile.status === "open" && (!room.pile.game || room.pile.game === "lane") && room.lane.leftTap == null && room.lane.rightTap == null) {
-        const armed = armLane(room, 20 + Math.floor(Math.random() * 61));
-        if (armed.ok) room = writeRoom(storage, armed.state);
+        const mark = 20 + Math.floor(Math.random() * 61);
+        const armed = armLane(room, mark);
+        if (armed.ok) {
+          room = writeRoom(storage, armed.state);
+          reportMove({ kind: "arm", mark });
+        }
       }
       showYou();
       paint();
@@ -245,6 +296,7 @@
       window.addEventListener("pageshow", () => {
         if (!readRoom(storage).you) { location.replace("/#in"); return; }
         room = readRoom(storage);
+        sit();
         showYou();
         paint();
       });
