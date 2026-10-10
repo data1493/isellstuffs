@@ -1,0 +1,23 @@
+{
+  "framework": null,
+  "rewrites": [
+    { "source": "/me", "destination": "/api/row?row=me" },
+    { "source": "/keep", "destination": "/api/row?row=keep" },
+    { "source": "/login", "destination": "/api/row?row=login" },
+    { "source": "/out", "destination": "/api/row?row=out" },
+    { "source": "/round", "destination": "/api/row?row=round" },
+    { "source": "/queue", "destination": "/api/row?row=queue" },
+    { "source": "/act", "destination": "/api/row?row=act" },
+    { "source": "/again", "destination": "/api/row?row=again" },
+    { "source": "/live.json", "destination": "/api/row?row=live" },
+    { "source": "/favicon.ico", "destination": "/favicon.svg" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}

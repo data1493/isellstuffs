@@ -1,0 +1,7 @@
+{
+  "name": "the-row",
+  "private": true,
+  "dependencies": {
+    "@upstash/redis": "^1.36.4"
+  }
+}
