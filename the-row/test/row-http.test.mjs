@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { handleRow, readCookie, sessionCookie } from "../js/row-http.mjs";
 import { createMemoryStore } from "../js/memory-store.mjs";
-import { createRedisStore } from "../js/redis-store.mjs";
+import { conflictError, createBlobStore, isConflict, lostCreate } from "../js/blob-store.mjs";
 
 const now = 1_700_000_000_000;
 
@@ -167,29 +167,57 @@ test("a bad body is refused", async () => {
   assert.equal(result.json.error, "Bad request.");
 });
 
-function fakeRedis() {
-  const data = new Map();
+function fakeBlob() {
+  let doc = null;
+  let serial = 0;
   return {
-    async get(key) {
-      if (!data.has(key)) return null;
-      return structuredClone(data.get(key));
+    async read() {
+      if (!doc) return null;
+      return { value: structuredClone(doc.value), etag: doc.etag };
     },
-    async set(key, value, opts) {
-      if (opts?.nx && data.has(key)) return null;
-      data.set(key, structuredClone(value));
-      return "OK";
+    async write(value, etag) {
+      if (doc && etag !== doc.etag) {
+        const error = new Error("Precondition failed: ETag mismatch.");
+        error.name = "BlobPreconditionFailedError";
+        throw error;
+      }
+      if (doc && !etag) throw conflictError();
+      serial += 1;
+      doc = { value: structuredClone(value), etag: `e${serial}` };
     },
-    async del(key) {
-      data.delete(key);
-      return 1;
+    bump() {
+      if (doc) doc.etag = `moved-${doc.etag}`;
     },
   };
 }
 
-test("redis keeps the account and the room across two function instances", async () => {
-  const redis = fakeRedis();
+function blobStore(blob, now) {
+  return createBlobStore({
+    read: blob.read,
+    write: blob.write,
+    crowd: true,
+    now,
+    wait: async () => {},
+  });
+}
+
+test("a mismatch is a conflict and a landed create is not replayed", () => {
+  const missed = new Error("Precondition failed: ETag mismatch.");
+  missed.name = "BlobPreconditionFailedError";
+  assert.equal(isConflict(missed), true);
+  assert.equal(isConflict(conflictError()), true);
+  assert.equal(isConflict(new Error("nope")), false);
+  const written = { book: { users: [], sessions: [] }, live: { beat: 0 } };
+  assert.equal(lostCreate(new Error("Unknown error, please visit https://vercel.com/help."), null, written, null), "fail");
+  assert.equal(lostCreate(new Error("down"), null, written, { value: written }), "ok");
+  assert.equal(lostCreate(new Error("down"), null, written, { value: { book: { users: [{ handle: "salt" }] } } }), "retry");
+  assert.equal(lostCreate(missed, "e1", written, { value: written }), "retry");
+});
+
+test("blob keeps the account and the room across two function instances", async () => {
+  const blob = fakeBlob();
   let clock = 5_000;
-  const first = createRedisStore({ redis, crowd: true, now: () => clock });
+  const first = blobStore(blob, () => clock);
   const kept = await handleRow({
     method: "POST",
     pathname: "/keep",
@@ -204,9 +232,13 @@ test("redis keeps the account and the room across two function instances", async
   assert.match(kept.cookie, /Secure/);
   const token = cookieToken(kept.cookie);
   await postOn(first, "/queue", { handle: "mint", link: "https://mint.room", game: "lane" }, token);
+  const stored = await blob.read();
+  assert.equal(stored.value.live.state.beating, undefined);
+  assert.equal(stored.value.book.users[0].key, undefined);
+  assert.equal(typeof stored.value.book.users[0].keyHash, "string");
 
   clock = 5_000 + 2400 * 2;
-  const second = createRedisStore({ redis, crowd: true, now: () => clock });
+  const second = blobStore(blob, () => clock);
   const me = await handleRow({
     method: "GET",
     pathname: "/me",
@@ -237,11 +269,124 @@ test("redis keeps the account and the room across two function instances", async
     token: "",
     secure: true,
     bodyText: "",
-    store: createRedisStore({ redis, crowd: true, now: () => clock }),
+    store: blobStore(blob, () => clock),
     crowd: true,
     now: () => clock,
   });
   assert.equal(JSON.stringify(again.json), JSON.stringify(live.json));
+  const after = await blob.read();
+  assert.equal(after.value.live.beat > 0, true);
+  assert.equal(after.value.live.tickAt, clock);
+});
+
+test("the first read keeps the crowd clock", async () => {
+  const blob = fakeBlob();
+  let clock = 10_000;
+  await handleRow({
+    method: "GET",
+    pathname: "/live.json",
+    token: "",
+    secure: false,
+    bodyText: "",
+    store: blobStore(blob, () => clock),
+    crowd: true,
+    now: () => clock,
+  });
+  const seeded = await blob.read();
+  assert.equal(seeded.value.live.tickAt, 10_000);
+  assert.equal(seeded.value.live.beat, 0);
+  clock = 10_000 + 2400;
+  await handleRow({
+    method: "GET",
+    pathname: "/live.json",
+    token: "",
+    secure: false,
+    bodyText: "",
+    store: blobStore(blob, () => clock),
+    crowd: true,
+    now: () => clock,
+  });
+  const moved = await blob.read();
+  assert.equal(moved.value.live.beat > 0, true);
+  assert.equal(moved.value.live.tickAt, clock);
+});
+
+test("a lost write reloads so two keeps both stay", async () => {
+  const blob = fakeBlob();
+  const left = createBlobStore({ read: blob.read, write: blob.write, crowd: false, now: () => now, wait: async () => {} });
+  const right = createBlobStore({ read: blob.read, write: blob.write, crowd: false, now: () => now, wait: async () => {} });
+  const [mint, salt] = await Promise.all([
+    post(left, "/keep", { handle: "mint" }),
+    post(right, "/keep", { handle: "salt" }),
+  ]);
+  assert.equal(mint.status, 200);
+  assert.equal(salt.status, 200);
+  const stored = await blob.read();
+  const handles = stored.value.book.users.map((user) => user.handle).sort();
+  assert.deepEqual(handles, ["mint", "salt"]);
+});
+
+test("an etag miss retries against the document that won", async () => {
+  const blob = fakeBlob();
+  const raw = blob.write.bind(blob);
+  let flipped = false;
+  blob.write = async (value, etag) => {
+    if (!flipped && etag) {
+      flipped = true;
+      blob.bump();
+      const error = new Error("Precondition failed: ETag mismatch.");
+      error.name = "BlobPreconditionFailedError";
+      throw error;
+    }
+    return raw(value, etag);
+  };
+  const store = createBlobStore({
+    read: blob.read,
+    write: (...args) => blob.write(...args),
+    crowd: false,
+    now: () => now,
+    wait: async () => {},
+  });
+  assert.equal((await post(store, "/keep", { handle: "mint" })).status, 200);
+  assert.equal((await post(store, "/keep", { handle: "salt" })).status, 200);
+  const stored = await blob.read();
+  const handles = stored.value.book.users.map((user) => user.handle).sort();
+  assert.deepEqual(handles, ["mint", "salt"]);
+});
+
+test("conflicts stop after the last retry and other errors do not retry", async () => {
+  const blob = fakeBlob();
+  let writes = 0;
+  blob.write = async () => {
+    writes += 1;
+    throw conflictError();
+  };
+  const store = createBlobStore({
+    read: blob.read,
+    write: blob.write,
+    crowd: false,
+    now: () => now,
+    attempts: 3,
+    wait: async () => {},
+  });
+  await assert.rejects(() => post(store, "/keep", { handle: "mint" }), /The room changed/);
+  assert.equal(writes, 3);
+
+  let once = 0;
+  const other = fakeBlob();
+  other.write = async () => {
+    once += 1;
+    throw new Error("disk full");
+  };
+  const failing = createBlobStore({
+    read: other.read,
+    write: other.write,
+    crowd: false,
+    now: () => now,
+    wait: async () => {},
+  });
+  await assert.rejects(() => post(failing, "/keep", { handle: "mint" }), /disk full/);
+  assert.equal(once, 1);
 });
 
 function postOn(store, path, body, token) {

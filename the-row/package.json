@@ -2,6 +2,6 @@
   "name": "the-row",
   "private": true,
   "dependencies": {
-    "@upstash/redis": "^1.36.4"
+    "@vercel/blob": "^2.8.1"
   }
 }

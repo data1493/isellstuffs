@@ -1,7 +1,8 @@
-import { Redis } from "@upstash/redis";
+import { get, put } from "@vercel/blob";
 import { handleRow, readCookie } from "../js/row-http.mjs";
-import { createRedisStore, redisOptionsFromEnv } from "../js/redis-store.mjs";
+import { conflictError, createBlobStore, lostCreate } from "../js/blob-store.mjs";
 
+const PATH = "row/state.json";
 const PATHS = {
   me: "/me",
   keep: "/keep",
@@ -16,12 +17,69 @@ const PATHS = {
 
 let store;
 
+function blobReady() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
+}
+
+async function textFrom(stream) {
+  const chunks = [];
+  if (stream && typeof stream.getReader === "function") {
+    const reader = stream.getReader();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) chunks.push(Buffer.from(value));
+    }
+  } else {
+    for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks).toString("utf8");
+}
+
+export async function readRowState() {
+  const result = await get(PATH, { access: "private", useCache: false });
+  if (!result || result.statusCode !== 200 || !result.stream) return null;
+  let value;
+  try {
+    value = JSON.parse(await textFrom(result.stream));
+  } catch {
+    throw new Error("The room store could not be read.");
+  }
+  if (!value || typeof value !== "object") throw new Error("The room store could not be read.");
+  return { value, etag: result.blob.etag };
+}
+
+export async function writeRowState(value, etag) {
+  try {
+    await put(PATH, JSON.stringify(value), {
+      access: "private",
+      contentType: "application/json",
+      addRandomSuffix: false,
+      cacheControlMaxAge: 60,
+      ...(etag ? { ifMatch: etag } : {}),
+    });
+  } catch (error) {
+    let current = null;
+    if (!etag) {
+      try {
+        current = await readRowState();
+      } catch {
+        current = null;
+      }
+    }
+    const decision = lostCreate(error, etag, value, current);
+    if (decision === "retry") throw conflictError();
+    if (decision === "ok") return;
+    throw error;
+  }
+}
+
 function getStore() {
   if (store) return store;
-  const options = redisOptionsFromEnv();
-  if (!options) throw new Error("Upstash Redis is not configured.");
-  store = createRedisStore({
-    redis: new Redis(options),
+  if (!blobReady()) throw new Error("Vercel Blob is not configured.");
+  store = createBlobStore({
+    read: readRowState,
+    write: writeRowState,
     crowd: process.env.ROW_CROWD === "1",
   });
   return store;
