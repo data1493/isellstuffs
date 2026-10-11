@@ -1,5 +1,5 @@
 import { hardenBook } from "./accounts.mjs";
-import { fillRoom } from "./crowd.mjs";
+import { houseRoom, isHouseRoom, realPlayers } from "./house.mjs";
 import { seedRoom } from "./room.mjs";
 import { advanceLive } from "./live-clock.mjs";
 
@@ -54,15 +54,21 @@ function liveReady(state) {
 function liveFrom(raw, crowd, now) {
   if (liveReady(raw?.state)) {
     if ("beating" in raw.state) delete raw.state.beating;
+    let state = raw.state;
+    let migrated = false;
+    if (crowd && realPlayers(state).length === 0 && !isHouseRoom(state)) {
+      state = houseRoom();
+      migrated = true;
+    }
     return {
-      state: raw.state,
+      state,
       beat: Number(raw.beat) || 0,
       tickAt: Number.isFinite(Number(raw.tickAt)) ? Number(raw.tickAt) : now,
-      seeded: false,
+      seeded: migrated,
     };
   }
   return {
-    state: crowd ? fillRoom() : seedRoom(),
+    state: crowd ? houseRoom() : seedRoom(),
     beat: 0,
     tickAt: now,
     seeded: true,

@@ -856,7 +856,7 @@
   <script type="module">
     import { CATALOG, SIDES, enqueue, join, linePlace, placeWord, say, focusDrop, roundLine, seatLabel, wall } from "./js/room.mjs?v=6";
     import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
-    import { crowdOn, watchCrowd } from "./js/live.mjs?v=6";
+    import { crowdOn, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
     import { watchCall } from "./js/gate.mjs?v=6";
     import { ensureTagStyle, fillTag, postRow } from "./js/watch.mjs?v=6";
 
@@ -909,7 +909,7 @@
 
     function commit(next) {
       room = next;
-      if (!crowdOn()) writeRoom(storage, room);
+      if (!crowdOn()) room = writeRoom(storage, room);
       paint();
     }
 
@@ -1208,6 +1208,7 @@
         room = readRoom(storage);
         paint();
       });
+      watchHouse(() => room, (next) => commit(next));
       paint();
     }
   </script>

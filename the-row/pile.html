@@ -256,7 +256,7 @@
   <script type="module">
     import { pileOn, resetPile, pileLine, roundLine, linePlace, seatYou } from "./js/room.mjs?v=6";
     import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
-    import { crowdOn, watchCrowd } from "./js/live.mjs?v=6";
+    import { crowdOn, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
     import { stampYou, watchCall } from "./js/gate.mjs?v=6";
     import { awardBar, ensureTagStyle, flashSides, mineSide, paintWho, postRow, reportMove } from "./js/watch.mjs?v=6";
 
@@ -356,7 +356,7 @@
       const next = seatYou(room);
       if (next === room) return;
       room = next;
-      writeRoom(storage, room);
+      room = writeRoom(storage, room);
     }
 
     function commit(next, move) {
@@ -364,7 +364,7 @@
       room = next;
       if (!crowdOn()) {
         sit();
-        writeRoom(storage, room);
+        room = writeRoom(storage, room);
         if (move) reportMove({ ...move, drop: room.drop?.id });
         awardBar(before, room);
       }
@@ -462,6 +462,7 @@
       sit();
       showYou();
       paint();
+      watchHouse(() => room, (next) => commit(next));
       watchCall({ room, here: "pile", crowd: false, you: room.you });
       window.addEventListener("pageshow", () => {
         if (!readRoom(storage).you) { location.replace("/#in"); return; }

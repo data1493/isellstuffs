@@ -1,3 +1,5 @@
+import { houseBeat } from "./house.mjs";
+import { BEAT_MS } from "./live-clock.mjs";
 import { revive } from "./room.mjs?v=6";
 
 let crowdLive = true;
@@ -15,6 +17,18 @@ export function keepCrowdLinks() {
     url.searchParams.set("crowd", "1");
     link.href = `${url.pathname}${url.search}${url.hash}`;
   }
+}
+
+export function watchHouse(pull, push) {
+  if (new URLSearchParams(location.search).get("crowd") === "1") return;
+  let beat = 0;
+  const step = () => {
+    const next = houseBeat(pull(), beat, Date.now());
+    beat = next.beat;
+    push(next.state);
+  };
+  step();
+  setInterval(step, BEAT_MS);
 }
 
 export function watchCrowd(apply) {

@@ -1,3 +1,4 @@
+import { houseBeat, isHouseRoom } from "./house.mjs";
 import {
   CATALOG,
   armLane,
@@ -24,7 +25,7 @@ export const CAST = [
   "drift", "quay",
 ];
 
-const VIBES = [
+export const VIBES = [
   "This room is mean in a good way.",
   "Need a drum bus that isn’t polite.",
   "Who’s closer, say it.",
@@ -55,7 +56,7 @@ const VIBES = [
   "One more and this round is called.",
 ];
 
-const LEFT_LINES = [
+export const LEFT_LINES = [
   "Night bus, no polish.",
   "The font walks in first.",
   "One bar. That’s the whole drop.",
@@ -63,7 +64,7 @@ const LEFT_LINES = [
   "Leave it open and watch.",
 ];
 
-const RIGHT_LINES = [
+export const RIGHT_LINES = [
   "Polite is how you lose it.",
   "Jun already kept one.",
   "Play it louder than the room.",
@@ -329,6 +330,10 @@ function guestBeat(state, beat, now) {
 }
 
 export function crowdBeat(state, beat, now = Date.now()) {
+  if (isHouseRoom(state)) {
+    const stepped = houseBeat(state, beat, now);
+    return { state: clearYou(stepped.state), beat: stepped.beat };
+  }
   if (humanSeated(state) && holdingForHuman(state)) {
     return { state: clearYou(guestBeat(state, beat, now)), beat: beat + 1 };
   }

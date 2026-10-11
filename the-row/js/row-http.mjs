@@ -1,4 +1,5 @@
 import { actingHandle, dropSession, keepName, loginName, playRound, readUser, recordRound } from "./accounts.mjs";
+import { isHouseBot, isHouseRoom, stripBotPrize } from "./house.mjs";
 import { act, enqueue, join, linePlace, runItBack, seatHandle, stepOut } from "./room.mjs";
 
 const COOKIE = "row";
@@ -124,11 +125,13 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
       return reply(400, { ok: false, error: gate.error, place: 0, call: live.state.call || null });
     }
     const before = live.state.pile?.status;
-    const result = applyPost(pathname, body, gate.handle, live.state);
-    if (!result.ok) return roomReply(result, live.state, gate.handle);
+    const played = applyPost(pathname, body, gate.handle, live.state);
+    if (!played.ok) return roomReply(played, live.state, gate.handle);
+    const result = { ...played, state: isHouseRoom(played.state) ? stripBotPrize(played.state) : played.state };
     saveLive({ ...live, state: result.state });
     if (before !== "won" && result.state.pile?.status === "won" && result.state.pile.winner) {
       const winner = seatHandle(result.state, result.state.pile.winner);
+      if (isHouseBot(winner)) return roomReply(result, result.state, gate.handle);
       const loser = seatHandle(result.state, result.state.pile.winner === "left" ? "right" : "left");
       const recorded = recordRound(book, {
         winner,
