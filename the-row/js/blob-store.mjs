@@ -26,9 +26,10 @@ export function isConflict(error) {
   return /precondition|etag mismatch|already exists/i.test(String(error.message || ""));
 }
 
-export function conflictError() {
+export function conflictError(cause) {
   const error = new Error("The room changed.");
   error.code = "CONFLICT";
+  if (cause instanceof Error) error.cause = cause;
   return error;
 }
 

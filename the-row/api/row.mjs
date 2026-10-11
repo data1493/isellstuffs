@@ -1,4 +1,4 @@
-import { get, put } from "@vercel/blob";
+import { get, head, put } from "@vercel/blob";
 import { handleRow, readCookie } from "../js/row-http.mjs";
 import { conflictError, createBlobStore, lostCreate } from "../js/blob-store.mjs";
 
@@ -39,7 +39,12 @@ export function putOptions(etag, env = process.env) {
   }, env);
 }
 
-export function faultText(error) {
+// Download responses can carry a weak validator. The Blob API compares the strong etag.
+export function blobEtag(value) {
+  return String(value || "").trim().replace(/^W\//i, "");
+}
+
+function faultPiece(error) {
   const name = error instanceof Error && /^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(error.name) ? error.name : "Error";
   let message = error instanceof Error ? String(error.message || "") : "";
   message = message.replace(/vercel_blob_[A-Za-z0-9_]+/g, "[token]");
@@ -48,6 +53,13 @@ export function faultText(error) {
   if (/authorization|secret|password|BLOB_READ_WRITE/i.test(message)) message = "";
   if (!message) return name;
   return `${name}: ${message.slice(0, 160)}`;
+}
+
+export function faultText(error) {
+  const text = faultPiece(error);
+  const cause = error instanceof Error && error.cause instanceof Error ? faultPiece(error.cause) : "";
+  if (!cause || cause === text) return text;
+  return `${text} | ${cause}`.slice(0, 220);
 }
 
 async function textFrom(stream) {
@@ -66,6 +78,13 @@ async function textFrom(stream) {
 }
 
 export async function readRowState() {
+  let etag = "";
+  try {
+    const meta = await head(PATH, commandOptions());
+    etag = blobEtag(meta?.etag);
+  } catch (error) {
+    if (error?.name === "BlobNotFoundError") return null;
+  }
   const result = await get(PATH, commandOptions({ access: "private", useCache: false }));
   if (!result || result.statusCode !== 200 || !result.stream) return null;
   let value;
@@ -75,7 +94,8 @@ export async function readRowState() {
     throw new Error("The room store could not be read.");
   }
   if (!value || typeof value !== "object") throw new Error("The room store could not be read.");
-  return { value, etag: result.blob.etag };
+  if (!etag) etag = blobEtag(result.blob?.etag);
+  return { value, etag };
 }
 
 export async function writeRowState(value, etag) {
@@ -91,7 +111,7 @@ export async function writeRowState(value, etag) {
       }
     }
     const decision = lostCreate(error, etag, value, current);
-    if (decision === "retry") throw conflictError();
+    if (decision === "retry") throw conflictError(error);
     if (decision === "ok") return;
     throw error;
   }

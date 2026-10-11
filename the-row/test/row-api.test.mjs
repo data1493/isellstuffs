@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { commandOptions, faultText, putOptions } from "../api/row.mjs";
+import { blobEtag, commandOptions, faultText, putOptions } from "../api/row.mjs";
 
 test("the read-write token is sent on blob commands", () => {
   const env = { BLOB_READ_WRITE_TOKEN: " vercel_blob_rw_example_secret " };
@@ -28,4 +28,15 @@ test("a store fault keeps the message and drops a token", () => {
   assert.equal(faultText(error), "BlobError: Vercel Blob: Failed to fetch blob with [token]");
   const secret = new Error("authorization: Bearer vercel_blob_rw_example_secret");
   assert.equal(faultText(secret), "Error");
+  const nested = new Error("The room changed.");
+  nested.cause = error;
+  assert.equal(
+    faultText(nested),
+    "Error: The room changed. | BlobError: Vercel Blob: Failed to fetch blob with [token]",
+  );
+});
+
+test("a weak download validator becomes the strong etag", () => {
+  assert.equal(blobEtag('W/"abc"'), '"abc"');
+  assert.equal(blobEtag('"abc"'), '"abc"');
 });
