@@ -1,11 +1,12 @@
 import { emptyBook } from "./accounts.mjs";
-import { fillRoom, crowdBeat } from "./crowd.mjs";
+import { crowdBeat } from "./crowd.mjs";
+import { houseRoom } from "./house.mjs";
 import { seedRoom } from "./room.mjs";
 
 export function createMemoryStore({ crowd = false, onBook, onLive, now = Date.now } = {}) {
   let book = emptyBook();
   let live = {
-    state: crowd ? fillRoom() : seedRoom(),
+    state: crowd ? houseRoom() : seedRoom(),
     beat: 0,
     tickAt: now(),
   };
