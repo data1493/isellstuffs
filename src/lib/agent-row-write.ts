@@ -34,14 +34,10 @@ const ASSETS = new Set(["usdc", "eth"]);
 export const TRADE_INTENTS = new Set(["take", "confirm", "void"]);
 
 function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
+  // NextURL rewrites loopback hosts to "localhost". The Fetch URL is this request.
+  const readUrl = Object.getOwnPropertyDescriptor(Request.prototype, "url")?.get;
+  const raw = readUrl?.call(request);
+  if (typeof raw === "string") return new URL(raw).origin;
   return request.nextUrl.origin;
 }
 
