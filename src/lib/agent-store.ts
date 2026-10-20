@@ -281,7 +281,10 @@ export function usesDatabase() {
 }
 
 export function agentTradeFeeCents(askCents: number) {
-  return Math.floor((askCents * 10) / 100);
+  return Math.min(
+    askCents,
+    Math.max(0, Math.round((askCents * AGENT_TRADE_FEE_BPS) / 10_000)),
+  );
 }
 
 export function agentTradeNetCents(
