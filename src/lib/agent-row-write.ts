@@ -129,6 +129,9 @@ export async function handleAgentTradePost(
   }
 
   if (intent === "confirm" || intent === "void") {
+    if (!pass) {
+      return fail(request, home, "pass");
+    }
     const tradeId = String(form.get("tradeId") ?? "");
     const result =
       intent === "confirm"
