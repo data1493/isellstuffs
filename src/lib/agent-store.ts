@@ -875,7 +875,7 @@ export async function readPass(
     "SELECT handle, public_address, created_at FROM agent_passes WHERE handle = ?",
     [fromCookie.handle],
   );
-  return named[0] ? rowPass(named[0]) : fromCookie;
+  return named[0] ? rowPass(named[0]) : null;
 }
 
 export async function readPassByHandle(
