@@ -254,6 +254,7 @@ export function loginName(book, input, now = Date.now(), deps = {}) {
   const user = next.users.find((item) => item.handle === handle);
   if (!user || !keyMatches(user, key)) return { ok: false, error: "That key does not match.", book: next };
   const token = (deps.token || makeToken)();
+  next.sessions = next.sessions.filter((item) => item.userId !== user.id);
   next.sessions.push({ token, userId: user.id, expires: now + YEAR_MS });
   return { ok: true, book: next, token, user: present(user, key) };
 }
