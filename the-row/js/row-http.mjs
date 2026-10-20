@@ -1,5 +1,5 @@
 import { actingHandle, dropSession, keepName, loginName, playRound, readUser, recordRound } from "./accounts.mjs";
-import { isHouseBot, isHouseRoom, stripBotPrize } from "./house.mjs";
+import { isHouseRoom, stripBotPrize } from "./house.mjs";
 import { act, enqueue, join, linePlace, runItBack, seatHandle, stepOut } from "./room.mjs";
 
 const COOKIE = "row";
@@ -9,7 +9,13 @@ export function readCookie(header, name = COOKIE) {
   const raw = header || "";
   for (const part of raw.split(";")) {
     const [key, ...rest] = part.trim().split("=");
-    if (key === name) return decodeURIComponent(rest.join("="));
+    if (key === name) {
+      try {
+        return decodeURIComponent(rest.join("="));
+      } catch {
+        return "";
+      }
+    }
   }
   return "";
 }
@@ -131,7 +137,6 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
     saveLive({ ...live, state: result.state });
     if (before !== "won" && result.state.pile?.status === "won" && result.state.pile.winner) {
       const winner = seatHandle(result.state, result.state.pile.winner);
-      if (isHouseBot(winner)) return roomReply(result, result.state, gate.handle);
       const loser = seatHandle(result.state, result.state.pile.winner === "left" ? "right" : "left");
       const recorded = recordRound(book, {
         winner,
