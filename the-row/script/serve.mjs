@@ -86,7 +86,12 @@ async function loadBook() {
 }
 
 function filePath(urlPath) {
-  const clean = decodeURIComponent((urlPath || "/").split("?")[0]);
+  let clean;
+  try {
+    clean = decodeURIComponent((urlPath || "/").split("?")[0]);
+  } catch {
+    return null;
+  }
   const relative = (clean === "/" ? "index.html" : clean).replace(/^\/+/, "");
   if (!relative || relative.split("/").includes("..")) return null;
   const full = normalize(pathJoin(root, relative));
