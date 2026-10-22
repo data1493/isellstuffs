@@ -7,14 +7,8 @@ import {
 } from "@/lib/cart";
 import { shakeCartListingIds } from "@/lib/cart-shake";
 import { cartShakePath } from "@/lib/paths";
+import { sameOriginUrl } from "@/lib/same-origin";
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  return request.nextUrl.origin;
-}
 
 function safeReturnTo(value: string) {
   if (value.startsWith("/") && !value.startsWith("//")) {
@@ -44,7 +38,7 @@ export async function POST(request: NextRequest) {
   );
   const result = shakeCartListingIds(cartIds);
 
-  const target = new URL(returnTo, originFrom(request));
+  const target = sameOriginUrl(request, returnTo);
   if (target.pathname === cartShakePath()) {
     target.searchParams.set("shook", result.notice);
   }
@@ -62,5 +56,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  return NextResponse.redirect(new URL(cartShakePath(), originFrom(request)), 303);
+  return NextResponse.redirect(sameOriginUrl(request, cartShakePath()), 303);
 }

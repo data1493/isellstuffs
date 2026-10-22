@@ -9,18 +9,8 @@ import {
   tapeEarlyFold,
 } from "@/lib/early-fold";
 import { stallFoldPath } from "@/lib/paths";
+import { sameOriginUrl } from "@/lib/same-origin";
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return request.nextUrl.origin;
-}
 
 function safeReturnTo(value: string, fallback: string) {
   if (value.startsWith("/") && !value.startsWith("//")) {
@@ -30,7 +20,7 @@ function safeReturnTo(value: string, fallback: string) {
 }
 
 function send(request: NextRequest, path: string, cookieValue?: string) {
-  const response = NextResponse.redirect(new URL(path, originFrom(request)), 303);
+  const response = NextResponse.redirect(sameOriginUrl(request, path), 303);
   if (cookieValue !== undefined) {
     response.cookies.set({
       name: EARLY_FOLD_COOKIE_NAME,
@@ -72,7 +62,7 @@ export async function POST(request: NextRequest) {
   const result = tapeEarlyFold(stall, existing, String(form.get("note") ?? ""));
   if (!result.ok) {
     if (result.reason === "empty") {
-      const target = new URL(stallFoldPath(stall.slug), originFrom(request));
+      const target = sameOriginUrl(request, stallFoldPath(stall.slug));
       target.searchParams.set("error", "empty");
       return NextResponse.redirect(target, 303);
     }
@@ -84,7 +74,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   return NextResponse.redirect(
-    new URL(stallFoldPath("folding-table-tuesday"), originFrom(request)),
+    sameOriginUrl(request, stallFoldPath("folding-table-tuesday")),
     303,
   );
 }

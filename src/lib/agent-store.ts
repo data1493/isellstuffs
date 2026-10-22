@@ -126,6 +126,7 @@ export type AgentStoreReason =
   | "pulled"
   | "taken"
   | "status"
+  | "actor"
   | "stars"
   | "about"
   | "method"
@@ -526,6 +527,17 @@ export function cookieNameFor(key: keyof AgentCookieWrites) {
 
 function normalizeHandle(raw: string) {
   return raw.trim().replace(/\s+/g, " ").slice(0, 40);
+}
+
+export function canSettleTrade(
+  trade: { takerHandle: string; lotId: string },
+  lots: { id: string; sellerHandle: string }[],
+  actorHandle: string | null | undefined,
+) {
+  const actor = normalizeHandle(actorHandle ?? "");
+  if (!actor) return false;
+  if (actor === trade.takerHandle) return true;
+  return lots.some((lot) => lot.id === trade.lotId && lot.sellerHandle === actor);
 }
 
 function normalizeTitle(raw: string) {
@@ -1179,7 +1191,8 @@ export async function insertTrade(
 async function setTradeStatus(
   tradeId: string,
   next: "confirmed" | "void",
-  snapshot?: AgentStoreSnapshot,
+  snapshot: AgentStoreSnapshot | undefined,
+  actorHandle: string | undefined,
 ): Promise<AgentStoreWrite<AgentTrade>> {
   if (usesDatabase()) {
     const sql = await sqlClient();
@@ -1193,6 +1206,14 @@ async function setTradeStatus(
     const trade = rowTrade(rows[0]);
     if (trade.status !== "taken") {
       return { ok: false, reason: "status", cookies: {} };
+    }
+    const lots = await sql.all<Record<string, unknown>>(
+      "SELECT id, seller_handle FROM agent_lots WHERE id = ?",
+      [trade.lotId],
+    );
+    const sellerHandle = lots[0] ? asText(lots[0].seller_handle) : "";
+    if (!canSettleTrade(trade, [{ id: trade.lotId, sellerHandle }], actorHandle)) {
+      return { ok: false, reason: "actor", cookies: {} };
     }
     await sql.run("UPDATE agent_trades SET status = ? WHERE id = ?", [
       next,
@@ -1222,6 +1243,13 @@ async function setTradeStatus(
       cookies: { trades: serializeTrades(state.trades), lots: serializeLots(state.lots) },
     };
   }
+  if (!canSettleTrade(trade, state.lots, actorHandle)) {
+    return {
+      ok: false,
+      reason: "actor",
+      cookies: { trades: serializeTrades(state.trades), lots: serializeLots(state.lots) },
+    };
+  }
   trade.status = next;
   if (next === "confirmed") {
     const lot = state.lots.find((row) => row.id === trade.lotId);
@@ -1243,15 +1271,17 @@ async function setTradeStatus(
 export async function confirmTrade(
   tradeId: string,
   snapshot?: AgentStoreSnapshot,
+  actorHandle?: string,
 ) {
-  return setTradeStatus(tradeId, "confirmed", snapshot);
+  return setTradeStatus(tradeId, "confirmed", snapshot, actorHandle);
 }
 
 export async function voidTrade(
   tradeId: string,
   snapshot?: AgentStoreSnapshot,
+  actorHandle?: string,
 ) {
-  return setTradeStatus(tradeId, "void", snapshot);
+  return setTradeStatus(tradeId, "void", snapshot, actorHandle);
 }
 
 export async function readTrade(

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { pileOn } from "../js/room.mjs";
+import { enqueue, join, PEOPLE_CAP, pileOn, QUEUE_CAP, stepOut } from "../js/room.mjs";
 import { crowdBeat, fillRoom } from "../js/crowd.mjs";
 import {
   HOUSE,
@@ -155,6 +155,84 @@ test("a bot win does not keep the drop", () => {
   const stripped = stripBotPrize(room);
   assert.equal(stripped.pile.status, "open");
   assert.equal(stripped.drop.holder, null);
+});
+
+test("a human who runs it back opens the next round in the same seats", () => {
+  let state = houseRoom();
+  state.people = [
+    { handle: "alice", link: "https://alice.room" },
+    { handle: "nova", link: "https://nova.room" },
+  ];
+  state.seats = { left: "alice", right: "nova" };
+  for (let i = 0; i < 5; i += 1) state = pileOn(state, "left").state;
+  assert.equal(state.pile.status, "won");
+  state.rematch = { alice: "back" };
+  const next = houseBeat(state, 0, now).state;
+  assert.equal(next.pile.status, "open");
+  assert.equal(next.pile.leftScore, 0);
+  assert.equal(next.seats.left, "alice");
+  assert.equal(next.seats.right, "nova");
+  assert.equal(next.rematch.alice, undefined);
+});
+
+test("stepping out stays out and the queue starts the next round", () => {
+  let state = houseRoom();
+  state.people = [
+    { handle: "alice", link: "https://alice.room" },
+    { handle: "nova", link: "https://nova.room" },
+  ];
+  state.seats = { left: "alice", right: "nova" };
+  for (let i = 0; i < 5; i += 1) state = pileOn(state, "left").state;
+  state = stepOut(state, "alice").state;
+  state = join(state, { handle: "bob", link: "https://bob.room" }).state;
+  state.you = null;
+  state = enqueue(state, { handle: "bob", game: "pile", at: now - 10 }).state;
+  const next = run(50, state, 0, now).state;
+  assert.equal(next.pile.status, "open");
+  assert.notEqual(next.seats.left, "alice");
+  assert.notEqual(next.seats.right, "alice");
+  assert.ok(next.seats.left === "bob" || next.seats.right === "bob");
+  assert.ok(isHouseBot(next.seats.left) || isHouseBot(next.seats.right));
+  assert.equal((next.people || []).some((person) => person.handle === "alice"), false);
+});
+
+test("the roster and the line are capped, and bots return when players leave", () => {
+  let state = houseRoom();
+  let joined = 0;
+  for (let i = 0; i < PEOPLE_CAP + 5; i += 1) {
+    const handle = `p${i}`;
+    const result = join(state, { handle, link: `https://${handle}.room` });
+    if (!result.ok) {
+      assert.equal(result.error, "The room is full.");
+      break;
+    }
+    state = result.state;
+    state.you = null;
+    joined += 1;
+  }
+  assert.equal(state.people.length, PEOPLE_CAP);
+  assert.ok(joined < PEOPLE_CAP + 5);
+
+  state = houseRoom();
+  for (let i = 0; i < QUEUE_CAP + 3; i += 1) {
+    const handle = `q${i}`;
+    state = join(state, { handle, link: `https://${handle}.room` }).state;
+    state.you = null;
+    const queued = enqueue(state, { handle, game: "pile", at: now - 10 });
+    if (!queued.ok) {
+      assert.equal(queued.error, "The line is full.");
+      break;
+    }
+    state = queued.state;
+  }
+  assert.equal(state.queue.length, QUEUE_CAP);
+  state.queue = [];
+  state.seats = { left: null, right: null };
+  state.pile = { ...state.pile, status: "open", winner: null, game: null };
+  state.you = null;
+  const empty = staffHouse(state, now);
+  assert.deepEqual(botsIn(empty), ["nova", "jun"]);
+  assert.equal(empty.people.length, 2);
 });
 
 test("the scripted crowd still runs when the room is full of the cast", () => {

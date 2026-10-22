@@ -8,17 +8,11 @@ import {
 import { savedPath } from "@/lib/paths";
 import { parseSavedListingIds, SAVED_COOKIE_NAME } from "@/lib/saved";
 import { bagSavedListingIds } from "@/lib/saved-bag";
+import { sameOriginUrl } from "@/lib/same-origin";
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  return request.nextUrl.origin;
-}
 
 function send(request: NextRequest, bag: "scooped" | "empty", cartIds?: string[]) {
-  const target = new URL(savedPath(), originFrom(request));
+  const target = sameOriginUrl(request, savedPath());
   target.searchParams.set("bag", bag);
   const response = NextResponse.redirect(target, 303);
   if (cartIds) {
@@ -51,5 +45,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  return NextResponse.redirect(new URL(savedPath(), originFrom(request)), 303);
+  return NextResponse.redirect(sameOriginUrl(request, savedPath()), 303);
 }

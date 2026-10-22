@@ -2,6 +2,8 @@ export const VERSION = 2;
 export const GOAL = 5;
 export const VIBE_CAP = 8;
 export const WALL_SHOW = 4;
+export const PEOPLE_CAP = 40;
+export const QUEUE_CAP = 24;
 
 export const CATALOG = [
   {
@@ -230,6 +232,8 @@ export function join(state, input) {
   const link = String(input?.link ?? "").trim().slice(0, 64);
   if (!handle) return fail(state, "Need a handle.");
   if (!link) return fail(state, "Need a link.");
+  const already = state.people.some((person) => person.handle === handle);
+  if (!already && state.people.length >= PEOPLE_CAP) return fail(state, "The room is full.");
   const next = clone(state);
   next.people = next.people.filter((person) => person.handle !== handle);
   next.people.unshift({ handle, link });
@@ -371,6 +375,7 @@ export function enqueue(state, input) {
   if (!handle || !inRoom(state, handle)) return fail(state, "Get in first.");
   if (seatSide(state, handle)) return fail(state, "You're already in.");
   if ((state.queue || []).some((item) => item.handle === handle)) return ok(state);
+  if ((state.queue || []).length >= QUEUE_CAP) return fail(state, "The line is full.");
   const person = state.people.find((entry) => entry.handle === handle);
   const game = input?.game === "line" || input?.game === "lane" || input?.game === "pile" ? input.game : state.pile.game || "pile";
   const at = Number(input?.at);
@@ -398,6 +403,52 @@ export function stepOut(state, handle) {
   next.seats = { ...(next.seats || {}), [side]: null };
   next.rematch = { ...(next.rematch || {}), [key]: "out" };
   return ok(next);
+}
+
+function renameMap(raw, from, to) {
+  const next = {};
+  if (!raw || typeof raw !== "object") return next;
+  for (const [handle, value] of Object.entries(raw)) {
+    const key = handle === from ? to : handle;
+    if (next[key] == null) next[key] = value;
+  }
+  return next;
+}
+
+export function renameHandle(state, from, to) {
+  const oldName = handleKey(from);
+  const newName = handleKey(to);
+  if (!oldName || !newName || oldName === newName || !state) return state;
+  const swap = (handle) => (handle === oldName ? newName : handle);
+  const next = clone(state);
+  const seen = new Set();
+  next.people = [];
+  for (const person of state.people || []) {
+    const handle = swap(person.handle);
+    if (!handle || seen.has(handle)) continue;
+    seen.add(handle);
+    next.people.push({ ...person, handle });
+  }
+  const left = swap(state.seats?.left) || null;
+  let right = swap(state.seats?.right) || null;
+  if (left && left === right) right = null;
+  next.seats = { left, right };
+  const queued = new Set();
+  next.queue = [];
+  for (const item of state.queue || []) {
+    const handle = swap(item.handle);
+    if (!handle || queued.has(handle)) continue;
+    queued.add(handle);
+    next.queue.push({ ...item, handle });
+  }
+  next.streaks = renameMap(state.streaks, oldName, newName);
+  next.streakAt = renameMap(state.streakAt, oldName, newName);
+  next.rematch = renameMap(state.rematch, oldName, newName);
+  if (next.drop) next.drop = { ...next.drop, holder: next.drop.holder ? swap(next.drop.holder) : next.drop.holder };
+  if (next.call?.handle) next.call = { ...next.call, handle: swap(next.call.handle) };
+  if (next.you?.handle) next.you = { ...next.you, handle: swap(next.you.handle) };
+  next.vibes = (next.vibes || []).map((vibe) => ({ ...vibe, handle: swap(vibe.handle) }));
+  return next;
 }
 
 export function act(state, input) {
@@ -447,7 +498,7 @@ export function revive(raw) {
   const people = raw.people
     .map((person) => ({ handle: handleKey(person?.handle), link: String(person?.link ?? "").slice(0, 64) }))
     .filter((person) => person.handle)
-    .slice(0, 40);
+    .slice(0, PEOPLE_CAP);
   if (people.length === 0) return seedRoom();
   const vibes = Array.isArray(raw.vibes)
     ? raw.vibes
@@ -523,7 +574,7 @@ function reviveQueue(raw, people) {
       game: item?.game === "line" || item?.game === "lane" ? item.game : "pile",
     }))
     .filter((item) => item.handle && people.some((person) => person.handle === item.handle))
-    .slice(0, 24);
+    .slice(0, QUEUE_CAP);
 }
 
 function reviveCall(raw, people) {

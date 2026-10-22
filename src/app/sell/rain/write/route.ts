@@ -11,6 +11,7 @@ import {
   tapeRainDate,
   writeRainDates,
 } from "@/lib/rain-date";
+import { sameOriginUrl } from "@/lib/same-origin";
 
 function safeReturnTo(value: string, fallback: string) {
   if (value.startsWith("/") && !value.startsWith("//")) {
@@ -19,17 +20,6 @@ function safeReturnTo(value: string, fallback: string) {
   return fallback;
 }
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return request.nextUrl.origin;
-}
 
 export async function POST(request: NextRequest) {
   const form = await request.formData();
@@ -59,19 +49,19 @@ export async function POST(request: NextRequest) {
     const path = stallId.trim()
       ? `${sellRainPath()}?stall=${encodeURIComponent(stallId.trim())}`
       : sellRainPath();
-    return NextResponse.redirect(new URL(path, originFrom(request)), 303);
+    return NextResponse.redirect(sameOriginUrl(request, path), 303);
   }
 
   if (!result.ok && result.reason === "empty") {
     const path = stall
       ? `${sellRainPath(stall.slug)}&error=empty`
       : `${sellRainPath()}?error=empty`;
-    return NextResponse.redirect(new URL(path, originFrom(request)), 303);
+    return NextResponse.redirect(sameOriginUrl(request, path), 303);
   }
 
   writeRainDates(result.map);
   const response = NextResponse.redirect(
-    new URL(returnTo, originFrom(request)),
+    sameOriginUrl(request, returnTo),
     303,
   );
   response.cookies.set({
@@ -86,5 +76,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  return NextResponse.redirect(new URL(sellRainPath(), originFrom(request)), 303);
+  return NextResponse.redirect(sameOriginUrl(request, sellRainPath()), 303);
 }

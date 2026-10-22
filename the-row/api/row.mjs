@@ -35,7 +35,7 @@ export function putOptions(etag, env = process.env) {
     contentType: "application/json",
     addRandomSuffix: false,
     cacheControlMaxAge: 60,
-    ...(etag ? { ifMatch: etag } : { allowOverwrite: true }),
+    ...(etag ? { ifMatch: etag } : { allowOverwrite: false }),
   }, env);
 }
 
@@ -98,14 +98,16 @@ export async function readRowState() {
   return { value, etag };
 }
 
-export async function writeRowState(value, etag) {
+export async function commitRowState(value, etag, io = {}) {
+  const putBlob = io.put || put;
+  const readBlob = io.read || readRowState;
   try {
-    await put(PATH, JSON.stringify(value), putOptions(etag));
+    await putBlob(PATH, JSON.stringify(value), putOptions(etag));
   } catch (error) {
     let current = null;
     if (!etag) {
       try {
-        current = await readRowState();
+        current = await readBlob();
       } catch {
         current = null;
       }
@@ -115,6 +117,10 @@ export async function writeRowState(value, etag) {
     if (decision === "ok") return;
     throw error;
   }
+}
+
+export async function writeRowState(value, etag) {
+  return commitRowState(value, etag);
 }
 
 function getStore() {

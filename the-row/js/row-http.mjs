@@ -1,6 +1,6 @@
 import { actingHandle, dropSession, keepName, loginName, playRound, readUser, recordRound } from "./accounts.mjs";
 import { isHouseBot, isHouseRoom, stripBotPrize } from "./house.mjs";
-import { act, enqueue, join, linePlace, runItBack, seatHandle, stepOut } from "./room.mjs";
+import { act, enqueue, join, linePlace, renameHandle, runItBack, seatHandle, stepOut } from "./room.mjs";
 
 const COOKIE = "row";
 const YEAR = 60 * 60 * 24 * 365;
@@ -98,10 +98,13 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
   }
 
   if (pathname === "/login" || pathname === "/keep") {
-    return store.transact(({ book, saveBook }) => {
+    return store.transact(({ book, live, saveBook, saveLive }) => {
+      const previous = readUser(book, token, at)?.handle || "";
       const result = pathname === "/login" ? loginName(book, body, at) : keepName(book, { ...body, token }, at);
       if (!result.ok) return reply(400, { ok: false, error: result.error });
       saveBook(result.book);
+      const renamed = pathname === "/keep" && previous && result.user?.handle && previous !== result.user.handle;
+      if (renamed && live?.state) saveLive({ ...live, state: renameHandle(live.state, previous, result.user.handle) });
       return reply(200, { ok: true, user: result.user }, sessionCookie(result.token, YEAR, secure));
     });
   }

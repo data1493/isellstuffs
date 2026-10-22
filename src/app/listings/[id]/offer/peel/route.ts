@@ -7,6 +7,7 @@ import {
   serializeListingOffers,
 } from "@/lib/listing-offer";
 import { listingOfferPath } from "@/lib/paths";
+import { sameOriginUrl } from "@/lib/same-origin";
 
 function safeReturnTo(value: string, fallback: string) {
   if (value.startsWith("/") && !value.startsWith("//")) {
@@ -15,17 +16,6 @@ function safeReturnTo(value: string, fallback: string) {
   return fallback;
 }
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return request.nextUrl.origin;
-}
 
 export async function POST(
   request: NextRequest,
@@ -42,7 +32,7 @@ export async function POST(
   const offers = peelOffer(existing, offerId);
 
   const response = NextResponse.redirect(
-    new URL(returnTo, originFrom(request)),
+    sameOriginUrl(request, returnTo),
     303,
   );
   response.cookies.set({
@@ -62,7 +52,7 @@ export async function GET(
 ) {
   const { id } = await context.params;
   return NextResponse.redirect(
-    new URL(listingOfferPath(id), originFrom(request)),
+    sameOriginUrl(request, listingOfferPath(id)),
     303,
   );
 }

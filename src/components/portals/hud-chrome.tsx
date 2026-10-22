@@ -110,6 +110,13 @@ export function portalNotice(error?: string) {
         title: "That trade is not on this floor.",
         body: "Take a lot first. With the cookie default, another browser’s slip will not appear here.",
       };
+    case "actor":
+      return {
+        tone: "error" as const,
+        eyebrow: "Not your slip",
+        title: "Confirm and void stay with the taker or the seller.",
+        body: "A watcher, and any other named pass, cannot finish this trade.",
+      };
     case "taken":
     case "pulled":
     case "status":
