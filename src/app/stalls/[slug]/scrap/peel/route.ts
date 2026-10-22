@@ -7,18 +7,8 @@ import {
   serializeStallScraps,
   STALL_SCRAP_COOKIE_NAME,
 } from "@/lib/stall-scrap";
+import { sameOriginUrl } from "@/lib/same-origin";
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return request.nextUrl.origin;
-}
 
 export async function POST(
   request: NextRequest,
@@ -33,7 +23,7 @@ export async function POST(
   const scraps = peelStallScrap(existing, scrapId);
 
   const response = NextResponse.redirect(
-    new URL(stallScrapPath(slug), originFrom(request)),
+    sameOriginUrl(request, stallScrapPath(slug)),
     303,
   );
   response.cookies.set({
@@ -53,7 +43,7 @@ export async function GET(
 ) {
   const { slug } = await context.params;
   return NextResponse.redirect(
-    new URL(stallScrapPath(slug), originFrom(request)),
+    sameOriginUrl(request, stallScrapPath(slug)),
     303,
   );
 }

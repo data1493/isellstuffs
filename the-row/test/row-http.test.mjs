@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { handleRow, readCookie, sessionCookie } from "../js/row-http.mjs";
 import { createMemoryStore } from "../js/memory-store.mjs";
+import { commitRowState } from "../api/row.mjs";
 import { conflictError, createBlobStore, isConflict, lostCreate } from "../js/blob-store.mjs";
 
 const now = 1_700_000_000_000;
@@ -116,7 +117,12 @@ test("a played round stores the win on the kept name", async () => {
 
 test("the room queue and a called round stay on the shared state", async () => {
   const store = memory();
-  const queued = await post(store, "/queue", { handle: "walker", link: "https://walker.room", game: "pile" });
+  const kept = await post(store, "/keep", { handle: "mint" });
+  const token = cookieToken(kept.cookie);
+  const stranger = await post(store, "/queue", { handle: "walker", link: "https://walker.room", game: "pile" });
+  assert.equal(stranger.status, 400);
+  assert.equal(stranger.json.error, "Keep a name first.");
+  const queued = await post(store, "/queue", { handle: "mint", link: "https://mint.room", game: "pile" }, token);
   assert.equal(queued.status, 200);
   assert.equal(queued.json.place, 1);
   const live = await handleRow({
@@ -130,10 +136,18 @@ test("the room queue and a called round stay on the shared state", async () => {
     now: () => now,
   });
   assert.equal(live.json.beating, false);
-  assert.equal(live.json.queue[0].handle, "walker");
+  assert.equal(live.json.queue[0].handle, "mint");
 
+  await store.transact(({ live: room, saveLive }) => {
+    const state = structuredClone(room.state);
+    state.seats = { ...state.seats, left: "mint" };
+    saveLive({ ...room, state });
+  });
+  const bot = await post(store, "/act", { handle: "nova", kind: "pile", side: "left" });
+  assert.equal(bot.status, 400);
+  assert.equal(bot.json.error, "Keep a name first.");
   for (let i = 0; i < 5; i += 1) {
-    const act = await post(store, "/act", { handle: "nova", kind: "pile", side: "left" });
+    const act = await post(store, "/act", { handle: "mint", kind: "pile", side: "left" }, token);
     assert.equal(act.status, 200, act.json.error);
   }
   const won = await handleRow({
@@ -148,7 +162,9 @@ test("the room queue and a called round stay on the shared state", async () => {
   });
   assert.equal(won.json.pile.status, "won");
   assert.equal(won.json.pile.winner, "left");
-  const again = await post(store, "/again", { handle: "nova", stay: true });
+  const stolen = await post(store, "/again", { handle: "nova", stay: true });
+  assert.equal(stolen.status, 400);
+  const again = await post(store, "/again", { handle: "mint", stay: true }, token);
   assert.equal(again.status, 200);
 });
 
@@ -387,6 +403,158 @@ test("conflicts stop after the last retry and other errors do not retry", async 
   });
   await assert.rejects(() => post(failing, "/keep", { handle: "mint" }), /disk full/);
   assert.equal(once, 1);
+});
+
+function crowdMemory(at = now) {
+  return createMemoryStore({ crowd: true, now: () => at });
+}
+
+async function liveOf(store, at = now) {
+  const result = await handleRow({
+    method: "GET",
+    pathname: "/live.json",
+    token: "",
+    secure: false,
+    bodyText: "",
+    store,
+    crowd: true,
+    now: () => at,
+  });
+  return result.json;
+}
+
+async function seat(store, handle, side = "left") {
+  await store.transact(({ live, saveLive }) => {
+    const state = structuredClone(live.state);
+    const other = side === "left" ? "right" : "left";
+    state.people = [
+      { handle, link: `https://${handle}.room` },
+      { handle: "nova", link: "https://nova.room" },
+    ];
+    state.seats = { left: null, right: null, [side]: handle, [other]: "nova" };
+    state.queue = [];
+    state.pile = { ...state.pile, status: "open", winner: null, game: null, leftScore: 0, rightScore: 0 };
+    saveLive({ ...live, state });
+  });
+}
+
+test("an anonymous act cannot move a house bot", async () => {
+  const store = crowdMemory();
+  const act = await post(store, "/act", { handle: "jun", side: "right", kind: "pile" });
+  assert.equal(act.status, 400);
+  assert.equal(act.json.ok, false);
+  assert.equal(act.json.error, "Keep a name first.");
+  const live = await liveOf(store);
+  assert.equal(live.pile.rightScore, 0);
+  assert.equal(live.seats.right, "jun");
+});
+
+test("renaming a kept name keeps the seat with that player", async () => {
+  const store = crowdMemory();
+  const kept = await post(store, "/keep", { handle: "alice" });
+  const token = cookieToken(kept.cookie);
+  await seat(store, "alice", "left");
+  const renamed = await post(store, "/keep", { handle: "alice2" }, token);
+  assert.equal(renamed.status, 200);
+  assert.equal(renamed.json.user.handle, "alice2");
+  const stolen = await post(store, "/act", { handle: "alice", side: "left", kind: "pile" });
+  assert.equal(stolen.status, 400);
+  assert.notEqual(stolen.json.ok, true);
+  const live = await liveOf(store);
+  assert.equal(live.seats.left, "alice2");
+  assert.equal(live.pile.leftScore, 0);
+  const played = await post(store, "/act", { handle: "alice2", side: "left", kind: "pile" }, token);
+  assert.equal(played.status, 200, played.json.error);
+  const after = await liveOf(store);
+  assert.equal(after.pile.leftScore, 1);
+  assert.equal(after.seats.left, "alice2");
+});
+
+test("a human win can run it back, and stepping out is not undone", async () => {
+  const store = crowdMemory();
+  const alice = await post(store, "/keep", { handle: "alice" });
+  const token = cookieToken(alice.cookie);
+  await seat(store, "alice", "left");
+  for (let i = 0; i < 5; i += 1) {
+    const act = await post(store, "/act", { handle: "alice", side: "left", kind: "pile" }, token);
+    assert.equal(act.status, 200, act.json.error);
+  }
+  assert.equal((await liveOf(store)).pile.status, "won");
+  const back = await post(store, "/again", { handle: "alice", stay: true }, token);
+  assert.equal(back.status, 200, back.json.error);
+  await store.tick(now);
+  const replay = await liveOf(store);
+  assert.equal(replay.pile.status, "open");
+  assert.equal(replay.pile.leftScore, 0);
+  assert.equal(replay.seats.left, "alice");
+  assert.equal(replay.rematch.alice, undefined);
+
+  for (let i = 0; i < 5; i += 1) {
+    const act = await post(store, "/act", { handle: "alice", side: "left", kind: "pile" }, token);
+    assert.equal(act.status, 200, act.json.error);
+  }
+  const out = await post(store, "/again", { handle: "alice", stay: false }, token);
+  assert.equal(out.status, 200, out.json.error);
+  await store.tick(now);
+  const left = await liveOf(store);
+  assert.notEqual(left.seats.left, "alice");
+  assert.notEqual(left.seats.right, "alice");
+  assert.equal(left.pile.status, "open");
+  assert.equal((left.people || []).some((person) => person.handle === "alice"), false);
+});
+
+function vercelLikeBlob() {
+  let doc = null;
+  let serial = 0;
+  let chain = Promise.resolve();
+  function exclusive(fn) {
+    const run = chain.then(fn, fn);
+    chain = run.then(() => {}, () => {});
+    return run;
+  }
+  return {
+    put(_path, body, options) {
+      return exclusive(async () => {
+        const allowOverwrite = options?.allowOverwrite === true;
+        const ifMatch = options?.ifMatch;
+        if (ifMatch) {
+          if (!doc || ifMatch !== doc.etag) {
+            const error = new Error("Precondition failed: ETag mismatch.");
+            error.name = "BlobPreconditionFailedError";
+            throw error;
+          }
+        } else if (doc && !allowOverwrite) {
+          const error = new Error("Unknown error, please visit https://vercel.com/help.");
+          error.name = "BlobUnknownError";
+          throw error;
+        }
+        serial += 1;
+        doc = { body, etag: `"e${serial}"` };
+      });
+    },
+    read() {
+      return exclusive(async () => {
+        if (!doc) return null;
+        return { value: JSON.parse(doc.body), etag: doc.etag };
+      });
+    },
+  };
+}
+
+test("two keeps both survive a create that matches real blob put", async () => {
+  const blob = vercelLikeBlob();
+  const write = (value, etag) => commitRowState(value, etag, blob);
+  const left = createBlobStore({ read: blob.read, write, crowd: false, now: () => now, wait: async () => {} });
+  const right = createBlobStore({ read: blob.read, write, crowd: false, now: () => now, wait: async () => {} });
+  const [mint, salt] = await Promise.all([
+    post(left, "/keep", { handle: "mint" }),
+    post(right, "/keep", { handle: "salt" }),
+  ]);
+  assert.equal(mint.status, 200, mint.json?.error);
+  assert.equal(salt.status, 200, salt.json?.error);
+  const stored = await blob.read();
+  const handles = stored.value.book.users.map((user) => user.handle).sort();
+  assert.deepEqual(handles, ["mint", "salt"]);
 });
 
 function postOn(store, path, body, token) {

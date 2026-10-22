@@ -7,6 +7,7 @@ import { afterEach, test } from "node:test";
 import {
   agentTradeFeeCents,
   agentTradeNetCents,
+  canSettleTrade,
   confirmTrade,
   insertLot,
   insertPledge,
@@ -69,7 +70,7 @@ test("cookie is the default when DATABASE_URL is unset", async () => {
   assert.equal(taken.value.status, "taken");
   assert.equal((await listLots()).length, 0);
 
-  const confirmed = await confirmTrade(taken.value.id);
+  const confirmed = await confirmTrade(taken.value.id, undefined, "crate-bot");
   assert.equal(confirmed.ok, true);
   assert.equal(await mallCutThisAisle(), 200);
 
@@ -147,11 +148,45 @@ test("void before confirm returns the lot", async () => {
   });
   assert.equal(taken.ok, true);
   if (!taken.ok) return;
-  const voided = await voidTrade(taken.value.id);
+  const voided = await voidTrade(taken.value.id, undefined, "crate-bot");
   assert.equal(voided.ok, true);
   assert.equal((await listLots()).length, 1);
-  const again = await confirmTrade(taken.value.id);
+  const again = await confirmTrade(taken.value.id, undefined, "crate-bot");
   assert.equal(again.ok, false);
+});
+
+test("confirm and void need the taker or the seller", async () => {
+  await writePass({ handle: "aisle-bot", publicAddress: "0xISS0000aisle" });
+  const listed = await insertLot({
+    sellerHandle: "aisle-bot",
+    title: "crate of stems",
+    askCents: 2000,
+    asset: "usdc",
+  });
+  assert.equal(listed.ok, true);
+  if (!listed.ok) return;
+  const taken = await insertTrade({
+    lotId: listed.value.id,
+    takerHandle: "crate-bot",
+  });
+  assert.equal(taken.ok, true);
+  if (!taken.ok) return;
+  assert.equal(canSettleTrade(taken.value, [listed.value], null), false);
+  assert.equal(canSettleTrade(taken.value, [listed.value], "walker"), false);
+  const stranger = await confirmTrade(taken.value.id);
+  assert.equal(stranger.ok, false);
+  if (stranger.ok) return;
+  assert.equal(stranger.reason, "actor");
+  const other = await voidTrade(taken.value.id, undefined, "walker");
+  assert.equal(other.ok, false);
+  if (other.ok) return;
+  assert.equal(other.reason, "actor");
+  assert.equal((await listLots()).length, 0);
+  const seller = await confirmTrade(taken.value.id, undefined, "aisle-bot");
+  assert.equal(seller.ok, true);
+  if (!seller.ok) return;
+  assert.equal(seller.value.status, "confirmed");
+  assert.equal((await listLots()).length, 0);
 });
 
 test("sqlite DATABASE_URL shares lots across snapshots", async () => {
@@ -178,4 +213,17 @@ test("sqlite DATABASE_URL shares lots across snapshots", async () => {
   const visible = await listLots(walkerB);
   assert.equal(visible.length, 1);
   assert.equal(visible[0]?.sellerHandle, "aisle-bot");
+
+  const taken = await insertTrade(
+    { lotId: visible[0].id, takerHandle: "crate-bot" },
+    walkerB,
+  );
+  assert.equal(taken.ok, true);
+  if (!taken.ok) return;
+  const stranger = await confirmTrade(taken.value.id, walkerB, "walker");
+  assert.equal(stranger.ok, false);
+  if (stranger.ok) return;
+  assert.equal(stranger.reason, "actor");
+  const seller = await confirmTrade(taken.value.id, walkerB, "aisle-bot");
+  assert.equal(seller.ok, true);
 });

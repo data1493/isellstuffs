@@ -11,10 +11,10 @@ test("the read-write token is sent on blob commands", () => {
   assert.deepEqual(commandOptions({ access: "private" }, {}), { access: "private" });
 });
 
-test("a missing etag overwrites and a present etag compares", () => {
+test("a missing etag does not overwrite and a present etag compares", () => {
   const env = { BLOB_READ_WRITE_TOKEN: "vercel_blob_rw_example_secret" };
   const created = putOptions("", env);
-  assert.equal(created.allowOverwrite, true);
+  assert.equal(created.allowOverwrite, false);
   assert.equal(created.ifMatch, undefined);
   assert.equal(created.token, "vercel_blob_rw_example_secret");
   const matched = putOptions('"abc"', env);

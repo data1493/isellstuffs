@@ -40,7 +40,8 @@ test("a kept name can only be played by its session", () => {
   assert.equal(actingHandle(kept.book, kept.token, "someone", now).error, "Play as your name.");
   assert.equal(actingHandle(kept.book, kept.token, "mint", now).handle, "mint");
   assert.equal(actingHandle(kept.book, "", "mint", now).error, "That name is kept.");
-  assert.equal(actingHandle(kept.book, "", "guest", now).handle, "guest");
+  assert.equal(actingHandle(kept.book, "", "guest", now).error, "Keep a name first.");
+  assert.equal(actingHandle(kept.book, "", "jun", now).error, "Keep a name first.");
 });
 
 test("a win sticks on the kept name and a guest writes nothing", () => {

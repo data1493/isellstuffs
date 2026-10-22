@@ -28,22 +28,12 @@ import {
   tradePath,
   tradeSlipPath,
 } from "@/lib/paths";
+import { sameOriginUrl } from "@/lib/same-origin";
 
 const ASSETS = new Set(["usdc", "eth"]);
 
 export const TRADE_INTENTS = new Set(["take", "confirm", "void"]);
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return request.nextUrl.origin;
-}
 
 function pathOnly(path: string) {
   return path.split("?")[0] ?? path;
@@ -82,7 +72,7 @@ export function send(
   path: string,
   cookies?: Parameters<typeof applyAgentCookies>[1],
 ) {
-  const response = NextResponse.redirect(new URL(path, originFrom(request)), 303);
+  const response = NextResponse.redirect(sameOriginUrl(request, path), 303);
   if (cookies) {
     applyAgentCookies(response, cookies);
   }
@@ -129,11 +119,14 @@ export async function handleAgentTradePost(
   }
 
   if (intent === "confirm" || intent === "void") {
+    if (!pass?.handle) {
+      return fail(request, home, "pass");
+    }
     const tradeId = String(form.get("tradeId") ?? "");
     const result =
       intent === "confirm"
-        ? await confirmTrade(tradeId, snapshot)
-        : await voidTrade(tradeId, snapshot);
+        ? await confirmTrade(tradeId, snapshot, pass.handle)
+        : await voidTrade(tradeId, snapshot, pass.handle);
     if (!result.ok) {
       return fail(request, home, result.reason, result.cookies);
     }

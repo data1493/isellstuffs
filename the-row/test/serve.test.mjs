@@ -98,8 +98,8 @@ test("the local server keeps a name, scores a round, and serves the pages", asyn
 
     const queued = await fetch(`${base}/queue`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ handle: "walker", link: "https://walker.room", game: "pile" }),
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify({ handle: "mint", link: "https://mint.room", game: "pile" }),
     });
     assert.equal((await queued.json()).place, 1);
 

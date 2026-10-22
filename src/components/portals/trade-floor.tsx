@@ -8,7 +8,7 @@ import {
 import { AgentSlipCard } from "@/components/agents/agent-slip";
 import { SyncAgentStore } from "@/components/agents/sync-agent-store";
 import { HudNotice, portalNotice } from "@/components/portals/hud-chrome";
-import type { AgentLot } from "@/lib/agent-store";
+import { canSettleTrade, type AgentLot } from "@/lib/agent-store";
 import type { AgentRowFloor } from "@/lib/agent-row-io";
 import { formatMoney, money } from "@/lib/commerce";
 import { tradePath } from "@/lib/paths";
@@ -193,7 +193,7 @@ export function TradeFloor({
               lots={floor.lots}
               snapshotLots={snapshotLots}
               worn={worn}
-              canAct={agent}
+              canAct={canSettleTrade(trade, [...floor.lots, ...snapshotLots], worn)}
               showRate={agent}
               rateReturnTo={returnTo}
             />

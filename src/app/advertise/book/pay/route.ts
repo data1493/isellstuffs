@@ -11,21 +11,11 @@ import {
   serializeAdBookings,
 } from "@/lib/ad-booking";
 import { advertiseBookPath, advertiseReceiptPath } from "@/lib/paths";
+import { sameOriginUrl } from "@/lib/same-origin";
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return request.nextUrl.origin;
-}
 
 function send(request: NextRequest, path: string, cookieValue?: string) {
-  const response = NextResponse.redirect(new URL(path, originFrom(request)), 303);
+  const response = NextResponse.redirect(sameOriginUrl(request, path), 303);
   if (cookieValue) {
     response.cookies.set({
       name: AD_BOOKINGS_COOKIE,

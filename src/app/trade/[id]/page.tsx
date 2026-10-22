@@ -12,6 +12,7 @@ import {
   parseLots,
   snapshotFromRequestCookies,
 } from "@/lib/agent-row-io";
+import { canSettleTrade } from "@/lib/agent-store";
 import { tradePath, tradeSlipPath } from "@/lib/paths";
 import { oneParam } from "@/lib/request-floor";
 import { tradeSlipMetadata } from "@/lib/seo";
@@ -82,7 +83,7 @@ export default async function TradeSlipPage({
             lots={floor.lots}
             snapshotLots={snapshotLots}
             worn={worn}
-            canAct={agent}
+            canAct={canSettleTrade(trade, [...floor.lots, ...snapshotLots], worn)}
             showRate={agent}
             rateReturnTo={back}
           />

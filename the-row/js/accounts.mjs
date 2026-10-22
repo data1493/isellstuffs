@@ -204,14 +204,15 @@ export function readUser(book, token, now = Date.now()) {
 export function actingHandle(book, token, requested, now = Date.now()) {
   const wanted = handleKey(requested);
   const session = readUser(book, token, now);
-  const owner = book.users.find((user) => user.handle === wanted);
-  if (session) {
-    if (wanted && wanted !== session.handle) return { ok: false, error: "Play as your name." };
-    return { ok: true, handle: session.handle };
+  if (!session) {
+    if (wanted && book.users.some((user) => user.handle === wanted)) {
+      return { ok: false, error: "That name is kept." };
+    }
+    return { ok: false, error: "Keep a name first." };
   }
-  if (owner) return { ok: false, error: "That name is kept." };
-  if (!wanted) return { ok: false, error: "Need a handle." };
-  return { ok: true, handle: wanted };
+  if (wanted && wanted !== session.handle) return { ok: false, error: "Play as your name." };
+  if (CAST.includes(session.handle)) return { ok: false, error: "That seat isn't yours." };
+  return { ok: true, handle: session.handle };
 }
 
 export function keepName(book, input, now = Date.now(), deps = {}) {

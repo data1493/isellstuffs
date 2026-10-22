@@ -7,14 +7,8 @@ import {
 } from "@/lib/cart";
 import { stallPath } from "@/lib/paths";
 import { bagStallListingIds, resolveBagStall } from "@/lib/stall-bag";
+import { sameOriginUrl } from "@/lib/same-origin";
 
-function originFrom(request: NextRequest) {
-  const fromOrigin = request.headers.get("origin");
-  if (fromOrigin) return fromOrigin;
-  const referer = request.headers.get("referer");
-  if (referer) return new URL(referer).origin;
-  return request.nextUrl.origin;
-}
 
 function send(
   request: NextRequest,
@@ -22,7 +16,7 @@ function send(
   bag?: "scooped" | "empty",
   cartIds?: string[],
 ) {
-  const target = new URL(path, originFrom(request));
+  const target = sameOriginUrl(request, path);
   if (bag) {
     target.searchParams.set("bag", bag);
   }
@@ -65,5 +59,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  return NextResponse.redirect(new URL("/explore", originFrom(request)), 303);
+  return NextResponse.redirect(sameOriginUrl(request, "/explore"), 303);
 }
