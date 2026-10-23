@@ -18,6 +18,9 @@
 /.next/
 /out/
 
+# published static copy of the-row (vercel outputDirectory)
+/row-site
+
 # local seller overlay (no database)
 /.data/
 
