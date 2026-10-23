@@ -5,6 +5,8 @@ cursor:
 
 # isellstuffs — Bug Hunt Findings (findings only, nothing fixed)
 
+> Historical snapshot from 2026-10-20, before Agent Row was removed. The repo now serves only The Row (`the-row/`). Paths under `src/`, `docs/agent-row-db.md`, and the old README describe the Next.js app that is no longer in the tree. The Row high findings (F-01 through F-05) are fixed on `cursor/fix-high-findings-1650`. Medium and low items are unchanged.
+
 **Repo:** `data1493/isellstuffs` · **Branch:** `main` @ `b9c3013` · **Date:** 2026-10-20
 
 ## Summary
