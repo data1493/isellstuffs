@@ -9,7 +9,12 @@ export function readCookie(header, name = COOKIE) {
   const raw = header || "";
   for (const part of raw.split(";")) {
     const [key, ...rest] = part.trim().split("=");
-    if (key === name) return decodeURIComponent(rest.join("="));
+    if (key !== name) continue;
+    try {
+      return decodeURIComponent(rest.join("="));
+    } catch {
+      return "";
+    }
   }
   return "";
 }
@@ -40,7 +45,7 @@ function clearYou(next) {
   return next;
 }
 
-function applyPost(path, body, handle, state) {
+function applyPost(path, body, handle, state, at) {
   const link = String(body.link || `https://${handle}.room`).slice(0, 64);
   const played = { ...body, handle, link };
   if (path === "/queue") {
@@ -50,7 +55,7 @@ function applyPost(path, body, handle, state) {
       if (!joined.ok) return joined;
       next = clearYou(joined.state);
     }
-    const queued = enqueue(next, { handle, link, game: body.game, at: Date.now() });
+    const queued = enqueue(next, { handle, link, game: body.game, at });
     if (queued.ok) clearYou(queued.state);
     return queued;
   }
@@ -128,7 +133,7 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
       return reply(400, { ok: false, error: gate.error, place: 0, call: live.state.call || null });
     }
     const before = live.state.pile?.status;
-    const played = applyPost(pathname, body, gate.handle, live.state);
+    const played = applyPost(pathname, body, gate.handle, live.state, at);
     if (!played.ok) return roomReply(played, live.state, gate.handle);
     const result = { ...played, state: isHouseRoom(played.state) ? stripBotPrize(played.state) : played.state };
     saveLive({ ...live, state: result.state });

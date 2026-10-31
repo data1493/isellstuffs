@@ -4,6 +4,10 @@ import { CAST } from "./crowd.mjs";
 
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+// The book rides in the one Blob document every request rewrites (F-04), so it
+// must stay small: about 280 bytes per kept name before personal rounds.
+export const ACCOUNT_CAP = 300;
+export const SESSION_CAP = 5;
 
 export function emptyBook() {
   return { users: [], sessions: [] };
@@ -35,6 +39,12 @@ function live(book, token, now) {
 function prune(book, now) {
   book.sessions = book.sessions.filter((item) => item.expires > now);
   return book;
+}
+
+function addSession(book, session) {
+  const mine = book.sessions.filter((item) => item.userId === session.userId);
+  const drop = new Set(mine.slice(0, Math.max(0, mine.length - SESSION_CAP + 1)));
+  book.sessions = [...book.sessions.filter((item) => !drop.has(item)), session];
 }
 
 function present(user, plainKey) {
@@ -229,6 +239,7 @@ export function keepName(book, input, now = Date.now(), deps = {}) {
 
   let user = current?.user;
   if (!user) {
+    if (next.users.length >= ACCOUNT_CAP) return { ok: false, error: "The room has no names left.", book: next };
     const plain = cleanKey((deps.key || makeKey)());
     const sealed = sealKey(plain);
     user = {
@@ -240,7 +251,7 @@ export function keepName(book, input, now = Date.now(), deps = {}) {
     };
     next.users.push(user);
     const token = (deps.token || makeToken)();
-    next.sessions.push({ token, userId: user.id, expires: now + YEAR_MS });
+    addSession(next, { token, userId: user.id, expires: now + YEAR_MS });
     return { ok: true, book: next, token, user: present(user, plain) };
   }
 
@@ -255,7 +266,7 @@ export function loginName(book, input, now = Date.now(), deps = {}) {
   const user = next.users.find((item) => item.handle === handle);
   if (!user || !keyMatches(user, key)) return { ok: false, error: "That key does not match.", book: next };
   const token = (deps.token || makeToken)();
-  next.sessions.push({ token, userId: user.id, expires: now + YEAR_MS });
+  addSession(next, { token, userId: user.id, expires: now + YEAR_MS });
   return { ok: true, book: next, token, user: present(user, key) };
 }
 
