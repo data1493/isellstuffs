@@ -100,7 +100,10 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
   if (pathname === "/login" || pathname === "/keep") {
     return store.transact(({ book, saveBook }) => {
       const result = pathname === "/login" ? loginName(book, body, at) : keepName(book, { ...body, token }, at);
-      if (!result.ok) return reply(400, { ok: false, error: result.error });
+      if (!result.ok) {
+        if (result.wrote) saveBook(result.book);
+        return reply(result.locked ? 429 : 400, { ok: false, error: result.error });
+      }
       saveBook(result.book);
       return reply(200, { ok: true, user: result.user }, sessionCookie(result.token, YEAR, secure));
     });

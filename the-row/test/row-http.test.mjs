@@ -38,7 +38,7 @@ test("keep, login, and out survive on the book", async () => {
   const kept = await post(store, "/keep", { handle: " Mint " });
   assert.equal(kept.status, 200);
   assert.equal(kept.json.user.handle, "mint");
-  assert.match(kept.json.user.key, /^[a-z2-9]{3}-[a-z2-9]{3}$/);
+  assert.match(kept.json.user.key, /^[a-z2-9]{4}-[a-z2-9]{4}-[a-z2-9]{4}$/);
   const token = cookieToken(kept.cookie);
   const stored = await store.transact(({ book }) => book.users.find((user) => user.handle === "mint"));
   assert.equal(stored.key, undefined);

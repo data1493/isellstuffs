@@ -1,9 +1,14 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { randomBytes, randomInt, scryptSync, timingSafeEqual } from "node:crypto";
 import { CATALOG, armLane, enterLine, focusDrop, handleKey, pileOn, resetPile, revive, seatHandle, seatYou, seedRoom, tapLane, voteLine } from "./room.mjs";
 import { CAST } from "./crowd.mjs";
 
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+// F-09: 12 characters from 31 is about 59 bits. Wrong keys lock the name for a while.
+export const KEY_LENGTH = 12;
+export const LOGIN_LIMIT = 5;
+export const LOCK_MS = 15 * 60 * 1000;
+const DUMMY_SALT = randomBytes(16);
 
 export function emptyBook() {
   return { users: [], sessions: [] };
@@ -17,10 +22,10 @@ export function makeToken() {
   return randomBytes(24).toString("base64url");
 }
 
-export function makeKey(random = Math.random) {
+export function makeKey(pick = randomInt) {
   let out = "";
-  for (let i = 0; i < 6; i += 1) out += ALPHABET[Math.floor(random() * ALPHABET.length)];
-  return `${out.slice(0, 3)}-${out.slice(3)}`;
+  for (let i = 0; i < KEY_LENGTH; i += 1) out += ALPHABET[pick(ALPHABET.length)];
+  return out.match(/.{1,4}/g).join("-");
 }
 
 function live(book, token, now) {
@@ -252,7 +257,24 @@ export function loginName(book, input, now = Date.now(), deps = {}) {
   const key = cleanKey(input?.key);
   const next = prune(structuredClone(book), now);
   const user = next.users.find((item) => item.handle === handle);
-  if (!user || !keyMatches(user, key)) return { ok: false, error: "That key does not match.", book: next };
+  if (!user) {
+    // Same scrypt cost as a real check, so timing does not reveal which names exist.
+    scryptSync(key || "x", DUMMY_SALT, 32);
+    return { ok: false, error: "That key does not match.", book: next };
+  }
+  if ((user.lockedUntil || 0) > now) {
+    return { ok: false, locked: true, error: "Too many tries. Wait a few minutes.", book: next };
+  }
+  if (!keyMatches(user, key)) {
+    user.loginFails = (user.loginFails || 0) + 1;
+    if (user.loginFails >= LOGIN_LIMIT) {
+      user.loginFails = 0;
+      user.lockedUntil = now + LOCK_MS;
+    }
+    return { ok: false, error: "That key does not match.", book: next, wrote: true };
+  }
+  delete user.loginFails;
+  delete user.lockedUntil;
   const token = (deps.token || makeToken)();
   next.sessions.push({ token, userId: user.id, expires: now + YEAR_MS });
   return { ok: true, book: next, token, user: present(user, key) };
