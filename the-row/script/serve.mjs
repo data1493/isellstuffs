@@ -85,10 +85,25 @@ async function loadBook() {
   });
 }
 
+// F-10: serve only the public site files, never source, deps, tests, or dotfiles.
+const PUBLIC_FILES = [
+  /^[a-z0-9-]+\.html$/,
+  /^favicon\.svg$/,
+  /^js\/[a-z0-9-]+\.mjs$/,
+  /^audio\/[a-z0-9-]+\.wav$/,
+  /^media\/[a-z0-9-]+\.(?:jpe?g|png|webp)$/,
+];
+
 function filePath(urlPath) {
-  const clean = decodeURIComponent((urlPath || "/").split("?")[0]);
+  let clean;
+  try {
+    clean = decodeURIComponent((urlPath || "/").split("?")[0]);
+  } catch {
+    return "";
+  }
   const relative = (clean === "/" ? "index.html" : clean).replace(/^\/+/, "");
   if (!relative || relative.split("/").includes("..")) return null;
+  if (!PUBLIC_FILES.some((pattern) => pattern.test(relative))) return undefined;
   const full = normalize(pathJoin(root, relative));
   const base = root.endsWith("/") ? root : `${root}/`;
   if (full !== root && !full.startsWith(base)) return null;
@@ -118,6 +133,16 @@ const server = createServer(async (req, res) => {
       return;
     }
     const path = filePath(url.pathname);
+    if (path === "") {
+      res.writeHead(400, { "content-type": "text/plain; charset=utf-8" });
+      res.end("Bad request");
+      return;
+    }
+    if (path === undefined) {
+      res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+      res.end("Not found");
+      return;
+    }
     if (!path) {
       res.writeHead(403);
       res.end();
