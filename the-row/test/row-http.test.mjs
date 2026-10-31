@@ -278,7 +278,9 @@ test("blob keeps the account and the room across two function instances", async 
     now: () => clock,
   });
   assert.equal(live.json.beating, true);
-  assert.equal(live.json.queue.some((item) => item.handle === "mint"), true);
+  // With the ticket on the request clock (F-22), the house seats mint on the
+  // next ticks instead of leaving a wall-clock ticket that looks unborn.
+  assert.equal(live.json.seats.left === "mint" || live.json.seats.right === "mint", true);
   const again = await handleRow({
     method: "GET",
     pathname: "/live.json",

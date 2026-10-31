@@ -610,7 +610,7 @@ function reviveLane(raw) {
   const lane = freshLane();
   if (!raw) return lane;
   const mark = Number(raw.mark);
-  if (Number.isFinite(mark)) lane.mark = clamp(mark, 0, 100);
+  if (Number.isFinite(mark)) lane.mark = bound(mark, 0, 100);
   lane.leftTap = tapOrNull(raw.leftTap);
   lane.rightTap = tapOrNull(raw.rightTap);
   return lane;
@@ -620,7 +620,13 @@ function tapOrNull(value) {
   if (value == null || value === "") return null;
   const number = Number(value);
   if (!Number.isFinite(number)) return null;
-  return clamp(number, 0, 100);
+  return bound(number, 0, 100);
+}
+
+// Lane spots are fractional (armLane and tapLane accept them), so revive must
+// not round them the way it rounds scores and votes (F-16).
+function bound(number, min, max) {
+  return Math.min(max, Math.max(min, number));
 }
 
 function clamp(value, min, max) {
