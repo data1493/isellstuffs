@@ -106,7 +106,10 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
     return store.transact(({ book, live, saveBook, saveLive }) => {
       const previous = readUser(book, token, at)?.handle || "";
       const result = pathname === "/login" ? loginName(book, body, at) : keepName(book, { ...body, token }, at);
-      if (!result.ok) return reply(400, { ok: false, error: result.error });
+      if (!result.ok) {
+        if (result.wrote) saveBook(result.book);
+        return reply(result.locked ? 429 : 400, { ok: false, error: result.error });
+      }
       saveBook(result.book);
       const renamed = pathname === "/keep" && previous && result.user?.handle && previous !== result.user.handle;
       if (renamed && live?.state) saveLive({ ...live, state: renameHandle(live.state, previous, result.user.handle) });
