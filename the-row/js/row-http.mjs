@@ -64,7 +64,7 @@ function applyPost(path, body, handle, state, at) {
     if (result.ok) clearYou(result.state);
     return result;
   }
-  const result = act(state, played);
+  const result = act(state, played, at);
   if (result.ok) clearYou(result.state);
   return result;
 }

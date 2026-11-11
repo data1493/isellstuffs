@@ -122,9 +122,15 @@ export function readCartListingIds(): string[] {
   );
   const fromCookie = parseCartListingIds(readCookieRaw());
   const merged = mergeListingIds(fromStorage, fromCookie);
-  cachedRaw = cartCookieValue(merged);
-  cachedIds = merged;
-  return merged;
+  const raw = cartCookieValue(merged);
+  // Hand back the same array while the cart is unchanged, so
+  // useSyncExternalStore sees a stable snapshot.
+  if (raw === cachedRaw) {
+    return cachedIds;
+  }
+  cachedRaw = raw;
+  cachedIds = merged.length === 0 ? emptyIds : merged;
+  return cachedIds;
 }
 
 export function writeCartListingIds(listingIds: string[]) {

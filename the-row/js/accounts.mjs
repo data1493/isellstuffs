@@ -122,13 +122,13 @@ function loadPersonal(user) {
   return open ? seatYou(room) : room;
 }
 
-function applyMove(state, input) {
+function applyMove(state, input, now = Date.now()) {
   if (input.kind === "reset") return resetPile(state);
   if (input.kind === "arm") return armLane(state, input.mark);
-  if (input.kind === "pile") return pileOn(state, input.side);
+  if (input.kind === "pile") return pileOn(state, input.side, now);
   if (input.kind === "line") return enterLine(state, input.side, input.text);
-  if (input.kind === "vote") return voteLine(state, input.side);
-  if (input.kind === "tap") return tapLane(state, input.side, input.spot);
+  if (input.kind === "vote") return voteLine(state, input.side, now);
+  if (input.kind === "tap") return tapLane(state, input.side, input.spot, now);
   return { ok: false, state, error: "Pick a move." };
 }
 
@@ -201,7 +201,7 @@ export function playRound(book, token, input, now = Date.now()) {
     if (!focused.ok) return { ok: false, error: focused.error || "That drop isn’t on the floor.", book };
     state = focused.state;
   }
-  const played = applyMove(state, input);
+  const played = applyMove(state, input, now);
   if (!played.ok) return { ok: false, error: played.error || "Pick a move.", book };
   const wasWon = before.pile?.status === "won";
   user.round = played.state;

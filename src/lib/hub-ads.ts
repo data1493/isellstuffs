@@ -5,7 +5,6 @@
  * Featured and homepage-takeover stay on home — do not import this there.
  */
 import {
-  nextWindowPackageByKind,
   parseAdBookings,
   type AdBooking,
 } from "@/lib/ad-booking";
@@ -48,7 +47,6 @@ function latestHubBooking(
 }
 
 function slotFromBooking(booking: AdBooking, hubId: HubId): AdSlot {
-  const pack = nextWindowPackageByKind("hub-takeover");
   const stallId = stallIdForName(booking.stallName) ?? "";
 
   return {

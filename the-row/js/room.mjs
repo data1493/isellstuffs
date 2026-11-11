@@ -164,7 +164,7 @@ export function winnerName(state) {
   return seatLabel(state, state.pile.winner);
 }
 
-function award(next, side) {
+function award(next, side, now = Date.now()) {
   next.pile.status = "won";
   next.pile.winner = side;
   next.pile.streaked = true;
@@ -174,7 +174,7 @@ function award(next, side) {
   next.streaks = { ...(next.streaks || {}) };
   next.streakAt = { ...(next.streakAt || {}) };
   next.streaks[winner] = (next.streaks[winner] || 0) + 1;
-  next.streakAt[winner] = Date.now();
+  next.streakAt[winner] = Number.isFinite(now) ? now : Date.now();
   next.dealt = (next.dealt || 0) + 1;
   if (loser !== winner) {
     delete next.streaks[loser];
@@ -276,7 +276,7 @@ export function lockDrop(state, handle) {
   return ok(next);
 }
 
-export function pileOn(state, side) {
+export function pileOn(state, side, now = Date.now()) {
   if (!sideOf(side)) return fail(state, "Pick a side.");
   const blocked = roundOpen(state, "pile");
   if (blocked) return fail(state, blocked);
@@ -286,7 +286,7 @@ export function pileOn(state, side) {
   next.pile[scoreKey] += 1;
   if (next.pile[scoreKey] >= next.pile.goal) {
     next.pile[scoreKey] = next.pile.goal;
-    award(next, side);
+    award(next, side, now);
   }
   return ok(next);
 }
@@ -314,7 +314,7 @@ export function enterLine(state, side, text) {
   return ok(next);
 }
 
-export function voteLine(state, side) {
+export function voteLine(state, side, now = Date.now()) {
   if (!sideOf(side)) return fail(state, "Pick a side.");
   const blocked = roundOpen(state, "line");
   if (blocked) return fail(state, blocked);
@@ -324,7 +324,7 @@ export function voteLine(state, side) {
   next.line[voteKey] += 1;
   if (next.line[voteKey] >= GOAL) {
     next.line[voteKey] = GOAL;
-    award(next, side);
+    award(next, side, now);
   }
   return ok(next);
 }
@@ -340,7 +340,7 @@ export function armLane(state, mark) {
   return ok(next);
 }
 
-export function tapLane(state, side, position) {
+export function tapLane(state, side, position, now = Date.now()) {
   if (!sideOf(side)) return fail(state, "Pick a side.");
   const blocked = roundOpen(state, "lane");
   if (blocked) return fail(state, blocked);
@@ -359,7 +359,7 @@ export function tapLane(state, side, position) {
     next.lane.rightTap = null;
     return ok(next);
   }
-  award(next, leftDistance < rightDistance ? "left" : "right");
+  award(next, leftDistance < rightDistance ? "left" : "right", now);
   return ok(next);
 }
 
@@ -451,14 +451,14 @@ export function renameHandle(state, from, to) {
   return next;
 }
 
-export function act(state, input) {
+export function act(state, input, now = Date.now()) {
   const key = handleKey(input?.handle);
   const side = input?.side === "left" || input?.side === "right" ? input.side : null;
   if (!side || state.seats?.[side] !== key) return fail(state, "That seat isn't yours.");
-  if (input.kind === "pile") return pileOn(state, side);
-  if (input.kind === "vote") return voteLine(state, side);
+  if (input.kind === "pile") return pileOn(state, side, now);
+  if (input.kind === "vote") return voteLine(state, side, now);
   if (input.kind === "line") return enterLine(state, side, input.text);
-  if (input.kind === "tap") return tapLane(state, side, input.spot);
+  if (input.kind === "tap") return tapLane(state, side, input.spot, now);
   return fail(state, "Pick a move.");
 }
 
