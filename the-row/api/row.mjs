@@ -2,7 +2,8 @@ import { get, head, put } from "@vercel/blob";
 import { handleRow, readCookie } from "../js/row-http.mjs";
 import { conflictError, createBlobStore, lostCreate } from "../js/blob-store.mjs";
 
-const PATH = "row/state.json";
+export const STATE_PATH = "row/state.json";
+export const ACCOUNTS_PATH = "row/accounts.json";
 const PATHS = {
   me: "/me",
   keep: "/keep",
@@ -77,37 +78,37 @@ async function textFrom(stream) {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-export async function readRowState() {
+export async function readBlob(path) {
   let etag = "";
   try {
-    const meta = await head(PATH, commandOptions());
+    const meta = await head(path, commandOptions());
     etag = blobEtag(meta?.etag);
   } catch (error) {
     if (error?.name === "BlobNotFoundError") return null;
   }
-  const result = await get(PATH, commandOptions({ access: "private", useCache: false }));
+  const result = await get(path, commandOptions({ access: "private", useCache: false }));
   if (!result || result.statusCode !== 200 || !result.stream) return null;
   let value;
   try {
     value = JSON.parse(await textFrom(result.stream));
   } catch {
-    throw new Error("The room store could not be read.");
+    throw new Error("The row store could not be read.");
   }
-  if (!value || typeof value !== "object") throw new Error("The room store could not be read.");
+  if (!value || typeof value !== "object") throw new Error("The row store could not be read.");
   if (!etag) etag = blobEtag(result.blob?.etag);
   return { value, etag };
 }
 
-export async function commitRowState(value, etag, io = {}) {
+export async function commitBlob(path, value, etag, io = {}) {
   const putBlob = io.put || put;
-  const readBlob = io.read || readRowState;
+  const readBlobAt = io.read || readBlob;
   try {
-    await putBlob(PATH, JSON.stringify(value), putOptions(etag));
+    await putBlob(path, JSON.stringify(value), putOptions(etag));
   } catch (error) {
     let current = null;
     if (!etag) {
       try {
-        current = await readBlob();
+        current = await readBlobAt(path);
       } catch {
         current = null;
       }
@@ -119,16 +120,25 @@ export async function commitRowState(value, etag, io = {}) {
   }
 }
 
-export async function writeRowState(value, etag) {
-  return commitRowState(value, etag);
+async function readSplit() {
+  const [room, accounts] = await Promise.all([
+    readBlob(STATE_PATH),
+    readBlob(ACCOUNTS_PATH),
+  ]);
+  return { room, accounts };
+}
+
+function writeSplit(part, value, etag) {
+  const path = part === "accounts" ? ACCOUNTS_PATH : STATE_PATH;
+  return commitBlob(path, value, etag);
 }
 
 function getStore() {
   if (store) return store;
   if (!blobReady()) throw new Error("Vercel Blob is not configured.");
   store = createBlobStore({
-    read: readRowState,
-    write: writeRowState,
+    read: readSplit,
+    write: writeSplit,
     crowd: process.env.ROW_CROWD === "1",
   });
   return store;

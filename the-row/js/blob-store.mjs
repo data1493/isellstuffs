@@ -5,13 +5,14 @@ import { advanceLive } from "./live-clock.mjs";
 
 const ATTEMPTS = 6;
 
-// The book and the room share one private blob. put({ ifMatch }) is a
-// compare-and-swap: a lost race throws, and the request reloads and reapplies.
-// One object means a win cannot land in the room and miss the account, or the
-// reverse. Blob has no lock, so every request may rewrite this small document,
-// and a crowded moment can still fail after the retries. The function then
-// answers "Down", which the pages already handle. Separate keys would let an
-// account write pass a crowd write, so a win could be credited twice or dropped.
+// Accounts are their own Blob document (row/accounts.json). The room document
+// (row/state.json) is what a tick rewrites. Each document keeps its own etag
+// compare-and-swap. A new account is written after the room create, so a lost
+// room create does not leave a name behind. A win is written to the accounts
+// document first; recordRound ignores a round id it already credited, so a
+// lost room write can be retried without counting the win twice. An old
+// state.json that still has a book is split on the first read. The accounts
+// document is written before that book is removed.
 
 function delay(ms) {
   return new Promise((resolve) => {
@@ -48,14 +49,26 @@ function bookFrom(raw) {
   };
 }
 
+function embeddedBook(roomValue) {
+  if (!roomValue || typeof roomValue !== "object" || !roomValue.book || typeof roomValue.book !== "object") return null;
+  return bookFrom(roomValue.book);
+}
+
+function storedBook(accountsValue) {
+  if (!accountsValue || typeof accountsValue !== "object") return null;
+  if (Array.isArray(accountsValue.users) || Array.isArray(accountsValue.sessions)) return bookFrom(accountsValue);
+  if (accountsValue.book && typeof accountsValue.book === "object") return bookFrom(accountsValue.book);
+  return null;
+}
+
 function liveReady(state) {
   return Boolean(state?.pile && state.drop && Array.isArray(state.people) && state.people.length);
 }
 
 function liveFrom(raw, crowd, now) {
-  if (liveReady(raw?.state)) {
-    if ("beating" in raw.state) delete raw.state.beating;
-    let state = raw.state;
+  if (liveReady(raw?.live?.state)) {
+    if ("beating" in raw.live.state) delete raw.live.state.beating;
+    let state = raw.live.state;
     let migrated = false;
     if (crowd && realPlayers(state).length === 0 && !isHouseRoom(state)) {
       state = houseRoom();
@@ -63,8 +76,8 @@ function liveFrom(raw, crowd, now) {
     }
     return {
       state,
-      beat: Number(raw.beat) || 0,
-      tickAt: Number.isFinite(Number(raw.tickAt)) ? Number(raw.tickAt) : now,
+      beat: Number(raw.live.beat) || 0,
+      tickAt: Number.isFinite(Number(raw.live.tickAt)) ? Number(raw.live.tickAt) : now,
       seeded: migrated,
     };
   }
@@ -76,11 +89,30 @@ function liveFrom(raw, crowd, now) {
   };
 }
 
-function stateFrom(raw, crowd, now) {
-  const value = typeof raw === "string" ? parseJson(raw) : raw;
+// roomValue is the state.json body. accountsValue is the accounts body, or
+// null when that blob does not exist yet. lift means the book still has to
+// be copied out. strip means state.json still carries a book key.
+export function openDocuments(roomValue, accountsValue, crowd, now) {
+  const room = typeof roomValue === "string" ? parseJson(roomValue) : roomValue;
+  const accounts = typeof accountsValue === "string" ? parseJson(accountsValue) : accountsValue;
+  const embedded = embeddedBook(room);
+  const stored = storedBook(accounts);
+  const embeddedCount = embedded ? embedded.users.length : 0;
+  const storedCount = stored ? stored.users.length : 0;
+  let book = bookFrom(null);
+  let lift = false;
+  if (stored && (storedCount > 0 || embeddedCount === 0)) {
+    book = stored;
+  } else if (embedded) {
+    book = embedded;
+    lift = true;
+  }
+  const strip = Boolean(room && typeof room === "object" && Object.prototype.hasOwnProperty.call(room, "book"));
   return {
-    book: bookFrom(value?.book),
-    live: liveFrom(value?.live, crowd, now),
+    book,
+    live: liveFrom(room, crowd, now),
+    lift,
+    strip,
   };
 }
 
@@ -105,13 +137,15 @@ export function createBlobStore({ read, write, crowd = false, now = Date.now, at
 
   async function once(fn) {
     const at = now();
-    const current = await read();
-    const loaded = stateFrom(current?.value, crowd, at);
+    const current = (await read()) || {};
+    const room = current.room || null;
+    const accounts = current.accounts || null;
+    const loaded = openDocuments(room ? room.value : null, accounts ? accounts.value : null, crowd, at);
     const hardened = hardenBook(loaded.book);
     const advanced = advanceLive(loaded.live, at, crowd);
-    const fresh = !current;
-    let nextBook = hardened ? loaded.book : null;
-    let nextLive = fresh || loaded.live.seeded || advanced.changed ? advanced.live : null;
+    const freshRoom = !room;
+    let nextBook = hardened || loaded.lift ? loaded.book : null;
+    let nextLive = freshRoom || loaded.live.seeded || advanced.changed || loaded.strip ? advanced.live : null;
     const result = await fn({
       book: loaded.book,
       live: advanced.live,
@@ -122,11 +156,15 @@ export function createBlobStore({ read, write, crowd = false, now = Date.now, at
         nextLive = value;
       },
     });
-    if (fresh || nextBook || nextLive) {
-      await write({
-        book: nextBook || loaded.book,
-        live: nextLive || advanced.live,
-      }, current?.etag || null);
+    const accountsWrite = nextBook ? { value: nextBook, etag: accounts?.etag || null } : null;
+    const roomWrite = nextLive ? { value: { live: nextLive }, etag: room?.etag || null } : null;
+    const creating = Boolean(accountsWrite && !accounts && !loaded.lift);
+    if (creating && roomWrite) {
+      await write("room", roomWrite.value, roomWrite.etag);
+      await write("accounts", accountsWrite.value, accountsWrite.etag);
+    } else {
+      if (accountsWrite) await write("accounts", accountsWrite.value, accountsWrite.etag);
+      if (roomWrite) await write("room", roomWrite.value, roomWrite.etag);
     }
     return result;
   }

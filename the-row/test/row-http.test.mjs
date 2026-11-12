@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { handleRow, readCookie, sessionCookie } from "../js/row-http.mjs";
 import { createMemoryStore } from "../js/memory-store.mjs";
-import { commitRowState } from "../api/row.mjs";
+import { ACCOUNTS_PATH, STATE_PATH, commitBlob } from "../api/row.mjs";
 import { conflictError, createBlobStore, isConflict, lostCreate } from "../js/blob-store.mjs";
 
 const now = 1_700_000_000_000;
@@ -184,14 +184,19 @@ test("a bad body is refused", async () => {
 });
 
 function fakeBlob() {
-  let doc = null;
+  const docs = new Map();
   let serial = 0;
   return {
     async read() {
-      if (!doc) return null;
-      return { value: structuredClone(doc.value), etag: doc.etag };
+      const load = (part) => {
+        const doc = docs.get(part);
+        if (!doc) return null;
+        return { value: structuredClone(doc.value), etag: doc.etag };
+      };
+      return { room: load("room"), accounts: load("accounts") };
     },
-    async write(value, etag) {
+    async write(part, value, etag) {
+      const doc = docs.get(part) || null;
       if (doc && etag !== doc.etag) {
         const error = new Error("Precondition failed: ETag mismatch.");
         error.name = "BlobPreconditionFailedError";
@@ -199,9 +204,10 @@ function fakeBlob() {
       }
       if (doc && !etag) throw conflictError();
       serial += 1;
-      doc = { value: structuredClone(value), etag: `e${serial}` };
+      docs.set(part, { value: structuredClone(value), etag: `e${serial}` });
     },
-    bump() {
+    bump(part) {
+      const doc = docs.get(part);
       if (doc) doc.etag = `moved-${doc.etag}`;
     },
   };
@@ -249,9 +255,10 @@ test("blob keeps the account and the room across two function instances", async 
   const token = cookieToken(kept.cookie);
   await postOn(first, "/queue", { handle: "mint", link: "https://mint.room", game: "lane" }, token);
   const stored = await blob.read();
-  assert.equal(stored.value.live.state.beating, undefined);
-  assert.equal(stored.value.book.users[0].key, undefined);
-  assert.equal(typeof stored.value.book.users[0].keyHash, "string");
+  assert.equal(stored.room.value.book, undefined);
+  assert.equal(stored.room.value.live.state.beating, undefined);
+  assert.equal(stored.accounts.value.users[0].key, undefined);
+  assert.equal(typeof stored.accounts.value.users[0].keyHash, "string");
 
   clock = 5_000 + 2400 * 2;
   const second = blobStore(blob, () => clock);
@@ -293,8 +300,8 @@ test("blob keeps the account and the room across two function instances", async 
   });
   assert.equal(JSON.stringify(again.json), JSON.stringify(live.json));
   const after = await blob.read();
-  assert.equal(after.value.live.beat > 0, true);
-  assert.equal(after.value.live.tickAt, clock);
+  assert.equal(after.room.value.live.beat > 0, true);
+  assert.equal(after.room.value.live.tickAt, clock);
 });
 
 test("the first read keeps the crowd clock", async () => {
@@ -311,8 +318,9 @@ test("the first read keeps the crowd clock", async () => {
     now: () => clock,
   });
   const seeded = await blob.read();
-  assert.equal(seeded.value.live.tickAt, 10_000);
-  assert.equal(seeded.value.live.beat, 0);
+  assert.equal(seeded.room.value.live.tickAt, 10_000);
+  assert.equal(seeded.room.value.live.beat, 0);
+  assert.equal(seeded.accounts, null);
   clock = 10_000 + 2400;
   await handleRow({
     method: "GET",
@@ -325,8 +333,9 @@ test("the first read keeps the crowd clock", async () => {
     now: () => clock,
   });
   const moved = await blob.read();
-  assert.equal(moved.value.live.beat > 0, true);
-  assert.equal(moved.value.live.tickAt, clock);
+  assert.equal(moved.room.value.live.beat > 0, true);
+  assert.equal(moved.room.value.live.tickAt, clock);
+  assert.equal(moved.accounts, null);
 });
 
 test("a lost write reloads so two keeps both stay", async () => {
@@ -340,23 +349,24 @@ test("a lost write reloads so two keeps both stay", async () => {
   assert.equal(mint.status, 200);
   assert.equal(salt.status, 200);
   const stored = await blob.read();
-  const handles = stored.value.book.users.map((user) => user.handle).sort();
+  const handles = stored.accounts.value.users.map((user) => user.handle).sort();
   assert.deepEqual(handles, ["mint", "salt"]);
+  assert.equal(stored.room.value.book, undefined);
 });
 
 test("an etag miss retries against the document that won", async () => {
   const blob = fakeBlob();
   const raw = blob.write.bind(blob);
   let flipped = false;
-  blob.write = async (value, etag) => {
+  blob.write = async (part, value, etag) => {
     if (!flipped && etag) {
       flipped = true;
-      blob.bump();
+      blob.bump(part);
       const error = new Error("Precondition failed: ETag mismatch.");
       error.name = "BlobPreconditionFailedError";
       throw error;
     }
-    return raw(value, etag);
+    return raw(part, value, etag);
   };
   const store = createBlobStore({
     read: blob.read,
@@ -368,7 +378,7 @@ test("an etag miss retries against the document that won", async () => {
   assert.equal((await post(store, "/keep", { handle: "mint" })).status, 200);
   assert.equal((await post(store, "/keep", { handle: "salt" })).status, 200);
   const stored = await blob.read();
-  const handles = stored.value.book.users.map((user) => user.handle).sort();
+  const handles = stored.accounts.value.users.map((user) => user.handle).sort();
   assert.deepEqual(handles, ["mint", "salt"]);
 });
 
@@ -506,7 +516,7 @@ test("a human win can run it back, and stepping out is not undone", async () => 
 });
 
 function vercelLikeBlob() {
-  let doc = null;
+  const docs = new Map();
   let serial = 0;
   let chain = Promise.resolve();
   function exclusive(fn) {
@@ -515,10 +525,11 @@ function vercelLikeBlob() {
     return run;
   }
   return {
-    put(_path, body, options) {
+    put(path, body, options) {
       return exclusive(async () => {
         const allowOverwrite = options?.allowOverwrite === true;
         const ifMatch = options?.ifMatch;
+        const doc = docs.get(path) || null;
         if (ifMatch) {
           if (!doc || ifMatch !== doc.etag) {
             const error = new Error("Precondition failed: ETag mismatch.");
@@ -531,11 +542,12 @@ function vercelLikeBlob() {
           throw error;
         }
         serial += 1;
-        doc = { body, etag: `"e${serial}"` };
+        docs.set(path, { body, etag: `"e${serial}"` });
       });
     },
-    read() {
+    read(path) {
       return exclusive(async () => {
+        const doc = docs.get(path);
         if (!doc) return null;
         return { value: JSON.parse(doc.body), etag: doc.etag };
       });
@@ -545,18 +557,23 @@ function vercelLikeBlob() {
 
 test("two keeps both survive a create that matches real blob put", async () => {
   const blob = vercelLikeBlob();
-  const write = (value, etag) => commitRowState(value, etag, blob);
-  const left = createBlobStore({ read: blob.read, write, crowd: false, now: () => now, wait: async () => {} });
-  const right = createBlobStore({ read: blob.read, write, crowd: false, now: () => now, wait: async () => {} });
+  const read = async () => ({
+    room: await blob.read(STATE_PATH),
+    accounts: await blob.read(ACCOUNTS_PATH),
+  });
+  const write = (part, value, etag) => commitBlob(part === "accounts" ? ACCOUNTS_PATH : STATE_PATH, value, etag, blob);
+  const left = createBlobStore({ read, write, crowd: false, now: () => now, wait: async () => {} });
+  const right = createBlobStore({ read, write, crowd: false, now: () => now, wait: async () => {} });
   const [mint, salt] = await Promise.all([
     post(left, "/keep", { handle: "mint" }),
     post(right, "/keep", { handle: "salt" }),
   ]);
   assert.equal(mint.status, 200, mint.json?.error);
   assert.equal(salt.status, 200, salt.json?.error);
-  const stored = await blob.read();
-  const handles = stored.value.book.users.map((user) => user.handle).sort();
+  const stored = await read();
+  const handles = stored.accounts.value.users.map((user) => user.handle).sort();
   assert.deepEqual(handles, ["mint", "salt"]);
+  assert.equal(stored.room.value.book, undefined);
 });
 
 function postOn(store, path, body, token) {

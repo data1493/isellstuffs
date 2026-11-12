@@ -1,4 +1,4 @@
-import { actingHandle, dropSession, keepName, loginName, playRound, readUser, recordRound } from "./accounts.mjs";
+import { actingHandle, creditId, dropSession, keepName, loginName, playRound, readUser, recordRound } from "./accounts.mjs";
 import { isHouseBot, isHouseRoom, stripBotPrize } from "./house.mjs";
 import { act, enqueue, join, linePlace, renameHandle, runItBack, seatHandle, stepOut } from "./room.mjs";
 
@@ -149,6 +149,7 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
         loser,
         held: result.state.drop?.holder === winner,
         dropId: result.state.drop?.id,
+        id: creditId(result.state, winner, loser),
       }, at);
       if (recorded.ok && recorded.book) saveBook(recorded.book);
     }
