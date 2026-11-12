@@ -4,6 +4,7 @@
   "scripts": {
     "build": "node script/publish-row.mjs",
     "start": "node the-row/script/serve.mjs",
-    "test": "node --test the-row/test/*.test.mjs"
+    "test": "node --test the-row/test/*.test.mjs",
+    "test:playtest": "node script/playtest.mjs"
   }
 }
