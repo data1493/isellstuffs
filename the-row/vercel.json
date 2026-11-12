@@ -9,6 +9,7 @@
     { "source": "/queue", "destination": "/api/row?row=queue" },
     { "source": "/act", "destination": "/api/row?row=act" },
     { "source": "/again", "destination": "/api/row?row=again" },
+    { "source": "/vibe", "destination": "/api/row?row=vibe" },
     { "source": "/live.json", "destination": "/api/row?row=live" },
     { "source": "/favicon.ico", "destination": "/favicon.svg" }
   ],

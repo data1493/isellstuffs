@@ -1063,7 +1063,7 @@
         passBtn.classList.add("stamped");
         passMsg.textContent = `${room.you.handle} is in. ${room.you.link} is up. Keys stayed with you.`;
         vibeAs.hidden = false;
-        vibeAs.textContent = crowdOn() ? `In as ${room.you.handle}. The wall is the room’s.` : `Posting as ${room.you.handle}`;
+        vibeAs.textContent = crowdOn() ? `In as ${room.you.handle}. One line each half minute.` : `Posting as ${room.you.handle}`;
       } else {
         passBtn.textContent = "Get in";
         passBtn.classList.remove("stamped");
@@ -1072,8 +1072,11 @@
       }
       if (crowdOn()) {
         heroLede.textContent = "The round is live. Watch the drop, the wall, and versus.";
-        document.querySelector("#vibeMsg").textContent = room.you ? `The wall knows ${room.you.handle}.` : "The wall is moving.";
-        vibeFields.forEach((field) => { field.disabled = true; });
+        const vibeMsg = document.querySelector("#vibeMsg");
+        if (!vibeMsg.textContent) {
+          vibeMsg.textContent = room.you ? `The wall knows ${room.you.handle}.` : "Check in to leave a line.";
+        }
+        vibeFields.forEach((field) => { field.disabled = !room.you; });
       } else {
         heroLede.textContent = quietLede;
         vibeFields.forEach((field) => { field.disabled = false; });
@@ -1141,15 +1144,29 @@
       commit(result.state);
     });
 
-    document.querySelector("#vibeForm").addEventListener("submit", (event) => {
+    document.querySelector("#vibeForm").addEventListener("submit", async (event) => {
       event.preventDefault();
       const msg = document.querySelector("#vibeMsg");
-      if (crowdOn()) {
-        msg.textContent = "The wall is moving.";
-        return;
-      }
       if (!room.you) {
         msg.textContent = "Get in first. The wall needs a handle.";
+        return;
+      }
+      if (crowdOn()) {
+        try {
+          const result = await postRow("/vibe", {
+            handle: room.you.handle,
+            text: document.querySelector("#vibeText").value,
+          });
+          if (!result?.ok) {
+            msg.textContent = result?.error || "The wall held that.";
+            return;
+          }
+        } catch {
+          msg.textContent = "The wall missed that.";
+          return;
+        }
+        document.querySelector("#vibeText").value = "";
+        msg.textContent = "It’s on the wall.";
         return;
       }
       const result = say(room, { handle: room.you.handle, text: document.querySelector("#vibeText").value });
