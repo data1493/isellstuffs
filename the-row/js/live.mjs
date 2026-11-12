@@ -1,9 +1,23 @@
 import { houseBeat } from "./house.mjs";
 import { BEAT_MS } from "./live-clock.mjs";
+import { CROWD_POLL_MS } from "./live-read.mjs";
 import { revive } from "./room.mjs?v=6";
 
 let crowdLive = true;
 let crowdTimer = 0;
+let lastBeat = -1;
+
+export function noteCrowdBeat(beat) {
+  const n = Number(beat);
+  if (!Number.isFinite(n)) return;
+  if (n > lastBeat) lastBeat = n;
+}
+
+export function postedRoom(result) {
+  if (!result?.room) return null;
+  noteCrowdBeat(result.room.beat);
+  return result.room;
+}
 
 export function crowdOn() {
   return new URLSearchParams(location.search).get("crowd") === "1" && crowdLive;
@@ -39,7 +53,7 @@ export function watchCrowd(apply) {
   const pull = async () => {
     if (stopped) return;
     try {
-      const res = await fetch(`/live.json?t=${Date.now()}`, { cache: "no-store" });
+      const res = await fetch("/live.json");
       if (!res.ok || stopped) return;
       const text = await res.text();
       const raw = JSON.parse(text);
@@ -51,12 +65,17 @@ export function watchCrowd(apply) {
         return;
       }
       if (!text || text === last || stopped) return;
+      const beat = Number(raw.beat) || 0;
+      if (beat < lastBeat) return;
+      lastBeat = beat;
       last = text;
-      apply(revive(raw));
+      const next = revive(raw);
+      next.beat = beat;
+      apply(next);
     } catch {
       // The next pull tries again. The room stays on the last good frame.
     }
   };
   pull();
-  crowdTimer = setInterval(pull, 800);
+  crowdTimer = setInterval(pull, CROWD_POLL_MS);
 }

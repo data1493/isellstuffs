@@ -1,6 +1,7 @@
 import { get, head, put } from "@vercel/blob";
 import { handleRow, readCookie } from "../js/row-http.mjs";
 import { conflictError, createBlobStore, lostCreate } from "../js/blob-store.mjs";
+import { createLiveCache, liveCacheControl, serveCachedLive } from "../js/live-read.mjs";
 
 const PATH = "row/state.json";
 const PATHS = {
@@ -16,6 +17,7 @@ const PATHS = {
 };
 
 let store;
+const liveCache = createLiveCache();
 
 function blobReady() {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
@@ -155,11 +157,11 @@ function text(status, value, extra) {
   });
 }
 
-function send(result) {
+function send(result, cacheControl = "no-store") {
   if (result.text != null) return text(result.status, result.text);
   const headers = {
     "content-type": "application/json; charset=utf-8",
-    "cache-control": "no-store",
+    "cache-control": cacheControl,
   };
   if (result.cookie) headers["set-cookie"] = result.cookie;
   return new Response(JSON.stringify(result.json), { status: result.status, headers });
@@ -167,6 +169,27 @@ function send(result) {
 
 async function handler(request) {
   try {
+    const pathname = routeOf(request);
+    const crowd = process.env.ROW_CROWD === "1";
+    const now = Date.now();
+    if (request.method !== "GET") liveCache.clear();
+    if (request.method === "GET" && pathname === "/live.json") {
+      const served = await serveCachedLive({
+        cache: liveCache,
+        now,
+        load: () => handleRow({
+          method: "GET",
+          pathname: "/live.json",
+          token: "",
+          secure: process.env.ROW_SECURE === "1" || request.headers.get("x-forwarded-proto") === "https",
+          bodyText: "",
+          store: getStore(),
+          crowd,
+          now: () => now,
+        }),
+      });
+      return send(served.result, liveCacheControl());
+    }
     const bodyText = request.method === "POST" ? await request.text() : "";
     const lazy = {
       transact(fn) {
@@ -175,12 +198,12 @@ async function handler(request) {
     };
     const result = await handleRow({
       method: request.method,
-      pathname: routeOf(request),
+      pathname,
       token: readCookie(request.headers.get("cookie") || ""),
       secure: process.env.ROW_SECURE === "1" || request.headers.get("x-forwarded-proto") === "https",
       bodyText,
       store: lazy,
-      crowd: process.env.ROW_CROWD === "1",
+      crowd,
     });
     return send(result);
   } catch (error) {
