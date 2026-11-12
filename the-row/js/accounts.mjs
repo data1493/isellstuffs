@@ -4,8 +4,9 @@ import { CAST } from "./crowd.mjs";
 
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-// The book rides in the one Blob document every request rewrites (F-04), so it
-// must stay small: about 280 bytes per kept name before personal rounds.
+// The book is row/accounts.json. A room tick rewrites row/state.json only.
+// A keep, a login, or a win still rewrites the whole book, so it stays capped.
+// About 280 bytes per kept name before a personal round is stored on the user.
 export const ACCOUNT_CAP = 300;
 export const SESSION_CAP = 5;
 // F-09: 12 characters from 31 is about 59 bits. Wrong keys lock the name for a while.
@@ -13,6 +14,18 @@ export const KEY_LENGTH = 12;
 export const LOGIN_LIMIT = 5;
 export const LOCK_MS = 15 * 60 * 1000;
 const DUMMY_SALT = randomBytes(16);
+const CREDIT_MEMORY = 8;
+
+export function creditId(state, winner, loser) {
+  return JSON.stringify([
+    Number(state?.dealt) || 0,
+    winner || "",
+    loser || "",
+    state?.drop?.id || "",
+    state?.seats?.left || "",
+    state?.seats?.right || "",
+  ]);
+}
 
 export function emptyBook() {
   return { users: [], sessions: [] };
@@ -158,14 +171,25 @@ function creditUser(user, state, now) {
   return true;
 }
 
+function alreadyCredited(user, id) {
+  return Boolean(id) && Array.isArray(user?.credited) && user.credited.includes(id);
+}
+
+function markCredit(user, id) {
+  if (!id) return;
+  const prev = Array.isArray(user.credited) ? user.credited.filter((item) => item !== id) : [];
+  user.credited = [...prev, id].slice(-CREDIT_MEMORY);
+}
+
 export function recordRound(book, input, now = Date.now()) {
   const next = structuredClone(book);
   const winner = handleKey(input?.winner);
   const loser = handleKey(input?.loser);
+  const id = typeof input?.id === "string" ? input.id : "";
   let wrote = false;
   const userFor = (handle) => (handle ? next.users.find((user) => user.handle === handle) : null);
   const winnerUser = userFor(winner);
-  if (winnerUser) {
+  if (winnerUser && !alreadyCredited(winnerUser, id)) {
     wrote = true;
     winnerUser.wins = (winnerUser.wins || 0) + 1;
     winnerUser.streak = (winnerUser.streak || 0) + 1;
@@ -174,13 +198,15 @@ export function recordRound(book, input, now = Date.now()) {
       winnerUser.dropsKept = (winnerUser.dropsKept || 0) + 1;
       addPrize(winnerUser, input.dropId);
     }
+    markCredit(winnerUser, id);
   }
   const loserUser = loser !== winner ? userFor(loser) : null;
-  if (loserUser) {
+  if (loserUser && !alreadyCredited(loserUser, id)) {
     wrote = true;
     loserUser.losses = (loserUser.losses || 0) + 1;
     loserUser.streak = 0;
     loserUser.streakAt = now;
+    markCredit(loserUser, id);
   }
   return { ok: wrote, book: next, wrote };
 }
