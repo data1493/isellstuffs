@@ -18,6 +18,9 @@ export function RetapeLookup({
   const [listing, setListing] = useState<Listing | null | undefined>(undefined);
 
   useEffect(() => {
+    // Seller listings live in localStorage, so read them after mount to keep
+    // the server and first client render the same.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setListing(sellerListingById(listingId) ?? null);
   }, [listingId]);
 

@@ -39,7 +39,7 @@ test("keep, login, and out survive on the book", async () => {
   const kept = await post(store, "/keep", { handle: " Mint " });
   assert.equal(kept.status, 200);
   assert.equal(kept.json.user.handle, "mint");
-  assert.match(kept.json.user.key, /^[a-z2-9]{3}-[a-z2-9]{3}$/);
+  assert.match(kept.json.user.key, /^[a-z2-9]{4}-[a-z2-9]{4}-[a-z2-9]{4}$/);
   const token = cookieToken(kept.cookie);
   const stored = await store.transact(({ book }) => book.users.find((user) => user.handle === "mint"));
   assert.equal(stored.key, undefined);
@@ -278,7 +278,9 @@ test("blob keeps the account and the room across two function instances", async 
     now: () => clock,
   });
   assert.equal(live.json.beating, true);
-  assert.equal(live.json.queue.some((item) => item.handle === "mint"), true);
+  // With the ticket on the request clock (F-22), the house seats mint on the
+  // next ticks instead of leaving a wall-clock ticket that looks unborn.
+  assert.equal(live.json.seats.left === "mint" || live.json.seats.right === "mint", true);
   const again = await handleRow({
     method: "GET",
     pathname: "/live.json",

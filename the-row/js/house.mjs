@@ -185,7 +185,7 @@ function botSides(state) {
   return ["left", "right"].filter((side) => isHouseBot(state.seats?.[side]));
 }
 
-function play(state, beat) {
+function play(state, beat, now = Date.now()) {
   if (state.pile?.status !== "open") return state;
   if (beat % HOUSE_PLAY_EVERY !== 0) return state;
   const sides = botSides(state);
@@ -203,19 +203,19 @@ function play(state, beat) {
     if (!state.line.leftText || !state.line.rightText) return state;
     const votes = side === "left" ? state.line.leftVotes : state.line.rightVotes;
     if (votes + 1 >= state.pile.goal) return human ? state : resetPile(state).state;
-    return apply(state, voteLine(state, side));
+    return apply(state, voteLine(state, side, now));
   }
   if (game === "lane") {
     const tapKey = side === "left" ? "leftTap" : "rightTap";
     if (state.lane[tapKey] != null) return state;
     const spot = clampTap(side === "left" ? state.lane.mark - 20 : state.lane.mark + 20);
-    const tapped = apply(state, tapLane(state, side, spot));
+    const tapped = apply(state, tapLane(state, side, spot, now));
     if (tapped.pile?.status === "won" && isHouseBot(tapped.seats?.[tapped.pile.winner])) return resetPile(state).state;
     return tapped;
   }
   const score = side === "left" ? state.pile.leftScore : state.pile.rightScore;
   if (score + 1 >= state.pile.goal) return human ? state : resetPile(state).state;
-  return apply(state, pileOn(state, side));
+  return apply(state, pileOn(state, side, now));
 }
 
 export function stripBotPrize(state) {
@@ -229,7 +229,7 @@ export function stripBotPrize(state) {
 export function houseBeat(state, beat, now = Date.now()) {
   let next = staffHouse(state, now);
   next = talk(next, beat);
-  next = play(next, beat);
+  next = play(next, beat, now);
   next = stripBotPrize(next);
   return { state: next, beat: beat + 1 };
 }

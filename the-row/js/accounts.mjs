@@ -1,9 +1,18 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { randomBytes, randomInt, scryptSync, timingSafeEqual } from "node:crypto";
 import { CATALOG, armLane, enterLine, focusDrop, handleKey, pileOn, resetPile, revive, seatHandle, seatYou, seedRoom, tapLane, voteLine } from "./room.mjs";
 import { CAST } from "./crowd.mjs";
 
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+// The book rides in the one Blob document every request rewrites (F-04), so it
+// must stay small: about 280 bytes per kept name before personal rounds.
+export const ACCOUNT_CAP = 300;
+export const SESSION_CAP = 5;
+// F-09: 12 characters from 31 is about 59 bits. Wrong keys lock the name for a while.
+export const KEY_LENGTH = 12;
+export const LOGIN_LIMIT = 5;
+export const LOCK_MS = 15 * 60 * 1000;
+const DUMMY_SALT = randomBytes(16);
 
 export function emptyBook() {
   return { users: [], sessions: [] };
@@ -17,10 +26,10 @@ export function makeToken() {
   return randomBytes(24).toString("base64url");
 }
 
-export function makeKey(random = Math.random) {
+export function makeKey(pick = randomInt) {
   let out = "";
-  for (let i = 0; i < 6; i += 1) out += ALPHABET[Math.floor(random() * ALPHABET.length)];
-  return `${out.slice(0, 3)}-${out.slice(3)}`;
+  for (let i = 0; i < KEY_LENGTH; i += 1) out += ALPHABET[pick(ALPHABET.length)];
+  return out.match(/.{1,4}/g).join("-");
 }
 
 function live(book, token, now) {
@@ -35,6 +44,12 @@ function live(book, token, now) {
 function prune(book, now) {
   book.sessions = book.sessions.filter((item) => item.expires > now);
   return book;
+}
+
+function addSession(book, session) {
+  const mine = book.sessions.filter((item) => item.userId === session.userId);
+  const drop = new Set(mine.slice(0, Math.max(0, mine.length - SESSION_CAP + 1)));
+  book.sessions = [...book.sessions.filter((item) => !drop.has(item)), session];
 }
 
 function present(user, plainKey) {
@@ -107,13 +122,13 @@ function loadPersonal(user) {
   return open ? seatYou(room) : room;
 }
 
-function applyMove(state, input) {
+function applyMove(state, input, now = Date.now()) {
   if (input.kind === "reset") return resetPile(state);
   if (input.kind === "arm") return armLane(state, input.mark);
-  if (input.kind === "pile") return pileOn(state, input.side);
+  if (input.kind === "pile") return pileOn(state, input.side, now);
   if (input.kind === "line") return enterLine(state, input.side, input.text);
-  if (input.kind === "vote") return voteLine(state, input.side);
-  if (input.kind === "tap") return tapLane(state, input.side, input.spot);
+  if (input.kind === "vote") return voteLine(state, input.side, now);
+  if (input.kind === "tap") return tapLane(state, input.side, input.spot, now);
   return { ok: false, state, error: "Pick a move." };
 }
 
@@ -186,7 +201,7 @@ export function playRound(book, token, input, now = Date.now()) {
     if (!focused.ok) return { ok: false, error: focused.error || "That drop isn’t on the floor.", book };
     state = focused.state;
   }
-  const played = applyMove(state, input);
+  const played = applyMove(state, input, now);
   if (!played.ok) return { ok: false, error: played.error || "Pick a move.", book };
   const wasWon = before.pile?.status === "won";
   user.round = played.state;
@@ -229,6 +244,7 @@ export function keepName(book, input, now = Date.now(), deps = {}) {
 
   let user = current?.user;
   if (!user) {
+    if (next.users.length >= ACCOUNT_CAP) return { ok: false, error: "The room has no names left.", book: next };
     const plain = cleanKey((deps.key || makeKey)());
     const sealed = sealKey(plain);
     user = {
@@ -240,7 +256,7 @@ export function keepName(book, input, now = Date.now(), deps = {}) {
     };
     next.users.push(user);
     const token = (deps.token || makeToken)();
-    next.sessions.push({ token, userId: user.id, expires: now + YEAR_MS });
+    addSession(next, { token, userId: user.id, expires: now + YEAR_MS });
     return { ok: true, book: next, token, user: present(user, plain) };
   }
 
@@ -253,9 +269,26 @@ export function loginName(book, input, now = Date.now(), deps = {}) {
   const key = cleanKey(input?.key);
   const next = prune(structuredClone(book), now);
   const user = next.users.find((item) => item.handle === handle);
-  if (!user || !keyMatches(user, key)) return { ok: false, error: "That key does not match.", book: next };
+  if (!user) {
+    // Same scrypt cost as a real check, so timing does not reveal which names exist.
+    scryptSync(key || "x", DUMMY_SALT, 32);
+    return { ok: false, error: "That key does not match.", book: next };
+  }
+  if ((user.lockedUntil || 0) > now) {
+    return { ok: false, locked: true, error: "Too many tries. Wait a few minutes.", book: next };
+  }
+  if (!keyMatches(user, key)) {
+    user.loginFails = (user.loginFails || 0) + 1;
+    if (user.loginFails >= LOGIN_LIMIT) {
+      user.loginFails = 0;
+      user.lockedUntil = now + LOCK_MS;
+    }
+    return { ok: false, error: "That key does not match.", book: next, wrote: true };
+  }
+  delete user.loginFails;
+  delete user.lockedUntil;
   const token = (deps.token || makeToken)();
-  next.sessions.push({ token, userId: user.id, expires: now + YEAR_MS });
+  addSession(next, { token, userId: user.id, expires: now + YEAR_MS });
   return { ok: true, book: next, token, user: present(user, key) };
 }
 

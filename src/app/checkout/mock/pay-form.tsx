@@ -172,6 +172,9 @@ export function PayForm({
     [session.currency, session.subtotalCents],
   );
 
+  // Kept for the scripted pay flow; the form posts natively today. Agent Row
+  // (src/) is removed in PR #7, so this is not worth rewiring.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function submit(action: "pay" | "cancel") {
     setError(null);
     setFieldError(null);

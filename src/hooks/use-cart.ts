@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useSyncExternalStore } from "react";
+import { useCallback, useLayoutEffect, useState, useSyncExternalStore } from "react";
 
 import {
   addListingToCart,
@@ -14,9 +14,9 @@ import {
 const emptyCart: string[] = [];
 
 export function useCart(serverListingIds: readonly string[] = emptyCart) {
-  const serverSnapshot = useRef(
+  const [serverSnapshot] = useState(() =>
     serverListingIds.length > 0 ? [...serverListingIds] : emptyCart,
-  ).current;
+  );
 
   const getServerSnapshot = useCallback(
     () => (serverSnapshot.length > 0 ? serverSnapshot : emptyCart),

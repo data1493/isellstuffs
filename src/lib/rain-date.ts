@@ -133,16 +133,6 @@ function serverStore(): RainDateMap {
   return g[SERVER_STORE] ?? emptyMap;
 }
 
-function mergeRainMaps(...maps: RainDateMap[]): RainDateMap {
-  const next: RainDateMap = {};
-  for (const map of maps) {
-    for (const [stallId, tape] of Object.entries(map)) {
-      next[stallId] = tape;
-    }
-  }
-  return Object.keys(next).length === 0 ? emptyMap : next;
-}
-
 export function readRainDates(): RainDateMap {
   if (canUseStorage()) {
     const fromStorage = window.localStorage.getItem(RAIN_DATE_STORAGE_KEY);

@@ -583,19 +583,6 @@ function lotIsOpen(lot: AgentLot, trades: AgentTrade[]) {
   );
 }
 
-function cookiesFor(state: MemoryState): AgentCookieWrites {
-  return {
-    pass: serializePass(state.pass),
-    lots: serializeLots(state.lots),
-    trades: serializeTrades(state.trades),
-    talk: serializeTalk({
-      ratings: state.ratings,
-      suggestions: state.suggestions,
-    }),
-    pledges: serializePledges(state.pledges),
-  };
-}
-
 function stateFromSnapshot(
   snapshot: AgentStoreSnapshot | undefined,
   fallback: MemoryState,
