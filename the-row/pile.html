@@ -256,7 +256,7 @@
   <script type="module">
     import { pileOn, resetPile, pileLine, roundLine, linePlace, seatYou } from "./js/room.mjs?v=6";
     import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
-    import { crowdOn, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
+    import { crowdOn, postedRoom, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
     import { stampYou, watchCall } from "./js/gate.mjs?v=6";
     import { awardBar, ensureTagStyle, flashSides, mineSide, paintWho, postRow, reportMove } from "./js/watch.mjs?v=6";
 
@@ -383,7 +383,12 @@
         const btn = side === "left" ? leftBtn : rightBtn;
         btn.classList.add("hot");
         setTimeout(() => btn.classList.remove("hot"), 460);
-        await postRow("/act", { handle: you.handle, kind: "pile", side });
+        const result = await postRow("/act", { handle: you.handle, kind: "pile", side });
+        const next = postedRoom(result);
+        if (next) {
+          room = next;
+          paint();
+        }
         return;
       }
       const result = pileOn(room, side);
@@ -400,7 +405,12 @@
       const you = readRoom(storage).you;
       if (crowdOn()) {
         if (!you) return;
-        await postRow("/again", { handle: you.handle, stay: true });
+        const result = await postRow("/again", { handle: you.handle, stay: true });
+        const next = postedRoom(result);
+        if (next) {
+          room = next;
+          paint();
+        }
         return;
       }
       commit(resetPile(room).state, { kind: "reset" });
@@ -408,7 +418,12 @@
     stepOut.addEventListener("click", async () => {
       const you = readRoom(storage).you;
       if (!you) return;
-      await postRow("/again", { handle: you.handle, stay: false });
+      const result = await postRow("/again", { handle: you.handle, stay: false });
+      const next = postedRoom(result);
+      if (next) {
+        room = next;
+        paint();
+      }
     });
     lockSeat.addEventListener("click", async () => {
       const you = readRoom(storage).you;

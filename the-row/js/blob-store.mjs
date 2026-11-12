@@ -110,8 +110,11 @@ export function createBlobStore({ read, write, crowd = false, now = Date.now, at
     const hardened = hardenBook(loaded.book);
     const advanced = advanceLive(loaded.live, at, crowd);
     const fresh = !current;
+    // A beat is computed for the response. It is not a Blob write. A put
+    // happens when the document is first created, when the saved room is
+    // migrated, or when the request itself changes the book or the room.
     let nextBook = hardened ? loaded.book : null;
-    let nextLive = fresh || loaded.live.seeded || advanced.changed ? advanced.live : null;
+    let nextLive = fresh || loaded.live.seeded ? advanced.live : null;
     const result = await fn({
       book: loaded.book,
       live: advanced.live,

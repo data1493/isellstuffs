@@ -95,7 +95,7 @@
   <script type="module">
     import { enterLine, voteLine, resetPile, roundLine, linePlace, seatYou } from "./js/room.mjs?v=6";
     import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
-    import { crowdOn, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
+    import { crowdOn, postedRoom, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
     import { stampYou, watchCall } from "./js/gate.mjs?v=6";
     import { awardBar, ensureTagStyle, flashSides, mineSide, paintWho, postRow, reportMove } from "./js/watch.mjs?v=6";
 
@@ -191,6 +191,11 @@
         if (mineSide(room, you) !== side) return;
         const result = await postRow("/act", { handle: you.handle, kind: "line", side, text: value });
         if (!result.ok) status.textContent = result.error || "That line missed.";
+        const next = postedRoom(result);
+        if (next) {
+          room = next;
+          paint();
+        }
         return;
       }
       const result = enterLine(room, side, value);
@@ -241,6 +246,11 @@
         flash(side);
         const result = await postRow("/act", { handle: you.handle, kind: "vote", side });
         if (!result.ok) status.textContent = result.error || "That vote missed.";
+        const next = postedRoom(result);
+        if (next) {
+          room = next;
+          paint();
+        }
         return;
       }
       const result = voteLine(room, side);

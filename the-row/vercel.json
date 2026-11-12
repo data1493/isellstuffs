@@ -18,6 +18,12 @@
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
       ]
+    },
+    {
+      "source": "/live.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=30, max-age=2" }
+      ]
     }
   ]
 }

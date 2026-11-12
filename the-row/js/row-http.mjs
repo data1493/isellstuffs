@@ -69,13 +69,17 @@ function applyPost(path, body, handle, state, at) {
   return result;
 }
 
-function roomReply(result, state, handle) {
-  return reply(result.ok ? 200 : 400, {
+function roomReply(result, state, handle, live, crowd) {
+  const json = {
     ok: result.ok,
     error: result.error || null,
     place: linePlace(state, handle),
     call: state.call || null,
-  });
+  };
+  if (result.ok) {
+    json.room = { ...state, beat: live?.beat || 0, tickAt: live?.tickAt || 0, beating: Boolean(crowd) };
+  }
+  return reply(result.ok ? 200 : 400, json);
 }
 
 export async function handleRow({ method, pathname, token, secure, bodyText, store, crowd, now = Date.now }) {
@@ -127,7 +131,12 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
   }
 
   if (pathname === "/live.json") {
-    return store.transact(({ live }) => reply(200, { ...live.state, beating: crowd }));
+    return store.transact(({ live }) => reply(200, {
+      ...live.state,
+      beat: live.beat || 0,
+      tickAt: live.tickAt || 0,
+      beating: crowd,
+    }));
   }
 
   return store.transact(({ book, live, saveBook, saveLive }) => {
@@ -137,12 +146,12 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
     }
     const before = live.state.pile?.status;
     const played = applyPost(pathname, body, gate.handle, live.state, at);
-    if (!played.ok) return roomReply(played, live.state, gate.handle);
+    if (!played.ok) return roomReply(played, live.state, gate.handle, live, crowd);
     const result = { ...played, state: isHouseRoom(played.state) ? stripBotPrize(played.state) : played.state };
     saveLive({ ...live, state: result.state });
     if (before !== "won" && result.state.pile?.status === "won" && result.state.pile.winner) {
       const winner = seatHandle(result.state, result.state.pile.winner);
-      if (isHouseBot(winner)) return roomReply(result, result.state, gate.handle);
+      if (isHouseBot(winner)) return roomReply(result, result.state, gate.handle, live, crowd);
       const loser = seatHandle(result.state, result.state.pile.winner === "left" ? "right" : "left");
       const recorded = recordRound(book, {
         winner,
@@ -152,6 +161,6 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
       }, at);
       if (recorded.ok && recorded.book) saveBook(recorded.book);
     }
-    return roomReply(result, result.state, gate.handle);
+    return roomReply(result, result.state, gate.handle, live, crowd);
   });
 }

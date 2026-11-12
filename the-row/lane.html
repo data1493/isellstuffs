@@ -86,7 +86,7 @@
   <script type="module">
     import { armLane, tapLane, resetPile, roundLine, linePlace, seatYou } from "./js/room.mjs?v=6";
     import { readRoom, writeRoom } from "./js/persist.mjs?v=6";
-    import { crowdOn, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
+    import { crowdOn, postedRoom, watchCrowd, watchHouse } from "./js/live.mjs?v=6";
     import { stampYou, watchCall } from "./js/gate.mjs?v=6";
     import { awardBar, ensureTagStyle, flashSides, mineSide, paintWho, postRow, reportMove } from "./js/watch.mjs?v=6";
 
@@ -195,6 +195,11 @@
         document.querySelector(side === "left" ? "#left" : "#right").classList.add("hot");
         const result = await postRow("/act", { handle: you.handle, kind: "tap", side, spot: Math.round(spot) });
         if (!result.ok) status.textContent = result.error || "That tap missed.";
+        const next = postedRoom(result);
+        if (next) {
+          room = next;
+          paint();
+        }
         return;
       }
       const at = Math.round(spot);

@@ -293,8 +293,9 @@ test("blob keeps the account and the room across two function instances", async 
   });
   assert.equal(JSON.stringify(again.json), JSON.stringify(live.json));
   const after = await blob.read();
-  assert.equal(after.value.live.beat > 0, true);
-  assert.equal(after.value.live.tickAt, clock);
+  // The seat is in the response. A live read does not put the beat.
+  assert.equal(after.value.live.tickAt, 5_000);
+  assert.equal(after.etag, stored.etag);
 });
 
 test("the first read keeps the crowd clock", async () => {
@@ -314,7 +315,7 @@ test("the first read keeps the crowd clock", async () => {
   assert.equal(seeded.value.live.tickAt, 10_000);
   assert.equal(seeded.value.live.beat, 0);
   clock = 10_000 + 2400;
-  await handleRow({
+  const shown = await handleRow({
     method: "GET",
     pathname: "/live.json",
     token: "",
@@ -324,9 +325,11 @@ test("the first read keeps the crowd clock", async () => {
     crowd: true,
     now: () => clock,
   });
+  assert.equal(shown.json.beat > 0, true);
   const moved = await blob.read();
-  assert.equal(moved.value.live.beat > 0, true);
-  assert.equal(moved.value.live.tickAt, clock);
+  assert.equal(moved.value.live.beat, 0);
+  assert.equal(moved.value.live.tickAt, 10_000);
+  assert.equal(moved.etag, seeded.etag);
 });
 
 test("a lost write reloads so two keeps both stay", async () => {
