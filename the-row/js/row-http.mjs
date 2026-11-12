@@ -1,6 +1,15 @@
 import { actingHandle, dropSession, keepName, loginName, playRound, readUser, recordRound } from "./accounts.mjs";
 import { isHouseBot, isHouseRoom, stripBotPrize } from "./house.mjs";
-import { act, enqueue, join, linePlace, renameHandle, runItBack, seatHandle, stepOut } from "./room.mjs";
+import {
+  LINE_MAX,
+  VIBE_MAX,
+  lineReady,
+  rememberLine,
+  rememberVibe,
+  screenPublicText,
+  vibeReady,
+} from "./moderate.mjs";
+import { act, enqueue, join, linePlace, renameHandle, runItBack, say, seatHandle, stepOut } from "./room.mjs";
 
 const COOKIE = "row";
 const YEAR = 60 * 60 * 24 * 365;
@@ -29,7 +38,7 @@ export function isApi(pathname, method) {
   if (pathname === "/me") return method === "GET";
   if (method !== "POST") return false;
   return pathname === "/keep" || pathname === "/login" || pathname === "/out" || pathname === "/round"
-    || pathname === "/queue" || pathname === "/act" || pathname === "/again";
+    || pathname === "/queue" || pathname === "/act" || pathname === "/again" || pathname === "/vibe";
 }
 
 function reply(status, json, cookie = "") {
@@ -78,6 +87,15 @@ function roomReply(result, state, handle) {
   });
 }
 
+function refuse(status, error, state, handle) {
+  return reply(status, {
+    ok: false,
+    error,
+    place: linePlace(state, handle),
+    call: state.call || null,
+  });
+}
+
 export async function handleRow({ method, pathname, token, secure, bodyText, store, crowd, now = Date.now }) {
   if (!isApi(pathname, method)) return text(404, "Not found");
   const at = now();
@@ -118,11 +136,33 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
   }
 
   if (pathname === "/round") {
+    if (body.kind === "line") {
+      const screened = screenPublicText(body.text, LINE_MAX);
+      if (!screened.ok) return reply(screened.status, { ok: false, error: screened.error });
+      body = { ...body, text: screened.text };
+    }
     return store.transact(({ book, saveBook }) => {
       const result = playRound(book, token, body, at);
       if (!result.ok) return reply(400, { ok: false, error: result.error });
       saveBook(result.book);
       return reply(200, { ok: true, user: result.user, wrote: Boolean(result.wrote) });
+    });
+  }
+
+  if (pathname === "/vibe") {
+    return store.transact(({ book, live, saveBook, saveLive }) => {
+      const gate = actingHandle(book, token, body.handle, at);
+      if (!gate.ok) return refuse(400, gate.error, live.state, body.handle || "");
+      const screened = screenPublicText(body.text, VIBE_MAX);
+      if (!screened.ok) return refuse(screened.status, screened.error, live.state, gate.handle);
+      const pace = vibeReady(book, token, at);
+      if (!pace.ok) return refuse(pace.status, pace.error, live.state, gate.handle);
+      const said = say(live.state, { handle: gate.handle, text: screened.text });
+      if (!said.ok) return roomReply(said, live.state, gate.handle);
+      clearYou(said.state);
+      saveLive({ ...live, state: said.state });
+      saveBook(rememberVibe(book, token, at));
+      return roomReply(said, said.state, gate.handle);
     });
   }
 
@@ -135,23 +175,34 @@ export async function handleRow({ method, pathname, token, secure, bodyText, sto
     if (!gate.ok) {
       return reply(400, { ok: false, error: gate.error, place: 0, call: live.state.call || null });
     }
+    let posted = body;
+    if (pathname === "/act" && body.kind === "line") {
+      const screened = screenPublicText(body.text, LINE_MAX);
+      if (!screened.ok) return refuse(screened.status, screened.error, live.state, gate.handle);
+      const pace = lineReady(book, token, live.state, at);
+      if (!pace.ok) return refuse(pace.status, pace.error, live.state, gate.handle);
+      posted = { ...body, text: screened.text };
+    }
     const before = live.state.pile?.status;
-    const played = applyPost(pathname, body, gate.handle, live.state, at);
+    const played = applyPost(pathname, posted, gate.handle, live.state, at);
     if (!played.ok) return roomReply(played, live.state, gate.handle);
     const result = { ...played, state: isHouseRoom(played.state) ? stripBotPrize(played.state) : played.state };
+    let nextBook = null;
+    if (pathname === "/act" && posted.kind === "line") nextBook = rememberLine(book, token, live.state);
     saveLive({ ...live, state: result.state });
     if (before !== "won" && result.state.pile?.status === "won" && result.state.pile.winner) {
       const winner = seatHandle(result.state, result.state.pile.winner);
       if (isHouseBot(winner)) return roomReply(result, result.state, gate.handle);
       const loser = seatHandle(result.state, result.state.pile.winner === "left" ? "right" : "left");
-      const recorded = recordRound(book, {
+      const recorded = recordRound(nextBook || book, {
         winner,
         loser,
         held: result.state.drop?.holder === winner,
         dropId: result.state.drop?.id,
       }, at);
-      if (recorded.ok && recorded.book) saveBook(recorded.book);
+      if (recorded.ok && recorded.book) nextBook = recorded.book;
     }
+    if (nextBook) saveBook(nextBook);
     return roomReply(result, result.state, gate.handle);
   });
 }

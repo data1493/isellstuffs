@@ -12,6 +12,7 @@ const PATHS = {
   queue: "/queue",
   act: "/act",
   again: "/again",
+  vibe: "/vibe",
   live: "/live.json",
 };
 
